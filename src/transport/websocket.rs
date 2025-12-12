@@ -11,7 +11,7 @@ mod ws_room_tests {
 
     // helper that builds the wss URL for a given side
     fn ws_url(app_id: &str, side: &str) -> String {
-        format!("wss://whitenoise.systems/ws?appID={app_id}&side={side}")
+        format!("wss://nt.whitenoise.systems/ws?appID={app_id}&side={side}")
     }
 
     #[tokio::test]
@@ -40,24 +40,26 @@ mod ws_room_tests {
         // send from A
         write_a.send(WsMsg::Text(text.into())).await?;
 
-        // 4) read on B
-        if let Some(msg) = read_b.next().await {
-            let msg = msg?;
-            assert!(msg.is_text(), "expected text frame from server");
+        loop {
+            let msg = read_b.next().await.expect("B: WS closed unexpectedly")?;
             let body = msg.into_text()?;
             println!("[B] received raw: {body}");
 
             let recv: SignalFrame = serde_json::from_str(&body)?;
+
             match recv {
                 SignalFrame::Offer { sdp } => {
                     assert_eq!(sdp, "test-sdp-from-rust");
                     println!("[B] parsed offer SDP: {sdp}");
+                    break; // test success path
                 }
+                SignalFrame::Room_Full  => {
+                    println!("[B] got room_full (both peers present), waiting for offer…");
+                    // just continue the loop
+                }
+                // if you later have more variants, you can log them here too
             }
-        } else {
-            panic!("B did not receive any message");
         }
-
         Ok(())
     }
 }

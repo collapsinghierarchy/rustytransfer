@@ -16,7 +16,7 @@ pub enum Role {
 }
 
 #[derive(Debug)]
-pub struct PakeKey;         // you can later make this a newtype around [u8; N]
+pub struct PakeKey;         // later: actual key representation
 #[derive(Debug)]
 pub struct Password;        // later: actual password representation
 #[derive(Debug)]

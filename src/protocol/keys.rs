@@ -1,0 +1,3 @@
+struct MacKey();
+struct SessionKey();
+

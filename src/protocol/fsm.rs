@@ -1,10 +1,11 @@
 #[derive(Debug)]
 pub enum State {
     Init {role: Role},
-    Pake {role: Role, pake_key: PakeKey, pw: Password},
+    Pake {role: Role, pw: Password},
     KemAuth {role: Role, kem_pk: KemPublicKey, mac_key: MacKey},
     Smt {role: Role, dem_key: DemKey, file: FileData},
 
+    Success(String),
     Failed(String)
 }
 

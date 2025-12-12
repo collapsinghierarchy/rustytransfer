@@ -30,7 +30,7 @@ pub struct ReceiverFsm {
 }
 
 #[derive(Debug)]
-enum Message {
+pub enum Event {
     PakeInit {
         pw: Password,
         rendezvous: RendezvousInfo  
@@ -54,21 +54,33 @@ impl ReceiverFsm {
         }
     }
 
-    pub fn step(&mut self, input: Option<Message>) -> Result<Option<Message>, StepError> {
+    pub fn step(&mut self, input: Option<Event>) -> Option<StepError> {
         let current = std::mem::replace(&mut self.state, State::Failed("stepped from invalid state".into()));
 
-        let (next_state, outgoing) = match (current, input) {
-            (State::Init {role: Role::Receiver}, Some(Message::PakeInit { pw, rendezvous })) => {
-                //Received the PW and rendezvous info --> initiate PAKE with sender at rendezvous
-                todo!()
+        let next_state = match (current, input) {
+            (State::Init {role: Role::Receiver}, Some(Event::PakeInit { pw: _, rendezvous: _ })) => {
+                //Pre-Condition: Received pw and rendezvouz info
+                // connect to sender and init the PAKE
+                //Post-Condition: PAKE started 
+                // transition to Pake state, or Failed on error
+                State::Pake {role: Role::Receiver, pw: Password}
             }
+            (State::Pake {role: Role::Receiver, pw: _}, Some(Event::KemPkTag { pk_kem: _, tag :_})) => {
+                //Pre-Condition: Pake started
+                // Do the PAKE
+                //Post-Condition: PAKE finished -> derived K_mac, generated and sent (pk_kem, tag) to sender
+                //transition to KemAuth state, or Failed on error
+                State::KemAuth {role: Role::Receiver, kem_pk: KemPublicKey, mac_key: MacKey}
+            }
+            // KemAuth -> Smt-recv
+            // Smt-recv -> Success/Failed
             (state, msg) => {
-                (State::Failed(format!("invalid transition: {:?} with {:?}", state, msg)), None)
+                State::Failed(format!("invalid transition: {:?} with {:?}", state, msg))
             }
         };
 
         self.state = next_state;
-        Ok(outgoing)
+        None
     }
 }
 
@@ -80,12 +92,19 @@ mod tests {
     #[test]
     fn receiver_starts_in_init_state() {
         let fsm = ReceiverFsm::new();
+        assert!(matches!(fsm.state, State::Init { role: Role::Receiver }));
+    }
 
-        match fsm.state {
-            State::Init { role: Role::Receiver } => {
-                // Test passes
-            }
-            other => panic!("unexpected initial state: {:?}", other),
-        }
+    #[test]
+    fn receiver_transitions_into_pake() {
+        let mut fsm = ReceiverFsm::new();
+        let pw = Password;
+        let rendezvous = RendezvousInfo;
+        let pake_init = Event::PakeInit {
+            pw,
+            rendezvous
+        };
+        fsm.step(Some(pake_init));
+        assert!(matches!(fsm.state, State::Pake { role: Role::Receiver, pw: Password }));
     }
 }

@@ -24,7 +24,7 @@ pub struct SenderFsm {
 }
 
 #[derive(Debug)]
-enum Message {
+pub enum Event {
     PakeStart {
         pw: Password,
         rendezvous: RendezvousInfo  
@@ -48,19 +48,44 @@ impl SenderFsm {
         }
     }
 
-    pub fn step(&mut self, input: Option<Message>) -> Result<Option<Message>, StepError> {
+    pub fn step(&mut self, input: Option<Event>) -> Option<StepError> {
            let current = std::mem::replace(&mut self.state, State::Failed("stepped from invalid state".into()));
 
-        let (next_state, outgoing) = match (current, input) {
-            (State::Init {role: Role::Sender}, Some(Message::PakeStart { pw, rendezvous })) => {
-                //Generated pw and rendezvouz info -> waiting for receiver to connect and init the PAKE.
-                todo!()
+        let next_state = match (current, input) {
+            (State::Init {role: Role::Sender}, Some(Event::PakeStart { pw, rendezvous })) => {
+                //Pre-Condition: Generated pw and rendezvouz info
+                //waiting for receiver to connect and init the PAKE
+                //Post-Condition: PAKE started
+                // transition to Pake state, or Failed on error
+                State::Pake {role: Role::Sender, pw}
+
             }
+            (State::Pake {role: Role::Sender, pw}, Some(Event::KemPkTag { pk_kem, tag })) => {
+                //Pre-Condition: Pake started
+                // Do the PAKE
+                //Post-Condition: PAKE finished -> derived K_mac
+                //transition to KemAuth state, or Failed on error
+                State::KemAuth {role: Role::Sender, kem_pk: pk_kem, mac_key: MacKey}
+            }
+            /*
+            (State::KemAuth {role: Role::Sender}, Some(Event::KemCtDem { ct_kem, dem })) => {
+                //Pre-Condition: received pk_kem and tag from receiver
+                todo!() // Verify tag with K_mac. 
+                //Post-Condition: ...
+                // transition to Smt state, or Failed on error
+            }
+            (State::Smt {role: Role::Sender}, Some(Event::KemCtDem { ct_kem, dem })) => {
+                //Pre-Condition: ...
+                todo!() // ...
+                //Post-Condition: ...
+                // transition to Success/Failed state
+            }
+            */
             (state, msg) => {
-                (State::Failed(format!("invalid transition: {:?} with {:?}", state, msg)), None)
+                State::Failed(format!("invalid transition: {:?} with {:?}", state, msg))
             }
         };
         self.state = next_state;
-        Ok(outgoing)
+        None
     }
 }

@@ -24,63 +24,49 @@
 - If OK, decrypt file → done.
 */
 use crate::protocol::fsm::*;
+use crate::crypto::pake::*;
 
 pub struct ReceiverFsm {
     pub state: State,
 }
 
-#[derive(Debug)]
-pub enum Event {
-    PakeInit {
-        pw: Password,
-        rendezvous: RendezvousInfo  
-    },
-
-    KemPkTag {
-        pk_kem: KemPublicKey,
-        tag: MacTag
-    },
-
-    KemCtDem {
-        ct_kem: KemCiphertext,
-        dem: DemData
-    }
-}
-
 impl ReceiverFsm {
-    pub fn new() -> Self {
+    pub fn new(pw: Vec<u8>) -> Self {
         ReceiverFsm {
-            state: State::Init { role: Role::Receiver },
+            state: State::Init { role: Role::Receiver, pw: Some(pw) },
         }
     }
 
-    pub fn step(&mut self, input: Option<Event>) -> Option<StepError> {
+    pub fn step (&mut self, tag: &str, input: Option<Vec<u8>>) -> Result<Vec<u8>, StepError> {
         let current = std::mem::replace(&mut self.state, State::Failed("stepped from invalid state".into()));
 
-        let next_state = match (current, input) {
-            (State::Init {role: Role::Receiver}, Some(Event::PakeInit { pw: _, rendezvous: _ })) => {
-                //Pre-Condition: Received pw and rendezvouz info
-                // connect to sender and init the PAKE
-                //Post-Condition: PAKE started 
-                // transition to Pake state, or Failed on error
-                State::Pake {role: Role::Receiver, pw: Password}
+        let (next_state, outbox) = match (current, tag, input) {
+            (State::Init {role: Role::Receiver, pw: Some(pw)}, "PakeStart", input) => {
+                let pake_pw = pw.as_slice();
+                let mut pake_sender_state = PakeState::start_sender(pake_pw);
+                let outbound_msg = pake_sender_state.take_outbound_msg();
+                (State::Pake {role: Role::Receiver, pake_state: pake_sender_state}, outbound_msg)
             }
-            (State::Pake {role: Role::Receiver, pw: _}, Some(Event::KemPkTag { pk_kem: _, tag :_})) => {
-                //Pre-Condition: Pake started
-                // Do the PAKE
-                //Post-Condition: PAKE finished -> derived K_mac, generated and sent (pk_kem, tag) to sender
-                //transition to KemAuth state, or Failed on error
-                State::KemAuth {role: Role::Receiver, kem_pk: KemPublicKey, mac_key: MacKey}
+            (State::Pake {role: Role::Receiver, mut pake_state}, "Receiver_Answer", input) => {
+                //Pre-Condition: PAKE started
+                let pake_receiver_msg = input.ok_or_else(|| StepError::InvalidTransition("Expected input for PakeStart".into()))?;
+                let sender_key = pake_state.finish(&pake_receiver_msg).expect("Sender failed to finish");
+                //TODO: go into KEM-AUTH state
+                
+                // For this: 
+                // - generate KEM  
+                // - compute MAC tag over transcript + pk_kem
+                // - transition into the new state and return the network message
+                (State::Pake {role: Role::Receiver, pake_state}, sender_key)
             }
-            // KemAuth -> Smt-recv
-            // Smt-recv -> Success/Failed
-            (state, msg) => {
-                State::Failed(format!("invalid transition: {:?} with {:?}", state, msg))
+            (state,tag, input) => {
+                (State::Failed(format!("invalid transition: from {:?} with ({:?},{:?})", state, tag, input)), Vec::new())
             }
         };
 
         self.state = next_state;
-        None
+        Ok(outbox)
+        
     }
 }
 
@@ -90,21 +76,59 @@ mod tests {
     use super::*;
 
     #[test]
-    fn receiver_starts_in_init_state() {
-        let fsm = ReceiverFsm::new();
-        assert!(matches!(fsm.state, State::Init { role: Role::Receiver }));
+    fn receiver_transitions_into_pake() {
+        let mut fsm = ReceiverFsm::new(b"Password".to_vec());
+
+        let out = fsm.step("PakeStart", None).expect("step failed");
+        if let State::Pake { role: Role::Receiver, .. } = &fsm.state { } else { panic!("wrong state"); }
+        assert!(!out.is_empty());
     }
 
-    #[test]
-    fn receiver_transitions_into_pake() {
-        let mut fsm = ReceiverFsm::new();
-        let pw = Password;
-        let rendezvous = RendezvousInfo;
-        let pake_init = Event::PakeInit {
-            pw,
-            rendezvous
-        };
-        fsm.step(Some(pake_init));
-        assert!(matches!(fsm.state, State::Pake { role: Role::Receiver, pw: Password }));
+     #[test]
+    fn receiver_derives_sender_key_via_pake_sender_state() {
+        // Single owner of the password Vec (no clone)
+        let pw = b"Password".to_vec();
+
+        // Build the mock peer FIRST (borrows pw only during the call)
+        let mut peer_receiver = PakeState::start_receiver(pw.as_slice());
+
+        // Move pw into the FSM (pw no longer accessible after this)
+        let mut fsm = ReceiverFsm::new(pw);
+
+        // Step 1: ReceiverFsm (application role Receiver) starts PAKE as "sender"
+        let sender_msg = fsm
+            .step("PakeStart", None)
+            .expect("PakeStart step failed");
+        assert!(!sender_msg.is_empty(), "expected non-empty sender PAKE msg");
+
+        // Mock peer processes sender_msg:
+        // - derives its key
+        // - prepares a reply message back to the sender side
+        let peer_key = peer_receiver
+            .finish(&sender_msg)
+            .expect("peer receiver failed to finish");
+
+        // Most PAKE APIs store an outbound reply after finish; adjust if your API differs
+        let receiver_reply_msg = peer_receiver.take_outbound_msg();
+        assert!(
+            !receiver_reply_msg.is_empty(),
+            "expected non-empty receiver reply msg"
+        );
+
+        // Step 2: feed receiver's reply back into the FSM to derive sender_key
+        let sender_key = fsm
+            .step("Receivers_Answer", Some(receiver_reply_msg))
+            .expect("Receivers_Answer step failed");
+
+        // Basic sanity checks
+        assert!(!sender_key.is_empty(), "expected non-empty sender_key");
+        assert!(
+            (16..=64).contains(&sender_key.len()),
+            "unexpected sender_key length: {}",
+            sender_key.len()
+        );
+
+        // Optional (strong) check: both sides derived the same key
+        assert_eq!(sender_key, peer_key, "PAKE keys mismatch");
     }
 }

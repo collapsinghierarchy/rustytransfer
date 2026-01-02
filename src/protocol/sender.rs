@@ -18,74 +18,80 @@
 Done.
 */
 use crate::protocol::fsm::*;
+use crate::crypto::pake::{self, *};
 
 pub struct SenderFsm {
     pub state: State,
 }
 
-#[derive(Debug)]
-pub enum Event {
-    PakeStart {
-        pw: Password,
-        rendezvous: RendezvousInfo  
-    },
+impl SenderFsm {
+    pub fn new(pw: Vec<u8>) -> Self {
+        SenderFsm {
+            state: State::Init { role: Role::Sender, pw: Some(pw) },
+        }
+    }
+    
+    pub fn step (&mut self, tag: &str, input: Option<Vec<u8>>) -> Result<Vec<u8>, StepError> {
+        let current = std::mem::replace(&mut self.state, State::Failed("stepped from invalid state".into()));
 
-    KemPkTag {
-        pk_kem: KemPublicKey,
-        tag: MacTag
-    },
+        let (next_state, outbox) = match (current, tag, input) {
+            (State::Init {role: Role::Sender, pw: Some(pw)}, "PakeStart", input) => {
+                let pake_pw = pw.as_slice();
+                let pake_sender_msg = input.ok_or_else(|| StepError::InvalidTransition("Expected input for PakeStart".into()))?;
+                let mut pake_receiver_state = PakeState::start_receiver(pake_pw);
+                let receiver_key = pake_receiver_state.finish(&pake_sender_msg)
+            .expect("Receiver failed to finish");
+                //TODO: transition into the KEM-AUTH state
+                // For this:
+                // - wait for (pk_kem, tag) from Receiver
+                // - verify tag with K_mac
+                // - if MAC ok, encapsulate, derive session key, encrypt file, compute DEM MAC
+                (State::Pake {role: Role::Sender, pake_state: pake_receiver_state}, receiver_key)
+            }
+            (state,tag, input) => {
+                (State::Failed(format!("invalid transition: from {:?} with ({:?},{:?})", state, tag, input)), Vec::new())
+            }
+        };
 
-    KemCtDem {
-        ct_kem: KemCiphertext,
-        dem: DemData
+        self.state = next_state;
+        Ok(outbox)
+
+        
     }
 }
 
-impl SenderFsm {
-    pub fn new() -> Self {
-        SenderFsm {
-            state: State::Init { role: Role::Sender },
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn sender_transitions_into_pake_and_key_len_ok() {
+        let pw = b"Password".to_vec();
+
+        let outbound_msg = {
+            let mut pake_sender_state = PakeState::start_sender(pw.as_slice());
+            pake_sender_state.take_outbound_msg()
+        };
+
+        let mut fsm = SenderFsm::new(pw);
+
+        let receiver_key = fsm
+            .step("PakeStart", Some(outbound_msg))
+            .expect("step failed");
+
+        match &fsm.state {
+            State::Pake { role: Role::Sender, .. } => {}
+            other => panic!("wrong state: {:?}", other),
         }
+
+        const KEY_LEN: usize = 32; // <- set to your protocol’s key length
+        assert_eq!(receiver_key.len(), KEY_LEN, "unexpected receiver key length");
     }
 
-    pub fn step(&mut self, input: Option<Event>) -> Option<StepError> {
-           let current = std::mem::replace(&mut self.state, State::Failed("stepped from invalid state".into()));
-
-        let next_state = match (current, input) {
-            (State::Init {role: Role::Sender}, Some(Event::PakeStart { pw, rendezvous })) => {
-                //Pre-Condition: Generated pw and rendezvouz info
-                //waiting for receiver to connect and init the PAKE
-                //Post-Condition: PAKE started
-                // transition to Pake state, or Failed on error
-                State::Pake {role: Role::Sender, pw}
-
-            }
-            (State::Pake {role: Role::Sender, pw}, Some(Event::KemPkTag { pk_kem, tag })) => {
-                //Pre-Condition: Pake started
-                // Do the PAKE
-                //Post-Condition: PAKE finished -> derived K_mac
-                //transition to KemAuth state, or Failed on error
-                State::KemAuth {role: Role::Sender, kem_pk: pk_kem, mac_key: MacKey}
-            }
-            /*
-            (State::KemAuth {role: Role::Sender}, Some(Event::KemCtDem { ct_kem, dem })) => {
-                //Pre-Condition: received pk_kem and tag from receiver
-                todo!() // Verify tag with K_mac. 
-                //Post-Condition: ...
-                // transition to Smt state, or Failed on error
-            }
-            (State::Smt {role: Role::Sender}, Some(Event::KemCtDem { ct_kem, dem })) => {
-                //Pre-Condition: ...
-                todo!() // ...
-                //Post-Condition: ...
-                // transition to Success/Failed state
-            }
-            */
-            (state, msg) => {
-                State::Failed(format!("invalid transition: {:?} with {:?}", state, msg))
-            }
-        };
-        self.state = next_state;
-        None
+    #[test]
+    fn sender_pakestart_requires_input() {
+        let mut fsm = SenderFsm::new(b"Password".to_vec());
+        let err = fsm.step("PakeStart", None).unwrap_err();
+        println!("got expected error: {:?}", err);
     }
 }

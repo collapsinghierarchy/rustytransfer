@@ -1,7 +1,9 @@
+use crate::crypto::pake::PakeState;
+
 #[derive(Debug)]
 pub enum State {
-    Init {role: Role},
-    Pake {role: Role, pw: Password},
+    Init {role: Role, pw: Option<Vec<u8>>},
+    Pake {role: Role, pake_state: PakeState},
     KemAuth {role: Role, kem_pk: KemPublicKey, mac_key: MacKey},
     Smt {role: Role, dem_key: DemKey, file: FileData},
 

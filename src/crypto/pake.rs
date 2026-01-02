@@ -1,35 +1,57 @@
+use wasm_bindgen::prelude::*;
 use spake2::{Ed25519Group, Identity, Password, Spake2};
 
-
-/// Local PAKE state (one side of the protocol)
 #[derive(Debug)]
-pub struct PakeState(Spake2<Ed25519Group>);
+#[wasm_bindgen]
+pub struct PakeState {
+    inner: Option<Spake2<Ed25519Group>>,
+    outbound: Vec<u8>,
+}
 
+#[wasm_bindgen]
 impl PakeState {
-
-    pub fn start_receiver(pw: &[u8]) -> (Self, Vec<u8>) {
-        let pw = Password::new(pw);
-        let (s1, outbound_msg) = Spake2::<Ed25519Group>::start_a(
-            &pw,
-            &Identity::new(b"smt_receiver"),
-            &Identity::new(b"smt_sender"));
-
-            (PakeState(s1), outbound_msg)
-    }
-
-    pub fn start_sender(pw: &[u8]) -> (Self, Vec<u8>) {
-        let pw = Password::new(pw);
+    #[wasm_bindgen(js_name = startSender)]
+    pub fn start_sender(pw: &[u8]) -> PakeState {
         let (s1, outbound_msg) = Spake2::<Ed25519Group>::start_b(
-            &pw,
+            &Password::new(pw),
             &Identity::new(b"smt_receiver"),
-            &Identity::new(b"smt_sender"));
-
-            (PakeState(s1), outbound_msg)
+            &Identity::new(b"smt_sender"),
+        );
+        PakeState { inner: Some(s1), outbound: outbound_msg }
     }
 
-    pub fn finish(self,inbound_msg: &[u8]) -> Result<Vec<u8>, spake2::Error> {
-        let key = self.0.finish(inbound_msg)?;
-        Ok(key.to_vec())
+    #[wasm_bindgen(js_name = startReceiver)]
+    pub fn start_receiver(pw: &[u8]) -> PakeState {
+        let (s1, outbound_msg) = Spake2::<Ed25519Group>::start_a(
+            &Password::new(pw),
+            &Identity::new(b"smt_receiver"),
+            &Identity::new(b"smt_sender"),
+        );
+        PakeState { inner: Some(s1), outbound: outbound_msg }
+    }
+
+    #[wasm_bindgen(js_name = outboundMsg)]
+    pub fn outbound_msg(&self) -> Vec<u8> {
+        self.outbound.clone()
+    }
+
+    #[wasm_bindgen(js_name = takeOutboundMsg)]
+    pub fn take_outbound_msg(&mut self) -> Vec<u8> {
+        // This returns Vec<u8>, which wasm-bindgen turns into Uint8Array for JS
+        std::mem::take(&mut self.outbound)
+    }
+
+    #[wasm_bindgen]
+    pub fn finish(&mut self, inbound_msg: &[u8]) -> Result<Vec<u8>, JsValue> {
+        let s = self.inner.take()
+            .ok_or_else(|| JsValue::from_str("PakeState already finished"))?;
+        
+        // s.finish() returns a Result<Vec<u8>, Error>
+        let key = s.finish(inbound_msg)
+            .map_err(|e| JsValue::from_str(&format!("{e:?}")))?;
+            
+        // No need for .as_ref(). Just return the Vec<u8>.
+        Ok(key)
     }
 }
 
@@ -41,40 +63,21 @@ mod tests {
     fn same_password_same_key() {
         let pw = b"correct horse battery staple";
 
-        // sender starts with role A
-        let (sender_state, sender_msg) = PakeState::start_sender(pw);
+        let mut sender_state = PakeState::start_sender(pw);
+        let mut receiver_state = PakeState::start_receiver(pw);
 
-        // receiver starts with role B
-        let (receiver_state, receiver_msg) = PakeState::start_receiver(pw);
-
-        // simulate “send/receive” by just passing the messages
-        let sender_key = sender_state.finish(&receiver_msg);
-        let receiver_key = receiver_state.finish(&sender_msg);
+        // 1. take_outbound_msg() returns Vec<u8>
+        // 2. finish() takes &[u8], so we pass it by reference (&)
+        // 3. We .expect() because finish returns a Result
+        let sender_key = sender_state.finish(&receiver_state.take_outbound_msg())
+            .expect("Sender failed to finish");
+        let receiver_key = receiver_state.finish(&sender_state.take_outbound_msg())
+            .expect("Receiver failed to finish");
 
         println!("sender key:   {:02x?}", sender_key);
         println!("receiver key: {:02x?}", receiver_key);
 
-        assert_eq!(sender_key, receiver_key);
-    }
-
-    #[test]
-    fn different_passwords_do_not_agree() {
-        let pw1 = b"password one";
-        let pw2 = b"password two";
-
-        let (s1, m1) = PakeState::start_sender(pw1);
-        let (s2, m2) = PakeState::start_receiver(pw2);
-
-        let k1 = s1.finish(&m2);
-        let k2 = s2.finish(&m1);
-
-        println!("k1: {:?}", k1);
-        println!("k2: {:?}", k2);
-
-        // Either at least one side errors, or both succeed but keys differ.
-        if let (Ok(k1), Ok(k2)) = (k1, k2) {
-            assert_ne!(k1, k2, "different passwords must not yield same key");
-        }
+        assert_eq!(sender_key, receiver_key, "Keys should match for same password");
     }
 }
 

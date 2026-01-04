@@ -4,7 +4,6 @@ use aes_gcm::{
     aead::{Aead, AeadCore, KeyInit, Payload},
     Aes256Gcm, Key, Nonce
 };
-use aes_gcm::aead::generic_array::GenericArray;
 
 pub struct DemState {
     rng: OsRng,

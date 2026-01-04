@@ -1,53 +1,47 @@
 use anyhow::Result;
-use just_webrtc::{
-    DataChannelExt,
-    PeerConnectionExt,
-    SimpleLocalPeerConnection,
-    types::{SessionDescription, ICECandidate, PeerConnectionState}
-};
+use bytes::Bytes;
+use just_webrtc::{DataChannelExt};
+use just_webrtc::platform::{Channel, PeerConnection};
+use just_webrtc::types::{ICECandidate, SDPType};
 
-pub async fn run_remote_peer() -> anyhow::Result<()> {
-    // create remote peer with one unordered data channel
-    let remote = SimpleLocalPeerConnection::build(true).await?;
-    
-    // ... receive (offer, candidates) via your signalling (your WS backend) ...
-    /*
-    remote.set_remote_description(offer).await?;
-    remote.add_ice_candidates(candidates).await?;
+use crate::transport::frames::Frame;
+use crate::transport::websocket::{WsRead, WsRoomTransport};
 
-    let answer = remote.get_local_description().await.unwrap();
-    let answer_candidates = remote.collect_ice_candidates().await?;
-
-    // ... send (answer, answer_candidates) back via your signalling ...
-
-    while remote.state_change().await != PeerConnectionState::Connected {}
-
-    let channel = remote.receive_channel().await.unwrap();
-    channel.wait_ready().await;
-    let msg = channel.receive().await?;
-    println!("Got message from remote: {}", String::from_utf8_lossy(&msg));
-    */
-    Ok(())
+pub struct WebRtcState {
+    pub pc: PeerConnection,
+    pub ch: Channel,
 }
 
-async fn run_local_peer() -> anyhow::Result<()> {
-    // create local peer with one unordered data channel
-    let local = SimpleLocalPeerConnection::build(false).await?;
-    let offer = local.get_local_description().await.unwrap();
-    let candidates = local.collect_ice_candidates().await?;
+impl WebRtcState {
+    pub async fn send_vec(&self, data: Vec<u8>) -> Result<()> {
+        let b = Bytes::from(data);
+        self.ch.send(&b).await?;
+        Ok(())
+    }
 
-    // ... send (offer, candidates) via your signalling (your WS backend) ...
+    pub async fn recv_vec(&self) -> Result<Vec<u8>> {
+        Ok(self.ch.receive().await?.to_vec())
+    }
+}
 
-    // ... receive (answer, answer_candidates) ...
-    /* 
-    local.set_remote_description(answer).await?;
-    local.add_ice_candidates(answer_candidates).await?;
+pub async fn wait_for_sdp_frame(
+    read: &mut WsRead,
+    expected: SDPType,
+) -> Result<(String, Vec<ICECandidate>)> {
+    loop {
+        match WsRoomTransport::recv_frame(read).await? {
+            Frame::Room_Full => continue,
 
-    while local.state_change().await != PeerConnectionState::Connected {}
+            Frame::Offer { sdp, candidates } if expected == SDPType::Offer => {
+                return Ok((sdp, candidates));
+            }
 
-    let channel = local.receive_channel().await.unwrap();
-    channel.wait_ready().await;
-    channel.send("hello remote!".into()).await?;
-    */
-    Ok(())
+            Frame::Answer { sdp, candidates } if expected == SDPType::Answer => {
+                return Ok((sdp, candidates));
+            }
+
+            // ignore anything else and keep waiting
+            _ => continue,
+        }
+    }
 }

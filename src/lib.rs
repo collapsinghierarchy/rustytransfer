@@ -2,6 +2,7 @@
 //mod transport;
 pub mod crypto;
 pub mod protocol;
+pub mod transport;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

@@ -6,6 +6,7 @@ pub type MacTag = [u8; 32];
 
 type HmacSha3_256 = Hmac<Sha3_256>;
 
+#[derive(Debug)]
 pub struct MacState {
     key: MacKey,
 }

@@ -1,6 +1,8 @@
 use rand_core::OsRng;
 use ml_kem::{Ciphertext, Encoded, KemCore, MlKem768, SharedKey,EncodedSizeUser};
 use ml_kem::kem::{Decapsulate, Encapsulate};
+
+#[derive(Debug)]
 pub struct KemState {
     rng: OsRng,
     dk: Option<<MlKem768 as KemCore>::DecapsulationKey>,

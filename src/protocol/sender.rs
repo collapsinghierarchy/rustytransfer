@@ -19,45 +19,101 @@ Done.
 */
 use crate::protocol::fsm::*;
 use crate::crypto::pake::{self, *};
+use crate::crypto::mac::*;
+use crate::crypto::kem::*;
+use crate::crypto::dem::*;
+use ml_kem::{KemCore, EncodedSizeUser, MlKem768, Encoded};
+use ml_kem::array::typenum::Unsigned;
+
+const TAG_LEN: usize = 32;          
+const PK_LEN: usize =
+    <<<MlKem768 as KemCore>::EncapsulationKey as EncodedSizeUser>::EncodedSize as Unsigned>::USIZE;
+
+fn parse_auth_kem_msg(input: &[u8])
+    -> Result<([u8; TAG_LEN], Encoded<<MlKem768 as KemCore>::EncapsulationKey>), &'static str>
+{
+    if input.len() != TAG_LEN + PK_LEN {
+        return Err("bad AUTH_KEM message length");
+    }
+
+    let (tag_bytes, pk_bytes) = input.split_at(TAG_LEN);
+
+    let tag: [u8; TAG_LEN] = tag_bytes.try_into().map_err(|_| "bad tag len")?;
+    let pk_enc: Encoded<<MlKem768 as KemCore>::EncapsulationKey> =
+        pk_bytes.try_into().map_err(|_| "bad pk len")?;
+
+    Ok((tag, pk_enc))
+}
 
 pub struct SenderFsm {
     pub state: State,
+    pub file_data: Vec<u8>,
 }
 
 impl SenderFsm {
     pub fn new(pw: Vec<u8>) -> Self {
         SenderFsm {
             state: State::Init { role: Role::Sender, pw: Some(pw) },
+            file_data: Vec::new(),
         }
     }
-    
-    pub fn step (&mut self, tag: &str, input: Option<Vec<u8>>) -> Result<Vec<u8>, StepError> {
+
+    pub fn step (&mut self, tag: &str, input: Option<Vec<u8>>) -> Result<Option<Vec<u8>>, StepError> {
         let current = std::mem::replace(&mut self.state, State::Failed("stepped from invalid state".into()));
 
         let (next_state, outbox) = match (current, tag, input) {
-            (State::Init {role: Role::Sender, pw: Some(pw)}, "PakeStart", input) => {
+            (State::Init {role: Role::Sender, pw: Some(pw)}, "PAKE_START", input) => {
                 let pake_pw = pw.as_slice();
                 let pake_sender_msg = input.ok_or_else(|| StepError::InvalidTransition("Expected input for PakeStart".into()))?;
                 let mut pake_receiver_state = PakeState::start_receiver(pake_pw);
                 let receiver_key = pake_receiver_state.finish(&pake_sender_msg)
             .expect("Receiver failed to finish");
-                //TODO: transition into the KEM-AUTH state
-                // For this:
-                // - wait for (pk_kem, tag) from Receiver
-                // - verify tag with K_mac
-                // - if MAC ok, encapsulate, derive session key, encrypt file, compute DEM MAC
-                (State::Pake {role: Role::Sender, pake_state: pake_receiver_state}, receiver_key)
+                (State::Pake {role: Role::Sender, pake_state: pake_receiver_state, shared_key: Some(receiver_key)}, None)
             }
-            (state,tag, input) => {
-                (State::Failed(format!("invalid transition: from {:?} with ({:?},{:?})", state, tag, input)), Vec::new())
+            (State::Pake {role: Role::Sender, pake_state: pake_receiver_state, shared_key}, "RECEIVED_AUTH_KEM", input) => {
+                let input_bytes: &[u8] = input.as_deref().ok_or( StepError::InvalidTransition("Input is malformed".into()))?;
+                let (tag, pk_enc) = parse_auth_kem_msg(input_bytes)?;
+                let shared_key_bytes: &[u8] = shared_key.as_deref().ok_or_else(|| StepError::InvalidTransition("Missing shared_key".into()))?;
+                let mac = MacState::new(shared_key_bytes);
+                let vfy_flag = mac.verify(&pk_enc, &tag);
+                if !vfy_flag {
+                    return Err(StepError::InvalidTransition("MAC verification failed".into()));
+                }
+                let mut kem = KemState::new();
+                kem.set_public_key_bytes(&pk_enc);
+                let encaps_result = kem.encapsulate();
+
+                let mut dem = DemState::new();
+                let seal = dem.seal(encaps_result.shared_secret.as_ref(), &self.file_data, &[]).expect("seal failed");
+
+                let tag = mac.tag(encaps_result.ciphertext.as_ref());
+                
+                let mut outbox = Vec::new();
+                outbox.extend_from_slice(tag.as_ref());
+                outbox.extend_from_slice(encaps_result.ciphertext.as_ref());
+                outbox.extend_from_slice(seal.nonce.as_ref());
+                outbox.extend_from_slice(seal.ciphertext.as_ref());
+
+                (State::KemAuth { role: Role::Sender, mac: Some(mac), kem: Some(kem) }, Some(outbox))
+             }
+              (State::KemAuth { role: Role::Sender, mac: Some(mac), kem: Some(kem) }, "FIN", input) => {
+                let bytes: &[u8] = input
+                    .as_deref()
+                    .ok_or_else(|| StepError::InvalidTransition("FIN expected input bytes".into()))?;
+
+                if bytes != b"FIN" {
+                    return Err(StepError::InvalidTransition("FIN payload must be b\"FIN\"".into()));
+                }
+                (State::Success("Finished!".to_string()), None)
+              }
+              (state,tag, input) => {
+                (State::Failed(format!("invalid transition: from {:?} with ({:?},{:?})", state, tag, input)), None)
             }
         };
-
         self.state = next_state;
         Ok(outbox)
-
+        }
         
-    }
 }
 
 #[cfg(test)]
@@ -83,9 +139,6 @@ mod tests {
             State::Pake { role: Role::Sender, .. } => {}
             other => panic!("wrong state: {:?}", other),
         }
-
-        const KEY_LEN: usize = 32; // <- set to your protocol’s key length
-        assert_eq!(receiver_key.len(), KEY_LEN, "unexpected receiver key length");
     }
 
     #[test]

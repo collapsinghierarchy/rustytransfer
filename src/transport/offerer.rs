@@ -4,9 +4,12 @@ use just_webrtc::{
     platform::{Channel, PeerConnection},
     types::{PeerConnectionState, SessionDescription, SDPType},
 };
+use tokio::time::timeout;
+use std::time::Duration;
 
 use crate::transport::frames::Frame;
 use crate::transport::websocket::WsRoomTransport;
+use crate::transport::websocket::wait_for_room_full;
 use crate::transport::webrtc::WebRtcState;
 use crate::transport::webrtc::wait_for_sdp_frame;
 
@@ -23,6 +26,8 @@ pub async fn connect_offerer(app_id: &str) -> Result<WebRtcState> {
         .await
         .context("missing local offer")?;
     let offer_candidates = pc.collect_ice_candidates().await?;
+    // wait until the other peer is present (add a timeout!)
+    timeout(Duration::from_secs(60), wait_for_room_full(&mut read)).await??;
 
     // Send offer
     WsRoomTransport::send_frame(

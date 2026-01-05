@@ -61,6 +61,18 @@ impl WsRoomTransport {
 
 }
 
+pub async fn wait_for_room_full(
+    read: &mut WsRead,
+) -> Result<bool> {
+    loop {
+        match WsRoomTransport::recv_frame(read).await? {
+            Frame::Room_Full => return Ok(true),
+            // ignore anything else and keep waiting
+            _ => continue,
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

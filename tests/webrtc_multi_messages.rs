@@ -3,7 +3,6 @@ use std::time::Duration;
 use tokio::time::timeout;
 use uuid::Uuid;
 
-// Adjust paths if your module layout differs:
 use rustytransfer::transport::answerer::connect_answerer;
 use rustytransfer::transport::offerer::connect_offerer;
 

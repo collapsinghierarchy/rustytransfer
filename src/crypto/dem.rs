@@ -5,6 +5,8 @@ use aes_gcm::{
     Aes256Gcm, Key, Nonce
 };
 
+pub const NONCE_PREFIX_LEN: usize = 8;
+
 pub struct DemState {
     rng: OsRng,
 }
@@ -32,6 +34,57 @@ impl DemState {
         let aes_key = Key::<Aes256Gcm>::from_slice(key);
         let cipher = Aes256Gcm::new(&aes_key);
         cipher.decrypt(Nonce::from_slice(&seal.nonce), seal.ciphertext.as_ref())
+    }
+}
+
+fn make_nonce(prefix: &[u8; NONCE_PREFIX_LEN], ctr: u32) -> [u8; 12] {
+    let mut n = [0u8; 12];
+    n[0..8].copy_from_slice(prefix);
+    n[8..12].copy_from_slice(&ctr.to_be_bytes());
+    n
+}
+
+pub struct DemStreamSealer {
+    cipher: Aes256Gcm,
+    prefix: [u8; NONCE_PREFIX_LEN],
+    ctr: u32,
+}
+
+impl DemStreamSealer {
+    pub fn new(key: &[u8; 32]) -> Self {
+        let cipher = Aes256Gcm::new(Key::<Aes256Gcm>::from_slice(key));
+        let mut prefix = [0u8; NONCE_PREFIX_LEN];
+        OsRng.fill_bytes(&mut prefix);
+        Self { cipher, prefix, ctr: 0 }
+    }
+
+    pub fn nonce_prefix(&self) -> [u8; NONCE_PREFIX_LEN] {
+        self.prefix
+    }
+
+    pub fn seal_chunk(&mut self, plaintext: &[u8]) -> Result<Vec<u8>, aes_gcm::Error> {
+        let nonce_bytes = make_nonce(&self.prefix, self.ctr);
+        self.ctr = self.ctr.wrapping_add(1);
+        self.cipher.encrypt(Nonce::from_slice(&nonce_bytes), plaintext)
+    }
+}
+
+pub struct DemStreamOpener {
+    cipher: Aes256Gcm,
+    prefix: [u8; NONCE_PREFIX_LEN],
+    ctr: u32,
+}
+
+impl DemStreamOpener {
+    pub fn new(key: &[u8; 32], prefix: [u8; NONCE_PREFIX_LEN]) -> Self {
+        let cipher = Aes256Gcm::new(Key::<Aes256Gcm>::from_slice(key));
+        Self { cipher, prefix, ctr: 0 }
+    }
+
+    pub fn open_chunk(&mut self, ciphertext: &[u8]) -> Result<Vec<u8>, aes_gcm::Error> {
+        let nonce_bytes = make_nonce(&self.prefix, self.ctr);
+        self.ctr = self.ctr.wrapping_add(1);
+        self.cipher.decrypt(Nonce::from_slice(&nonce_bytes), ciphertext)
     }
 }
 

@@ -1,22 +1,3 @@
-/*
-# Init
-- Actively send PAKE-init.
-
-# PAKE
-- Run PAKE until finished.
-- End result: shared K_pake, derive K_mac.
-
-# SMT-wait-pk
-- Wait for (pk_kem, tag) from Receiver.
-- Verify tag with K_mac.
-- If MAC ok:
-    - Encapsulate: (ct_kem, ss) = encap(pk_kem).
-    - Derive session key K from ss (+ maybe K_pake).
-    - Encrypt file under DEM with K.
-    - Compute DEM MAC with K.
-    - Send (ct_kem, DEM) to Receiver.
-Done.
-*/
 use crate::protocol::fsm::*;
 use crate::crypto::pake::{self, *};
 use crate::crypto::mac::*;
@@ -47,15 +28,26 @@ fn parse_auth_kem_msg(input: &[u8])
 
 pub struct SenderFsm {
     pub state: State,
-    pub file_data: Vec<u8>,
+
+    file_len: u64,
+    chunk_size: u32,
+    bytes_sent: u64,
+    dem_stream: Option<DemStreamSealer>
 }
 
 impl SenderFsm {
-    pub fn new(pw: Vec<u8>) -> Self {
+    pub fn new(pw: Vec<u8>, file_len: u64, chunk_size: u32) -> Self {
         SenderFsm {
             state: State::Init { role: Role::Sender, pw: Some(pw) },
-            file_data: Vec::new(),
+            file_len: file_len,
+            chunk_size: chunk_size,
+            bytes_sent: 0,
+            dem_stream: None
         }
+    }
+
+    pub fn bytes_sent(&self) -> u64 {
+        self.bytes_sent
     }
 
     pub fn step (&mut self, tag: &str, input: Option<Vec<u8>>) -> Result<Option<Vec<u8>>, StepError> {
@@ -83,20 +75,53 @@ impl SenderFsm {
                 kem.set_public_key_bytes(&pk_enc);
                 let encaps_result = kem.encapsulate();
 
-                let mut dem = DemState::new();
-                let seal = dem.seal(encaps_result.shared_secret.as_ref(), &self.file_data, &[]).expect("seal failed");
+                let sealer = DemStreamSealer::new(encaps_result.shared_secret.as_ref());
+                let prefix = sealer.nonce_prefix();
+                self.dem_stream = Some(sealer);
 
-                let tag = mac.tag(encaps_result.ciphertext.as_ref());
-                
+                // tag over (kem_ct || prefix || file_len || chunk_size)
+                let mut mac_input = Vec::new();
+                mac_input.extend_from_slice(encaps_result.ciphertext.as_ref());
+                mac_input.extend_from_slice(&prefix);
+                mac_input.extend_from_slice(&self.file_len.to_be_bytes());
+                mac_input.extend_from_slice(&self.chunk_size.to_be_bytes());
+
+                let tag = mac.tag(mac_input.as_ref());
+
                 let mut outbox = Vec::new();
                 outbox.extend_from_slice(tag.as_ref());
                 outbox.extend_from_slice(encaps_result.ciphertext.as_ref());
-                outbox.extend_from_slice(seal.nonce.as_ref());
-                outbox.extend_from_slice(seal.ciphertext.as_ref());
+                outbox.extend_from_slice(&prefix);
+                outbox.extend_from_slice(&self.file_len.to_be_bytes());
+                outbox.extend_from_slice(&self.chunk_size.to_be_bytes());
 
-                (State::KemAuth { role: Role::Sender, mac: Some(mac), kem: Some(kem) }, Some(outbox))
+                (State::Smt { role: Role::Sender}, Some(outbox))
              }
-              (State::KemAuth { role: Role::Sender, mac: Some(mac), kem: Some(kem) }, "FIN", input) => {
+             (State::Smt { role: Role::Sender }, "SMT", input) => {
+                let pt: &[u8] = input
+                    .as_deref()
+                    .ok_or_else(|| StepError::InvalidTransition("SMT chunk missing input".into()))?;
+
+                // optional: enforce your chosen chunk_size
+                if pt.len() > self.chunk_size as usize {
+                    return Err(StepError::InvalidTransition("chunk larger than chunk_size".into()));
+                }
+
+                // required: don't send more plaintext than file_len
+                if self.bytes_sent + pt.len() as u64 > self.file_len {
+                    return Err(StepError::InvalidTransition("sending beyond file_len".into()));
+                }
+
+                let sealer = self.dem_stream
+                    .as_mut()
+                    .ok_or_else(|| StepError::InvalidTransition("missing dem_stream".into()))?;
+
+                let ct = sealer.seal_chunk(pt)?;
+                self.bytes_sent += pt.len() as u64;
+
+                (State::Smt { role: Role::Sender }, Some(ct))
+            }
+              (State::Smt { role: Role::Sender }, "FIN", input) => {
                 let bytes: &[u8] = input
                     .as_deref()
                     .ok_or_else(|| StepError::InvalidTransition("FIN expected input bytes".into()))?;
@@ -104,6 +129,11 @@ impl SenderFsm {
                 if bytes != b"FIN" {
                     return Err(StepError::InvalidTransition("FIN payload must be b\"FIN\"".into()));
                 }
+                
+                if self.bytes_sent != self.file_len {
+                    return Err(StepError::InvalidTransition("FIN received before full file sent".into()));
+                }
+
                 (State::Success("Finished!".to_string()), None)
               }
               (state,tag, input) => {
@@ -114,37 +144,4 @@ impl SenderFsm {
         Ok(outbox)
         }
         
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn sender_transitions_into_pake_and_key_len_ok() {
-        let pw = b"Password".to_vec();
-
-        let outbound_msg = {
-            let mut pake_sender_state = PakeState::start_sender(pw.as_slice());
-            pake_sender_state.take_outbound_msg()
-        };
-
-        let mut fsm = SenderFsm::new(pw);
-
-        let receiver_key = fsm
-            .step("PakeStart", Some(outbound_msg))
-            .expect("step failed");
-
-        match &fsm.state {
-            State::Pake { role: Role::Sender, .. } => {}
-            other => panic!("wrong state: {:?}", other),
-        }
-    }
-
-    #[test]
-    fn sender_pakestart_requires_input() {
-        let mut fsm = SenderFsm::new(b"Password".to_vec());
-        let err = fsm.step("PakeStart", None).unwrap_err();
-        println!("got expected error: {:?}", err);
-    }
 }

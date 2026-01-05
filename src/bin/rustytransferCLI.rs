@@ -1,6 +1,7 @@
 use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand};
 use std::{path::PathBuf, time::Duration};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::time::timeout;
 use uuid::Uuid;
 
@@ -8,7 +9,6 @@ use rustytransfer::protocol::fsm::{Role, State};
 use rustytransfer::protocol::receiver::ReceiverFsm;
 use rustytransfer::protocol::sender::SenderFsm;
 
-// Adjust these imports to your module layout if needed:
 use rustytransfer::transport::answerer::connect_answerer;
 use rustytransfer::transport::offerer::connect_offerer;
 
@@ -17,6 +17,10 @@ fn must_some(label: &str, v: Option<Vec<u8>>) -> Vec<u8> {
 }
 
 const NET_TIMEOUT: Duration = Duration::from_secs(90);
+const CHUNK_TIMEOUT: Duration = Duration::from_secs(90);
+
+// Good default that stays well under typical DC message limits even after GCM tag.
+const DEFAULT_CHUNK_SIZE: u32 = 8 * 1024;
 
 #[derive(Parser, Debug)]
 #[command(name = "rustytransfer")]
@@ -28,39 +32,42 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Command {
-    /// Send an encrypted file (offerer / side A). Generates an App ID and prints it.
+    /// Send a file (offerer / side A). Prints an App ID you share with receiver.
     Send {
-        /// Password / shared secret (same on both sides)
         #[arg(long)]
         password: String,
 
-        /// Path to file to send
         #[arg(long)]
         file: PathBuf,
+
+        /// Plaintext chunk size for streaming SMT
+        #[arg(long, default_value_t = DEFAULT_CHUNK_SIZE)]
+        chunk_size: u32,
     },
 
-    /// Receive an encrypted file (answerer / side B)
+    /// Receive a file (answerer / side B)
     Recv {
-        /// Password / shared secret (same on both sides)
         #[arg(long)]
         password: String,
 
-        /// Shared room UUID (paste what sender printed)
         #[arg(long)]
         app_id: String,
 
-        /// Where to write the received bytes
         #[arg(long)]
         out: PathBuf,
     },
 }
 
-#[tokio::main]
+#[tokio::main(flavor = "multi_thread", worker_threads = 2)]
 async fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.cmd {
-        Command::Send { password, file } => send_cmd(password, file).await?,
+        Command::Send {
+            password,
+            file,
+            chunk_size,
+        } => send_cmd(password, file, chunk_size).await?,
         Command::Recv {
             password,
             app_id,
@@ -71,25 +78,34 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-/// Side A (sender/offerer): waits for receiver's PAKE_START, runs FSM, sends encrypted payload.
-async fn send_cmd(password: String, file: PathBuf) -> Result<()> {
+async fn send_cmd(password: String, file: PathBuf, chunk_size: u32) -> Result<()> {
     let app_id = Uuid::new_v4().to_string();
-    println!("App ID (share this with receiver): {}", app_id);
+    println!("App ID (share this with receiver): {app_id}");
 
-    let file_bytes = std::fs::read(&file)
-        .with_context(|| format!("failed to read file: {}", file.display()))?;
-    println!("File is ready! Size: {} bytes", file_bytes.len());
+    // Open file for streaming
+    let mut f = tokio::fs::File::open(&file)
+        .await
+        .with_context(|| format!("failed to open file: {}", file.display()))?;
+    let meta = f
+        .metadata()
+        .await
+        .with_context(|| format!("failed to stat file: {}", file.display()))?;
+    let file_len = meta.len();
 
-    // 1) Connect WebRTC once (signaling + datachannel)
+    println!("File is ready! Size: {file_len} bytes");
+    println!("Waiting for receiver to join room...");
+
+    // Connect offerer (includes room-full barrier + datachannel open in your connect_offerer)
     let st = timeout(NET_TIMEOUT, connect_offerer(&app_id))
         .await
         .context("offerer connect timeout")??;
 
-    // 2) Run Sender FSM
-    let mut sender = SenderFsm::new(password.into_bytes());
-    sender.file_data = file_bytes;
+    println!("Connected! Running sender FSM...");
 
-    // Wait for PAKE_START from receiver
+    // Sender FSM init
+    let mut sender = SenderFsm::new(password.into_bytes(), file_len, chunk_size);
+
+    // --- PAKE ---
     let pake_msg_1 = timeout(NET_TIMEOUT, st.recv_vec())
         .await
         .context("timeout waiting for PAKE_START")??;
@@ -101,7 +117,7 @@ async fn send_cmd(password: String, file: PathBuf) -> Result<()> {
         bail!("sender PAKE_START unexpectedly produced output");
     }
 
-    // Extract PAKE_ANSWER from internal PakeState and send it
+    // Extract PAKE_ANSWER and send (same pattern you already had)
     let pake_msg_2 = match &mut sender.state {
         State::Pake {
             role: Role::Sender,
@@ -112,28 +128,56 @@ async fn send_cmd(password: String, file: PathBuf) -> Result<()> {
     };
     st.send_vec(pake_msg_2).await?;
 
-    // Wait for AUTH_KEM from receiver
+    // --- AUTH_KEM from receiver ---
     let auth_kem = timeout(NET_TIMEOUT, st.recv_vec())
         .await
         .context("timeout waiting for AUTH_KEM")??;
 
-    // Sender consumes AUTH_KEM and emits SMT payload (encrypted file)
-    let smt_payload = must_some(
-        "sender RECEIVED_AUTH_KEM outbox (SMT payload)",
+    // Sender consumes AUTH_KEM and emits SMT HEADER (small)
+    let smt_header = must_some(
+        "sender RECEIVED_AUTH_KEM outbox (SMT header)",
         sender
             .step("RECEIVED_AUTH_KEM", Some(auth_kem))
             .context("sender step(RECEIVED_AUTH_KEM) failed")?,
     );
-    st.send_vec(smt_payload).await?;
+    st.send_vec(smt_header).await?;
 
-    // Wait for FIN
+    // --- SMT streaming: read chunks, encrypt, send ---
+    let chunk_sz = chunk_size as usize;
+    let mut buf = vec![0u8; chunk_sz];
+
+    let mut last_report: u64 = 0;
+    loop {
+        let n = f
+            .read(&mut buf)
+            .await
+            .with_context(|| format!("failed reading file: {}", file.display()))?;
+        if n == 0 {
+            break;
+        }
+
+        let pt = buf[..n].to_vec();
+        let ct = must_some(
+            "sender SMT chunk outbox",
+            sender
+                .step("SMT", Some(pt))
+                .context("sender step(SMT chunk) failed")?,
+        );
+
+        st.send_vec(ct).await?;
+        let sent = sender.bytes_sent();
+        if sent - last_report >= 1024 * 1024 || sent == file_len {
+            println!("sent {sent}/{file_len} bytes");
+            last_report = sent;
+        }
+    }
+
+    // --- FIN ---
     let fin = timeout(NET_TIMEOUT, st.recv_vec())
         .await
         .context("timeout waiting for FIN")??;
 
-    let out = sender
-        .step("FIN", Some(fin))
-        .context("sender step(FIN) failed")?;
+    let out = sender.step("FIN", Some(fin)).context("sender step(FIN) failed")?;
     if out.is_some() {
         bail!("sender FIN unexpectedly produced output");
     }
@@ -145,18 +189,16 @@ async fn send_cmd(password: String, file: PathBuf) -> Result<()> {
     Ok(())
 }
 
-/// Side B (receiver/answerer): starts PAKE, receives encrypted payload, decrypts, writes file.
 async fn recv_cmd(password: String, app_id: String, out: PathBuf) -> Result<()> {
-    // 1) Connect WebRTC once (signaling + datachannel)
+    // Connect answerer
     let st = timeout(NET_TIMEOUT, connect_answerer(&app_id))
         .await
         .context("answerer connect timeout")??;
     println!("Connected! Running receiver FSM...");
 
-    // 2) Run Receiver FSM
     let mut receiver = ReceiverFsm::new(password.into_bytes());
 
-    // Receiver sends PAKE_START first
+    // --- PAKE ---
     let pake_msg_1 = must_some(
         "receiver PAKE_START outbox",
         receiver
@@ -165,7 +207,6 @@ async fn recv_cmd(password: String, app_id: String, out: PathBuf) -> Result<()> 
     );
     st.send_vec(pake_msg_1).await?;
 
-    // Wait for PAKE_ANSWER
     let pake_msg_2 = timeout(NET_TIMEOUT, st.recv_vec())
         .await
         .context("timeout waiting for PAKE_ANSWER")??;
@@ -179,32 +220,69 @@ async fn recv_cmd(password: String, app_id: String, out: PathBuf) -> Result<()> 
     );
     st.send_vec(auth_kem).await?;
 
-    // Wait for SMT payload (encrypted file)
-    let smt_payload = timeout(NET_TIMEOUT, st.recv_vec())
+    // --- SMT header ---
+    let smt_header = timeout(NET_TIMEOUT, st.recv_vec())
         .await
-        .context("timeout waiting for SMT payload")??;
+        .context("timeout waiting for SMT header")??;
 
-    // Receiver decrypts SMT payload -> plaintext
-    let plaintext = must_some(
-        "receiver SMT outbox (plaintext)",
-        receiver
-            .step("SMT", Some(smt_payload))
-            .context("receiver step(SMT) failed")?,
+    let outbox = receiver
+        .step("SMT", Some(smt_header))
+        .context("receiver step(SMT header) failed")?;
+    if outbox.is_some() {
+        bail!("receiver SMT header unexpectedly produced output");
+    }
+
+    // Prepare output file
+    let mut out_f = tokio::fs::File::create(&out)
+        .await
+        .with_context(|| format!("failed to create output: {}", out.display()))?;
+
+    let file_len = receiver.file_len(); // needs to exist (or use your actual accessor/field)
+    println!(
+        "Receiving {} bytes (chunk_size={})...",
+        file_len,
+        receiver.chunk_size()
     );
 
-    // Receiver emits FIN 
+    // --- SMT chunks: recv, decrypt, write ---
+    let mut last_report: u64 = 0;
+    while receiver.bytes_received() < file_len {
+        let ct = timeout(CHUNK_TIMEOUT, st.recv_vec())
+            .await
+            .context("timeout waiting for SMT chunk")??;
+
+        let pt = must_some(
+            "receiver SMT chunk outbox (plaintext)",
+            receiver
+                .step("SMT", Some(ct))
+                .context("receiver step(SMT chunk) failed")?,
+        );
+
+        out_f
+            .write_all(&pt)
+            .await
+            .with_context(|| format!("failed writing output: {}", out.display()))?;
+
+        // progress every 1 MiB
+        let got = receiver.bytes_received();
+        if got - last_report >= 1024 * 1024 || got == file_len {
+            println!("received {got}/{file_len} bytes");
+            last_report = got;
+        }
+    }
+
+    out_f.flush().await.ok();
+
+    // Finalize SMT -> FIN
     let fin = must_some(
-        "receiver SMT(FIN) outbox",
-        receiver.step("SMT", None).context("receiver FIN step failed")?,
+        "receiver SMT finalize outbox (FIN)",
+        receiver.step("SMT", None).context("receiver SMT finalize failed")?,
     );
     st.send_vec(fin).await?;
 
     if !matches!(receiver.state, State::Success(_)) {
         bail!("receiver did not reach Success state");
     }
-
-    std::fs::write(&out, &plaintext)
-        .with_context(|| format!("failed to write output: {}", out.display()))?;
 
     println!("wrote {}", out.display());
     Ok(())

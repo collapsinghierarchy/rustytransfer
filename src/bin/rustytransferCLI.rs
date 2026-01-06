@@ -7,8 +7,9 @@ use tokio::time::timeout;
 use rustytransfer::protocol::fsm::{Role, State};
 use rustytransfer::protocol::receiver::ReceiverFsm;
 use rustytransfer::protocol::sender::SenderFsm;
-use rustytransfer::cli_ui::graphics::spinner;
-use rustytransfer::cli_ui::graphics::bytes_bar; 
+
+use rustytransfer::cli_ui::graphics::{bytes_bar, spinner};
+use rustytransfer::cli_ui::graphics::pick_file_tui;
 
 use rustytransfer::transport::answerer::connect_answerer;
 use rustytransfer::transport::offerer::connect_offerer;
@@ -36,14 +37,19 @@ struct Cli {
 enum Command {
     /// Send a file. Prints a share code NNNN-ABCDE (digits = rendezvous, letters = password).
     Send {
-        #[arg(long)]
-        file: PathBuf,
-
         /// Optional override (must be 5 uppercase letters). If omitted, generated automatically.
         #[arg(long)]
         password: Option<String>,
 
-        /// Plaintext chunk size for streaming SMT (defaults to 8KiB)
+        /// If omitted and --pick is not set, a TUI file picker opens.
+        #[arg(long)]
+        file: Option<PathBuf>,
+
+        /// Force opening the TUI file picker (ignores --file)
+        #[arg(long, default_value_t = false)]
+        pick: bool,
+
+        /// Plaintext chunk size for streaming SMT
         #[arg(long, default_value_t = DEFAULT_CHUNK_SIZE)]
         chunk_size: u32,
     },
@@ -64,21 +70,39 @@ async fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.cmd {
         Command::Send {
-            file,
             password,
+            file,
+            pick,
             chunk_size,
-        } => send_cmd(file, password, chunk_size).await,
-        Command::Recv { code, out } => recv_cmd(code, out).await,
+        } => {
+            send_cmd(password, file, pick, chunk_size).await?;
+        }
+        Command::Recv { code, out } => {
+            recv_cmd(code, out).await?;
+        }
     }
+    Ok(())
 }
 
-async fn send_cmd(file: PathBuf, password: Option<String>, chunk_size: u32) -> Result<()> {
+async fn send_cmd(
+    password: Option<String>,
+    file: Option<PathBuf>,
+    pick: bool,
+    chunk_size: u32,
+) -> Result<()> {
+    // Pick file first (before networking)
+    let file: PathBuf = match (pick, file) {
+        (false, Some(p)) => p,
+        _ => {
+            tokio::task::spawn_blocking(|| pick_file_tui(None))
+                .await
+                .context("file picker task join failed")??
+        }
+    };
+
     // password: 5 uppercase letters
-    let pw5 = match password {
+    let pw5: String = match password {
         Some(p) => {
-            // reuse rendezvous validation helpers
-            // (format_share_code() validates both components)
-            // We just validate here by trying to normalize with a dummy code.
             if p.len() != 5 || !p.chars().all(|c| c.is_ascii_uppercase()) {
                 bail!("--password must be exactly 5 uppercase letters (e.g. ABCDE)");
             }
@@ -119,8 +143,7 @@ async fn send_cmd(file: PathBuf, password: Option<String>, chunk_size: u32) -> R
     spin.finish_and_clear();
 
     // FSM
-    // Expected: SenderFsm::new(pw, file_len, chunk_size)
-    // If your SenderFsm::new still only takes (pw), change the next line accordingly and call your setter.
+    // NOTE: this assumes your SenderFsm::new takes (pw, file_len, chunk_size)
     let mut sender = SenderFsm::new(pw5.into_bytes(), file_len, chunk_size);
 
     // --- PAKE ---
@@ -261,9 +284,6 @@ async fn recv_cmd(code: String, out: PathBuf) -> Result<()> {
         .await
         .with_context(|| format!("failed to create output: {}", out.display()))?;
 
-    // These should exist on ReceiverFsm:
-    //   fn file_len(&self) -> u64
-    //   fn bytes_received(&self) -> u64
     let total = receiver.file_len();
     let pb = bytes_bar(total, "Receiving");
 

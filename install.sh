@@ -1,64 +1,35 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL="${REPO_URL:-https://github.com/collapsinghierarchy/rustytransfer.git}"
-BRANCH_OR_TAG="${BRANCH_OR_TAG:-main}"
+BIN_NAME="${BIN_NAME:-rustytransfer}"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 
-need_cmd() {
-  command -v "$1" >/dev/null 2>&1
-}
-
-echo "== rustytransfer install from source =="
-
-if ! need_cmd git; then
-  echo "ERROR: git is required. Install it with your package manager."
+if [ ! -f "Cargo.toml" ]; then
+  echo "ERROR: Cargo.toml not found. Run this script from the repo root."
   exit 1
 fi
 
-if ! need_cmd cargo || ! need_cmd rustc; then
-  cat <<'EOF'
-ERROR: Rust toolchain not found.
+if ! command -v cargo >/dev/null 2>&1; then
+  echo "ERROR: cargo not found. Install Rust from https://rustup.rs"
+  exit 1
+fi
 
-Install Rust (rustup) from: https://rustup.rs
-Then re-run this script.
-EOF
+echo "Building (release)…"
+cargo build --release
+
+BIN_SRC="target/release/${BIN_NAME}"
+if [ ! -f "$BIN_SRC" ]; then
+  echo "ERROR: expected binary at $BIN_SRC"
+  echo "If your binary name differs, run: BIN_NAME=<name> $0"
   exit 1
 fi
 
 mkdir -p "$INSTALL_DIR"
-
-WORKDIR="${WORKDIR:-$HOME/.cache/rustytransfer-src}"
-mkdir -p "$(dirname "$WORKDIR")"
-
-if [ -d "$WORKDIR/.git" ]; then
-  echo "Updating existing checkout in $WORKDIR"
-  git -C "$WORKDIR" fetch --tags --prune
-  git -C "$WORKDIR" checkout "$BRANCH_OR_TAG"
-  git -C "$WORKDIR" pull --ff-only || true
-else
-  echo "Cloning $REPO_URL into $WORKDIR"
-  rm -rf "$WORKDIR"
-  git clone "$REPO_URL" "$WORKDIR"
-  git -C "$WORKDIR" checkout "$BRANCH_OR_TAG"
-fi
-
-echo "Building (release)…"
-cargo -C "$WORKDIR" build --release
-
-BIN_SRC="$WORKDIR/target/release/rustytransfer"
-if [ ! -f "$BIN_SRC" ]; then
-  echo "ERROR: expected binary at $BIN_SRC"
-  echo "If your binary has a different name, edit BIN_SRC in this script."
-  exit 1
-fi
-
-echo "Installing to $INSTALL_DIR"
-install -m 0755 "$BIN_SRC" "$INSTALL_DIR/rustytransfer"
+echo "Installing to $INSTALL_DIR/${BIN_NAME}"
+install -m 0755 "$BIN_SRC" "$INSTALL_DIR/${BIN_NAME}"
 
 echo
-echo "Installed: $INSTALL_DIR/rustytransfer"
-echo "Try: rustytransfer --help"
+echo "Installed: $INSTALL_DIR/${BIN_NAME}"
+echo "Try: ${BIN_NAME} --help"
 echo
-echo "NOTE: Ensure $INSTALL_DIR is in your PATH."
-echo "Example (bash/zsh): echo 'export PATH=\$PATH:$INSTALL_DIR' >> ~/.profile"
+echo "NOTE: Ensure $INSTALL_DIR is on your PATH."

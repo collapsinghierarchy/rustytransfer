@@ -26,7 +26,7 @@ pub async fn connect_offerer(app_id: &str) -> Result<WebRtcState> {
         .await
         .context("missing local offer")?;
     let offer_candidates = pc.collect_ice_candidates().await?;
-    // wait until the other peer is present (add a timeout!)
+    // wait until the other peer is present
     timeout(Duration::from_secs(60), wait_for_room_full(&mut read)).await??;
 
     // Send offer

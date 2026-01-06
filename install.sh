@@ -33,3 +33,11 @@ echo "Installed: $INSTALL_DIR/${BIN_NAME}"
 echo "Try: ${BIN_NAME} --help"
 echo
 echo "NOTE: Ensure $INSTALL_DIR is on your PATH."
+
+# Suggest how to add it (only if it's not already on PATH)
+if [ -d "$INSTALL_DIR" ] && ! echo ":$PATH:" | grep -q ":$INSTALL_DIR:"; then
+  echo
+  echo "To add it for *this* terminal session:"
+  echo "  export PATH=\"$INSTALL_DIR:\$PATH\""
+  echo
+fi

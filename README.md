@@ -2,7 +2,7 @@
 
 Peer-to-peer file transfer over WebRTC with password-based authentication (MAC-via-PAKE) and end-to-end encryption (ML-KEM+AES-GCM). Similar to [croc](https://github.com/schollz/croc) and [wormhole](https://github.com/magic-wormhole/magic-wormhole), but with quantum-safe features and in rust (and less features). Somewhat similar to [noisytransfercli](github.com/collapsinghierarchy/noisytransfercli), which is based on short authentication strings instead of PAKEs and is hella slow and hella large and is written in JS (and instead of porting it to TS (which is necessary), the author decided instead to redo it in rust -> hence rustytransfer (yikes...)). Both share, however, the same signaling [wrtc back-end](https://github.com/collapsinghierarchy/nt-backend-wrtc).
 
-`rustytransfer` is a CLI tool that establishes a WebRTC data channel between two peers and streams the encrypted file directly from sender to receiver. A lightweight rendezvous service is used only for pairing and WebRTC signaling. The back-end 
+`rustytransfer` is a CLI tool that establishes a WebRTC data channel between two peers and streams the encrypted file directly from sender to receiver. A lightweight rendezvous service is used only for pairing and WebRTC signaling. 
 
 > Status: **alpha**. The protocol and implementation are under active development and have not been security-audited, but reviewed by a cryptographer (whatever that means to you). Also everything may change without notice and yada yada.
 

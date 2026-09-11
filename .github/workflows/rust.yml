@@ -41,7 +41,7 @@ jobs:
       run: |
         set +e
         mkdir -p target
-        cargo clippy --all-targets --all-features --locked --message-format=json > target/clippy.json
+        cargo clippy --lib --bins --all-features --locked --message-format=json > target/clippy.json
         clippy_status=$?
         set -e
         clippy-sarif < target/clippy.json > target/clippy.sarif

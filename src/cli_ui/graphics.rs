@@ -56,13 +56,17 @@ pub fn pick_file_tui(start_dir: Option<PathBuf>) -> Result<PathBuf> {
                     .constraints([Constraint::Min(1), Constraint::Length(2)])
                     .split(f.area());
                 let w = explorer.widget();
-                f.render_widget(&w, chunks[0]);
+                if let Some(area) = chunks.first() {
+                    f.render_widget(&w, *area);
+                }
 
                 let help = Paragraph::new(
                     "↑↓ move  h/←/Backspace parent  l/→/Enter open dir  Enter on file selects  q/Esc cancel",
                 )
                 .block(Block::default().borders(Borders::TOP));
-                f.render_widget(help, chunks[1]);
+                if let Some(area) = chunks.get(1) {
+                    f.render_widget(help, *area);
+                }
             })
             .context("draw failed")?;
         let ev: crossterm::event::Event = event::read().context("read event failed")?;

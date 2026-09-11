@@ -53,3 +53,17 @@ jobs:
       with:
         sarif_file: target/clippy.sarif
         category: clippy
+
+  osv-scan:
+    name: OSV-Scanner
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@0c58c542420dfd23fcac08dd9c8ca3cca9c36f1a # v2.5.0
+    with:
+      scan-args: |-
+        --recursive
+        ./
+      results-file-name: osv-results.sarif
+      fail-on-vuln: false
+    permissions:
+      actions: read
+      contents: read
+      security-events: write

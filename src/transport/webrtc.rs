@@ -65,7 +65,10 @@ impl WebRtcState {
             return Ok(first_bytes);
         }
 
-        let total_len = parse_u64_be(&first_bytes[4..12]) as usize;
+        let header_length = first_bytes
+            .get(4..12)
+            .ok_or_else(|| anyhow!("invalid fragment header"))?;
+        let total_len = parse_u64_be(header_length) as usize;
         ensure!(total_len > 0, "invalid fragmented total_len=0");
         ensure!(
             total_len <= MAX_REASSEMBLE_BYTES,

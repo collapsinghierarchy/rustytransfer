@@ -195,11 +195,14 @@ async fn send_cmd(
             break;
         }
 
+        let bytes_sent_before_chunk = sender.bytes_sent();
         let ct = must_some(
             "sender SMT chunk outbox",
             sender
                 .step("SMT", Some(buf[..n].to_vec()))
-                .context("sender step(SMT chunk) failed")?,
+                .context(format!(
+                    "sender step(SMT chunk at {bytes_sent_before_chunk} bytes) failed"
+                ))?,
         );
 
         st.send_vec(ct).await?;

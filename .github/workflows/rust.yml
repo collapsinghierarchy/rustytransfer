@@ -30,6 +30,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Install Rust toolchain
       uses: dtolnay/rust-toolchain@stable
       with:
@@ -45,6 +47,7 @@ jobs:
         clippy_status=$?
         set -e
         clippy-sarif < target/clippy.json > target/clippy.sarif
+        python3 .github/scripts/stabilize-clippy-sarif.py target/clippy.sarif
         sarif-fmt < target/clippy.sarif
         exit "$clippy_status"
     - name: Upload Clippy SARIF report

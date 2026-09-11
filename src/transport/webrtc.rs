@@ -61,7 +61,7 @@ impl WebRtcState {
         let first_bytes = first.to_vec();
 
         // Not a fragment header? return as-is.
-        if first_bytes.len() != 12 || &first_bytes[0..4] != FRAG_MAGIC {
+        if first_bytes.len() != 12 || !first_bytes.starts_with(FRAG_MAGIC) {
             return Ok(first_bytes);
         }
 

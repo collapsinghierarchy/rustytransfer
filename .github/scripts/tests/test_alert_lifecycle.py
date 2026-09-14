@@ -164,6 +164,62 @@ def worker_metadata(
 
 
 class AlertLifecycleTests(unittest.TestCase):
+    def test_collect_alerts_deduplicates_same_dismissed_alert_returned_by_two_filters(self):
+        alert = {
+            "number": 9,
+            "state": "dismissed",
+            "rule": {"id": "clippy::unwrap_used"},
+            "dismissed_reason": "used in tests",
+            "dismissed_comment": "same alert",
+            "fixed_at": "2026-09-14T00:00:00Z",
+            "most_recent_instance": {
+                "location": {"path": "src/example.rs"},
+                "commit_sha": "sha",
+                "category": "Code Scanner",
+            },
+        }
+        endpoint = "repos/owner/repo/code-scanning/alerts"
+        pages = {
+            (endpoint, tuple(sorted({"state": "open", "tool_name": "clippy", "ref": "refs/heads/main", "per_page": 100}.items())), alert_lifecycle.DEFAULT_ACCEPT): [[]],
+            (endpoint, tuple(sorted({"state": "dismissed", "tool_name": "clippy", "ref": "refs/heads/main", "per_page": 100}.items())), alert_lifecycle.DEFAULT_ACCEPT): [[alert]],
+            (endpoint, tuple(sorted({"state": "fixed", "tool_name": "clippy", "ref": "refs/heads/main", "per_page": 100}.items())), alert_lifecycle.DEFAULT_ACCEPT): [[alert]],
+        }
+        client = FixtureClient(pages=pages)
+        records = alert_lifecycle.collect_alerts(
+            client, "owner/repo", "refs/heads/main", "clippy", "Code Scanner"
+        )
+        self.assertEqual([record["alert_number"] for record in records], [9])
+
+    def test_collect_alerts_rejects_conflicting_views_of_one_alert(self):
+        first = {
+            "number": 9,
+            "state": "dismissed",
+            "rule": {"id": "clippy::unwrap_used"},
+            "dismissed_reason": "used in tests",
+            "dismissed_comment": "same alert",
+            "fixed_at": "2026-09-14T00:00:00Z",
+            "most_recent_instance": {
+                "location": {"path": "src/example.rs"},
+                "commit_sha": "sha",
+                "category": "Code Scanner",
+            },
+        }
+        second = {**first, "dismissed_comment": "different alert"}
+        endpoint = "repos/owner/repo/code-scanning/alerts"
+        pages = {
+            (endpoint, tuple(sorted({"state": "open", "tool_name": "clippy", "ref": "refs/heads/main", "per_page": 100}.items())), alert_lifecycle.DEFAULT_ACCEPT): [[]],
+            (endpoint, tuple(sorted({"state": "dismissed", "tool_name": "clippy", "ref": "refs/heads/main", "per_page": 100}.items())), alert_lifecycle.DEFAULT_ACCEPT): [[first]],
+            (endpoint, tuple(sorted({"state": "fixed", "tool_name": "clippy", "ref": "refs/heads/main", "per_page": 100}.items())), alert_lifecycle.DEFAULT_ACCEPT): [[second]],
+        }
+        client = FixtureClient(pages=pages)
+        with self.assertRaisesRegex(
+            alert_lifecycle.LifecycleError,
+            "conflicting alert records returned",
+        ):
+            alert_lifecycle.collect_alerts(
+                client, "owner/repo", "refs/heads/main", "clippy", "Code Scanner"
+            )
+
     def test_worker_metadata_matches_the_fixed_artifact_schema(self):
         normalized = alert_lifecycle.validate_worker_metadata(
             worker_metadata(),

@@ -748,13 +748,41 @@ def collect_alerts(
         for alert in page_items(pages, key=None):
             records.append(normalize_alert(alert, state, ref, tool, category))
 
-    counts = Counter(record["alert_number"] for record in records)
-    for number, occurrence in counts.items():
-        if occurrence > 1:
-            for index, record in enumerate(
-                item for item in records if item["alert_number"] == number
-            ):
-                record["evidence"]["duplicate_api_occurrence"] = index + 1
+    # GitHub can return the same historical alert from more than one state
+    # filter.  In particular, an alert whose API state remains ``dismissed``
+    # after its finding is fixed is returned by both ``state=dismissed`` and
+    # ``state=fixed``.  Those are duplicate views of one alert, not two alert
+    # records.  Deduplicate only when the payload's lifecycle identity is
+    # byte-for-byte equivalent; conflicting payloads remain a hard error.
+    by_number: Dict[int, List[Dict[str, Any]]] = defaultdict(list)
+    for record in records:
+        by_number[record["alert_number"]].append(record)
+
+    deduplicated: List[Dict[str, Any]] = []
+    for number, occurrences in by_number.items():
+        if len(occurrences) == 1:
+            deduplicated.append(occurrences[0])
+            continue
+        comparable = [
+            (
+                record.get("state"),
+                record.get("rule_id"),
+                record.get("path"),
+                record.get("dismissed_reason"),
+                record.get("dismissed_comment"),
+                record.get("fixed_at_present"),
+            )
+            for record in occurrences
+        ]
+        if len(set(comparable)) != 1:
+            raise LifecycleError(
+                "conflicting alert records returned for one alert number: "
+                f"{number}"
+            )
+        # Prefer the first payload, retaining one complete API evidence object.
+        deduplicated.append(occurrences[0])
+
+    records = deduplicated
     return records
 
 

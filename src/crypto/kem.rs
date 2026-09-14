@@ -27,7 +27,9 @@ impl KemState {
 
     pub fn encapsulate(&mut self) -> EncapsulationResult {
         let ek = self.ek.as_ref().expect("Encapsulation key not generated");
-        let (ct, ss) = ek.encapsulate(&mut self.rng).unwrap();
+        let (ct, ss) = ek
+            .encapsulate(&mut self.rng)
+            .unwrap();
         EncapsulationResult {
             ciphertext: ct,
             shared_secret: ss

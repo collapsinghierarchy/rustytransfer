@@ -84,7 +84,9 @@ impl WebRtcState {
                 let c = chunk.to_vec();
 
                 // Under your stated protocol constraints this should never happen.
-                if c.len() == 12 && &c[0..4] == FRAG_MAGIC {
+                if c.len() == 12
+                    && &c[0..4] == FRAG_MAGIC
+                {
                     bail!("unexpected fragment header during reassembly (concurrent recv or interleaving?)");
                 }
 

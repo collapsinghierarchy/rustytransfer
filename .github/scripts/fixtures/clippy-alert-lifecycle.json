@@ -1,0 +1,317 @@
+{
+  "schema": "rustytransfer-clippy-alert-lifecycle-fixtures/v1",
+  "version": 1,
+  "scope": {
+    "ref": "refs/heads/main",
+    "tool": "clippy",
+    "category": "Code Scanner",
+    "workflow": "rust.yml",
+    "job": "clippy",
+    "upload_step": "Upload Clippy SARIF report",
+    "metadata_file": "clippy-upload-metadata.json",
+    "artifact_template": "clippy-sarif-{run_id}-{run_attempt}"
+  },
+  "checks": {
+    "dry_run_branch": "clippy-identity-v5",
+    "dry_run_head": "5ccef7159f79c7f5a61798f6a01498367807fcd0",
+    "dry_run_main": "da428f06ac8d04528f2ef8f2dfed9ad56f6566dc",
+    "parent_sha": "5ccef7159f79c7f5a61798f6a01498367807fcd0",
+    "preintegration_main_sha": "da428f06ac8d04528f2ef8f2dfed9ad56f6566dc"
+  },
+  "temporary_dismissals": [
+    {
+      "name": "pake-finish-missing-errors-doc",
+      "selector": {
+        "path": "src/crypto/pake.rs",
+        "rule_id": "clippy::missing_errors_doc",
+        "source_needle": "pub fn finish(&mut self, inbound_msg: &[u8])"
+      }
+    },
+    {
+      "name": "kem-encapsulate-unwrap",
+      "selector": {
+        "path": "src/crypto/kem.rs",
+        "rule_id": "clippy::unwrap_used",
+        "source_needle": "ek.encapsulate(&mut self.rng).unwrap()"
+      }
+    },
+    {
+      "name": "webrtc-fragment-indexing",
+      "selector": {
+        "path": "src/transport/webrtc.rs",
+        "rule_id": "clippy::indexing_slicing",
+        "source_needle": "&c[0..4] == FRAG_MAGIC"
+      }
+    }
+  ],
+  "phases": {
+    "T0": {
+      "kind": "baseline",
+      "description": "Fresh v5 main baseline; OSV analyses are not in the Clippy scope.",
+      "expected": {
+        "no_clippy_analyses_before_baseline": true,
+        "report_complete": "true",
+        "upload_step": "success",
+        "sarif_processing": "complete",
+        "analysis": "one new analysis for exact commit SHA"
+      },
+      "operations": []
+    },
+    "T1": {
+      "kind": "positive",
+      "description": "Reflow three real findings while preserving their identity and temporary dismissals.",
+      "commit_message": "lifecycle T1 reflow representative Clippy findings",
+      "expected": {
+        "report_complete": "true",
+        "comparison": "the three selected baseline IDs and fingerprints remain unchanged",
+        "cohort": "the three named temporary-dismissal selectors only",
+        "restore_dismissals_before_next_phase": true
+      },
+      "operations": [
+        {
+          "op": "replace_once",
+          "path": "src/crypto/pake.rs",
+          "old": "    pub fn finish(&mut self, inbound_msg: &[u8]) -> Result<Vec<u8>, JsValue> {",
+          "new": "    pub fn finish(\n        &mut self,\n        inbound_msg: &[u8],\n    ) -> Result<Vec<u8>, JsValue> {"
+        },
+        {
+          "op": "replace_once",
+          "path": "src/crypto/kem.rs",
+          "old": "        let (ct, ss) = ek.encapsulate(&mut self.rng).unwrap();",
+          "new": "        let (ct, ss) = ek\n            .encapsulate(&mut self.rng)\n            .unwrap();"
+        },
+        {
+          "op": "replace_once",
+          "path": "src/transport/webrtc.rs",
+          "old": "                if c.len() == 12 && &c[0..4] == FRAG_MAGIC {",
+          "new": "                if c.len() == 12\n                    && &c[0..4] == FRAG_MAGIC\n                {"
+        }
+      ]
+    },
+    "T2": {
+      "kind": "positive",
+      "description": "Rename locals in representative documented function bodies and verify the entire fresh doc cohort.",
+      "commit_message": "lifecycle T2 rename locals in documented bodies",
+      "expected": {
+        "report_complete": "true",
+        "comparison": "all actual baseline doc findings retain their IDs and fingerprints",
+        "doc_rules": [
+          "clippy::missing_errors_doc",
+          "clippy::missing_panics_doc",
+          "clippy::doc_markdown"
+        ],
+        "cached_cohort_count_hint": 36,
+        "cohort_count_source": "fresh T0 snapshot, never a cached SARIF count"
+      },
+      "operations": [
+        {
+          "op": "replace_once",
+          "path": "src/crypto/dem.rs",
+          "old": "        let aes_key = Key::<Aes256Gcm>::from_slice(key);",
+          "new": "        let cipher_key = Key::<Aes256Gcm>::from_slice(key);"
+        },
+        {
+          "op": "replace_once",
+          "path": "src/crypto/dem.rs",
+          "old": "        let cipher = Aes256Gcm::new(&aes_key);",
+          "new": "        let cipher = Aes256Gcm::new(&cipher_key);"
+        },
+        {
+          "op": "replace_once",
+          "path": "src/protocol/receiver.rs",
+          "old": "        let current = std::mem::replace(&mut self.state, State::Failed(\"stepped from invalid state\".into()));",
+          "new": "        let state_before = std::mem::replace(&mut self.state, State::Failed(\"stepped from invalid state\".into()));"
+        },
+        {
+          "op": "replace_once",
+          "path": "src/protocol/receiver.rs",
+          "old": "        let (next_state, outbox) = match (current, tag, input) {",
+          "new": "        let (updated_state, outbox) = match (state_before, tag, input) {"
+        },
+        {
+          "op": "replace_once",
+          "path": "src/protocol/receiver.rs",
+          "old": "        self.state = next_state;",
+          "new": "        self.state = updated_state;"
+        },
+        {
+          "op": "replace_once",
+          "path": "src/transport/websocket.rs",
+          "old": "            let msg = read\n                .next()",
+          "new": "            let message = read\n                .next()"
+        },
+        {
+          "op": "replace_once",
+          "path": "src/transport/websocket.rs",
+          "old": "            let Ok(body) = msg.into_text() else { continue };",
+          "new": "            let Ok(text) = message.into_text() else { continue };"
+        },
+        {
+          "op": "replace_once",
+          "path": "src/transport/websocket.rs",
+          "old": "            if let Ok(frame) = serde_json::from_str::<Frame>(&body) {",
+          "new": "            if let Ok(frame) = serde_json::from_str::<Frame>(&text) {"
+        }
+      ]
+    },
+    "T3": {
+      "kind": "positive",
+      "description": "Replace the fragment-header slice with starts_with; exactly one indexing warning must be fixed.",
+      "commit_message": "lifecycle T3 replace fragment magic indexing",
+      "expected": {
+        "report_complete": "true",
+        "removed_count": 1,
+        "removed": {
+          "path": "src/transport/webrtc.rs",
+          "rule_id": "clippy::indexing_slicing",
+          "source_needle": "&c[0..4] == FRAG_MAGIC"
+        },
+        "no_unrelated_alert_changes": true
+      },
+      "operations": [
+        {
+          "op": "replace_once",
+          "path": "src/transport/webrtc.rs",
+          "old": "&c[0..4] == FRAG_MAGIC",
+          "new": "c.starts_with(FRAG_MAGIC)"
+        }
+      ]
+    },
+    "T4": {
+      "kind": "positive",
+      "description": "Change literal spaces in both receiver KEM error strings; the literal-span oracle must re-key findings.",
+      "commit_message": "lifecycle T4 distinguish literal whitespace",
+      "expected": {
+        "report_complete": "true",
+        "literal_occurrences": 2,
+        "literal_identity": "different literal whitespace must not collide",
+        "comparison": "only baseline findings at the two receiver literal spans may re-key"
+      },
+      "operations": [
+        {
+          "op": "replace_all",
+          "path": "src/protocol/receiver.rs",
+          "old": "Bad KEM ciphertext length",
+          "new": "Bad  KEM ciphertext length",
+          "expected_count": 2
+        }
+      ]
+    },
+    "T5": {
+      "kind": "known_limitation",
+      "description": "Seed two comment-distinguished identical findings, dismiss the survivor, delete the first source duplicate, and record the ordinal limitation.",
+      "commit_message_seed": "lifecycle T5 seed duplicate oracle findings",
+      "commit_message_delete_first": "lifecycle T5 delete first duplicate oracle finding",
+      "expected": {
+        "report_complete": "true",
+        "oracle_rule_id": "clippy::unwrap_used",
+        "oracle_path": "src/transport/webrtc.rs",
+        "oracle_comments": [
+          "T5_ORACLE_A",
+          "T5_ORACLE_B"
+        ],
+        "known_failure_status": "LIMITATION/FAIL",
+        "never_pass": true,
+        "restore_temp_dismissals_before_seed_revert": true
+      },
+      "seed_operations": [
+        {
+          "op": "replace_once",
+          "path": "src/transport/webrtc.rs",
+          "old": "fn parse_u64_be(b: &[u8]) -> u64 {\n    u64::from_be_bytes(b.try_into().unwrap())\n}",
+          "new": "fn parse_u64_be(b: &[u8]) -> u64 {\n    let _: [u8;8] = b.try_into().unwrap(); // T5_ORACLE_A\n    let _: [u8;8] = b.try_into().unwrap(); // T5_ORACLE_B\n    u64::from_be_bytes(b.try_into().unwrap())\n}"
+        }
+      ],
+      "delete_first_operations": [
+        {
+          "op": "replace_once",
+          "path": "src/transport/webrtc.rs",
+          "old": "    let _: [u8;8] = b.try_into().unwrap(); // T5_ORACLE_A\n",
+          "new": ""
+        }
+      ]
+    },
+    "T6": {
+      "kind": "negative",
+      "description": "Insert a library compile_error marker; Clippy must fail before upload and leave alert state unchanged.",
+      "commit_message": "lifecycle T6 prove compile failure skips upload",
+      "expected": {
+        "report_complete": null,
+        "clippy_job": "failure",
+        "upload_step": "skipped",
+        "analysis": "none at exact failure SHA",
+        "alert_states": "unchanged",
+        "report_build_failure": true
+      },
+      "operations": [
+        {
+          "op": "replace_once",
+          "path": "src/lib.rs",
+          "old": "//#[cfg(not(target_arch = \"wasm32\"))]\n",
+          "new": "//#[cfg(not(target_arch = \"wasm32\"))]\ncompile_error!(\"lifecycle T6 intentional library compile failure\");\n"
+        }
+      ]
+    },
+    "T7": {
+      "kind": "negative_matrix",
+      "description": "Exercise three independent strict decimal floor failures, restoring 150 after each trial.",
+      "commit_message_prefix": "lifecycle T7 floor trial",
+      "workflow_trial_requires_explicit_flag": true,
+      "expected": {
+        "report_complete": null,
+        "clippy_job": "failure",
+        "upload_step": "skipped",
+        "analysis": "none at each exact failure SHA",
+        "alert_states": "unchanged",
+        "report_build_failure": true,
+        "restore_floor": "150"
+      },
+      "floor_trials": [
+        {
+          "name": "valid-too-high",
+          "value": "999999",
+          "reason": "valid decimal floor above the report count"
+        },
+        {
+          "name": "malformed-octal-like",
+          "value": "17o",
+          "reason": "malformed decimal must fail closed"
+        },
+        {
+          "name": "huge-decimal",
+          "value": "999999999999999999999999999999999999",
+          "reason": "arbitrary precision floor must fail closed"
+        }
+      ],
+      "operations_template": {
+        "op": "replace_once",
+        "path": ".github/workflows/rust.yml",
+        "old": "      CLIPPY_MIN_RESULTS: 150",
+        "restore": "      CLIPPY_MIN_RESULTS: 150"
+      }
+    },
+    "T8": {
+      "kind": "positive",
+      "description": "Rename mac.rs with git mv and preserve the public module API through an explicit path attribute.",
+      "commit_message": "lifecycle T8 preserve module API across git mv",
+      "expected": {
+        "report_complete": "true",
+        "module_api": "crypto::mac remains the public module",
+        "comparison": "only the recorded mac.rs cohort may move or re-key"
+      },
+      "operations": [
+        {
+          "op": "git_move",
+          "from": "src/crypto/mac.rs",
+          "to": "src/crypto/mac_renamed.rs"
+        },
+        {
+          "op": "replace_once",
+          "path": "src/crypto/mod.rs",
+          "old": "pub mod mac;\n",
+          "new": "#[path = \"mac_renamed.rs\"]\npub mod mac;\n"
+        }
+      ]
+    }
+  }
+}

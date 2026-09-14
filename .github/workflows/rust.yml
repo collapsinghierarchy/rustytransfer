@@ -27,6 +27,15 @@ jobs:
 
   clippy:
     runs-on: ubuntu-latest
+    # Scope serialization to Clippy only. The build and OSV jobs remain
+    # independent, so a hung integration test cannot hold an analysis trial.
+    # GitHub keeps one running and one pending run per group; with
+    # cancel-in-progress=false, a newer queued run can replace an older pending
+    # run. Lifecycle trials must therefore wait for the exact Clippy job and
+    # SARIF processing before pushing the next commit.
+    concurrency:
+      group: clippy-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: false
 
     env:
       # Floor on the number of results a COMPLETE Clippy report must contain.
@@ -83,9 +92,13 @@ jobs:
       run: |
         python3 .github/scripts/tests/test_rustscan.py
         python3 .github/scripts/tests/test_identity.py
+        python3 .github/scripts/tests/test_report_gate.py
     - name: Install Rust toolchain
       uses: dtolnay/rust-toolchain@stable
       with:
+        # Pin the toolchain used by lifecycle trials. The actual versions are
+        # also recorded in the evidence metadata below.
+        toolchain: 1.97.0
         components: clippy
     - name: Install SARIF tools
       run: cargo install --locked clippy-sarif@0.8.0 sarif-fmt@0.8.0
@@ -101,10 +114,6 @@ jobs:
         cargo clippy --lib --bins --all-features --locked --message-format=json > target/clippy.json
         clippy_status=$?
         set -e
-
-        # Refuse to run with no floor configured, rather than silently accepting
-        # any result count. See CLIPPY_MIN_RESULTS in the job env above.
-        : "${CLIPPY_MIN_RESULTS:?must be set in the clippy job env; see the comment there}"
 
         # There is no -D warnings in the invocation above, so cargo clippy exits
         # non-zero only when the crate fails to COMPILE; findings alone never
@@ -133,35 +142,17 @@ jobs:
         # report_complete signal below is what keeps it unpublished.
         python3 .github/scripts/stabilize-clippy-sarif.py target/clippy.sarif --stats --fail-on-skipped
 
-        # Content gate. Every other check in this step keys off an exit status,
-        # and a report with no results passes all of them vacuously -- so count
-        # what is about to be uploaded, from the exact bytes that will be
-        # uploaded. Count only results carrying a byteOffset: those are the ones
-        # the fingerprinter can key, and the harness below counts the same way.
-        # A toolchain whose JSON this pipeline no longer understands therefore
-        # fails HERE, instead of reading as a full report to this gate and an
-        # empty one to the harness and passing both. See CLIPPY_MIN_RESULTS
-        # above for what an operator does when the count legitimately drops.
-        test -s target/clippy.sarif
-        result_count="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1],encoding="utf-8")); print(sum(1 for r in (d.get("runs") or []) for x in (r.get("results") or []) if ((((x.get("locations") or [{}])[0].get("physicalLocation") or {}).get("region") or {}).get("byteOffset")) is not None))' target/clippy.sarif)"
-        # `[` exits 2 on a non-integer operand, and a failing condition inside
-        # `if` is exempt from `set -e` -- so a typo in the floor (CLIPPY_MIN_RESULTS=17o)
-        # would silently degrade this gate to a no-op in the PERMISSIVE direction,
-        # letting an empty report upload. The `:?` guard above catches only unset
-        # and empty. Validate both operands and fail closed on anything else.
-        for operand in "$CLIPPY_MIN_RESULTS" "$result_count"; do
-          case "$operand" in
-            ''|*[!0-9]*)
-              echo "::error::Result-count gate requires non-negative integers; got floor='${CLIPPY_MIN_RESULTS}' count='${result_count}'. Not uploading."
-              exit 1
-              ;;
-          esac
-        done
-        echo "Clippy report contains ${result_count} fingerprintable result(s); required floor is ${CLIPPY_MIN_RESULTS}."
-        if [ "$result_count" -lt "$CLIPPY_MIN_RESULTS" ]; then
-          echo "::error::Clippy produced ${result_count} fingerprintable result(s), below the floor of ${CLIPPY_MIN_RESULTS} -- either the analysis silently stopped finding things, or the drop is real. Confirm the new count, then lower CLIPPY_MIN_RESULTS in .github/workflows/rust.yml in the same pull request. Not uploading."
-          exit 1
-        fi
+        # Validate the exact, fully stabilized SARIF bytes that will be
+        # uploaded. This uses strict decimal parsing and Python arbitrary
+        # precision, so values such as 17o, empty strings, and huge all-digit
+        # floors fail closed without shell overflow or a permissive fallback.
+        # It also rejects missing/empty runs, malformed results, missing byte
+        # regions, missing fingerprints, and duplicate same-rule/path keys.
+        # A structurally valid zero-result Clippy run is accepted only when the
+        # operator explicitly sets the exact floor to 0.
+        python3 .github/scripts/check-clippy-report.py \
+          target/clippy.sarif \
+          --min-results "${CLIPPY_MIN_RESULTS-}"
 
         # Guard the identity algorithm against the REAL corpus, not a synthetic
         # one: replay every finding just produced through synthetic
@@ -179,6 +170,7 @@ jobs:
         echo "report_complete=true" >> "$GITHUB_OUTPUT"
         exit "$clippy_status"
     - name: Upload Clippy SARIF report
+      id: upload_clippy
       # Deliberately NOT 'if: always()'. An incomplete report is worse than no
       # report: GitHub treats every alert absent from an upload as FIXED, so a
       # single truncated run closes the whole backlog and the next good run
@@ -194,6 +186,108 @@ jobs:
         # transition to fixed) and creates a fresh set under the new name.
         # See https://github.blog/changelog/2024-05-06-code-scanning-will-stop-combining-runs-from-a-single-upload/
         category: "Code Scanner"
+        wait-for-processing: true
+
+    - name: Record Clippy SARIF metadata
+      if: always()
+      shell: bash
+      env:
+        CLIPPY_SARIF_ID: ${{ steps.upload_clippy.outputs.sarif-id }}
+        CLIPPY_REPORT_COMPLETE: ${{ steps.clippy.outputs.report_complete }}
+        CLIPPY_STEP_OUTCOME: ${{ steps.clippy.outcome }}
+        CLIPPY_UPLOAD_STEP_OUTCOME: ${{ steps.upload_clippy.outcome }}
+        CLIPPY_REF: ${{ github.ref }}
+        CLIPPY_SHA: ${{ github.sha }}
+        CLIPPY_RUN_ID: ${{ github.run_id }}
+        CLIPPY_RUN_ATTEMPT: ${{ github.run_attempt }}
+        CLIPPY_WORKFLOW: ${{ github.workflow }}
+        CLIPPY_JOB: ${{ github.job }}
+        CLIPPY_MIN_RESULTS_EXACT: ${{ env.CLIPPY_MIN_RESULTS }}
+      run: |
+        set +e
+        mkdir -p target
+        export RUSTC_VERSION="$(rustc --version 2>&1 || true)"
+        export CARGO_VERSION="$(cargo --version 2>&1 || true)"
+        export CARGO_CLIPPY_VERSION="$(cargo clippy --version 2>&1 || true)"
+        export CLIPPY_SARIF_VERSION="$(clippy-sarif --version 2>&1 || true)"
+        export SARIF_FMT_VERSION="$(sarif-fmt --version 2>&1 || true)"
+        python3 - <<'PY'
+        import json
+        import os
+        from pathlib import Path
+
+        def value(name):
+            raw = os.environ.get(name)
+            return raw if raw != "" else None
+
+        run_id = os.environ.get("CLIPPY_RUN_ID", "")
+        run_attempt = os.environ.get("CLIPPY_RUN_ATTEMPT", "")
+        metadata = {
+            "schema_version": 1,
+            "artifact_name": f"clippy-sarif-{run_id}-{run_attempt}",
+            "workflow": value("CLIPPY_WORKFLOW"),
+            "job": value("CLIPPY_JOB"),
+            "run_id": value("CLIPPY_RUN_ID"),
+            "run_attempt": value("CLIPPY_RUN_ATTEMPT"),
+            "ref": value("CLIPPY_REF"),
+            "commit_sha": value("CLIPPY_SHA"),
+            "tool": "clippy",
+            "category": "Code Scanner",
+            "sarif_id": value("CLIPPY_SARIF_ID"),
+            "report_complete": value("CLIPPY_REPORT_COMPLETE"),
+            "clippy_step_outcome": value("CLIPPY_STEP_OUTCOME"),
+            "upload_step_outcome": value("CLIPPY_UPLOAD_STEP_OUTCOME"),
+            "configured_floor": os.environ.get("CLIPPY_MIN_RESULTS_EXACT"),
+            "files": {
+                "raw_clippy_json": "target/clippy.json",
+                "uploaded_clippy_sarif": "target/clippy.sarif",
+            },
+            "versions": {
+                "rust_toolchain_action": "dtolnay/rust-toolchain@stable (toolchain 1.97.0)",
+                "rustc": value("RUSTC_VERSION"),
+                "cargo": value("CARGO_VERSION"),
+                "cargo_clippy": value("CARGO_CLIPPY_VERSION"),
+                "clippy_sarif": "cargo package clippy-sarif@0.8.0",
+                "clippy_sarif_runtime": value("CLIPPY_SARIF_VERSION"),
+                "sarif_fmt": "cargo package sarif-fmt@0.8.0",
+                "sarif_fmt_runtime": value("SARIF_FMT_VERSION"),
+                "upload_sarif_action": "github/codeql-action/upload-sarif@v3",
+            },
+        }
+        Path("target/clippy-upload-metadata.json").write_text(
+            json.dumps(metadata, indent=2) + "\n", encoding="utf-8"
+        )
+
+        summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+        if summary_path:
+            sarif_id = value("CLIPPY_SARIF_ID") or "not uploaded"
+            with open(summary_path, "a", encoding="utf-8") as summary:
+                summary.write("### Clippy SARIF evidence\n\n")
+                summary.write(f"- SARIF ID: `{sarif_id}`\n")
+                summary.write(
+                    f"- Report complete: `{value('CLIPPY_REPORT_COMPLETE') or 'false'}`\n"
+                )
+                summary.write(
+                    f"- Ref/SHA: `{value('CLIPPY_REF')}` / `{value('CLIPPY_SHA')}`\n"
+                )
+                summary.write(
+                    f"- Run attempt: `{value('CLIPPY_RUN_ID')}` / `"
+                    f"{value('CLIPPY_RUN_ATTEMPT')}`\n"
+                )
+        print(f"Clippy SARIF id: {value('CLIPPY_SARIF_ID') or 'not uploaded'}")
+        PY
+
+    - name: Retain Clippy SARIF evidence
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: clippy-sarif-${{ github.run_id }}-${{ github.run_attempt }}
+        if-no-files-found: warn
+        retention-days: 30
+        path: |
+          target/clippy.json
+          target/clippy.sarif
+          target/clippy-upload-metadata.json
 
   osv-scan:
     name: OSV-Scanner

@@ -28,10 +28,61 @@ jobs:
   clippy:
     runs-on: ubuntu-latest
 
+    env:
+      # Floor on the number of results a COMPLETE Clippy report must contain.
+      # This is the only gate that keys off the report's CONTENT rather than an
+      # exit status, and it exists because the most destructive upload is the
+      # one where every other stage passes vacuously: if clippy compiles, exits
+      # 0 and emits no diagnostics for a bad reason (a lint configuration wiped,
+      # a feature flag that excludes every module, a cargo or clippy-sarif
+      # release whose JSON this pipeline no longer understands), the stabilizer
+      # fingerprints 0 results and exits 0, the SARIF file is still ~17KB of
+      # non-empty envelope, and the identity harness PASSes every scenario over
+      # an empty finding set. GitHub would then be told that every existing
+      # alert is FIXED, closing the whole backlog in a single upload.
+      #
+      # This repository currently produces 177 results. 150 leaves room for
+      # ordinary lint cleanup without babysitting, while still catching a
+      # collapse to zero or near-zero.
+      #
+      # OPERATOR ACTION when the count legitimately drops below the floor --
+      # a batch of lints fixed, a module deleted -- the run WILL fail, and that
+      # failure is the intended prompt: read the result count printed by "Run
+      # Clippy", confirm it is the number you meant to produce, and lower this
+      # value in the SAME pull request that removes the lints, so a human
+      # reviews the drop instead of it being absorbed silently. A genuinely
+      # clean repository can still publish an empty report deliberately by
+      # setting this to 0 -- a visible, reviewable one-line diff, never a
+      # default. The step refuses to run at all when this variable is unset, so
+      # the floor cannot decay into a rubber stamp by being deleted.
+      CLIPPY_MIN_RESULTS: 150
+
     steps:
     - uses: actions/checkout@v4
+      # fetch-depth: 1 is a shallow clone: one commit, no history. The identity
+      # pipeline is purely lexical -- it reads the checked-out working tree, and
+      # nothing under .github/scripts shells out to git -- so no fingerprint can
+      # depend on history and there is nothing here to deepen the clone for.
       with:
-        fetch-depth: 0
+        fetch-depth: 1
+    - name: Self-check identity scripts
+      # Cheap, toolchain-free smoke test, and the only place the Rust lexer the
+      # whole identity rests on is tested directly:
+      #   * test_rustscan.py - unit cases over rustscan's tokenizer and item
+      #     scanner. No fixture, no toolchain, no SARIF needed. A lexer
+      #     regression that happens not to move any fingerprint in the
+      #     177-result corpus would otherwise ship unnoticed, because the
+      #     real-corpus check below can only see regressions that move one.
+      #   * test_identity.py - with no SARIF argument the harness SYNTHESIZES a
+      #     corpus from the source tree, so this proves the identity scripts
+      #     import, parse and agree with each other. It never sees a real Clippy
+      #     finding and cannot certify a real report.
+      # Both earn their place by failing in seconds, before the toolchain
+      # install and a full build, when someone breaks a script. The check that
+      # actually gates the upload is the real-corpus run inside "Run Clippy".
+      run: |
+        python3 .github/scripts/tests/test_rustscan.py
+        python3 .github/scripts/tests/test_identity.py
     - name: Install Rust toolchain
       uses: dtolnay/rust-toolchain@stable
       with:
@@ -39,22 +90,109 @@ jobs:
     - name: Install SARIF tools
       run: cargo install --locked clippy-sarif@0.8.0 sarif-fmt@0.8.0
     - name: Run Clippy
+      id: clippy
       shell: bash
       run: |
         set +e
         mkdir -p target
+        # --lib --bins is load-bearing: without it cargo analyses each target
+        # separately and reports the same source line once per target, which
+        # doubles the results and manufactures duplicate alerts.
         cargo clippy --lib --bins --all-features --locked --message-format=json > target/clippy.json
         clippy_status=$?
         set -e
+
+        # Refuse to run with no floor configured, rather than silently accepting
+        # any result count. See CLIPPY_MIN_RESULTS in the job env above.
+        : "${CLIPPY_MIN_RESULTS:?must be set in the clippy job env; see the comment there}"
+
+        # There is no -D warnings in the invocation above, so cargo clippy exits
+        # non-zero only when the crate fails to COMPILE; findings alone never
+        # reach this branch, and gating on completion therefore cannot suppress
+        # legitimate alerts. A compile failure means the diagnostic stream
+        # stopped early: every lint in the code cargo never analysed is missing,
+        # and uploading that would tell GitHub those alerts are FIXED. Render
+        # the partial diagnostics so the failure is debuggable, then fail the
+        # job with clippy's own status WITHOUT declaring the report complete --
+        # which is what keeps the truncated file off the upload step.
+        if [ "$clippy_status" -ne 0 ]; then
+          echo "::error::cargo clippy exited ${clippy_status} (compile failure); the SARIF report is incomplete and will not be uploaded."
+          clippy-sarif < target/clippy.json > target/clippy.sarif || true
+          sarif-fmt < target/clippy.sarif || true
+          exit "$clippy_status"
+        fi
+
         clippy-sarif < target/clippy.json > target/clippy.sarif
-        python3 .github/scripts/stabilize-clippy-sarif.py target/clippy.sarif
+        # --fail-on-skipped: a result the stabilizer cannot fingerprint silently
+        # falls back to GitHub's own line hash, which would mix two identity
+        # schemes in one upload. Fail loudly instead. On that failure the
+        # stabilizer returns BEFORE writing, so what sits on disk is byte for
+        # byte what clippy-sarif produced: a readable but UN-fingerprinted
+        # report carrying none of this repository's identities. Publishing it
+        # would re-key every alert to GitHub's own line hashes, so the
+        # report_complete signal below is what keeps it unpublished.
+        python3 .github/scripts/stabilize-clippy-sarif.py target/clippy.sarif --stats --fail-on-skipped
+
+        # Content gate. Every other check in this step keys off an exit status,
+        # and a report with no results passes all of them vacuously -- so count
+        # what is about to be uploaded, from the exact bytes that will be
+        # uploaded. Count only results carrying a byteOffset: those are the ones
+        # the fingerprinter can key, and the harness below counts the same way.
+        # A toolchain whose JSON this pipeline no longer understands therefore
+        # fails HERE, instead of reading as a full report to this gate and an
+        # empty one to the harness and passing both. See CLIPPY_MIN_RESULTS
+        # above for what an operator does when the count legitimately drops.
+        test -s target/clippy.sarif
+        result_count="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1],encoding="utf-8")); print(sum(1 for r in (d.get("runs") or []) for x in (r.get("results") or []) if ((((x.get("locations") or [{}])[0].get("physicalLocation") or {}).get("region") or {}).get("byteOffset")) is not None))' target/clippy.sarif)"
+        # `[` exits 2 on a non-integer operand, and a failing condition inside
+        # `if` is exempt from `set -e` -- so a typo in the floor (CLIPPY_MIN_RESULTS=17o)
+        # would silently degrade this gate to a no-op in the PERMISSIVE direction,
+        # letting an empty report upload. The `:?` guard above catches only unset
+        # and empty. Validate both operands and fail closed on anything else.
+        for operand in "$CLIPPY_MIN_RESULTS" "$result_count"; do
+          case "$operand" in
+            ''|*[!0-9]*)
+              echo "::error::Result-count gate requires non-negative integers; got floor='${CLIPPY_MIN_RESULTS}' count='${result_count}'. Not uploading."
+              exit 1
+              ;;
+          esac
+        done
+        echo "Clippy report contains ${result_count} fingerprintable result(s); required floor is ${CLIPPY_MIN_RESULTS}."
+        if [ "$result_count" -lt "$CLIPPY_MIN_RESULTS" ]; then
+          echo "::error::Clippy produced ${result_count} fingerprintable result(s), below the floor of ${CLIPPY_MIN_RESULTS} -- either the analysis silently stopped finding things, or the drop is real. Confirm the new count, then lower CLIPPY_MIN_RESULTS in .github/workflows/rust.yml in the same pull request. Not uploading."
+          exit 1
+        fi
+
+        # Guard the identity algorithm against the REAL corpus, not a synthetic
+        # one: replay every finding just produced through synthetic
+        # reformatting and code motion and assert each fingerprint comes back
+        # byte-identical.
+        python3 .github/scripts/tests/test_identity.py target/clippy.sarif .
+
         sarif-fmt < target/clippy.sarif
+
+        # Reached only when clippy compiled, the report carries at least
+        # CLIPPY_MIN_RESULTS results, and every stage above succeeded, so
+        # target/clippy.sarif is a complete, fully fingerprinted report. This is
+        # the one place the signal is set; any failure above leaves it unset and
+        # the upload step is skipped.
+        echo "report_complete=true" >> "$GITHUB_OUTPUT"
         exit "$clippy_status"
     - name: Upload Clippy SARIF report
-      if: always()
+      # Deliberately NOT 'if: always()'. An incomplete report is worse than no
+      # report: GitHub treats every alert absent from an upload as FIXED, so a
+      # single truncated run closes the whole backlog and the next good run
+      # reopens it as brand new alerts. Upload only the report that the step
+      # above certified complete.
+      if: success() && steps.clippy.outputs.report_complete == 'true'
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: target/clippy.sarif
+        # DO NOT CHANGE THIS VALUE. Category names the analysis configuration.
+        # Changing it leaves every existing alert stranded permanently open
+        # under the old configuration (they are never re-run, so they never
+        # transition to fixed) and creates a fresh set under the new name.
+        # See https://github.blog/changelog/2024-05-06-code-scanning-will-stop-combining-runs-from-a-single-upload/
         category: "Code Scanner"
 
   osv-scan:

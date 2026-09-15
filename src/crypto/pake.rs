@@ -45,7 +45,10 @@ impl PakeState {
     pub fn finish(
         &mut self,
         inbound_msg: &[u8],
-    ) -> Result<Vec<u8>, JsValue> {
+    ) -> Result<
+        Vec<u8>,
+        JsValue,
+    > {
         let s = self.inner.take()
             .ok_or_else(|| JsValue::from_str("PakeState already finished"))?;
         
@@ -83,5 +86,4 @@ mod tests {
         assert_eq!(sender_key, receiver_key, "Keys should match for same password");
     }
 }
-
 

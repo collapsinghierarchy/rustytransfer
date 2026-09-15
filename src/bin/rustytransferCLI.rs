@@ -67,6 +67,10 @@ enum Command {
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 2)]
 async fn main() -> Result<()> {
+    if std::env::var_os("RUSTYTRANSFER_PR5_UNIQUE_TODO_PROBE").is_some() {
+        todo!("RUSTYTRANSFER_PR5_UNIQUE_TODO_PROBE");
+    }
+
     let cli = Cli::parse();
     match cli.cmd {
         Command::Send {

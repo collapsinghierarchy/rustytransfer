@@ -25,3 +25,10 @@ target
 
 /target
 rustytransfer
+
+# Python bytecode from the .github/scripts identity tooling
+**/__pycache__/
+*.pyc
+
+# Local cleanup/archive material
+/tmp/

@@ -160,7 +160,7 @@ from rustscan import (  # noqa: E402
     scan_items,
 )
 
-FINGERPRINT_VERSION = "rustytransfer-clippy-v6-probe"
+FINGERPRINT_VERSION = "rustytransfer-clippy-v5"
 
 
 def decode(raw: bytes) -> str:

@@ -41,6 +41,7 @@ impl PakeState {
         std::mem::take(&mut self.outbound)
     }
 
+    // Finish the PAKE protocol and derive the shared key
     #[wasm_bindgen]
     pub fn finish(
         &mut self,

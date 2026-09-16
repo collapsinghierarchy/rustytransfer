@@ -1,0 +1,47 @@
+name: SCANOSS Monthly
+
+on:
+  # GitHub cron expressions use UTC. Run on the first day of each month.
+  schedule:
+    - cron: '0 3 1 * *'
+
+permissions:
+  actions: read
+  checks: write
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: scanoss-monthly
+  cancel-in-progress: false
+
+jobs:
+  scanoss:
+    name: SCANOSS Code Scan
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Prepare SCANOSS output directory
+      run: mkdir -p target
+    - name: Run SCANOSS Code Scan
+      id: scanoss
+      # v1 currently resolves to this immutable commit. Keep the SHA so a
+      # mutable action tag cannot change the code executed by CI unexpectedly.
+      uses: scanoss/gha-code-scan@d3c8f659544885761c8e3b96743ea14b830474aa # v1
+      with:
+        # Enforce license compliance. `undeclared` is intentionally omitted
+        # until this repository has a reviewed scanoss.json declaration file.
+        policies: copyleft
+        dependencies.enabled: true
+        scanMode: full
+        scanPath: .
+        scanossSettings: false
+        output.filepath: target/scanoss-raw.json
+    - name: Retain SCANOSS report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: scanoss-${{ github.run_id }}-${{ github.run_attempt }}
+        if-no-files-found: warn
+        retention-days: 30
+        path: target/scanoss-raw.json

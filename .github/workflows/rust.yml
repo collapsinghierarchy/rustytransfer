@@ -406,3 +406,26 @@ jobs:
         if-no-files-found: warn
         retention-days: 30
         path: target/scanoss-raw.json
+
+  cargo-deny:
+    name: Cargo Deny (${{ matrix.checks }})
+    runs-on: ubuntu-latest
+    # The official cargo-deny guidance recommends keeping advisory updates
+    # visible without allowing a newly published advisory to break every build.
+    continue-on-error: ${{ matrix.checks == 'advisories' }}
+    strategy:
+      matrix:
+        checks:
+          - advisories
+          - bans licenses sources
+    permissions:
+      contents: read
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run cargo-deny
+      # v2.1.1 bundles cargo-deny 0.20.2. Pin the signed release's commit
+      # instead of following the mutable v2 tag.
+      uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2.1.1
+      with:
+        rust-version: "1.97.0"
+        command: check ${{ matrix.checks }}

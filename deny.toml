@@ -1,0 +1,49 @@
+# Policy for cargo-deny check.
+# Keep this file intentionally small: the checks should use cargo-deny's
+# current defaults unless this repository has made an explicit decision.
+
+[advisories]
+# A yanked crate is not acceptable in a locked production dependency graph.
+yanked = "deny"
+
+[licenses]
+# Only explicitly permitted licenses may enter the dependency graph. The root
+# package is AGPL-3.0-only and is allowed below as a package-specific exception;
+# AGPL is deliberately not allowed for third-party dependencies.
+allow = [
+    "0BSD",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "CC0-1.0",
+    "CDDL-1.0",
+    "CDDL-1.1",
+    "ISC",
+    "MIT",
+    "MIT-0",
+    "MPL-2.0",
+    "OpenSSL",
+    "Unicode-3.0",
+    "Unlicense",
+    "Zlib",
+]
+confidence-threshold = 0.8
+
+[[licenses.exceptions]]
+crate = "rustytransfer"
+allow = ["AGPL-3.0-only"]
+
+[bans]
+# Duplicate versions are useful information but are not automatically unsafe;
+# keep them visible without blocking unrelated dependency updates.
+multiple-versions = "warn"
+wildcards = "deny"
+
+[sources]
+# All third-party crates must come from the public crates.io registry unless a
+# deliberate source exception is added here in a reviewed change.
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []

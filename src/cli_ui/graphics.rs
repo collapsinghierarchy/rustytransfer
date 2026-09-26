@@ -1,24 +1,76 @@
 use indicatif::{ProgressBar, ProgressStyle};
 use std::time::Duration;
 
-use anyhow::{bail, Context, Result};
+use anyhow::{Context, Result};
+use std::ops::{Deref, DerefMut};
 use std::path::PathBuf;
 
+/// Marker for an intentional user cancellation in an interactive prompt.
+#[derive(Debug, Clone, Copy)]
+pub struct UserCancelled;
+
+impl std::fmt::Display for UserCancelled {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("cancelled by user")
+    }
+}
+
+impl std::error::Error for UserCancelled {}
+
+/// Progress UI that always clears itself when its scope ends.
+pub struct ProgressGuard(ProgressBar);
+
+impl ProgressGuard {
+    fn new(progress: ProgressBar) -> Self {
+        Self(progress)
+    }
+
+    pub fn finish_and_clear(&self) {
+        self.0.finish_and_clear();
+    }
+}
+
+impl Deref for ProgressGuard {
+    type Target = ProgressBar;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl DerefMut for ProgressGuard {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
+impl Drop for ProgressGuard {
+    fn drop(&mut self) {
+        self.0.finish_and_clear();
+    }
+}
+
+/// Open the terminal file picker and return the selected file.
+///
+/// # Errors
+///
+/// Returns an error if terminal setup, input handling, rendering, or file
+/// explorer navigation fails, or if the user cancels the picker.
 pub fn pick_file_tui(start_dir: Option<PathBuf>) -> Result<PathBuf> {
-    use std::io::{stdout, Write};
+    use std::io::{Write, stdout};
 
     use crossterm::{
         cursor,
         event::{self, KeyCode, KeyEventKind},
         execute,
-        terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+        terminal::{EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode},
     };
 
     use ratatui::{
+        Terminal,
         backend::CrosstermBackend,
         layout::{Constraint, Direction, Layout},
         widgets::{Block, Borders, Paragraph},
-        Terminal,
     };
 
     use ratatui_explorer::{FileExplorer, Theme};
@@ -26,16 +78,16 @@ pub fn pick_file_tui(start_dir: Option<PathBuf>) -> Result<PathBuf> {
     struct TermGuard;
     impl Drop for TermGuard {
         fn drop(&mut self) {
-            let _ = disable_raw_mode();
+            drop(disable_raw_mode());
             let mut out = stdout();
-            let _ = execute!(out, LeaveAlternateScreen, cursor::Show);
+            drop(execute!(out, LeaveAlternateScreen, cursor::Show));
         }
     }
 
     enable_raw_mode().context("enable_raw_mode failed")?;
     let mut out = stdout();
     execute!(out, EnterAlternateScreen, cursor::Hide).context("enter alt screen failed")?;
-    out.flush().ok();
+    out.flush().context("flush terminal setup failed")?;
     let _guard = TermGuard;
 
     let backend = CrosstermBackend::new(stdout());
@@ -71,19 +123,19 @@ pub fn pick_file_tui(start_dir: Option<PathBuf>) -> Result<PathBuf> {
             .context("draw failed")?;
         let ev: crossterm::event::Event = event::read().context("read event failed")?;
 
-        if let crossterm::event::Event::Key(k) = &ev {
-            if k.kind == KeyEventKind::Press {
-                match k.code {
-                    KeyCode::Esc | KeyCode::Char('q') => bail!("file selection cancelled"),
-                    KeyCode::Enter => {
-                        let cur = explorer.current();
-                        if cur.is_file() {
-                            return Ok(cur.path().clone());
-                        }
-                        // if it's a dir, explorer.handle will open it (Enter bound)
+        if let crossterm::event::Event::Key(k) = &ev
+            && k.kind == KeyEventKind::Press
+        {
+            match k.code {
+                KeyCode::Esc | KeyCode::Char('q') => return Err(UserCancelled.into()),
+                KeyCode::Enter => {
+                    let cur = explorer.current();
+                    if cur.is_file() {
+                        return Ok(cur.path().clone());
                     }
-                    _ => {}
+                    // if it's a dir, explorer.handle will open it (Enter bound)
                 }
+                _ => {}
             }
         }
 
@@ -91,26 +143,28 @@ pub fn pick_file_tui(start_dir: Option<PathBuf>) -> Result<PathBuf> {
     }
 }
 
-
-
-pub fn spinner(msg: &str) -> ProgressBar {
+/// Create a spinner with the application's standard presentation.
+#[must_use]
+pub fn spinner(msg: &str) -> ProgressGuard {
     let pb = ProgressBar::new_spinner();
     pb.set_style(
         ProgressStyle::with_template("{spinner} {msg}")
-            .unwrap()
-            .tick_strings(&["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"]),
+            .unwrap_or_else(|_| ProgressStyle::default_spinner())
+            .tick_strings(&["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]),
     );
     pb.set_message(msg.to_string());
     pb.enable_steady_tick(Duration::from_millis(90));
-    pb
+    ProgressGuard::new(pb)
 }
 
-pub fn bytes_bar(total: u64, msg: &str) -> ProgressBar {
+/// Create a byte progress bar with the application's standard presentation.
+#[must_use]
+pub fn bytes_bar(total: u64, msg: &str) -> ProgressGuard {
     let pb = ProgressBar::new(total);
     pb.set_style(
         ProgressStyle::with_template("{msg} [{bar:40}] {bytes}/{total_bytes} ({eta})")
-            .unwrap(),
+            .unwrap_or_else(|_| ProgressStyle::default_bar()),
     );
     pb.set_message(msg.to_string());
-    pb
+    ProgressGuard::new(pb)
 }

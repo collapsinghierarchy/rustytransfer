@@ -51,9 +51,11 @@ jobs:
       # an empty finding set. GitHub would then be told that every existing
       # alert is FIXED, closing the whole backlog in a single upload.
       #
-      # This repository currently produces 177 results. 150 leaves room for
-      # ordinary lint cleanup without babysitting, while still catching a
-      # collapse to zero or near-zero.
+      # This repository currently produces 3 results in the workflow's
+      # --lib/--bins scope; they are accepted through the fingerprint baseline
+      # in .github/clippy-suppressions.json. Keep the floor at that count so a
+      # missing lint configuration or an accidental target exclusion cannot
+      # silently publish an empty report.
       #
       # OPERATOR ACTION when the count legitimately drops below the floor --
       # a batch of lints fixed, a module deleted -- the run WILL fail, and that
@@ -65,7 +67,7 @@ jobs:
       # setting this to 0 -- a visible, reviewable one-line diff, never a
       # default. The step refuses to run at all when this variable is unset, so
       # the floor cannot decay into a rubber stamp by being deleted.
-      CLIPPY_MIN_RESULTS: 150
+      CLIPPY_MIN_RESULTS: 3
 
     steps:
     - uses: actions/checkout@v4
@@ -81,7 +83,7 @@ jobs:
       #   * test_rustscan.py - unit cases over rustscan's tokenizer and item
       #     scanner. No fixture, no toolchain, no SARIF needed. A lexer
       #     regression that happens not to move any fingerprint in the
-      #     177-result corpus would otherwise ship unnoticed, because the
+      #     finding corpus would otherwise ship unnoticed, because the
       #     real-corpus check below can only see regressions that move one.
       #   * test_identity.py - with no SARIF argument the harness SYNTHESIZES a
       #     corpus from the source tree, so this proves the identity scripts

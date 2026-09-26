@@ -1,7 +1,7 @@
-use wasm_bindgen::prelude::*;
+use crate::crypto::error::CryptoError;
 use spake2::{Ed25519Group, Identity, Password, Spake2};
+use wasm_bindgen::prelude::*;
 
-#[derive(Debug)]
 #[wasm_bindgen]
 pub struct PakeState {
     inner: Option<Spake2<Ed25519Group>>,
@@ -11,26 +11,35 @@ pub struct PakeState {
 #[wasm_bindgen]
 impl PakeState {
     #[wasm_bindgen(js_name = startSender)]
+    #[must_use]
     pub fn start_sender(pw: &[u8]) -> PakeState {
         let (s1, outbound_msg) = Spake2::<Ed25519Group>::start_b(
             &Password::new(pw),
             &Identity::new(b"smt_receiver"),
             &Identity::new(b"smt_sender"),
         );
-        PakeState { inner: Some(s1), outbound: outbound_msg }
+        PakeState {
+            inner: Some(s1),
+            outbound: outbound_msg,
+        }
     }
 
     #[wasm_bindgen(js_name = startReceiver)]
+    #[must_use]
     pub fn start_receiver(pw: &[u8]) -> PakeState {
         let (s1, outbound_msg) = Spake2::<Ed25519Group>::start_a(
             &Password::new(pw),
             &Identity::new(b"smt_receiver"),
             &Identity::new(b"smt_sender"),
         );
-        PakeState { inner: Some(s1), outbound: outbound_msg }
+        PakeState {
+            inner: Some(s1),
+            outbound: outbound_msg,
+        }
     }
 
     #[wasm_bindgen(js_name = outboundMsg)]
+    #[must_use]
     pub fn outbound_msg(&self) -> Vec<u8> {
         self.outbound.clone()
     }
@@ -42,20 +51,29 @@ impl PakeState {
     }
 
     #[wasm_bindgen]
+    /// Finishes the PAKE exchange with the peer's outbound message.
+    ///
+    /// # Errors
+    ///
+    /// Returns a JavaScript error when this state has already been finished
+    /// or when the peer message is invalid.
     pub fn finish(&mut self, inbound_msg: &[u8]) -> Result<Vec<u8>, JsValue> {
-        let s = self.inner.take()
-            .ok_or_else(|| JsValue::from_str("PakeState already finished"))?;
-        
-        // s.finish() returns a Result<Vec<u8>, Error>
-        let key = s.finish(inbound_msg)
-            .map_err(|e| JsValue::from_str(&format!("{e:?}")))?;
-            
-        // No need for .as_ref(). Just return the Vec<u8>.
-        Ok(key)
+        self.finish_internal(inbound_msg)
+            .map_err(|_source| JsValue::from_str("PAKE exchange failed"))
+    }
+}
+
+impl PakeState {
+    pub(crate) fn finish_internal(&mut self, inbound_msg: &[u8]) -> Result<Vec<u8>, CryptoError> {
+        let state = self.inner.take().ok_or(CryptoError::PakeAlreadyFinished)?;
+        state
+            .finish(inbound_msg)
+            .map_err(|_source| CryptoError::InvalidPakeMessage)
     }
 }
 
 #[cfg(test)]
+// Clippy baseline: these tests retain explicit failure messages for PAKE setup.
 mod tests {
     use super::*;
 
@@ -69,17 +87,16 @@ mod tests {
         // 1. take_outbound_msg() returns Vec<u8>
         // 2. finish() takes &[u8], so we pass it by reference (&)
         // 3. We .expect() because finish returns a Result
-        let sender_key = sender_state.finish(&receiver_state.take_outbound_msg())
+        let sender_key = sender_state
+            .finish(&receiver_state.take_outbound_msg())
             .expect("Sender failed to finish");
-        let receiver_key = receiver_state.finish(&sender_state.take_outbound_msg())
+        let receiver_key = receiver_state
+            .finish(&sender_state.take_outbound_msg())
             .expect("Receiver failed to finish");
 
-        println!("sender key:   {:02x?}", sender_key);
-        println!("receiver key: {:02x?}", receiver_key);
-
-        assert_eq!(sender_key, receiver_key, "Keys should match for same password");
+        assert_eq!(
+            sender_key, receiver_key,
+            "Keys should match for same password"
+        );
     }
 }
-
-
-

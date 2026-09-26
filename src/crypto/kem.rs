@@ -1,12 +1,12 @@
-use rand_core::OsRng;
-use ml_kem::{Ciphertext, Encoded, KemCore, MlKem768, SharedKey,EncodedSizeUser};
+use crate::crypto::error::CryptoError;
 use ml_kem::kem::{Decapsulate, Encapsulate};
+use ml_kem::{Ciphertext, Encoded, EncodedSizeUser, KemCore, MlKem768, SharedKey};
+use rand_core::OsRng;
 
-#[derive(Debug)]
 pub struct KemState {
     rng: OsRng,
     dk: Option<<MlKem768 as KemCore>::DecapsulationKey>,
-    ek: Option<<MlKem768 as KemCore>::EncapsulationKey>
+    ek: Option<<MlKem768 as KemCore>::EncapsulationKey>,
 }
 
 pub struct EncapsulationResult {
@@ -14,9 +14,20 @@ pub struct EncapsulationResult {
     pub shared_secret: SharedKey<MlKem768>,
 }
 
+impl Default for KemState {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl KemState {
+    #[must_use]
     pub fn new() -> Self {
-        Self { rng: OsRng, dk: None, ek: None }
+        Self {
+            rng: OsRng,
+            dk: None,
+            ek: None,
+        }
     }
 
     pub fn generate_keypair(&mut self) {
@@ -25,34 +36,60 @@ impl KemState {
         self.ek = Some(ek);
     }
 
-    pub fn encapsulate(&mut self) -> EncapsulationResult {
-        let ek = self.ek.as_ref().expect("Encapsulation key not generated");
-        let (ct, ss) = ek.encapsulate(&mut self.rng).unwrap();
-        EncapsulationResult {
+    /// Encapsulates a fresh shared key with the generated public key.
+    ///
+    /// Encapsulates a shared key using the current public key.
+    pub fn encapsulate(&mut self) -> Result<EncapsulationResult, CryptoError> {
+        let ek = self
+            .ek
+            .as_ref()
+            .ok_or(CryptoError::MissingEncapsulationKey)?;
+        let (ct, ss) = ek
+            .encapsulate(&mut self.rng)
+            .map_err(|_source| CryptoError::EncapsulationFailed)?;
+        Ok(EncapsulationResult {
             ciphertext: ct,
-            shared_secret: ss
-        }
+            shared_secret: ss,
+        })
     }
 
-    pub fn decapsulate(&self, ciphertext: &Ciphertext<MlKem768>) -> SharedKey<MlKem768> {
-        let dk = self.dk.as_ref().expect("Decapsulation key not generated");
-        dk.decapsulate(ciphertext).unwrap()
+    /// Decapsulates a ciphertext with the generated private key.
+    ///
+    /// Decapsulates a shared key using the current private key.
+    pub fn decapsulate(
+        &self,
+        ciphertext: &Ciphertext<MlKem768>,
+    ) -> Result<SharedKey<MlKem768>, CryptoError> {
+        let dk = self
+            .dk
+            .as_ref()
+            .ok_or(CryptoError::MissingDecapsulationKey)?;
+        dk.decapsulate(ciphertext)
+            .map_err(|_source| CryptoError::DecapsulationFailed)
     }
 
-    pub fn public_key_bytes(&self) -> Encoded<<MlKem768 as KemCore>::EncapsulationKey> {
+    /// Returns the encoded public key.
+    ///
+    /// Returns the encoded public key when one is available.
+    pub fn public_key_bytes(
+        &self,
+    ) -> Result<Encoded<<MlKem768 as KemCore>::EncapsulationKey>, CryptoError> {
         self.ek
             .as_ref()
-            .expect("Encapsulation key not generated")
-            .as_bytes()
+            .map(|key| key.as_bytes())
+            .ok_or(CryptoError::MissingEncapsulationKey)
     }
 
-    pub fn set_public_key_bytes(&mut self, pk: &Encoded<<MlKem768 as KemCore>::EncapsulationKey>) {
+    pub fn set_public_key_bytes(
+        &mut self,
+        pk: &Encoded<<MlKem768 as KemCore>::EncapsulationKey>,
+    ) -> Result<(), CryptoError> {
         let ek = <MlKem768 as KemCore>::EncapsulationKey::from_bytes(pk);
+        self.dk = None;
         self.ek = Some(ek);
+        Ok(())
     }
-
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -74,8 +111,10 @@ mod tests {
         let mut kem = KemState::new();
         kem.generate_keypair();
 
-        let res = kem.encapsulate();
-        let ss2 = kem.decapsulate(&res.ciphertext);
+        let res = kem.encapsulate().expect("encapsulation succeeds");
+        let ss2 = kem
+            .decapsulate(&res.ciphertext)
+            .expect("decapsulation succeeds");
 
         assert_eq!(res.shared_secret, ss2);
 
@@ -84,18 +123,27 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Encapsulation key not generated")]
-    fn encapsulate_panics_without_keypair() {
+    fn encapsulate_fails_without_keypair() {
         let mut kem = KemState::new();
-        let _ = kem.encapsulate();
+        assert!(matches!(
+            kem.encapsulate(),
+            Err(CryptoError::MissingEncapsulationKey)
+        ));
     }
 
     #[test]
-    #[should_panic(expected = "Decapsulation key not generated")]
-    fn decapsulate_panics_without_keypair() {
+    fn decapsulate_fails_without_keypair() {
+        let mut source = KemState::new();
+        source.generate_keypair();
+        let ciphertext = source
+            .encapsulate()
+            .expect("encapsulation succeeds")
+            .ciphertext;
+
         let kem = KemState::new();
-        // ciphertext value doesn't matter because it should panic before use
-        let dummy = unsafe { std::mem::MaybeUninit::<Ciphertext<MlKem768>>::uninit().assume_init() };
-        let _ = kem.decapsulate(&dummy);
+        assert!(matches!(
+            kem.decapsulate(&ciphertext),
+            Err(CryptoError::MissingDecapsulationKey)
+        ));
     }
 }

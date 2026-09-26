@@ -1,0 +1,59 @@
+﻿{
+    "schema_version":  1,
+    "croc_version":  "11.5.3",
+    "endpoint":  "141.147.1.21:9009",
+    "direction":  "Oracle ARM64 sender to WSL x86_64 receiver",
+    "mode":  "direct TCP to sender local Croc relay; --transport relay; 4 data connections",
+    "data_ports":  [
+                       9010,
+                       9011,
+                       9012,
+                       9013
+                   ],
+    "compression":  "disabled",
+    "path_verification":  "receiver log connects to 141.147.1.21:9009 and 9010-9013",
+    "checksum_verification":  "all successful samples have matching source and received SHA-256",
+    "firewall":  "temporary iptables allow from WSL /32 to TCP 9009-9013; removed after tests",
+    "sizes":  {
+                  "64_mib":  {
+                                 "warmup_rate_mib_per_second":  13.238,
+                                 "measured_runs":  3,
+                                 "median_wall_seconds":  4.683,
+                                 "wall_range_seconds":  [
+                                                            4.679,
+                                                            4.737
+                                                        ],
+                                 "median_effective_mib_per_second":  13.666,
+                                 "rate_range_mib_per_second":  [
+                                                                   13.509,
+                                                                   13.677
+                                                               ],
+                                 "median_sender_cpu_seconds":  0.38,
+                                 "median_receiver_cpu_seconds":  0.83,
+                                 "median_sender_max_rss_kib":  24260,
+                                 "median_receiver_max_rss_kib":  22576,
+                                 "sha256":  "3b6a07d0d404fab4e23b6d34bc6696a6a312dd92821332385e5af7c01c421351",
+                                 "all_direct_and_hash_verified":  true
+                             },
+                  "512_mib":  {
+                                  "warmup_rate_mib_per_second":  26.494,
+                                  "measured_runs":  3,
+                                  "median_wall_seconds":  19.277,
+                                  "wall_range_seconds":  [
+                                                             19.272,
+                                                             27.303
+                                                         ],
+                                  "median_effective_mib_per_second":  26.56,
+                                  "rate_range_mib_per_second":  [
+                                                                    18.752,
+                                                                    26.567
+                                                                ],
+                                  "median_sender_cpu_seconds":  1.8,
+                                  "median_receiver_cpu_seconds":  6.37,
+                                  "median_sender_max_rss_kib":  24848,
+                                  "median_receiver_max_rss_kib":  22664,
+                                  "sha256":  "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767",
+                                  "all_direct_and_hash_verified":  true
+                              }
+              }
+}

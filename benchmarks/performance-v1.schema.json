@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rustytransfer.invalid/schemas/performance-v1.schema.json",
+  "title": "Rustytransfer performance measurement v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "commit",
+    "working_tree_dirty",
+    "transport",
+    "path",
+    "path_start",
+    "path_end",
+    "size_bytes",
+    "chunk_size",
+    "pipeline_depth",
+    "handshake_seconds",
+    "payload_seconds",
+    "shutdown_seconds",
+    "wall_seconds",
+    "effective_mib_per_second",
+    "sender_cpu_seconds",
+    "receiver_cpu_seconds",
+    "sender_max_rss_kib",
+    "receiver_max_rss_kib",
+    "source_sha256",
+    "received_sha256",
+    "success"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "commit": { "type": ["string", "null"] },
+    "working_tree_dirty": { "type": ["boolean", "null"] },
+    "role": { "enum": ["sender", "receiver"] },
+    "transport": { "enum": ["iroh", "webrtc", "croc"] },
+    "transport_mode": { "enum": ["auto", "relay"] },
+    "path": { "enum": ["direct", "relay", "mixed", "unknown", "auto"] },
+    "path_start": { "enum": ["direct", "relay", "unknown"] },
+    "path_end": { "enum": ["direct", "relay", "unknown"] },
+    "local_candidate_type": { "type": ["string", "null"] },
+    "remote_candidate_type": { "type": ["string", "null"] },
+    "size_bytes": { "type": "integer", "minimum": 0 },
+    "chunk_size": { "type": "integer", "minimum": 0 },
+    "pipeline_depth": { "type": "integer", "minimum": 1 },
+    "handshake_seconds": { "type": ["number", "null"], "minimum": 0 },
+    "payload_seconds": { "type": ["number", "null"], "minimum": 0 },
+    "shutdown_seconds": { "type": ["number", "null"], "minimum": 0 },
+    "wall_seconds": { "type": "number", "minimum": 0 },
+    "effective_mib_per_second": { "type": "number", "minimum": 0 },
+    "sender_cpu_seconds": { "type": ["number", "null"], "minimum": 0 },
+    "receiver_cpu_seconds": { "type": ["number", "null"], "minimum": 0 },
+    "sender_max_rss_kib": { "type": ["integer", "null"], "minimum": 0 },
+    "receiver_max_rss_kib": { "type": ["integer", "null"], "minimum": 0 },
+    "source_sha256": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" }
+      ]
+    },
+    "received_sha256": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" }
+      ]
+    },
+    "success": { "type": "boolean" }
+  }
+}

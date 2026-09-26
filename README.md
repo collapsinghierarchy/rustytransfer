@@ -1,8 +1,8 @@
 # rustytransfer
 
-Peer-to-peer file transfer over WebRTC with password-based authentication (MAC-via-PAKE) and end-to-end encryption (ML-KEM+AES-GCM). Similar to [croc](https://github.com/schollz/croc) and [wormhole](https://github.com/magic-wormhole/magic-wormhole), but with quantum-safe features and in rust (and less features). Somewhat similar to [noisytransfercli](github.com/collapsinghierarchy/noisytransfercli), which is based on short authentication strings instead of PAKEs and is hella slow and hella large and is written in JS (and instead of porting it to TS (which is necessary), the author decided instead to redo it in rust -> hence rustytransfer (yikes...)). Both share, however, the same signaling [wrtc back-end](https://github.com/collapsinghierarchy/nt-backend-wrtc).
+Peer-to-peer file transfer over WebRTC or Iroh with password-based authentication (MAC-via-PAKE) and end-to-end encryption (ML-KEM+AES-GCM). Similar to [croc](https://github.com/schollz/croc) and [wormhole](https://github.com/magic-wormhole/magic-wormhole), but with quantum-safe features and in rust (and less features). Somewhat similar to [noisytransfercli](github.com/collapsinghierarchy/noisytransfercli), which is based on short authentication strings instead of PAKEs and is hella slow and hella large and is written in JS (and instead of porting it to TS (which is necessary), the author decided instead to redo it in rust -> hence rustytransfer (yikes...)).
 
-`rustytransfer` is a CLI tool that establishes a WebRTC data channel between two peers and streams the encrypted file directly from sender to receiver. A lightweight rendezvous service is used only for pairing and WebRTC signaling. 
+`rustytransfer` is a CLI tool that establishes a selectable WebRTC data channel or Iroh connection between two peers and streams the encrypted file directly from sender to receiver. A lightweight rendezvous/signaling service is used only for pairing and connection setup.
 
 > Status: **alpha**. The protocol and implementation are under active development and have not been security-audited, but reviewed by a cryptographer (whatever that means to you). Also everything may change without notice and yada yada.
 
@@ -14,7 +14,7 @@ The sender requests a **4-digit rendezvous code** from the backend and generates
 
 **`NNNN-ABCDE`**
 
-- `NNNN` is redeemed by the receiver to obtain the WebRTC room/app ID
+- `NNNN` is redeemed by the receiver to obtain the room/app ID
 - `ABCDE` is used as the PAKE password
 
 You share **only** `NNNN-ABCDE` with the receiver. Regarding the explanation of the security guarantees there is a blog article in preparation that will soon appear on my [Blog](https://whitenoise.systems/).
@@ -93,6 +93,7 @@ rustytransfer send --file /path/to/file
 
 Optional flags:
 
+- `--transport <webrtc|iroh>` selects the data transport. It defaults to `webrtc`; both peers must use the same value.
 - `--password ABCDE` (exactly 5 uppercase letters, otherwise one is generated.)
 - `--pick` an explicit flag to open the terminal file picker
 - `--chunk-size <bytes>` to tune streaming chunk size (advanced)
@@ -108,6 +109,10 @@ rustytransfer send --file ./example.zip --password ABCDE
 
 # Pick a file with the terminal UI
 rustytransfer send --pick
+
+# Use Iroh for both sides instead of the default WebRTC transport
+rustytransfer --transport iroh send --file ./example.zip
+rustytransfer --transport iroh recv --code 1234-ABCDE --out ./received.bin
 ```
 
 ### Receive
@@ -124,10 +129,19 @@ rustytransfer recv --code 1234-ABCDE --out ./received.bin
 
 ## Network requirements
 
-- Outbound HTTPS/WSS access to the rendezvous/signaling service:
-  - `https://nt.whitenoise.systems`
-  - `wss://nt.whitenoise.systems`
-- WebRTC connectivity depends on local network/NAT behavior.
+Failed transfers report a stable `RTY-*` code and exit with a code matching the
+failure category. The receiver writes to a temporary file in the destination
+directory and publishes the result only after the transfer is confirmed. An
+existing destination is never overwritten. Set `RUSTYTRANSFER_METRICS_JSONL`
+to record both successful and failed transfers; failure records include the
+phase, error code, transferred byte count, and completion state. `--verbose`
+adds redacted diagnostic context.
+
+- Outbound HTTP/WS access to the rendezvous/signaling service (default Oracle backend):
+  - `http://141.147.1.21`
+  - `ws://141.147.1.21`
+- WebRTC connectivity depends on local network/NAT behavior when `--transport webrtc` is used.
+- Iroh connectivity uses its QUIC/relay path when `--transport iroh` is used.
 ---
 
 ## Use of AI
@@ -140,4 +154,4 @@ rustytransfer recv --code 1234-ABCDE --out ./received.bin
 ## Acknowledgements
 
 - WebRTC transport via Rust crates in the ecosystem
-- Rendezvous service hosted at `nt.whitenoise.systems`
+- Rendezvous service hosted on the Oracle backend at `141.147.1.21`

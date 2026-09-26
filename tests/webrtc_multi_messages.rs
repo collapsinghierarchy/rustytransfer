@@ -3,8 +3,7 @@ use std::time::Duration;
 use tokio::time::timeout;
 use uuid::Uuid;
 
-use rustytransfer::transport::answerer::connect_answerer;
-use rustytransfer::transport::offerer::connect_offerer;
+use rustytransfer::transport::webrtc::{connect_answerer, connect_offerer};
 
 fn e2e_enabled() -> bool {
     // Optional gating so normal `cargo test` doesn't depend on the remote backend.
@@ -22,11 +21,7 @@ async fn webrtc_datachannel_multiple_messages_roundtrip() -> Result<()> {
     let app_id = Uuid::new_v4().to_string();
     println!("Using appID: {app_id}");
 
-    let msgs: Vec<Vec<u8>> = vec![
-        b"one".to_vec(),
-        b"two".to_vec(),
-        b"three".to_vec(),
-    ];
+    let msgs: Vec<Vec<u8>> = vec![b"one".to_vec(), b"two".to_vec(), b"three".to_vec()];
 
     let answerer_fut = async {
         let st = timeout(Duration::from_secs(90), connect_answerer(&app_id))
@@ -71,7 +66,10 @@ async fn webrtc_datachannel_multiple_messages_roundtrip() -> Result<()> {
             let mut expected = b"ACK:".to_vec();
             expected.extend_from_slice(m);
 
-            anyhow::ensure!(ack == expected, "unexpected ack: got {ack:?}, expected {expected:?}");
+            anyhow::ensure!(
+                ack == expected,
+                "unexpected ack: got {ack:?}, expected {expected:?}"
+            );
         }
 
         // tell receiver we're done (keeps same channel alive until now)

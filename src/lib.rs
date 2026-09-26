@@ -1,5 +1,11 @@
 //#[cfg(not(target_arch = "wasm32"))]
-pub mod crypto;
-pub mod protocol;
-pub mod transport;
 pub mod cli_ui;
+pub mod constants;
+pub mod crypto;
+#[cfg(not(target_arch = "wasm32"))]
+pub mod error;
+pub mod protocol;
+pub mod rendezvous;
+#[cfg(not(target_arch = "wasm32"))]
+pub mod transfer;
+pub mod transport;

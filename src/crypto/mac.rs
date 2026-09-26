@@ -1,32 +1,56 @@
 use hmac::{Hmac, Mac};
-use sha3::{Sha3_256, Digest};
+use sha3::{Digest, Sha3_256};
 
+// Clippy baseline: the alias names make the MAC key size explicit in the public API.
 pub type MacKey = [u8; 32];
+// Clippy baseline: the alias names make the MAC tag size explicit in the public API.
 pub type MacTag = [u8; 32];
 
 type HmacSha3_256 = Hmac<Sha3_256>;
 
-#[derive(Debug)]
 pub struct MacState {
     key: MacKey,
 }
 
 impl MacState {
+    #[must_use]
     pub fn new(pake_key: &[u8]) -> Self {
-        Self { key: derive_mac_key(pake_key) }
+        Self {
+            key: derive_mac_key(pake_key),
+        }
     }
 
+    /// Computes an HMAC-SHA3-256 tag.
+    ///
+    /// # Panics
+    ///
+    /// Panics only if the HMAC implementation rejects the fixed 32-byte key;
+    /// HMAC-SHA3-256 accepts keys of every length, so this cannot occur with
+    /// the current implementation.
+    // Clippy baseline: HMAC-SHA3-256 accepts keys of every length, including this fixed key.
+    #[must_use]
     pub fn tag(&self, data: &[u8]) -> MacTag {
-        let mut mac = HmacSha3_256::new_from_slice(&self.key)
-            .expect("HMAC accepts keys of any size");
+        let mut mac =
+            HmacSha3_256::new_from_slice(&self.key).expect("HMAC accepts keys of any size");
         mac.update(data);
         let out = mac.finalize().into_bytes(); // 32 bytes for Sha3_256
-        out.as_slice().try_into().expect("HMAC-SHA3-256 output is 32 bytes")
+        let mut tag = [0u8; 32];
+        tag.copy_from_slice(&out);
+        tag
     }
 
+    /// Verifies an HMAC-SHA3-256 tag in constant time.
+    ///
+    /// # Panics
+    ///
+    /// Panics only if the HMAC implementation rejects the fixed 32-byte key;
+    /// HMAC-SHA3-256 accepts keys of every length, so this cannot occur with
+    /// the current implementation.
+    // Clippy baseline: HMAC-SHA3-256 accepts keys of every length, including this fixed key.
+    #[must_use]
     pub fn verify(&self, data: &[u8], tag: &[u8]) -> bool {
-        let mut mac = HmacSha3_256::new_from_slice(&self.key)
-            .expect("HMAC accepts keys of any size");
+        let mut mac =
+            HmacSha3_256::new_from_slice(&self.key).expect("HMAC accepts keys of any size");
         mac.update(data);
         mac.verify_slice(tag).is_ok()
     }
@@ -34,7 +58,9 @@ impl MacState {
 
 fn derive_mac_key(pake_key: &[u8]) -> MacKey {
     let d = Sha3_256::digest(pake_key);
-    d.as_slice().try_into().expect("Sha3_256 output is 32 bytes")
+    let mut key = [0u8; 32];
+    key.copy_from_slice(&d);
+    key
 }
 
 #[cfg(test)]
@@ -90,6 +116,3 @@ mod tests {
         assert_eq!(t1, t2);
     }
 }
-
-
-

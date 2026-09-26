@@ -1,0 +1,23 @@
+	Command being timed: "env RUSTYTRANSFER_BENCH_SOURCE=/tmp/rustytransfer-phase3-resource-source.bin RUSTYTRANSFER_RESOURCE_PROBE_TRANSPORT=webrtc RUSTYTRANSFER_RESOURCE_PROBE_CHUNK_KIB=8 target/release/deps/local_transport_regressions-939cba332415c915 local_transfer_resource_probe --ignored --nocapture"
+	User time (seconds): 18.66
+	System time (seconds): 23.68
+	Percent of CPU this job got: 222%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:19.01
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 21452
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 215
+	Minor (reclaiming a frame) page faults: 9470
+	Voluntary context switches: 648467
+	Involuntary context switches: 350
+	Swaps: 0
+	File system inputs: 1
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

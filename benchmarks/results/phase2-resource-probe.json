@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "source_sha256": "8e25e35d7a940f0d6630e10a9957802f4706d8122163626d0e350191416a35bf",
+  "size_bytes": 536870912,
+  "runs_per_transport": 2,
+  "warmup_runs": 1,
+  "measured_runs": 1,
+  "paired_endpoints_share_one_process": true,
+  "transports": [
+    {
+      "transport": "iroh",
+      "path": "direct",
+      "chunk_size": 262144,
+      "elapsed_seconds": 12.56,
+      "user_cpu_seconds": 14.50,
+      "system_cpu_seconds": 9.34,
+      "combined_cpu_seconds": 23.84,
+      "average_combined_cpu_seconds_per_transfer": 11.92,
+      "process_max_rss_kib": 27028,
+      "success": true
+    },
+    {
+      "transport": "webrtc",
+      "path": "direct",
+      "chunk_size": 8192,
+      "elapsed_seconds": 36.14,
+      "user_cpu_seconds": 28.55,
+      "system_cpu_seconds": 36.31,
+      "combined_cpu_seconds": 64.86,
+      "average_combined_cpu_seconds_per_transfer": 32.43,
+      "process_max_rss_kib": 24136,
+      "success": true
+    }
+  ],
+  "limitations": [
+    "CPU and peak RSS cover the in-process sender and receiver together, test harness, and setup.",
+    "Each process RSS is an upper bound for either peer in this harness; independent endpoint processes were not measured.",
+    "CPU averages divide the two-transfer command total, including one warm-up and test overhead, by two."
+  ]
+}

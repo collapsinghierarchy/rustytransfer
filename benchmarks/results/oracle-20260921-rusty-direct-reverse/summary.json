@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "binary_sha256": "f60b1ba6f2ed65dfe56cd794724882a9338f66780c41f0b38fa1b454c03a1ab5",
+  "direction": "Oracle ARM64 sender to WSL x86_64 receiver",
+  "transport": "Iroh QUIC direct",
+  "runs": 3,
+  "sizes": {
+    "64_mib": {
+      "warmup_rate_mib_per_second": 14.16619695320466,
+      "measured_runs": 3,
+      "median_wall_seconds": 4.076117819999997,
+      "wall_range_seconds": [
+        4.009270537000003,
+        4.162050086999997
+      ],
+      "median_effective_mib_per_second": 15.701214446249754,
+      "rate_range_mib_per_second": [
+        15.377037436407008,
+        15.963003596132719
+      ],
+      "median_sender_cpu_seconds": 1.78,
+      "median_receiver_cpu_seconds": 1.1099999999999999,
+      "median_sender_max_rss_kib": 38408,
+      "median_receiver_max_rss_kib": 27920,
+      "sha256": "3b6a07d0d404fab4e23b6d34bc6696a6a312dd92821332385e5af7c01c421351",
+      "all_direct_and_hash_verified": true
+    },
+    "512_mib": {
+      "warmup_rate_mib_per_second": 27.220199164919126,
+      "measured_runs": 3,
+      "median_wall_seconds": 18.840649479000007,
+      "wall_range_seconds": [
+        18.787067365,
+        18.844013098999994
+      ],
+      "median_effective_mib_per_second": 27.175283982151505,
+      "rate_range_mib_per_second": [
+        27.170433246364627,
+        27.252789914079283
+      ],
+      "median_sender_cpu_seconds": 13.49,
+      "median_receiver_cpu_seconds": 7.82,
+      "median_sender_max_rss_kib": 38508,
+      "median_receiver_max_rss_kib": 28196,
+      "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767",
+      "all_direct_and_hash_verified": true
+    }
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "groups": [
+    {
+      "chunk_size": 8192,
+      "effective_mib_per_second": {
+        "mad": 0.5154166674169289,
+        "maximum": 35.102040372626,
+        "median": 34.58662370520907,
+        "minimum": 33.84907578137062
+      },
+      "endpoint_process_cpu_and_rss_available": false,
+      "handshake_seconds": {
+        "mad": 0.0016248200000000268,
+        "maximum": 0.366351675,
+        "median": 0.360219888,
+        "minimum": 0.354012714
+      },
+      "path": "direct",
+      "payload_seconds": {
+        "mad": 0.02294583799999983,
+        "maximum": 1.512847099,
+        "median": 1.48497109,
+        "minimum": 1.462025252
+      },
+      "pipeline_depth": 1,
+      "receiver_cpu_seconds": null,
+      "receiver_max_rss_kib": null,
+      "role": "receiver",
+      "sender_cpu_seconds": null,
+      "sender_max_rss_kib": null,
+      "shutdown_seconds": {
+        "mad": 0.000245807,
+        "maximum": 0.028269493,
+        "median": 0.001650642,
+        "minimum": 0.001404835
+      },
+      "size_bytes": 67108864,
+      "successful_runs": 5,
+      "transport": "iroh",
+      "transport_mode": null,
+      "wall_seconds": {
+        "mad": 0.027170517000000283,
+        "maximum": 1.890745863,
+        "median": 1.850426354,
+        "minimum": 1.8232558369999998
+      }
+    },
+    {
+      "chunk_size": 8192,
+      "effective_mib_per_second": {
+        "mad": 0.5209728225242998,
+        "maximum": 34.8914595630884,
+        "median": 34.3704867405641,
+        "minimum": 33.65104120861761
+      },
+      "endpoint_process_cpu_and_rss_available": false,
+      "handshake_seconds": {
+        "mad": 0.0016337590000000124,
+        "maximum": 0.365994259,
+        "median": 0.359784123,
+        "minimum": 0.353548369
+      },
+      "path": "direct",
+      "payload_seconds": {
+        "mad": 0.02186301600000018,
+        "maximum": 1.529913858,
+        "median": 1.4962613120000001,
+        "minimum": 1.474398296
+      },
+      "pipeline_depth": 1,
+      "receiver_cpu_seconds": null,
+      "receiver_max_rss_kib": null,
+      "role": "sender",
+      "sender_cpu_seconds": null,
+      "sender_max_rss_kib": null,
+      "shutdown_seconds": {
+        "mad": 0.0003180609999999999,
+        "maximum": 0.027880242,
+        "median": 0.00134176,
+        "minimum": 0.001023699
+      },
+      "size_bytes": 67108864,
+      "successful_runs": 5,
+      "transport": "iroh",
+      "transport_mode": null,
+      "wall_seconds": {
+        "mad": 0.02780290800000018,
+        "maximum": 1.9018728009999997,
+        "median": 1.862062661,
+        "minimum": 1.8342597529999998
+      }
+    },
+    {
+      "chunk_size": 8192,
+      "effective_mib_per_second": {
+        "mad": 2.970544818004335,
+        "maximum": 38.42196746020402,
+        "median": 34.12584692333823,
+        "minimum": 30.84693645636355
+      },
+      "endpoint_process_cpu_and_rss_available": false,
+      "handshake_seconds": {
+        "mad": 0.0008847850000001101,
+        "maximum": 0.620189083,
+        "median": 0.6066434390000001,
+        "minimum": 0.605758654
+      },
+      "path": "direct",
+      "payload_seconds": {
+        "mad": 0.17948063699999994,
+        "maximum": 1.466475483,
+        "median": 1.2680135510000001,
+        "minimum": 1.059367095
+      },
+      "pipeline_depth": 1,
+      "receiver_cpu_seconds": null,
+      "receiver_max_rss_kib": null,
+      "role": "receiver",
+      "sender_cpu_seconds": null,
+      "sender_max_rss_kib": null,
+      "shutdown_seconds": {
+        "mad": 9.835900000000001e-05,
+        "maximum": 0.000776452,
+        "median": 0.000652222,
+        "minimum": 0.000553863
+      },
+      "size_bytes": 67108864,
+      "successful_runs": 5,
+      "transport": "webrtc",
+      "transport_mode": null,
+      "wall_seconds": {
+        "mad": 0.17881365400000027,
+        "maximum": 2.074760328,
+        "median": 1.875411331,
+        "minimum": 1.665713763
+      }
+    },
+    {
+      "chunk_size": 8192,
+      "effective_mib_per_second": {
+        "mad": 2.9663222656499215,
+        "maximum": 38.09007790995124,
+        "median": 33.90235192661245,
+        "minimum": 30.658115544040477
+      },
+      "endpoint_process_cpu_and_rss_available": false,
+      "handshake_seconds": {
+        "mad": 0.0009036500000001446,
+        "maximum": 0.6191098049999999,
+        "median": 0.606226773,
+        "minimum": 0.6053231229999999
+      },
+      "path": "direct",
+      "payload_seconds": {
+        "mad": 0.18156617600000002,
+        "maximum": 1.479273867,
+        "median": 1.280512317,
+        "minimum": 1.073987193
+      },
+      "pipeline_depth": 1,
+      "receiver_cpu_seconds": null,
+      "receiver_max_rss_kib": null,
+      "role": "sender",
+      "sender_cpu_seconds": null,
+      "sender_max_rss_kib": null,
+      "shutdown_seconds": {
+        "mad": 5.518100000000007e-05,
+        "maximum": 0.001188587,
+        "median": 0.000980363,
+        "minimum": 0.000917279
+      },
+      "size_bytes": 67108864,
+      "successful_runs": 5,
+      "transport": "webrtc",
+      "transport_mode": null,
+      "wall_seconds": {
+        "mad": 0.18101055600000038,
+        "maximum": 2.087538613,
+        "median": 1.887774634,
+        "minimum": 1.680227595
+      }
+    }
+  ],
+  "rejected_rows": [],
+  "schema_version": 1
+}

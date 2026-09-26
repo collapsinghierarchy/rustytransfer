@@ -1,14 +1,12 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result};
+use futures_util::stream::{SplitSink, SplitStream};
 use futures_util::{SinkExt, StreamExt};
 use tokio::net::TcpStream;
 use tokio_tungstenite::{
-    connect_async,
-    tungstenite::protocol::Message as WsMsg,
-    MaybeTlsStream,
-    WebSocketStream,
+    MaybeTlsStream, WebSocketStream, connect_async, tungstenite::protocol::Message as WsMsg,
 };
-use futures_util::stream::{SplitSink, SplitStream};
 
+use crate::transport::errors::TransportError;
 use crate::transport::frames::Frame;
 
 pub type WsStream = WebSocketStream<MaybeTlsStream<TcpStream>>;
@@ -21,15 +19,27 @@ pub struct WsRoomTransport {
 }
 
 impl WsRoomTransport {
+    #[must_use]
     pub fn new(app_id: String, side: String) -> Self {
         Self { app_id, side }
     }
 
-    // helper that builds the wss URL for a given side
+    // Helper that builds the WebSocket URL for the selected backend.
+    #[must_use]
     pub fn ws_url(&self) -> String {
-        format!("wss://nt.whitenoise.systems/ws?appID={}&side={}", &self.app_id, &self.side)
+        format!(
+            "{}/ws?appID={}&side={}",
+            crate::constants::websocket_base_url(),
+            self.app_id,
+            self.side
+        )
     }
 
+    /// Connects to the rendezvous WebSocket room.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the backend cannot be reached or the WebSocket handshake fails.
     pub async fn connect_room(&self) -> Result<(WsWrite, WsRead)> {
         let url = self.ws_url();
         let (ws, _resp) = connect_async(&url)
@@ -38,37 +48,53 @@ impl WsRoomTransport {
         Ok(ws.split())
     }
 
+    /// Sends one signaling frame to the rendezvous room.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if serialization or WebSocket delivery fails.
     pub async fn send_frame(write: &mut WsWrite, frame: &Frame) -> Result<()> {
         let text = serde_json::to_string(frame)?;
         write.send(WsMsg::Text(text.into())).await?;
         Ok(())
     }
 
+    /// Receives and decodes the next signaling frame.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the WebSocket closes unexpectedly.
     pub async fn recv_frame(read: &mut WsRead) -> Result<Frame> {
         loop {
-            let msg = read
-                .next()
-                .await
-                .ok_or_else(|| anyhow!("websocket closed unexpectedly"))??;
+            let msg = read.next().await.ok_or(TransportError::WebSocketClosed)??;
 
-            let Ok(body) = msg.into_text() else { continue };
+            let body = match msg {
+                WsMsg::Text(body) => body,
+                WsMsg::Ping(_) | WsMsg::Pong(_) => continue,
+                WsMsg::Close(_) => return Err(TransportError::WebSocketClosed.into()),
+                WsMsg::Binary(_) => {
+                    return Err(TransportError::InvalidWebSocketMessage("binary").into());
+                }
+                WsMsg::Frame(_) => {
+                    return Err(TransportError::InvalidWebSocketMessage("raw frame").into());
+                }
+            };
 
-            if let Ok(frame) = serde_json::from_str::<Frame>(&body) {
-                return Ok(frame);
-            }
+            return serde_json::from_str::<Frame>(&body)
+                .map_err(|error| TransportError::InvalidWebSocketFrame(error.to_string()).into());
         }
     }
-
 }
 
-pub async fn wait_for_room_full(
-    read: &mut WsRead,
-) -> Result<bool> {
+/// Waits until the rendezvous room reports that both peers are present.
+///
+/// # Errors
+///
+/// Returns an error if the signaling WebSocket closes unexpectedly.
+pub async fn wait_for_room_full(read: &mut WsRead) -> Result<bool> {
     loop {
-        match WsRoomTransport::recv_frame(read).await? {
-            Frame::Room_Full => return Ok(true),
-            // ignore anything else and keep waiting
-            _ => continue,
+        if let Frame::RoomFull = WsRoomTransport::recv_frame(read).await? {
+            return Ok(true);
         }
     }
 }
@@ -76,24 +102,24 @@ pub async fn wait_for_room_full(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use anyhow::{anyhow, Result};
-    use tokio::time::{timeout, Duration};
+    use anyhow::{Result, anyhow, bail};
+    use tokio::time::{Duration, timeout};
     use uuid::Uuid;
 
     // Reasonable timeout for remote backend IO.
     const T: Duration = Duration::from_secs(8);
 
     async fn wait_for_offer(read: &mut WsRead) -> Result<Frame> {
-        // Room_Full may appear first; ignore it and keep waiting.
+        // RoomFull may appear first; ignore it and keep waiting.
         for _ in 0..10 {
             let frame = timeout(T, WsRoomTransport::recv_frame(read))
                 .await
-                .map_err(|_| anyhow!("timeout waiting for offer"))??;
+                .map_err(|error| anyhow!("timeout waiting for offer: {error}"))??;
 
             match frame {
-                Frame::Room_Full => continue,
+                Frame::RoomFull => {}
                 Frame::Offer { .. } => return Ok(frame),
-                Frame::Answer { .. } => continue, // ignore unexpected
+                Frame::Answer { .. } | Frame::IrohOffer { .. } => {} // ignore unexpected
             }
         }
         Err(anyhow!("did not receive Offer within retries"))
@@ -103,12 +129,12 @@ mod tests {
         for _ in 0..10 {
             let frame = timeout(T, WsRoomTransport::recv_frame(read))
                 .await
-                .map_err(|_| anyhow!("timeout waiting for answer"))??;
+                .map_err(|error| anyhow!("timeout waiting for answer: {error}"))??;
 
             match frame {
-                Frame::Room_Full => continue,
+                Frame::RoomFull => {}
                 Frame::Answer { .. } => return Ok(frame),
-                Frame::Offer { .. } => continue, // ignore unexpected
+                Frame::Offer { .. } | Frame::IrohOffer { .. } => {} // ignore unexpected
             }
         }
         Err(anyhow!("did not receive Answer within retries"))
@@ -119,7 +145,7 @@ mod tests {
         let t = WsRoomTransport::new("abc123".to_string(), "A".to_string());
         let url = t.ws_url();
 
-        assert!(url.contains("wss://nt.whitenoise.systems/ws?"));
+        assert!(url.contains("ws://141.147.1.21/ws?"));
         assert!(url.contains("appID=abc123"));
         assert!(url.contains("side=A"));
     }
@@ -148,7 +174,7 @@ mod tests {
         let got = wait_for_offer(&mut read_b).await?;
         match got {
             Frame::Offer { sdp, .. } => assert_eq!(sdp, "test-sdp"),
-            other => panic!("expected Offer, got: {other:?}"),
+            other => bail!("expected Offer, got: {other:?}"),
         }
 
         Ok(())
@@ -178,7 +204,7 @@ mod tests {
         let got_offer = wait_for_offer(&mut read_b).await?;
         match got_offer {
             Frame::Offer { sdp, .. } => assert_eq!(sdp, "offer-from-a"),
-            other => panic!("expected Offer at B, got: {other:?}"),
+            other => bail!("expected Offer at B, got: {other:?}"),
         }
 
         // B -> A : Answer
@@ -194,7 +220,7 @@ mod tests {
         let got_answer = wait_for_answer(&mut read_a).await?;
         match got_answer {
             Frame::Answer { sdp, .. } => assert_eq!(sdp, "answer-from-b"),
-            other => panic!("expected Answer at A, got: {other:?}"),
+            other => bail!("expected Answer at A, got: {other:?}"),
         }
 
         Ok(())
@@ -232,13 +258,13 @@ mod tests {
         let got1 = wait_for_offer(&mut read_b).await?;
         let sdp1 = match got1 {
             Frame::Offer { sdp, .. } => sdp,
-            other => panic!("expected Offer, got: {other:?}"),
+            other => bail!("expected Offer, got: {other:?}"),
         };
 
         let got2 = wait_for_offer(&mut read_b).await?;
         let sdp2 = match got2 {
             Frame::Offer { sdp, .. } => sdp,
-            other => panic!("expected Offer, got: {other:?}"),
+            other => bail!("expected Offer, got: {other:?}"),
         };
 
         assert_eq!(sdp1, "offer-1");

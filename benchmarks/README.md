@@ -391,14 +391,15 @@ Raw relay rows and their summary are in
 [`summary.json`](results/oracle-20260921-relay/summary.json). The successful
 direct observation is retained in
 [`oracle-64.jsonl`](results/oracle-20260921-direct-probe/oracle-64.jsonl);
-its associated logs and the unmatched Croc path diagnostics are also retained
-in that folder and
-[`oracle-20260921-derp-probe`](results/oracle-20260921-derp-probe).
-The Croc direct TCP rows, summary, successful logs, and initial firewall-block
-diagnostic are in
+its associated logs and the unmatched Croc path diagnostics remain available
+locally under `results/oracle-20260921-direct-probe/logs/` and
+`results/oracle-20260921-derp-probe/logs/`.
+The Croc direct TCP rows and summary are in
 [`oracle-20260921-croc-direct-tcp`](results/oracle-20260921-croc-direct-tcp).
-The matched Rustytransfer direct rows, summary, and successful logs are in
+The matched Rustytransfer direct rows and summary are in
 [`oracle-20260921-rusty-direct-reverse`](results/oracle-20260921-rusty-direct-reverse).
+Successful transfer logs and the initial firewall-block diagnostic remain
+local in the corresponding `logs/` directories.
 
 **Decision:** the current Rustytransfer build is substantially slower than Croc
 on this Oracle relay route and does not meet the planned 5.5 MiB/s target for

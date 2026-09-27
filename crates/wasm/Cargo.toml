@@ -8,8 +8,8 @@ license.workspace = true
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-rustytransfer-crypto = { path = "../crypto" }
-rustytransfer-protocol = { path = "../protocol" }
+rustytransfer-crypto = { version = "0.1.0", path = "../crypto" }
+rustytransfer-protocol = { version = "0.1.0", path = "../protocol" }
 wasm-bindgen.workspace = true
 
 [lints]

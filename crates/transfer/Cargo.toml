@@ -5,7 +5,7 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-rustytransfer-protocol = { path = "../protocol" }
+rustytransfer-protocol = { version = "0.1.0", path = "../protocol" }
 anyhow.workspace = true
 thiserror.workspace = true
 tokio.workspace = true

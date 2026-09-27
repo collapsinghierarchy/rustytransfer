@@ -1,8 +1,6 @@
 # rustytransfer
 
-Peer-to-peer file transfer over WebRTC or Iroh with password-based authentication (MAC-via-PAKE) and end-to-end encryption (ML-KEM+AES-GCM). Similar to [croc](https://github.com/schollz/croc) and [wormhole](https://github.com/magic-wormhole/magic-wormhole), but with quantum-safe features and in rust (and less features). Somewhat similar to [noisytransfercli](github.com/collapsinghierarchy/noisytransfercli), which is based on short authentication strings instead of PAKEs and is hella slow and hella large and is written in JS (and instead of porting it to TS (which is necessary), the author decided instead to redo it in rust -> hence rustytransfer (yikes...)).
-
-`rustytransfer` is a CLI tool that establishes a selectable WebRTC data channel or Iroh connection between two peers and streams the encrypted file directly from sender to receiver. A lightweight rendezvous/signaling service is used only for pairing and connection setup.
+Peer-to-peer file transfer over WebRTC or Iroh with short-code PAKE or direct Iroh invites and end-to-end encryption (ML-KEM+AES-GCM). Similar to [croc](https://github.com/schollz/croc) and [wormhole](https://github.com/magic-wormhole/magic-wormhole), but with quantum-safe features and in rust (and less features).
 
 > Status: **alpha**. The protocol and implementation are under active development and have not been security-audited, but reviewed by a cryptographer (whatever that means to you). Also everything may change without notice and yada yada.
 
@@ -17,7 +15,25 @@ The sender requests a **4-digit rendezvous code** from the backend and generates
 - `NNNN` is redeemed by the receiver to obtain the room/app ID
 - `ABCDE` is used as the PAKE password
 
-You share **only** `NNNN-ABCDE` with the receiver. Regarding the explanation of the security guarantees there is a blog article in preparation that will soon appear on my [Blog](https://whitenoise.systems/).
+You share **only** `NNNN-ABCDE` with the receiver.
+
+For a direct Iroh transfer, the sender instead shares one invite in the form
+`rt1:<sender EndpointId>:<per-transfer token>`. Iroh authenticates the sender's
+ID; the random token authorizes this particular file transfer. The direct
+mode uses Iroh's public lookup/relays and does not contact the rustytransfer
+backend or run PAKE. Keep the complete invite private until the transfer ends.
+
+Save and list peer IDs locally:
+
+```bash
+rustytransfer contacts add alice '<EndpointId-or-direct-invite>'
+rustytransfer contacts list
+rustytransfer contacts remove alice
+```
+
+The address book stores the peer ID and name; when given a direct invite, it
+discards the per-transfer token. A saved contact ID does not replace the token
+needed to authorize a transfer.
 
 ---
 
@@ -42,7 +58,7 @@ chmod +x ./rustytransfer
 ```bash
 git clone https://github.com/collapsinghierarchy/rustytransfer.git
 cd rustytransfer
-cargo build --release
+cargo build -p rustytransfer --release
 ./target/release/rustytransfer --help
 ```
 
@@ -69,6 +85,44 @@ By default, the scripts install to:
 
 Make sure that directory is on your `PATH`.
 
+### Workspace packages
+
+The root `rustytransfer` package provides the CLI and Rust compatibility
+exports. The implementation is split into `rustytransfer-crypto` (PAKE and
+encryption), `rustytransfer-protocol` (wire messages and state machines),
+`rustytransfer-transfer` (file transfer and metrics), and
+`rustytransfer-native` (rendezvous, signaling, WebRTC, and Iroh).
+`rustytransfer-wasm` contains the JavaScript PAKE adapter and builds as a
+`cdylib` for WebAssembly.
+
+### Probe persistent Iroh IDs and public relays
+
+This standalone probe uses Iroh's public `N0` address lookup and relay without
+the rustytransfer backend or PAKE. It exchanges only `PING`/`PONG`; it does not
+transfer files. Run it on two machines, or use two distinct key files locally.
+
+```powershell
+$key = Join-Path $env:LOCALAPPDATA 'rustytransfer\iroh-probe-listener.key'
+cargo run -p rustytransfer-native --bin iroh-probe --no-default-features --features iroh -- --key-file $key --relay-only listen
+```
+
+Copy the printed `Local EndpointId` to the other peer:
+
+```powershell
+$key = Join-Path $env:LOCALAPPDATA 'rustytransfer\iroh-probe-dialer.key'
+cargo run -p rustytransfer-native --bin iroh-probe --no-default-features --features iroh -- --key-file $key --relay-only dial 'PASTE_ENDPOINT_ID_HERE'
+```
+
+Each side prints the authenticated peer ID and selected path. `path: relay`
+confirms relay traffic. Run the following twice to confirm that the EndpointId
+survives a restart:
+
+```powershell
+cargo run -p rustytransfer-native --bin iroh-probe --no-default-features --features iroh -- --key-file $key id
+```
+
+Omit `--relay-only` to allow direct IP paths. Keep the key file private.
+
 ---
 
 ## Usage
@@ -94,6 +148,8 @@ rustytransfer send --file /path/to/file
 Optional flags:
 
 - `--transport <webrtc|iroh>` selects the data transport. It defaults to `webrtc`; both peers must use the same value.
+- `--direct` starts a direct Iroh transfer and prints a copyable invite instead of a share code.
+- `--identity-file <path>` selects the sender's persistent Iroh key file for direct transfers. By default it is stored under the user's data directory.
 - `--password ABCDE` (exactly 5 uppercase letters, otherwise one is generated.)
 - `--pick` an explicit flag to open the terminal file picker
 - `--chunk-size <bytes>` to tune streaming chunk size (advanced)
@@ -113,7 +169,15 @@ rustytransfer send --pick
 # Use Iroh for both sides instead of the default WebRTC transport
 rustytransfer --transport iroh send --file ./example.zip
 rustytransfer --transport iroh recv --code 1234-ABCDE --out ./received.bin
+
+# Bypass the rendezvous backend and PAKE
+rustytransfer send --direct --file ./example.zip
+rustytransfer recv --invite 'rt1:<sender-id>:<one-time-token>' --out ./received.bin
 ```
+
+If requesting a rendezvous code fails, `send` switches to direct Iroh mode
+automatically. It prints only a direct invite after Iroh is publicly reachable;
+it does not print a short PAKE code. The receiver then uses `--invite`.
 
 ### Receive
 
@@ -137,11 +201,18 @@ to record both successful and failed transfers; failure records include the
 phase, error code, transferred byte count, and completion state. `--verbose`
 adds redacted diagnostic context.
 
-- Outbound HTTP/WS access to the rendezvous/signaling service (default Oracle backend):
-  - `http://141.147.1.21`
-  - `ws://141.147.1.21`
+- Outbound HTTP/WS access to the rendezvous/signaling service. Set
+  `RUSTYTRANSFER_BACKEND_URL` to override the backend base URL, for example
+  `https://transfer.example`.
 - WebRTC connectivity depends on local network/NAT behavior when `--transport webrtc` is used.
 - Iroh connectivity uses its QUIC/relay path when `--transport iroh` is used.
+- Direct invites use Iroh's public `N0` lookup and relays, even when the
+  rustytransfer backend is offline. A relay path is still end-to-end encrypted.
+
+After a transient connection failure, `send` and `recv` retry up to three
+times with 1, 2, and 4 second delays. Each retry starts a new session from byte
+zero, and incomplete receiver output is discarded. Authentication, protocol,
+and file errors do not trigger retries.
 ---
 
 ## Use of AI
@@ -154,4 +225,4 @@ adds redacted diagnostic context.
 ## Acknowledgements
 
 - WebRTC transport via Rust crates in the ecosystem
-- Rendezvous service hosted on the Oracle backend at `141.147.1.21`
+- Rendezvous service backend

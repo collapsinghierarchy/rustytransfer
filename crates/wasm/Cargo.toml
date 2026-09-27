@@ -1,0 +1,16 @@
+[package]
+name = "rustytransfer-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+rustytransfer-crypto = { path = "../crypto" }
+rustytransfer-protocol = { path = "../protocol" }
+wasm-bindgen.workspace = true
+
+[lints]
+workspace = true

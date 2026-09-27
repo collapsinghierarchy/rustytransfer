@@ -1,0 +1,282 @@
+use crate::*;
+
+/// Run the sender side of one encrypted file transfer.
+///
+/// # Errors
+///
+/// Returns an error when the configuration is invalid, the source cannot be
+/// read, authentication or encryption fails, the peer violates the protocol,
+/// or the transport cannot complete the transfer and shutdown sequence.
+pub async fn send_file<T, R, F>(
+    transport: &mut T,
+    source: R,
+    file_len: u64,
+    password: &[u8],
+    config: TransferConfig,
+    on_progress: F,
+) -> std::result::Result<TransferMetrics, TransferError>
+where
+    T: TransferTransport,
+    R: AsyncRead + Unpin + Send,
+    F: FnMut(u64, u64) + Send,
+{
+    send_file_with_auth(
+        transport,
+        source,
+        file_len,
+        Authentication::Pake(password),
+        config,
+        on_progress,
+    )
+    .await
+}
+
+/// Run the sender side of one encrypted transfer authenticated by a direct
+/// shared token. The two PAKE messages are omitted; the token authenticates
+/// the existing KEM exchange.
+///
+/// # Errors
+///
+/// Returns an error when the configuration is invalid, the source cannot be
+/// read, authentication or encryption fails, the peer violates the protocol,
+/// or the transport cannot complete the transfer and shutdown sequence.
+pub async fn send_file_direct<T, R, F>(
+    transport: &mut T,
+    source: R,
+    file_len: u64,
+    token: &[u8; 16],
+    config: TransferConfig,
+    on_progress: F,
+) -> std::result::Result<TransferMetrics, TransferError>
+where
+    T: TransferTransport,
+    R: AsyncRead + Unpin + Send,
+    F: FnMut(u64, u64) + Send,
+{
+    send_file_with_auth(
+        transport,
+        source,
+        file_len,
+        Authentication::Direct(token),
+        config,
+        on_progress,
+    )
+    .await
+}
+
+#[derive(Clone, Copy)]
+enum Authentication<'a> {
+    Pake(&'a [u8]),
+    Direct(&'a [u8; 16]),
+}
+
+async fn send_file_with_auth<T, R, F>(
+    transport: &mut T,
+    source: R,
+    file_len: u64,
+    authentication: Authentication<'_>,
+    config: TransferConfig,
+    on_progress: F,
+) -> std::result::Result<TransferMetrics, TransferError>
+where
+    T: TransferTransport,
+    R: AsyncRead + Unpin + Send,
+    F: FnMut(u64, u64) + Send,
+{
+    let mut context = TransferContext::new();
+    let result = send_file_inner(
+        transport,
+        source,
+        file_len,
+        authentication,
+        config,
+        on_progress,
+        &mut context,
+    )
+    .await;
+    match result {
+        Ok(metrics) => Ok(metrics),
+        Err(mut error) => {
+            if let Err(issue) = abort_transport(transport).await {
+                error.add_cleanup_issue(issue);
+            }
+            Err(error)
+        }
+    }
+}
+
+async fn send_file_inner<T, R, F>(
+    transport: &mut T,
+    mut source: R,
+    file_len: u64,
+    authentication: Authentication<'_>,
+    config: TransferConfig,
+    mut on_progress: F,
+    context: &mut TransferContext,
+) -> std::result::Result<TransferMetrics, TransferError>
+where
+    T: TransferTransport,
+    R: AsyncRead + Unpin + Send,
+    F: FnMut(u64, u64) + Send,
+{
+    let chunk_size = config.validate(file_len)?;
+    let mut sender = match authentication {
+        Authentication::Pake(password) => SenderFsm::new(password.to_vec(), file_len, chunk_size),
+        Authentication::Direct(token) => SenderFsm::new_direct(token, file_len, chunk_size),
+    };
+    context.phase = match authentication {
+        Authentication::Pake(_) => Phase::Pake,
+        Authentication::Direct(_) => Phase::KemAuth,
+    };
+    context.completion = CompletionState::InProgress;
+    let handshake_started = Instant::now();
+
+    if matches!(authentication, Authentication::Pake(_)) {
+        let pake_start = receive_with_timeout(transport, HANDSHAKE_TIMEOUT, *context).await?;
+        if sender
+            .step("PAKE_START", Some(pake_start))
+            .map_err(|error| context.protocol(error))?
+            .is_some()
+        {
+            return Err(context.error(TransferErrorKind::Internal(
+                "sender PAKE_START unexpectedly produced output",
+            )));
+        }
+
+        let pake_answer = match &mut sender.state {
+            State::Pake {
+                role: Role::Sender,
+                pake_state,
+                ..
+            } => pake_state.take_outbound_msg(),
+            _ => {
+                return Err(context.error(TransferErrorKind::Internal(
+                    "sender did not enter PAKE state",
+                )));
+            }
+        };
+        send_with_timeout(transport, pake_answer, HANDSHAKE_TIMEOUT, *context).await?;
+    }
+
+    context.phase = Phase::KemAuth;
+    let auth_kem = receive_with_timeout(transport, HANDSHAKE_TIMEOUT, *context).await?;
+    let smt_header = required_output(
+        "sender SMT header",
+        sender
+            .step("RECEIVED_AUTH_KEM", Some(auth_kem))
+            .map_err(|error| context.protocol(error))?,
+    )
+    .map_err(|_source| context.error(TransferErrorKind::Internal("sender SMT header missing")))?;
+    context.phase = Phase::Metadata;
+    send_with_timeout(transport, smt_header, HANDSHAKE_TIMEOUT, *context).await?;
+    let handshake_seconds = handshake_started.elapsed().as_secs_f64();
+
+    context.phase = Phase::Payload;
+    on_progress(file_len, 0);
+    let payload_started = Instant::now();
+    let mut buffer = Vec::new();
+    buffer
+        .try_reserve_exact(config.chunk_size)
+        .map_err(|_source| {
+            context.error(TransferErrorKind::Config("chunk buffer allocation failed"))
+        })?;
+    buffer.resize(config.chunk_size, 0);
+    loop {
+        let bytes_read = timeout(CHUNK_TIMEOUT, source.read(&mut buffer))
+            .await
+            .map_err(|_source| context.error(TransferErrorKind::Timeout))?
+            .map_err(|error| context.error(TransferErrorKind::SourceIo(error)))?;
+        if bytes_read == 0 {
+            break;
+        }
+
+        let capacity = bytes_read.checked_add(GCM_TAG_LEN).ok_or_else(|| {
+            context.error(TransferErrorKind::Internal(
+                "plaintext chunk capacity overflow",
+            ))
+        })?;
+        let mut plaintext = Vec::new();
+        plaintext.try_reserve_exact(capacity).map_err(|_source| {
+            context.error(TransferErrorKind::Config(
+                "plaintext chunk allocation failed",
+            ))
+        })?;
+        let bytes = buffer.get(..bytes_read).ok_or_else(|| {
+            context.error(TransferErrorKind::Internal("source read exceeded buffer"))
+        })?;
+        plaintext.extend_from_slice(bytes);
+        let ciphertext = required_output(
+            "sender ciphertext block",
+            sender
+                .step("SMT", Some(plaintext))
+                .map_err(|error| context.protocol(error))?,
+        )
+        .map_err(|_source| {
+            context.error(TransferErrorKind::Internal("sender ciphertext missing"))
+        })?;
+        context.bytes_transferred = sender.bytes_sent();
+        send_with_timeout(transport, ciphertext, CHUNK_TIMEOUT, *context).await?;
+        on_progress(file_len, sender.bytes_sent());
+    }
+    if sender.bytes_sent() != file_len {
+        return Err(context.error(TransferErrorKind::SourceIo(io::Error::new(
+            io::ErrorKind::UnexpectedEof,
+            format!(
+                "source ended after {} of {} bytes",
+                sender.bytes_sent(),
+                file_len
+            ),
+        ))));
+    }
+    let payload_seconds = payload_started.elapsed().as_secs_f64();
+
+    context.phase = Phase::Finalize;
+    context.completion = CompletionState::DataCompleteUnconfirmed;
+    let shutdown_started = Instant::now();
+    let fin = receive_with_timeout(transport, SHUTDOWN_TIMEOUT, *context).await?;
+    if sender
+        .step("FIN", Some(fin))
+        .map_err(|error| context.protocol(error))?
+        .is_some()
+    {
+        return Err(context.error(TransferErrorKind::Internal(
+            "sender FIN unexpectedly produced output",
+        )));
+    }
+    if !matches!(sender.state, State::Success(_)) {
+        return Err(context.error(TransferErrorKind::Internal("sender did not complete")));
+    }
+    send_with_timeout(transport, FIN_ACK.to_vec(), SHUTDOWN_TIMEOUT, *context).await?;
+    context.completion = CompletionState::ProtocolConfirmed;
+    context.phase = Phase::Shutdown;
+    timeout(SHUTDOWN_TIMEOUT, transport.close_send_half())
+        .await
+        .map_err(|_source| context.error(TransferErrorKind::Timeout))?
+        .map_err(|error| context.transport(error))?;
+    timeout(SHUTDOWN_TIMEOUT, transport.finish_receiving())
+        .await
+        .map_err(|_source| context.error(TransferErrorKind::Timeout))?
+        .map_err(|error| context.transport(error))?;
+    let path_end = transport.observe_path().await.ok().flatten();
+    timeout(SHUTDOWN_TIMEOUT, transport.wait_for_peer_close())
+        .await
+        .map_err(|_source| context.error(TransferErrorKind::Timeout))?
+        .map_err(|error| context.transport(error))?;
+    let mut cleanup_issues = Vec::new();
+    if !matches!(
+        timeout(CLEANUP_TIMEOUT, transport.close_transport()).await,
+        Ok(Ok(()))
+    ) {
+        cleanup_issues.push("transport close failed after confirmation");
+    }
+
+    Ok(TransferMetrics {
+        bytes_transferred: file_len,
+        chunk_size,
+        handshake_seconds,
+        payload_seconds,
+        shutdown_seconds: shutdown_started.elapsed().as_secs_f64(),
+        path_end,
+        cleanup_issues,
+    })
+}

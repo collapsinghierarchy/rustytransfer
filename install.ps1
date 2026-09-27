@@ -16,7 +16,7 @@ if (-not (Get-Command cargo -ErrorAction SilentlyContinue)) {
 }
 
 Write-Host "Building (release)…"
-cargo build --release
+cargo build -p rustytransfer --release
 
 $BinSrc = Join-Path (Get-Location) ("target\release\{0}.exe" -f $BinName)
 if (-not (Test-Path $BinSrc)) {

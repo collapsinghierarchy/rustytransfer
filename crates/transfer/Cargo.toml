@@ -1,0 +1,16 @@
+[package]
+name = "rustytransfer-transfer"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+rustytransfer-protocol = { path = "../protocol" }
+anyhow.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+async-trait.workspace = true
+serde.workspace = true
+
+[lints]
+workspace = true

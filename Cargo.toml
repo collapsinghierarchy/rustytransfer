@@ -1,26 +1,29 @@
 [package]
 name = "rustytransfer"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[workspace]
+members = [".", "crates/crypto", "crates/protocol", "crates/transfer", "crates/native", "crates/wasm"]
+resolver = "3"
+
+[workspace.package]
 version = "0.1.0"
 edition = "2024"
 license = "AGPL-3.0-only"
 
-[lib]
-crate-type = ["cdylib", "rlib"]
-
-[dependencies]
+[workspace.dependencies]
 anyhow = "1.0.100"
 thiserror = "2"
 futures-util = "0.3.31"
-serde = { version = "1.0.228", features = ["derive"]}
+serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 spake2 = "0.4.0"
-url = "2.5.7"
 uuid = "1.19.0"
 wasm-bindgen = "0.2.106"
-
-getrandom = { version = "0.3", features = ["wasm_js"] }
-getrandom02 = { package = "getrandom", version = "0.2", features = ["js"] }
-js-sys = "0.3.83"
+getrandom = "0.3"
+getrandom02 = { package = "getrandom", version = "0.2" }
 ml-kem = "0.2.1"
 rand_core = "0.6.4"
 aes-gcm = { version = "0.10.3", features = ["aes"] }
@@ -33,26 +36,48 @@ indicatif = "0.18.3"
 ratatui = { version = "0.29.0", features = ["unstable-widget-ref"] }
 crossterm = "=0.28.1"
 ratatui-explorer = "0.2.1"
-
-# --- NATIVE ONLY DEPENDENCIES ---
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 async-trait = "0.1"
 iroh = { version = "=1.2.0", default-features = false, features = ["tls-ring"] }
-reqwest = { version = "0.12", features = ["json", "blocking", "stream"]}
+reqwest = { version = "0.12", features = ["json", "blocking", "stream"] }
 tokio = { version = "1.48.0", features = ["rt-multi-thread", "macros", "fs", "io-util", "net", "sync", "time", "signal"] }
 tokio-tungstenite = { version = "0.28.0", features = ["rustls-tls-webpki-roots", "url"] }
 webrtc = "0.21.0"
 
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+rustytransfer-crypto = { path = "crates/crypto" }
+rustytransfer-protocol = { path = "crates/protocol" }
+rustytransfer-transfer = { path = "crates/transfer" }
+rustytransfer-native = { path = "crates/native" }
+anyhow.workspace = true
+clap.workspace = true
+indicatif.workspace = true
+ratatui.workspace = true
+crossterm.workspace = true
+ratatui-explorer.workspace = true
+rand.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+rustytransfer-crypto = { path = "crates/crypto" }
+rustytransfer-protocol = { path = "crates/protocol" }
+
 [dev-dependencies]
-iroh = { version = "=1.2.0", default-features = false, features = ["tls-ring", "test-utils"] }
+async-trait.workspace = true
+iroh = { workspace = true, features = ["test-utils"] }
+ml-kem.workspace = true
+uuid = { workspace = true, features = ["v4"] }
+webrtc.workspace = true
 
 [[bin]]
 name = "rustytransfer"
 path = "src/bin/rustytransferCLI.rs"
 
-#wasm-pack build --target web --out-dir ../astro/src/wasm/rustytransfer --out-name rustytransfer
+[lints]
+workspace = true
 
-[lints.clippy]
+[workspace.lints.clippy]
 # `clippy::all` is the maintainable baseline. Restriction lints are intentionally
 # enabled one by one: Clippy does not recommend applying its restriction group
 # wholesale, especially to tests and invariant-preserving protocol code.

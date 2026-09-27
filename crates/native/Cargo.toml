@@ -1,0 +1,38 @@
+[package]
+name = "rustytransfer-native"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[features]
+default = ["webrtc", "iroh"]
+webrtc = ["dep:webrtc"]
+iroh = ["dep:iroh"]
+
+[dependencies]
+rustytransfer-transfer = { path = "../transfer" }
+rustytransfer-protocol = { path = "../protocol" }
+anyhow.workspace = true
+async-trait.workspace = true
+bytes.workspace = true
+clap.workspace = true
+futures-util.workspace = true
+iroh = { workspace = true, optional = true }
+reqwest.workspace = true
+tokio.workspace = true
+tokio-tungstenite.workspace = true
+webrtc = { workspace = true, optional = true }
+serde.workspace = true
+serde_json.workspace = true
+rand.workspace = true
+
+[dev-dependencies]
+uuid = { workspace = true, features = ["v4"] }
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "iroh-probe"
+path = "src/bin/iroh_probe.rs"
+required-features = ["iroh"]

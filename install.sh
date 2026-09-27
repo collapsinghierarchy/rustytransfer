@@ -15,7 +15,7 @@ if ! command -v cargo >/dev/null 2>&1; then
 fi
 
 echo "Building (release)…"
-cargo build --release
+cargo build -p rustytransfer --release
 
 BIN_SRC="target/release/${BIN_NAME}"
 if [ ! -f "$BIN_SRC" ]; then

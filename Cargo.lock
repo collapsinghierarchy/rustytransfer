@@ -4043,36 +4043,90 @@ checksum = "b39cdef0fa800fc44525c84ccb54a029961a8215f9619753635a9c0d2538d46d"
 name = "rustytransfer"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
+ "async-trait",
+ "clap",
+ "crossterm",
+ "indicatif",
+ "iroh",
+ "ml-kem",
+ "rand 0.8.5",
+ "ratatui",
+ "ratatui-explorer",
+ "rustytransfer-crypto",
+ "rustytransfer-native",
+ "rustytransfer-protocol",
+ "rustytransfer-transfer",
+ "serde",
+ "serde_json",
+ "tokio",
+ "uuid",
+ "webrtc",
+]
+
+[[package]]
+name = "rustytransfer-crypto"
+version = "0.1.0"
+dependencies = [
  "aes-gcm",
+ "getrandom 0.2.16",
+ "getrandom 0.3.4",
+ "hmac",
+ "ml-kem",
+ "rand_core 0.6.4",
+ "sha3",
+ "spake2",
+]
+
+[[package]]
+name = "rustytransfer-native"
+version = "0.1.0"
+dependencies = [
  "anyhow",
  "async-trait",
  "bytes",
  "clap",
- "crossterm",
  "futures-util",
- "getrandom 0.2.16",
- "getrandom 0.3.4",
- "hmac",
- "indicatif",
  "iroh",
- "js-sys",
- "ml-kem",
  "rand 0.8.5",
- "rand_core 0.6.4",
- "ratatui",
- "ratatui-explorer",
  "reqwest 0.12.25",
+ "rustytransfer-protocol",
+ "rustytransfer-transfer",
  "serde",
  "serde_json",
- "sha3",
- "spake2",
- "thiserror 2.0.20",
  "tokio",
  "tokio-tungstenite",
- "url",
  "uuid",
- "wasm-bindgen",
  "webrtc",
+]
+
+[[package]]
+name = "rustytransfer-protocol"
+version = "0.1.0"
+dependencies = [
+ "ml-kem",
+ "rustytransfer-crypto",
+]
+
+[[package]]
+name = "rustytransfer-transfer"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "rustytransfer-protocol",
+ "serde",
+ "thiserror 2.0.20",
+ "tokio",
+]
+
+[[package]]
+name = "rustytransfer-wasm"
+version = "0.1.0"
+dependencies = [
+ "rustytransfer-crypto",
+ "rustytransfer-protocol",
+ "wasm-bindgen",
 ]
 
 [[package]]

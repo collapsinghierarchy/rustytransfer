@@ -1,0 +1,12 @@
+[package]
+name = "rustytransfer-protocol"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+rustytransfer-crypto = { path = "../crypto" }
+ml-kem.workspace = true
+
+[lints]
+workspace = true

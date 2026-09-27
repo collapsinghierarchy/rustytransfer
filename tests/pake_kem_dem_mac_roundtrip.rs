@@ -3,6 +3,7 @@ use rustytransfer::crypto::dem::DemState;
 use rustytransfer::crypto::kem::KemState;
 use rustytransfer::crypto::mac::MacState;
 use rustytransfer::crypto::pake::PakeState;
+use rustytransfer::protocol::{PAKE_RECEIVER_ID, PAKE_SENDER_ID};
 
 fn ss_to_aes_key(ss: &ml_kem::SharedKey<ml_kem::MlKem768>) -> [u8; 32] {
     let mut key = [0_u8; 32];
@@ -15,8 +16,8 @@ fn pake_mac_kem_dem_roundtrip() -> Result<()> {
     let pw = b"Password";
 
     // ---- PAKE roundtrip
-    let mut sender = PakeState::start_sender(pw);
-    let mut receiver = PakeState::start_receiver(pw);
+    let mut sender = PakeState::start_sender(pw, PAKE_RECEIVER_ID, PAKE_SENDER_ID);
+    let mut receiver = PakeState::start_receiver(pw, PAKE_RECEIVER_ID, PAKE_SENDER_ID);
 
     let sender_key = sender
         .finish(&receiver.take_outbound_msg())

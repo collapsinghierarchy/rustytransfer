@@ -27,7 +27,7 @@ runner. In WSL, run it with:
 ```sh
 RUSTYTRANSFER_BENCH_SIZE_MIB=512 \
 RUSTYTRANSFER_LOCAL_BENCH_JSONL=benchmarks/results/phase0-local-512.jsonl \
-cargo test --release --test local_transport_regressions \
+cargo test -p rustytransfer --release --test local_transport_regressions \
   local_full_file_performance_baseline -- --ignored --nocapture
 ```
 
@@ -95,7 +95,7 @@ measurements.
 ## Phase 1 status (2026-09-20)
 
 The sender and receiver file-transfer loops now live in the native library
-module [`src/transfer.rs`](../src/transfer.rs). The CLI and full-file local
+module [`crates/transfer/src/lib.rs`](../crates/transfer/src/lib.rs). The CLI and full-file local
 benchmark both call the same core. Progress uses a `(total, transferred)`
 callback, and the transport interface preserves the existing PAKE, KEM, SMT,
 FIN/FIN_ACK, and stream shutdown order. A bounded in-memory transport exercises

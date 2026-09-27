@@ -73,8 +73,6 @@ fn can_retry_transfer(error: &TransferError) -> bool {
 }
 
 fn retryable_reconnect_error(plan_is_pake: bool, error: &anyhow::Error) -> bool {
-    use crate::transport::errors::TransportError;
-
     let permanent = error.chain().any(|cause| {
         cause.downcast_ref::<PermanentReconnectError>().is_some()
             || cause.downcast_ref::<TransportError>().is_some_and(|cause| {
@@ -476,10 +474,8 @@ pub(super) async fn send_cmd(
             }
         }
     };
-    if let Ok(mut progress) = progress.lock()
-        && let Some(bar) = progress.take()
-    {
-        bar.finish_and_clear();
+    if let Ok(mut progress) = progress.lock() {
+        drop(progress.take());
     }
     let path_end = transfer_metrics.path_end.unwrap_or(path.clone());
 
@@ -686,10 +682,8 @@ pub(super) async fn recv_cmd(
             }
         }
     };
-    if let Ok(mut progress) = progress.lock()
-        && let Some(bar) = progress.take()
-    {
-        bar.finish_and_clear();
+    if let Ok(mut progress) = progress.lock() {
+        drop(progress.take());
     }
     let path_end = transfer_metrics.path_end.unwrap_or(path.clone());
 

@@ -39,7 +39,7 @@ impl ResumeOutput {
         part_name.push(".rustytransfer.part");
         let path = destination.with_file_name(part_name);
 
-        let metadata = match tokio::fs::symlink_metadata(&path).await {
+        match tokio::fs::symlink_metadata(&path).await {
             Ok(metadata) => {
                 if metadata.file_type().is_symlink() || !metadata.is_file() {
                     return Err(io::Error::new(
@@ -63,13 +63,6 @@ impl ResumeOutput {
             }
             Err(error) => return Err(error),
         };
-        if !metadata.is_file() {
-            return Err(io::Error::new(
-                io::ErrorKind::InvalidInput,
-                "resume path is not a regular file",
-            ));
-        }
-
         let mut options = OpenOptions::new();
         options.read(true).write(true);
         no_follow(&mut options);
@@ -145,6 +138,15 @@ impl ResumeOutput {
         self.candidate
     }
 
+    fn file_mut(&mut self) -> io::Result<&mut File> {
+        self.file.as_mut().ok_or_else(|| {
+            io::Error::new(
+                io::ErrorKind::BrokenPipe,
+                "resume output is already committed",
+            )
+        })
+    }
+
     pub(crate) async fn select(&mut self, offset: u64, digest: [u8; 32]) -> io::Result<()> {
         let empty_digest: [u8; 32] = Sha3_256::digest([]).into();
         let accepted_candidate =
@@ -156,44 +158,24 @@ impl ResumeOutput {
                 "authenticated resume selection does not match the partial file",
             ));
         }
-        let file = self.file.as_mut().ok_or_else(|| {
-            io::Error::new(
-                io::ErrorKind::BrokenPipe,
-                "resume output is already committed",
-            )
-        })?;
+        let file = self.file_mut()?;
         file.set_len(offset).await?;
         file.seek(std::io::SeekFrom::Start(offset)).await?;
         Ok(())
     }
 
     pub(crate) async fn write_all(&mut self, bytes: &[u8]) -> io::Result<()> {
-        let file = self.file.as_mut().ok_or_else(|| {
-            io::Error::new(
-                io::ErrorKind::BrokenPipe,
-                "resume output is already committed",
-            )
-        })?;
+        let file = self.file_mut()?;
         tokio::io::AsyncWriteExt::write_all(file, bytes).await
     }
 
     pub(crate) async fn flush(&mut self) -> io::Result<()> {
-        let file = self.file.as_mut().ok_or_else(|| {
-            io::Error::new(
-                io::ErrorKind::BrokenPipe,
-                "resume output is already committed",
-            )
-        })?;
+        let file = self.file_mut()?;
         tokio::io::AsyncWriteExt::flush(file).await
     }
 
     pub(crate) async fn sync_data(&mut self) -> io::Result<()> {
-        let file = self.file.as_mut().ok_or_else(|| {
-            io::Error::new(
-                io::ErrorKind::BrokenPipe,
-                "resume output is already committed",
-            )
-        })?;
+        let file = self.file_mut()?;
         file.sync_data().await
     }
 

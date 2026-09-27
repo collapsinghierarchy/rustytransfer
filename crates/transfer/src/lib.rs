@@ -110,6 +110,20 @@ mod tests {
     const TEST_TIMEOUT: Duration = Duration::from_secs(15);
     static NEXT_OUTPUT: AtomicU64 = AtomicU64::new(0);
 
+    #[derive(Clone, Copy)]
+    enum PayloadChange {
+        Corrupt,
+        Truncate,
+        Abort,
+    }
+
+    #[derive(Clone, Copy)]
+    enum SendFault {
+        None,
+        ChangeThirdMessage(PayloadChange),
+        FailOnMessage(usize),
+    }
+
     struct MemoryTransport {
         tx: Option<mpsc::Sender<Vec<u8>>>,
         rx: mpsc::Receiver<Vec<u8>>,
@@ -118,6 +132,8 @@ mod tests {
         receive_delay: Duration,
         fin_send_delay: Duration,
         fin_ack_receive_delay: Duration,
+        send_fault: SendFault,
+        sent_messages: usize,
     }
 
     impl MemoryTransport {
@@ -140,6 +156,8 @@ mod tests {
                     receive_delay: Duration::ZERO,
                     fin_send_delay: Duration::ZERO,
                     fin_ack_receive_delay: Duration::ZERO,
+                    send_fault: SendFault::None,
+                    sent_messages: 0,
                 },
                 Self {
                     tx: Some(b_to_a_tx),
@@ -149,6 +167,8 @@ mod tests {
                     receive_delay,
                     fin_send_delay,
                     fin_ack_receive_delay,
+                    send_fault: SendFault::None,
+                    sent_messages: 0,
                 },
             )
         }
@@ -160,7 +180,26 @@ mod tests {
 
     #[async_trait::async_trait]
     impl TransferTransport for MemoryTransport {
-        async fn send_message(&mut self, data: Vec<u8>) -> Result<()> {
+        async fn send_message(&mut self, mut data: Vec<u8>) -> Result<()> {
+            self.sent_messages += 1;
+            match self.send_fault {
+                SendFault::None => {}
+                SendFault::ChangeThirdMessage(change) if self.sent_messages == 3 => match change {
+                    PayloadChange::Corrupt => {
+                        let last = data
+                            .last_mut()
+                            .ok_or_else(|| anyhow!("test ciphertext was empty"))?;
+                        *last ^= 0x80;
+                    }
+                    PayloadChange::Truncate => data.truncate(data.len().saturating_sub(1)),
+                    PayloadChange::Abort => return Err(anyhow!("injected sender abort")),
+                },
+                SendFault::ChangeThirdMessage(_) => {}
+                SendFault::FailOnMessage(fail_on) if self.sent_messages == fail_on => {
+                    return Err(anyhow!("injected connection interruption"));
+                }
+                SendFault::FailOnMessage(_) => {}
+            }
             if data == b"FIN" && !self.fin_send_delay.is_zero() {
                 tokio::time::sleep(self.fin_send_delay).await;
             }
@@ -215,112 +254,6 @@ mod tests {
         async fn close_transport(&mut self) -> Result<()> {
             self.local_closed.send_replace(true);
             Ok(())
-        }
-    }
-
-    #[derive(Clone, Copy)]
-    enum PayloadChange {
-        Corrupt,
-        Truncate,
-        Abort,
-    }
-
-    struct ChangeThirdMessage<T> {
-        inner: T,
-        sent_messages: usize,
-        change: PayloadChange,
-    }
-
-    struct FailOnMessage<T> {
-        inner: T,
-        sent_messages: usize,
-        fail_on: usize,
-    }
-
-    #[async_trait::async_trait]
-    impl<T: TransferTransport> TransferTransport for FailOnMessage<T> {
-        async fn send_message(&mut self, data: Vec<u8>) -> Result<()> {
-            self.sent_messages += 1;
-            if self.sent_messages == self.fail_on {
-                return Err(anyhow!("injected connection interruption"));
-            }
-            self.inner.send_message(data).await
-        }
-
-        async fn receive_message(&mut self) -> Result<Vec<u8>> {
-            self.inner.receive_message().await
-        }
-
-        async fn close_send_half(&mut self) -> Result<()> {
-            self.inner.close_send_half().await
-        }
-
-        async fn finish_sending(&mut self) -> Result<()> {
-            self.inner.finish_sending().await
-        }
-
-        async fn finish_receiving(&mut self) -> Result<()> {
-            self.inner.finish_receiving().await
-        }
-
-        async fn wait_for_peer_close(&mut self) -> Result<()> {
-            self.inner.wait_for_peer_close().await
-        }
-
-        async fn close_transport(&mut self) -> Result<()> {
-            self.inner.close_transport().await
-        }
-
-        async fn observe_path(&mut self) -> Result<Option<PathObservation>> {
-            self.inner.observe_path().await
-        }
-    }
-
-    #[async_trait::async_trait]
-    impl<T: TransferTransport> TransferTransport for ChangeThirdMessage<T> {
-        async fn send_message(&mut self, mut data: Vec<u8>) -> Result<()> {
-            self.sent_messages += 1;
-            if self.sent_messages == 3 {
-                match self.change {
-                    PayloadChange::Corrupt => {
-                        let last = data
-                            .last_mut()
-                            .ok_or_else(|| anyhow!("test ciphertext was empty"))?;
-                        *last ^= 0x80;
-                    }
-                    PayloadChange::Truncate => data.truncate(data.len().saturating_sub(1)),
-                    PayloadChange::Abort => return Err(anyhow!("injected sender abort")),
-                }
-            }
-            self.inner.send_message(data).await
-        }
-
-        async fn receive_message(&mut self) -> Result<Vec<u8>> {
-            self.inner.receive_message().await
-        }
-
-        async fn close_send_half(&mut self) -> Result<()> {
-            self.inner.close_send_half().await
-        }
-
-        async fn finish_sending(&mut self) -> Result<()> {
-            self.inner.finish_sending().await
-        }
-
-        async fn finish_receiving(&mut self) -> Result<()> {
-            self.inner.finish_receiving().await
-        }
-
-        async fn wait_for_peer_close(&mut self) -> Result<()> {
-            self.inner.wait_for_peer_close().await
-        }
-
-        async fn close_transport(&mut self) -> Result<()> {
-            self.inner.close_transport().await
-        }
-
-        async fn observe_path(&mut self) -> Result<Option<PathObservation>> {
-            self.inner.observe_path().await
         }
     }
 
@@ -542,11 +475,8 @@ mod tests {
             MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
         let output = output_path();
         let sender_future = async move {
-            let mut sender = ChangeThirdMessage {
-                inner: sender,
-                sent_messages: 0,
-                change,
-            };
+            let mut sender = sender;
+            sender.send_fault = SendFault::ChangeThirdMessage(change);
             send_file(
                 &mut sender,
                 Cursor::new(vec![1, 2, 3, 4, 5, 6, 7, 8]),
@@ -692,11 +622,8 @@ mod tests {
             MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
         let sender_data = data.clone();
         let sender_future = async move {
-            let mut sender = FailOnMessage {
-                inner: sender,
-                sent_messages: 0,
-                fail_on: 4,
-            };
+            let mut sender = sender;
+            sender.send_fault = SendFault::FailOnMessage(4);
             send_file(
                 &mut sender,
                 Cursor::new(sender_data.clone()),

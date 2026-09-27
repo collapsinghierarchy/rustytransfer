@@ -378,6 +378,35 @@ fn baseline_chunk_size(transport: &str) -> u32 {
     }
 }
 
+fn prepare_local_benchmark_files(
+    temp_dir: &Path,
+    size_bytes: u64,
+) -> Result<(Option<PathBuf>, PathBuf, PathBuf, String)> {
+    let size_mib = size_bytes / (1024 * 1024);
+    let file_name = format!("{size_mib}mib.bin");
+    let persistent_source = std::env::var_os("RUSTYTRANSFER_BENCH_SOURCE").map(PathBuf::from);
+    let source_path = persistent_source
+        .clone()
+        .unwrap_or_else(|| temp_dir.join(format!("source-{file_name}")));
+    let received_path = temp_dir.join(format!("received-{file_name}"));
+    if let Some(parent) = source_path.parent() {
+        fs::create_dir_all(parent).context("failed to create benchmark source directory")?;
+    }
+    if source_path.exists() {
+        ensure!(
+            fs::metadata(&source_path)
+                .context("failed to inspect configured benchmark source")?
+                .len()
+                == size_bytes,
+            "configured source must be exactly {size_mib} MiB"
+        );
+    } else {
+        write_incompressible_file(&source_path, size_bytes)?;
+    }
+    let source_sha256 = sha256_file(&source_path)?;
+    Ok((persistent_source, source_path, received_path, source_sha256))
+}
+
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "manual local full-file performance baseline"]
 async fn local_full_file_performance_baseline() -> Result<()> {
@@ -401,27 +430,9 @@ async fn local_full_file_performance_baseline() -> Result<()> {
         std::process::id()
     ));
     fs::create_dir_all(&temp_dir).context("failed to create local baseline temp directory")?;
-    let persistent_source = std::env::var_os("RUSTYTRANSFER_BENCH_SOURCE").map(PathBuf::from);
-    let source_path = persistent_source
-        .clone()
-        .unwrap_or_else(|| temp_dir.join(format!("source-{size_mib}mib.bin")));
-    let received_path = temp_dir.join(format!("received-{size_mib}mib.bin"));
     let size_bytes = size_mib * 1024 * 1024;
-    if let Some(parent) = source_path.parent() {
-        fs::create_dir_all(parent).context("failed to create source file directory")?;
-    }
-    if source_path.exists() {
-        ensure!(
-            fs::metadata(&source_path)
-                .context("failed to inspect configured source file")?
-                .len()
-                == size_bytes,
-            "configured source file size differs from RUSTYTRANSFER_BENCH_SIZE_MIB"
-        );
-    } else {
-        write_incompressible_file(&source_path, size_bytes)?;
-    }
-    let source_sha256 = sha256_file(&source_path)?;
+    let (persistent_source, source_path, received_path, source_sha256) =
+        prepare_local_benchmark_files(&temp_dir, size_bytes)?;
 
     // One unscored warm-up for each transport, then five runs in alternating order.
     for transport in ["webrtc", "iroh"] {
@@ -545,26 +556,8 @@ async fn local_chunk_size_performance_sweep() -> Result<()> {
         std::process::id()
     ));
     fs::create_dir_all(&temp_dir).context("failed to create chunk-sweep temp directory")?;
-    let persistent_source = std::env::var_os("RUSTYTRANSFER_BENCH_SOURCE").map(PathBuf::from);
-    let source_path = persistent_source
-        .clone()
-        .unwrap_or_else(|| temp_dir.join(format!("source-{size_mib}mib.bin")));
-    let received_path = temp_dir.join(format!("received-{size_mib}mib.bin"));
-    if let Some(parent) = source_path.parent() {
-        fs::create_dir_all(parent).context("failed to create sweep source directory")?;
-    }
-    if source_path.exists() {
-        ensure!(
-            fs::metadata(&source_path)
-                .context("failed to inspect configured sweep source")?
-                .len()
-                == size_bytes,
-            "configured source must be exactly {size_mib} MiB"
-        );
-    } else {
-        write_incompressible_file(&source_path, size_bytes)?;
-    }
-    let source_sha256 = sha256_file(&source_path)?;
+    let (persistent_source, source_path, received_path, source_sha256) =
+        prepare_local_benchmark_files(&temp_dir, size_bytes)?;
 
     for chunk_size in PHASE2_CHUNK_SIZES {
         for transport in &transports {
@@ -696,26 +689,8 @@ async fn local_transfer_resource_probe() -> Result<()> {
         std::process::id()
     ));
     fs::create_dir_all(&temp_dir).context("failed to create resource-probe temp directory")?;
-    let persistent_source = std::env::var_os("RUSTYTRANSFER_BENCH_SOURCE").map(PathBuf::from);
-    let source_path = persistent_source
-        .clone()
-        .unwrap_or_else(|| temp_dir.join("source-512mib.bin"));
-    let received_path = temp_dir.join("received-512mib.bin");
-    if let Some(parent) = source_path.parent() {
-        fs::create_dir_all(parent).context("failed to create resource-probe source directory")?;
-    }
-    if source_path.exists() {
-        ensure!(
-            fs::metadata(&source_path)
-                .context("failed to inspect resource-probe source")?
-                .len()
-                == size_bytes,
-            "resource-probe input must be 512 MiB"
-        );
-    } else {
-        write_incompressible_file(&source_path, size_bytes)?;
-    }
-    let source_sha256 = sha256_file(&source_path)?;
+    let (persistent_source, source_path, received_path, source_sha256) =
+        prepare_local_benchmark_files(&temp_dir, size_bytes)?;
 
     for run in ["warmup", "measured"] {
         let (sender, receiver) = run_local_full_transfer(

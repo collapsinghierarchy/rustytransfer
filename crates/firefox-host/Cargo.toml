@@ -1,0 +1,22 @@
+[package]
+name = "rustytransfer-firefox-host"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+rand.workspace = true
+rfd = { version = "0.17.2", default-features = false, features = ["xdg-portal"] }
+rustytransfer-native = { version = "0.1.0", path = "../native", default-features = false, features = ["iroh"] }
+rustytransfer-transfer = { version = "0.1.0", path = "../transfer" }
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "rustytransfer-firefox-host"
+path = "src/main.rs"

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RustyTransfer</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <header class="app-header">
+        <h1>RustyTransfer</h1>
+        <span id="connection-state" class="connection-state">Connecting</span>
+      </header>
+
+      <section class="transfer-state" aria-labelledby="status-heading">
+        <h2 id="status-heading" class="visually-hidden">Transfer status</h2>
+        <p id="status" role="status" aria-live="polite">Connecting to the desktop companion…</p>
+        <p id="file-name" class="file-name" hidden></p>
+        <p id="host-error" class="host-error" hidden></p>
+        <div id="progress-area" hidden>
+          <progress id="progress" aria-label="File transfer progress"></progress>
+          <p id="progress-label" class="progress-label"></p>
+        </div>
+        <div id="invitation-area" hidden>
+          <label for="invitation-output">Share this invite</label>
+          <textarea id="invitation-output" rows="3" readonly spellcheck="false"></textarea>
+          <button id="copy-invitation" class="secondary" type="button">Copy invite</button>
+          <p id="copy-status" class="hint" role="status" aria-live="polite"></p>
+        </div>
+        <button id="cancel-button" class="text-button" type="button" hidden>Cancel transfer</button>
+      </section>
+
+      <div class="mode-switch" role="group" aria-label="Transfer direction">
+        <button id="send-mode" class="mode-button" type="button" aria-pressed="true">Send</button>
+        <button id="receive-mode" class="mode-button" type="button" aria-pressed="false">Receive</button>
+      </div>
+
+      <section id="send-panel" class="mode-panel" aria-labelledby="send-heading">
+        <h2 id="send-heading">Send a file</h2>
+        <p class="hint">Choose a file, then share its invite with the receiver.</p>
+        <button id="send-button" class="primary" type="button">Choose file</button>
+      </section>
+
+      <section id="receive-panel" class="mode-panel" aria-labelledby="receive-heading" hidden>
+        <h2 id="receive-heading">Receive a file</h2>
+        <label for="receive-invitation">Direct invite</label>
+        <textarea id="receive-invitation" rows="3" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="rt1:…"></textarea>
+        <button id="receive-button" class="primary" type="button">Choose save location</button>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

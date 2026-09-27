@@ -62,6 +62,10 @@ allow = ["AGPL-3.0-only"]
 crate = "rustytransfer-wasm"
 allow = ["AGPL-3.0-only"]
 
+[[licenses.exceptions]]
+crate = "rustytransfer-firefox-host"
+allow = ["AGPL-3.0-only"]
+
 [bans]
 # Duplicate versions are useful information but are not automatically unsafe;
 # keep them visible without blocking unrelated dependency updates.

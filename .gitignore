@@ -32,6 +32,7 @@ rustytransfer
 
 # Local cleanup/archive material
 /tmp/
+/docs/
 
 # Preserve benchmark measurements in Git; keep per-run diagnostic logs local.
 /benchmarks/results/*/logs/

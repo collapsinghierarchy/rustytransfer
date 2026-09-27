@@ -93,7 +93,37 @@ encryption), `rustytransfer-protocol` (wire messages and state machines),
 `rustytransfer-transfer` (file transfer and metrics), and
 `rustytransfer-native` (rendezvous, signaling, WebRTC, and Iroh).
 `rustytransfer-wasm` contains the JavaScript PAKE adapter and builds as a
-`cdylib` for WebAssembly.
+`cdylib` for WebAssembly. `rustytransfer-firefox-host` is the separate desktop
+native messaging process used by the Firefox extension.
+
+### Firefox desktop extension (direct Iroh preview)
+
+The Firefox extension uses a local native host for file access and direct Iroh
+transfers. Install the host on the **same operating system as Firefox**:
+
+```powershell
+# Windows PowerShell, from the repository root
+.\scripts\install-firefox-host.ps1
+```
+
+```bash
+# Linux or macOS, from the repository root
+bash scripts/install-firefox-host.sh
+```
+
+For Windows Firefox, use the Windows installer rather than installing the host
+inside WSL. The Linux/macOS installer also needs Python 3 to write the host
+manifest. Then open `about:debugging#/runtime/this-firefox`, choose **Load
+Temporary Add-on**, and select `extension/firefox/manifest.json`. Temporary
+add-ons must be loaded again after restarting Firefox. The installer registers
+the host for the extension ID in that manifest; Firefox requires this separate
+native-host registration. See [Mozilla's native messaging guide](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging).
+
+Choose **Send** to pick a file and copy its direct invite. On the other peer,
+paste that invite into **Receive** and choose the destination. This preview uses
+public Iroh connectivity and does not contact the rustytransfer backend or use
+PAKE. Keep the invite private. If a receive is interrupted, choose the same
+destination with a fresh invite to verify and resume the saved partial file.
 
 ### Probe persistent Iroh IDs and public relays
 

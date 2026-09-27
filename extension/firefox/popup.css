@@ -1,0 +1,255 @@
+:root {
+  color-scheme: light;
+  font: 14px/1.45 system-ui, sans-serif;
+  --paper: #f7f8f6;
+  --surface: #fff;
+  --ink: #1c2723;
+  --muted: #5e6b65;
+  --line: #d9e0db;
+  --accent: #245d4e;
+  --accent-hover: #194b3e;
+  --error: #a3342c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --paper: #181e1b;
+    --surface: #202824;
+    --ink: #eef3ef;
+    --muted: #b0bdb5;
+    --line: #3a4840;
+    --accent: #8acdb0;
+    --accent-hover: #a3ddc1;
+    --error: #f0a19a;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 368px;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+main {
+  padding: 0 20px 20px;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 64px;
+  border-bottom: 1px solid var(--line);
+}
+
+h1 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.connection-state {
+  flex: none;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.connection-state::before {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+.connection-state.ready {
+  color: var(--accent);
+}
+
+.connection-state.unavailable {
+  color: var(--error);
+}
+
+.transfer-state {
+  display: grid;
+  gap: 9px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+#status {
+  font-weight: 550;
+}
+
+.file-name {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.host-error {
+  overflow-wrap: anywhere;
+  color: var(--error);
+  font-size: 12px;
+}
+
+#progress-area,
+#invitation-area {
+  display: grid;
+  gap: 8px;
+}
+
+progress {
+  width: 100%;
+  height: 8px;
+  accent-color: var(--accent);
+}
+
+.progress-label,
+.hint {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  resize: vertical;
+  min-height: 78px;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  font: 13px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+
+textarea::placeholder {
+  color: var(--muted);
+}
+
+button {
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+button:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button.primary {
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+}
+
+button.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+@media (prefers-color-scheme: dark) {
+  button.primary {
+    color: #132119;
+  }
+}
+
+button.secondary {
+  justify-self: start;
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+button.secondary:hover:not(:disabled) {
+  border-color: var(--muted);
+}
+
+button.text-button {
+  justify-self: start;
+  min-height: auto;
+  padding: 2px 0;
+  background: transparent;
+  color: var(--error);
+}
+
+.mode-switch {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.mode-button {
+  min-height: 45px;
+  padding: 0 1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+}
+
+.mode-button[aria-pressed="true"] {
+  border-bottom-color: var(--accent);
+  color: var(--ink);
+}
+
+.mode-panel {
+  display: grid;
+  gap: 11px;
+  padding-top: 18px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

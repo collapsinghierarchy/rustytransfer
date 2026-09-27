@@ -5,6 +5,11 @@
 [advisories]
 # A yanked crate is not acceptable in a locked production dependency graph.
 yanked = "deny"
+# `paste` is pulled in through ratatui 0.29 and netlink-packet-core 0.8.2.
+# Revisit this exception when those dependency branches are upgraded.
+ignore = [
+    { id = "RUSTSEC-2024-0436", reason = "Transitive unmaintained dependency through ratatui 0.29 and netlink-packet-core 0.8.2; revisit when those dependency branches are upgraded." },
+]
 
 [licenses]
 # Only explicitly permitted licenses may enter the dependency graph. The root

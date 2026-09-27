@@ -5,11 +5,16 @@
 [advisories]
 # A yanked crate is not acceptable in a locked production dependency graph.
 yanked = "deny"
+# `paste` is pulled in through ratatui 0.29 and netlink-packet-core 0.8.2.
+# Revisit this exception when those dependency branches are upgraded.
+ignore = [
+    { id = "RUSTSEC-2024-0436", reason = "Transitive unmaintained dependency through ratatui 0.29 and netlink-packet-core 0.8.2; revisit when those dependency branches are upgraded." },
+]
 
 [licenses]
 # Only explicitly permitted licenses may enter the dependency graph. The root
-# package is AGPL-3.0-only and is allowed below as a package-specific exception;
-# AGPL is deliberately not allowed for third-party dependencies.
+# package and workspace libraries use AGPL-3.0-only; they are allowed below as
+# package-specific exceptions. AGPL remains disallowed for third-party crates.
 allow = [
     "0BSD",
     "Apache-2.0",
@@ -17,6 +22,7 @@ allow = [
     "BSD-2-Clause",
     "BSD-3-Clause",
     "CC0-1.0",
+    "CDLA-Permissive-2.0",
     "CDDL-1.0",
     "CDDL-1.1",
     "ISC",
@@ -32,6 +38,28 @@ confidence-threshold = 0.8
 
 [[licenses.exceptions]]
 crate = "rustytransfer"
+allow = ["AGPL-3.0-only"]
+
+# The workspace libraries share the same license as the root package and need
+# the same narrow exception. Keep AGPL disallowed for third-party crates.
+[[licenses.exceptions]]
+crate = "rustytransfer-crypto"
+allow = ["AGPL-3.0-only"]
+
+[[licenses.exceptions]]
+crate = "rustytransfer-protocol"
+allow = ["AGPL-3.0-only"]
+
+[[licenses.exceptions]]
+crate = "rustytransfer-transfer"
+allow = ["AGPL-3.0-only"]
+
+[[licenses.exceptions]]
+crate = "rustytransfer-native"
+allow = ["AGPL-3.0-only"]
+
+[[licenses.exceptions]]
+crate = "rustytransfer-wasm"
 allow = ["AGPL-3.0-only"]
 
 [bans]

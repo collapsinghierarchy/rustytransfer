@@ -1,22 +1,30 @@
+use rustytransfer_protocol::sender::ResumeOffer;
+use sha3::{Digest, Sha3_256};
 use std::{
     io,
     path::{Path, PathBuf},
-    sync::atomic::{AtomicU64, Ordering},
 };
-use tokio::fs::{File, OpenOptions};
+use tokio::{
+    fs::{File, OpenOptions},
+    io::{AsyncReadExt, AsyncSeekExt},
+};
 
-static NEXT_TEMP_FILE: AtomicU64 = AtomicU64::new(0);
-
-pub(crate) struct TempOutput {
-    path: Option<PathBuf>,
+fn no_follow(options: &mut OpenOptions) {
+    #[cfg(unix)]
+    options.custom_flags(libc::O_NOFOLLOW);
+    #[cfg(windows)]
+    options.custom_flags(windows_sys::Win32::Storage::FileSystem::FILE_FLAG_OPEN_REPARSE_POINT);
 }
 
-impl TempOutput {
-    pub(crate) const fn new() -> Self {
-        Self { path: None }
-    }
+/// A same-directory partial output retained across connections and process runs.
+pub(crate) struct ResumeOutput {
+    path: PathBuf,
+    file: Option<File>,
+    candidate: ResumeOffer,
+}
 
-    pub(crate) async fn create(&mut self, destination: &Path) -> io::Result<File> {
+impl ResumeOutput {
+    pub(crate) async fn open(destination: &Path) -> io::Result<Self> {
         if tokio::fs::try_exists(destination).await? {
             return Err(io::Error::new(
                 io::ErrorKind::AlreadyExists,
@@ -26,75 +34,165 @@ impl TempOutput {
         let name = destination.file_name().ok_or_else(|| {
             io::Error::new(io::ErrorKind::InvalidInput, "destination has no file name")
         })?;
-        for _ in 0..16 {
-            let sequence = NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed);
-            let mut temp_name = std::ffi::OsString::from(".");
-            temp_name.push(name);
-            temp_name.push(format!(
-                ".rustytransfer-{}-{sequence}.part",
-                std::process::id()
-            ));
-            let path = destination.with_file_name(temp_name);
-            match OpenOptions::new()
-                .write(true)
-                .create_new(true)
-                .open(&path)
-                .await
-            {
-                Ok(file) => {
-                    self.path = Some(path);
-                    return Ok(file);
+        let mut part_name = std::ffi::OsString::from(".");
+        part_name.push(name);
+        part_name.push(".rustytransfer.part");
+        let path = destination.with_file_name(part_name);
+
+        match tokio::fs::symlink_metadata(&path).await {
+            Ok(metadata) => {
+                if metadata.file_type().is_symlink() || !metadata.is_file() {
+                    return Err(io::Error::new(
+                        io::ErrorKind::InvalidInput,
+                        "resume path must be a regular file, not a symlink",
+                    ));
                 }
-                Err(error) if error.kind() == io::ErrorKind::AlreadyExists => continue,
-                Err(error) => return Err(error),
+                metadata
             }
+            Err(error) if error.kind() == io::ErrorKind::NotFound => {
+                let mut options = OpenOptions::new();
+                options.read(true).write(true).create_new(true);
+                no_follow(&mut options);
+                let file = options.open(&path).await?;
+                let std_file = file.into_std().await;
+                std_file.try_lock().map_err(|error| {
+                    io::Error::new(io::ErrorKind::WouldBlock, error.to_string())
+                })?;
+                let file = File::from_std(std_file);
+                return Self::hash_candidate(path, file).await;
+            }
+            Err(error) => return Err(error),
+        };
+        let mut options = OpenOptions::new();
+        options.read(true).write(true);
+        no_follow(&mut options);
+        let file = options.open(&path).await?;
+        let std_file = file.into_std().await;
+        std_file
+            .try_lock()
+            .map_err(|error| io::Error::new(io::ErrorKind::WouldBlock, error.to_string()))?;
+        if !std_file.metadata()?.is_file() {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "resume path is not a regular file",
+            ));
         }
-        Err(io::Error::new(
-            io::ErrorKind::AlreadyExists,
-            "could not reserve a temporary output file",
-        ))
+        let path_metadata = tokio::fs::symlink_metadata(&path).await?;
+        if path_metadata.file_type().is_symlink() || !path_metadata.is_file() {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "resume path changed to a symlink or non-regular file",
+            ));
+        }
+        Self::hash_candidate(path, File::from_std(std_file)).await
     }
 
-    pub(crate) async fn commit(&mut self, destination: &Path) -> io::Result<()> {
-        let path = self.path.as_ref().ok_or_else(|| {
-            io::Error::new(io::ErrorKind::NotFound, "temporary output file is missing")
-        })?;
-        // The temporary file is in the same directory. A hard link publishes it
-        // atomically and fails when the destination already exists.
-        tokio::fs::hard_link(path, destination).await?;
-        match tokio::fs::remove_file(path).await {
-            Ok(()) => self.path = None,
-            Err(error) => eprintln!(
-                "warning: committed file, but could not remove temporary copy {}: {error}",
-                path.display()
-            ),
+    async fn hash_candidate(path: PathBuf, mut file: File) -> io::Result<Self> {
+        let length = file.metadata().await?.len();
+        file.seek(std::io::SeekFrom::Start(0)).await?;
+        let mut hasher = Sha3_256::new();
+        let mut buffer = vec![0_u8; 64 * 1024];
+        let buffer_len = u64::try_from(buffer.len())
+            .map_err(|error| io::Error::new(io::ErrorKind::InvalidData, error.to_string()))?;
+        let mut remaining = length;
+        let mut hashed = 0_u64;
+        while remaining > 0 {
+            let count = usize::try_from(remaining.min(buffer_len))
+                .map_err(|error| io::Error::new(io::ErrorKind::InvalidData, error.to_string()))?;
+            let read_buffer = buffer.get_mut(..count).ok_or_else(|| {
+                io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "resume hash buffer range is invalid",
+                )
+            })?;
+            let read = file.read(read_buffer).await?;
+            if read == 0 {
+                break;
+            }
+            let hashed_bytes = buffer.get(..read).ok_or_else(|| {
+                io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "resume hash read range is invalid",
+                )
+            })?;
+            hasher.update(hashed_bytes);
+            let read = u64::try_from(read)
+                .map_err(|error| io::Error::new(io::ErrorKind::InvalidData, error.to_string()))?;
+            hashed = hashed.checked_add(read).ok_or_else(|| {
+                io::Error::new(io::ErrorKind::InvalidData, "resume prefix length overflow")
+            })?;
+            remaining = remaining.saturating_sub(read);
         }
+        file.seek(std::io::SeekFrom::Start(0)).await?;
+        Ok(Self {
+            path,
+            file: Some(file),
+            candidate: ResumeOffer {
+                offset: hashed,
+                prefix_digest: hasher.finalize().into(),
+            },
+        })
+    }
+
+    pub(crate) const fn candidate(&self) -> ResumeOffer {
+        self.candidate
+    }
+
+    fn file_mut(&mut self) -> io::Result<&mut File> {
+        self.file.as_mut().ok_or_else(|| {
+            io::Error::new(
+                io::ErrorKind::BrokenPipe,
+                "resume output is already committed",
+            )
+        })
+    }
+
+    pub(crate) async fn select(&mut self, offset: u64, digest: [u8; 32]) -> io::Result<()> {
+        let empty_digest: [u8; 32] = Sha3_256::digest([]).into();
+        let accepted_candidate =
+            offset == self.candidate.offset && digest == self.candidate.prefix_digest;
+        let selected_reset = offset == 0 && digest == empty_digest;
+        if !accepted_candidate && !selected_reset {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "authenticated resume selection does not match the partial file",
+            ));
+        }
+        let file = self.file_mut()?;
+        file.set_len(offset).await?;
+        file.seek(std::io::SeekFrom::Start(offset)).await?;
         Ok(())
     }
 
-    pub(crate) async fn cleanup(&mut self) -> io::Result<()> {
-        if let Some(path) = self.path.as_ref() {
-            match tokio::fs::remove_file(path).await {
-                Ok(()) => {
-                    self.path = None;
-                    Ok(())
-                }
-                Err(error) if error.kind() == io::ErrorKind::NotFound => {
-                    self.path = None;
-                    Ok(())
-                }
-                Err(error) => Err(error),
-            }
-        } else {
-            Ok(())
-        }
+    pub(crate) async fn write_all(&mut self, bytes: &[u8]) -> io::Result<()> {
+        let file = self.file_mut()?;
+        tokio::io::AsyncWriteExt::write_all(file, bytes).await
     }
-}
 
-impl Drop for TempOutput {
-    fn drop(&mut self) {
-        if let Some(path) = self.path.take() {
-            let _cleanup_result = std::fs::remove_file(path);
+    pub(crate) async fn flush(&mut self) -> io::Result<()> {
+        let file = self.file_mut()?;
+        tokio::io::AsyncWriteExt::flush(file).await
+    }
+
+    pub(crate) async fn sync_data(&mut self) -> io::Result<()> {
+        let file = self.file_mut()?;
+        file.sync_data().await
+    }
+
+    pub(crate) async fn commit(&mut self, destination: &Path) -> io::Result<()> {
+        self.sync_data().await?;
+        tokio::fs::hard_link(&self.path, destination).await?;
+        drop(self.file.take());
+        match tokio::fs::remove_file(&self.path).await {
+            Ok(()) => Ok(()),
+            Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(()),
+            Err(error) => {
+                eprintln!(
+                    "warning: committed output, but could not remove partial file {}: {error}",
+                    self.path.display()
+                );
+                Ok(())
+            }
         }
     }
 }

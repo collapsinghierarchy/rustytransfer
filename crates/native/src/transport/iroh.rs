@@ -22,8 +22,8 @@ const CONNECT_TIMEOUT: Duration = Duration::from_secs(90);
 const ENDPOINT_READY_TIMEOUT: Duration = Duration::from_secs(10);
 const ENDPOINT_CLOSE_TIMEOUT: Duration = Duration::from_secs(10);
 const MAX_MESSAGE_BYTES: usize = 1024 * 1024 + 16; // Max plaintext chunk plus AES-GCM tag.
-const IROH_ALPN: &[u8] = b"rustytransfer/1";
-const DIRECT_ALPN: &[u8] = b"rustytransfer/direct/1";
+const IROH_ALPN: &[u8] = b"rustytransfer/2";
+const DIRECT_ALPN: &[u8] = b"rustytransfer/direct/2";
 pub const IROH_PROBE_ALPN: &[u8] = b"rustytransfer/probe/1";
 
 /// Return the per-user key path used by direct transfers.

@@ -10,8 +10,8 @@ webrtc = ["dep:webrtc"]
 iroh = ["dep:iroh"]
 
 [dependencies]
-rustytransfer-transfer = { path = "../transfer" }
-rustytransfer-protocol = { path = "../protocol" }
+rustytransfer-transfer = { version = "0.1.0", path = "../transfer" }
+rustytransfer-protocol = { version = "0.1.0", path = "../protocol" }
 anyhow.workspace = true
 async-trait.workspace = true
 bytes.workspace = true

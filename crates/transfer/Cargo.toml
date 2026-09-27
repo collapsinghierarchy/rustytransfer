@@ -5,12 +5,19 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-rustytransfer-protocol = { path = "../protocol" }
+rustytransfer-protocol = { version = "0.1.0", path = "../protocol" }
 anyhow.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 async-trait.workspace = true
 serde.workspace = true
+sha3.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61.2", features = ["Win32_Storage_FileSystem"] }
 
 [lints]
 workspace = true

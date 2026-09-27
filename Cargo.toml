@@ -14,7 +14,7 @@ edition = "2024"
 license = "AGPL-3.0-only"
 
 [workspace.dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.103"
 thiserror = "2"
 futures-util = "0.3.31"
 serde = { version = "1.0.228", features = ["derive"] }
@@ -27,7 +27,7 @@ getrandom02 = { package = "getrandom", version = "0.2" }
 ml-kem = "0.2.1"
 rand_core = "0.6.4"
 aes-gcm = { version = "0.10.3", features = ["aes"] }
-rand = "0.8.5"
+rand = "0.8.6"
 hmac = "0.12.1"
 sha3 = "0.10.8"
 bytes = "1.11.0"
@@ -44,10 +44,10 @@ tokio-tungstenite = { version = "0.28.0", features = ["rustls-tls-webpki-roots",
 webrtc = "0.21.0"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-rustytransfer-crypto = { path = "crates/crypto" }
-rustytransfer-protocol = { path = "crates/protocol" }
-rustytransfer-transfer = { path = "crates/transfer" }
-rustytransfer-native = { path = "crates/native" }
+rustytransfer-crypto = { version = "0.1.0", path = "crates/crypto" }
+rustytransfer-protocol = { version = "0.1.0", path = "crates/protocol" }
+rustytransfer-transfer = { version = "0.1.0", path = "crates/transfer" }
+rustytransfer-native = { version = "0.1.0", path = "crates/native" }
 anyhow.workspace = true
 clap.workspace = true
 indicatif.workspace = true
@@ -60,8 +60,8 @@ serde_json.workspace = true
 tokio.workspace = true
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-rustytransfer-crypto = { path = "crates/crypto" }
-rustytransfer-protocol = { path = "crates/protocol" }
+rustytransfer-crypto = { version = "0.1.0", path = "crates/crypto" }
+rustytransfer-protocol = { version = "0.1.0", path = "crates/protocol" }
 
 [dev-dependencies]
 async-trait.workspace = true

@@ -73,8 +73,6 @@ fn can_retry_transfer(error: &TransferError) -> bool {
 }
 
 fn retryable_reconnect_error(plan_is_pake: bool, error: &anyhow::Error) -> bool {
-    use crate::transport::errors::TransportError;
-
     let permanent = error.chain().any(|cause| {
         cause.downcast_ref::<PermanentReconnectError>().is_some()
             || cause.downcast_ref::<TransportError>().is_some_and(|cause| {
@@ -421,7 +419,7 @@ pub(super) async fn send_cmd(
             Err(error) if can_retry_transfer(&error) && attempts < MAX_TRANSFER_ATTEMPTS => {
                 let mut next_attempt = attempts.saturating_add(1).min(MAX_TRANSFER_ATTEMPTS);
                 eprintln!(
-                    "Connection interrupted after {} bytes; reconnecting (attempt {next_attempt}/{MAX_TRANSFER_ATTEMPTS}). The transfer restarts from the beginning.",
+                    "Connection interrupted after {} bytes; reconnecting (attempt {next_attempt}/{MAX_TRANSFER_ATTEMPTS}). The receiver will verify its saved prefix and resume if it matches.",
                     error.bytes_transferred
                 );
                 progress_bytes.store(0, Ordering::Relaxed);
@@ -450,7 +448,7 @@ pub(super) async fn send_cmd(
                                     "Reconnected; continuing despite path observation failure: {error:#}"
                                 ),
                             }
-                            eprintln!("Reconnected; restarting the transfer from the beginning.");
+                            eprintln!("Reconnected; negotiating the saved prefix.");
                             run.set_phase("transfer", "RTY-PROTOCOL-001");
                             break;
                         }
@@ -476,10 +474,8 @@ pub(super) async fn send_cmd(
             }
         }
     };
-    if let Ok(mut progress) = progress.lock()
-        && let Some(bar) = progress.take()
-    {
-        bar.finish_and_clear();
+    if let Ok(mut progress) = progress.lock() {
+        drop(progress.take());
     }
     let path_end = transfer_metrics.path_end.unwrap_or(path.clone());
 
@@ -630,7 +626,7 @@ pub(super) async fn recv_cmd(
             Err(error) if can_retry_transfer(&error) && attempts < MAX_TRANSFER_ATTEMPTS => {
                 let mut next_attempt = attempts.saturating_add(1).min(MAX_TRANSFER_ATTEMPTS);
                 eprintln!(
-                    "Connection interrupted after {} bytes; reconnecting (attempt {next_attempt}/{MAX_TRANSFER_ATTEMPTS}). The transfer restarts from the beginning.",
+                    "Connection interrupted after {} bytes; reconnecting (attempt {next_attempt}/{MAX_TRANSFER_ATTEMPTS}). The saved prefix will be verified before resume.",
                     error.bytes_transferred
                 );
                 progress_bytes.store(0, Ordering::Relaxed);
@@ -661,7 +657,7 @@ pub(super) async fn recv_cmd(
                                     "Reconnected; continuing despite path observation failure: {error:#}"
                                 ),
                             }
-                            eprintln!("Reconnected; restarting the transfer from the beginning.");
+                            eprintln!("Reconnected; negotiating the saved prefix.");
                             run.set_phase("transfer", "RTY-PROTOCOL-001");
                             break;
                         }
@@ -686,10 +682,8 @@ pub(super) async fn recv_cmd(
             }
         }
     };
-    if let Ok(mut progress) = progress.lock()
-        && let Some(bar) = progress.take()
-    {
-        bar.finish_and_clear();
+    if let Ok(mut progress) = progress.lock() {
+        drop(progress.take());
     }
     let path_end = transfer_metrics.path_end.unwrap_or(path.clone());
 
@@ -700,7 +694,7 @@ pub(super) async fn recv_cmd(
             start: path,
             end: path_end,
         },
-        transfer_metrics.bytes_transferred,
+        transfer_metrics.file_size,
         transfer_metrics.chunk_size,
         TransferTiming {
             handshake_seconds: setup_handshake_seconds + transfer_metrics.handshake_seconds,

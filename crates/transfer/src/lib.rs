@@ -1,7 +1,7 @@
 use anyhow::{Result, anyhow};
 use std::{io, path::Path, time::Duration};
 use tokio::{
-    io::{AsyncRead, AsyncReadExt, AsyncWriteExt},
+    io::{AsyncRead, AsyncReadExt},
     time::{Instant, timeout},
 };
 
@@ -14,7 +14,6 @@ mod session;
 pub use session::{receive_file, receive_file_direct, send_file, send_file_direct};
 mod transport_api;
 pub use metrics::TransferMetrics;
-use output::TempOutput;
 pub use transport_api::{PathObservation, TransferTransport};
 
 use crate::error::{CompletionState, Phase, TransferError, TransferErrorKind};
@@ -103,13 +102,27 @@ mod tests {
     use anyhow::{Context as AnyhowContext, ensure};
     use std::{
         io::Cursor,
-        path::PathBuf,
+        path::{Path, PathBuf},
         sync::atomic::{AtomicU64, Ordering},
     };
     use tokio::sync::{mpsc, watch};
 
     const TEST_TIMEOUT: Duration = Duration::from_secs(15);
     static NEXT_OUTPUT: AtomicU64 = AtomicU64::new(0);
+
+    #[derive(Clone, Copy)]
+    enum PayloadChange {
+        Corrupt,
+        Truncate,
+        Abort,
+    }
+
+    #[derive(Clone, Copy)]
+    enum SendFault {
+        None,
+        ChangeThirdMessage(PayloadChange),
+        FailOnMessage(usize),
+    }
 
     struct MemoryTransport {
         tx: Option<mpsc::Sender<Vec<u8>>>,
@@ -119,6 +132,8 @@ mod tests {
         receive_delay: Duration,
         fin_send_delay: Duration,
         fin_ack_receive_delay: Duration,
+        send_fault: SendFault,
+        sent_messages: usize,
     }
 
     impl MemoryTransport {
@@ -141,6 +156,8 @@ mod tests {
                     receive_delay: Duration::ZERO,
                     fin_send_delay: Duration::ZERO,
                     fin_ack_receive_delay: Duration::ZERO,
+                    send_fault: SendFault::None,
+                    sent_messages: 0,
                 },
                 Self {
                     tx: Some(b_to_a_tx),
@@ -150,6 +167,8 @@ mod tests {
                     receive_delay,
                     fin_send_delay,
                     fin_ack_receive_delay,
+                    send_fault: SendFault::None,
+                    sent_messages: 0,
                 },
             )
         }
@@ -161,7 +180,26 @@ mod tests {
 
     #[async_trait::async_trait]
     impl TransferTransport for MemoryTransport {
-        async fn send_message(&mut self, data: Vec<u8>) -> Result<()> {
+        async fn send_message(&mut self, mut data: Vec<u8>) -> Result<()> {
+            self.sent_messages += 1;
+            match self.send_fault {
+                SendFault::None => {}
+                SendFault::ChangeThirdMessage(change) if self.sent_messages == 3 => match change {
+                    PayloadChange::Corrupt => {
+                        let last = data
+                            .last_mut()
+                            .ok_or_else(|| anyhow!("test ciphertext was empty"))?;
+                        *last ^= 0x80;
+                    }
+                    PayloadChange::Truncate => data.truncate(data.len().saturating_sub(1)),
+                    PayloadChange::Abort => return Err(anyhow!("injected sender abort")),
+                },
+                SendFault::ChangeThirdMessage(_) => {}
+                SendFault::FailOnMessage(fail_on) if self.sent_messages == fail_on => {
+                    return Err(anyhow!("injected connection interruption"));
+                }
+                SendFault::FailOnMessage(_) => {}
+            }
             if data == b"FIN" && !self.fin_send_delay.is_zero() {
                 tokio::time::sleep(self.fin_send_delay).await;
             }
@@ -219,73 +257,22 @@ mod tests {
         }
     }
 
-    #[derive(Clone, Copy)]
-    enum PayloadChange {
-        Corrupt,
-        Truncate,
-        Abort,
-    }
-
-    struct ChangeThirdMessage<T> {
-        inner: T,
-        sent_messages: usize,
-        change: PayloadChange,
-    }
-
-    #[async_trait::async_trait]
-    impl<T: TransferTransport> TransferTransport for ChangeThirdMessage<T> {
-        async fn send_message(&mut self, mut data: Vec<u8>) -> Result<()> {
-            self.sent_messages += 1;
-            if self.sent_messages == 3 {
-                match self.change {
-                    PayloadChange::Corrupt => {
-                        let last = data
-                            .last_mut()
-                            .ok_or_else(|| anyhow!("test ciphertext was empty"))?;
-                        *last ^= 0x80;
-                    }
-                    PayloadChange::Truncate => data.truncate(data.len().saturating_sub(1)),
-                    PayloadChange::Abort => return Err(anyhow!("injected sender abort")),
-                }
-            }
-            self.inner.send_message(data).await
-        }
-
-        async fn receive_message(&mut self) -> Result<Vec<u8>> {
-            self.inner.receive_message().await
-        }
-
-        async fn close_send_half(&mut self) -> Result<()> {
-            self.inner.close_send_half().await
-        }
-
-        async fn finish_sending(&mut self) -> Result<()> {
-            self.inner.finish_sending().await
-        }
-
-        async fn finish_receiving(&mut self) -> Result<()> {
-            self.inner.finish_receiving().await
-        }
-
-        async fn wait_for_peer_close(&mut self) -> Result<()> {
-            self.inner.wait_for_peer_close().await
-        }
-
-        async fn close_transport(&mut self) -> Result<()> {
-            self.inner.close_transport().await
-        }
-
-        async fn observe_path(&mut self) -> Result<Option<PathObservation>> {
-            self.inner.observe_path().await
-        }
-    }
-
     fn output_path() -> PathBuf {
         std::env::temp_dir().join(format!(
             "rustytransfer-transfer-{}-{}.bin",
             std::process::id(),
             NEXT_OUTPUT.fetch_add(1, Ordering::Relaxed)
         ))
+    }
+
+    fn partial_path(output: &Path) -> Result<PathBuf> {
+        let name = output
+            .file_name()
+            .ok_or_else(|| anyhow!("test output has no file name"))?;
+        let mut part_name = std::ffi::OsString::from(".");
+        part_name.push(name);
+        part_name.push(".rustytransfer.part");
+        Ok(output.with_file_name(part_name))
     }
 
     async fn transfer_bytes(
@@ -488,11 +475,8 @@ mod tests {
             MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
         let output = output_path();
         let sender_future = async move {
-            let mut sender = ChangeThirdMessage {
-                inner: sender,
-                sent_messages: 0,
-                change,
-            };
+            let mut sender = sender;
+            sender.send_fault = SendFault::ChangeThirdMessage(change);
             send_file(
                 &mut sender,
                 Cursor::new(vec![1, 2, 3, 4, 5, 6, 7, 8]),
@@ -620,6 +604,209 @@ mod tests {
         .await
         .context("receiver-abort case timed out")?;
         ensure!(receiver_result.is_err(), "receiver ignored sender abort");
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn interrupted_transfer_resumes_saved_prefix_on_next_invocation() -> Result<()> {
+        const CHUNK: usize = 16;
+        let data: Vec<u8> = (0..96)
+            .map(|index| u8::try_from(index % 251))
+            .collect::<std::result::Result<_, _>>()
+            .context("test byte pattern exceeds u8")?;
+        let file_len = u64::try_from(data.len()).context("test input length exceeds u64")?;
+        let first_chunk = u64::try_from(CHUNK).context("test chunk length exceeds u64")?;
+        let output = output_path();
+        let part = partial_path(&output)?;
+        let (sender, receiver) =
+            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
+        let sender_data = data.clone();
+        let sender_future = async move {
+            let mut sender = sender;
+            sender.send_fault = SendFault::FailOnMessage(4);
+            send_file(
+                &mut sender,
+                Cursor::new(sender_data.clone()),
+                file_len,
+                b"ABCDE",
+                TransferConfig { chunk_size: CHUNK },
+                |_, _| {},
+            )
+            .await
+        };
+        let receiver_output = output.clone();
+        let receiver_future = async move {
+            let mut receiver = receiver;
+            receive_file(&mut receiver, b"ABCDE", &receiver_output, |_, _| {}).await
+        };
+        let (sender_result, receiver_result) = timeout(TEST_TIMEOUT, async {
+            tokio::join!(sender_future, receiver_future)
+        })
+        .await
+        .context("interrupted transfer timed out")?;
+        ensure!(
+            sender_result.is_err(),
+            "injected connection error was ignored"
+        );
+        ensure!(
+            receiver_result.is_err(),
+            "receiver accepted an incomplete file"
+        );
+        let partial = tokio::fs::read(&part).await?;
+        ensure!(
+            partial == data[..CHUNK],
+            "partial file does not contain one chunk"
+        );
+
+        let (sender, receiver) =
+            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
+        let sender_data = data.clone();
+        let sender_future = async move {
+            let mut sender = sender;
+            send_file(
+                &mut sender,
+                Cursor::new(sender_data.clone()),
+                file_len,
+                b"ABCDE",
+                TransferConfig { chunk_size: CHUNK },
+                |_, _| {},
+            )
+            .await
+        };
+        let receiver_output = output.clone();
+        let receiver_future = async move {
+            let mut receiver = receiver;
+            receive_file(&mut receiver, b"ABCDE", &receiver_output, |_, _| {}).await
+        };
+        let (sender_metrics, receiver_metrics) = timeout(TEST_TIMEOUT, async {
+            tokio::join!(sender_future, receiver_future)
+        })
+        .await
+        .context("resumed transfer timed out")?;
+        let sender_metrics = sender_metrics?;
+        let receiver_metrics = receiver_metrics?;
+        ensure!(sender_metrics.bytes_transferred == file_len - first_chunk);
+        ensure!(receiver_metrics.bytes_transferred == sender_metrics.bytes_transferred);
+        ensure!(receiver_metrics.file_size == file_len);
+        ensure!(tokio::fs::read(&output).await? == data);
+        ensure!(!tokio::fs::try_exists(&part).await?);
+        tokio::fs::remove_file(&output).await?;
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn corrupted_prefix_resets_and_full_part_sends_zero_suffix() -> Result<()> {
+        const CHUNK: usize = 8;
+        let data: Vec<u8> = (0..40)
+            .map(|index| u8::try_from(index + 1))
+            .collect::<std::result::Result<_, _>>()
+            .context("test byte pattern exceeds u8")?;
+        let file_len = u64::try_from(data.len()).context("test input length exceeds u64")?;
+        let output = output_path();
+        let part = partial_path(&output)?;
+        tokio::fs::write(&part, vec![0_u8; CHUNK * 2]).await?;
+        let (sender, receiver) =
+            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
+        let sender_data = data.clone();
+        let sender_future = async move {
+            let mut sender = sender;
+            send_file(
+                &mut sender,
+                Cursor::new(sender_data.clone()),
+                file_len,
+                b"ABCDE",
+                TransferConfig { chunk_size: CHUNK },
+                |_, _| {},
+            )
+            .await
+        };
+        let receiver_output = output.clone();
+        let receiver_future = async move {
+            let mut receiver = receiver;
+            receive_file(&mut receiver, b"ABCDE", &receiver_output, |_, _| {}).await
+        };
+        let (_sender_metrics, receiver_metrics) = timeout(TEST_TIMEOUT, async {
+            tokio::join!(sender_future, receiver_future)
+        })
+        .await
+        .context("corrupted-prefix reset timed out")?;
+        let receiver_metrics = receiver_metrics?;
+        ensure!(receiver_metrics.bytes_transferred == file_len);
+        ensure!(tokio::fs::read(&output).await? == data);
+        tokio::fs::remove_file(&output).await?;
+
+        let full_output = output_path();
+        let full_part = partial_path(&full_output)?;
+        tokio::fs::write(&full_part, &data).await?;
+        let (sender, receiver) =
+            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
+        let sender_data = data.clone();
+        let sender_future = async move {
+            let mut sender = sender;
+            send_file(
+                &mut sender,
+                Cursor::new(sender_data.clone()),
+                file_len,
+                b"ABCDE",
+                TransferConfig { chunk_size: CHUNK },
+                |_, _| {},
+            )
+            .await
+        };
+        let receiver_output = full_output.clone();
+        let receiver_future = async move {
+            let mut receiver = receiver;
+            receive_file(&mut receiver, b"ABCDE", &receiver_output, |_, _| {}).await
+        };
+        let (sender_metrics, receiver_metrics) = timeout(TEST_TIMEOUT, async {
+            tokio::join!(sender_future, receiver_future)
+        })
+        .await
+        .context("full-prefix transfer timed out")?;
+        ensure!(sender_metrics?.bytes_transferred == 0);
+        let receiver_metrics = receiver_metrics?;
+        ensure!(receiver_metrics.bytes_transferred == 0);
+        ensure!(receiver_metrics.file_size == file_len);
+        ensure!(tokio::fs::read(&full_output).await? == data);
+        tokio::fs::remove_file(&full_output).await?;
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn failed_authentication_preserves_existing_partial_file() -> Result<()> {
+        let output = output_path();
+        let part = partial_path(&output)?;
+        let partial = b"keep this verified prefix";
+        tokio::fs::write(&part, partial).await?;
+        let (sender, receiver) =
+            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
+        let sender_future = async move {
+            let mut sender = sender;
+            send_file_direct(
+                &mut sender,
+                Cursor::new(b"keep this verified prefix and finish it".to_vec()),
+                39,
+                &[0x41; 16],
+                TransferConfig::default(),
+                |_, _| {},
+            )
+            .await
+        };
+        let receiver_output = output.clone();
+        let receiver_future = async move {
+            let mut receiver = receiver;
+            receive_file_direct(&mut receiver, &[0x42; 16], &receiver_output, |_, _| {}).await
+        };
+        let (sender_result, receiver_result) = timeout(TEST_TIMEOUT, async {
+            tokio::join!(sender_future, receiver_future)
+        })
+        .await
+        .context("wrong-auth resume case timed out")?;
+        ensure!(sender_result.is_err());
+        ensure!(receiver_result.is_err());
+        ensure!(tokio::fs::read(&part).await? == partial);
+        ensure!(!tokio::fs::try_exists(&output).await?);
+        tokio::fs::remove_file(&part).await?;
         Ok(())
     }
 }

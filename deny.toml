@@ -8,8 +8,8 @@ yanked = "deny"
 
 [licenses]
 # Only explicitly permitted licenses may enter the dependency graph. The root
-# package is AGPL-3.0-only and is allowed below as a package-specific exception;
-# AGPL is deliberately not allowed for third-party dependencies.
+# package and workspace libraries use AGPL-3.0-only; they are allowed below as
+# package-specific exceptions. AGPL remains disallowed for third-party crates.
 allow = [
     "0BSD",
     "Apache-2.0",
@@ -32,6 +32,28 @@ confidence-threshold = 0.8
 
 [[licenses.exceptions]]
 crate = "rustytransfer"
+allow = ["AGPL-3.0-only"]
+
+# The workspace libraries share the same license as the root package and need
+# the same narrow exception. Keep AGPL disallowed for third-party crates.
+[[licenses.exceptions]]
+crate = "rustytransfer-crypto"
+allow = ["AGPL-3.0-only"]
+
+[[licenses.exceptions]]
+crate = "rustytransfer-protocol"
+allow = ["AGPL-3.0-only"]
+
+[[licenses.exceptions]]
+crate = "rustytransfer-transfer"
+allow = ["AGPL-3.0-only"]
+
+[[licenses.exceptions]]
+crate = "rustytransfer-native"
+allow = ["AGPL-3.0-only"]
+
+[[licenses.exceptions]]
+crate = "rustytransfer-wasm"
 allow = ["AGPL-3.0-only"]
 
 [bans]

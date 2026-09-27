@@ -1,4 +1,46 @@
 use crate::*;
+use sha3::{Digest, Sha3_256};
+use std::io::SeekFrom;
+use tokio::io::{AsyncSeek, AsyncSeekExt};
+
+async fn source_prefix_digest<R: AsyncRead + AsyncSeek + Unpin>(
+    source: &mut R,
+    offset: u64,
+) -> io::Result<[u8; 32]> {
+    source.seek(SeekFrom::Start(0)).await?;
+    let mut remaining = offset;
+    let mut hasher = Sha3_256::new();
+    let mut buffer = vec![0_u8; 64 * 1024];
+    while remaining > 0 {
+        let count = usize::try_from(remaining.min(64 * 1024))
+            .map_err(|error| io::Error::new(io::ErrorKind::InvalidInput, error.to_string()))?;
+        let read_buffer = buffer.get_mut(..count).ok_or_else(|| {
+            io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "source prefix buffer range is invalid",
+            )
+        })?;
+        let bytes_read = source.read(read_buffer).await?;
+        if bytes_read == 0 {
+            return Err(io::Error::new(
+                io::ErrorKind::UnexpectedEof,
+                "source ended before the requested resume offset",
+            ));
+        }
+        let hashed_bytes = buffer.get(..bytes_read).ok_or_else(|| {
+            io::Error::new(
+                io::ErrorKind::InvalidData,
+                "source prefix read range is invalid",
+            )
+        })?;
+        hasher.update(hashed_bytes);
+        let read = u64::try_from(bytes_read)
+            .map_err(|error| io::Error::new(io::ErrorKind::InvalidData, error.to_string()))?;
+        remaining = remaining.saturating_sub(read);
+    }
+    source.seek(SeekFrom::Start(offset)).await?;
+    Ok(hasher.finalize().into())
+}
 
 /// Run the sender side of one encrypted file transfer.
 ///
@@ -17,7 +59,7 @@ pub async fn send_file<T, R, F>(
 ) -> std::result::Result<TransferMetrics, TransferError>
 where
     T: TransferTransport,
-    R: AsyncRead + Unpin + Send,
+    R: AsyncRead + AsyncSeek + Unpin + Send,
     F: FnMut(u64, u64) + Send,
 {
     send_file_with_auth(
@@ -50,7 +92,7 @@ pub async fn send_file_direct<T, R, F>(
 ) -> std::result::Result<TransferMetrics, TransferError>
 where
     T: TransferTransport,
-    R: AsyncRead + Unpin + Send,
+    R: AsyncRead + AsyncSeek + Unpin + Send,
     F: FnMut(u64, u64) + Send,
 {
     send_file_with_auth(
@@ -80,7 +122,7 @@ async fn send_file_with_auth<T, R, F>(
 ) -> std::result::Result<TransferMetrics, TransferError>
 where
     T: TransferTransport,
-    R: AsyncRead + Unpin + Send,
+    R: AsyncRead + AsyncSeek + Unpin + Send,
     F: FnMut(u64, u64) + Send,
 {
     let mut context = TransferContext::new();
@@ -116,7 +158,7 @@ async fn send_file_inner<T, R, F>(
 ) -> std::result::Result<TransferMetrics, TransferError>
 where
     T: TransferTransport,
-    R: AsyncRead + Unpin + Send,
+    R: AsyncRead + AsyncSeek + Unpin + Send,
     F: FnMut(u64, u64) + Send,
 {
     let chunk_size = config.validate(file_len)?;
@@ -160,6 +202,17 @@ where
 
     context.phase = Phase::KemAuth;
     let auth_kem = receive_with_timeout(transport, HANDSHAKE_TIMEOUT, *context).await?;
+    let offer = sender
+        .authenticate_resume_offer(&auth_kem)
+        .map_err(|error| context.protocol(error))?;
+    let source_digest = if offer.offset <= file_len {
+        source_prefix_digest(&mut source, offer.offset)
+            .await
+            .map_err(|error| context.error(TransferErrorKind::SourceIo(error)))?
+    } else {
+        Sha3_256::digest([]).into()
+    };
+    sender.set_source_prefix_digest(source_digest);
     let smt_header = required_output(
         "sender SMT header",
         sender
@@ -167,12 +220,17 @@ where
             .map_err(|error| context.protocol(error))?,
     )
     .map_err(|_source| context.error(TransferErrorKind::Internal("sender SMT header missing")))?;
+    let resume_offset = sender.resume_offset();
+    source
+        .seek(SeekFrom::Start(resume_offset))
+        .await
+        .map_err(|error| context.error(TransferErrorKind::SourceIo(error)))?;
     context.phase = Phase::Metadata;
     send_with_timeout(transport, smt_header, HANDSHAKE_TIMEOUT, *context).await?;
     let handshake_seconds = handshake_started.elapsed().as_secs_f64();
 
     context.phase = Phase::Payload;
-    on_progress(file_len, 0);
+    on_progress(file_len, resume_offset);
     let payload_started = Instant::now();
     let mut buffer = Vec::new();
     buffer
@@ -181,13 +239,31 @@ where
             context.error(TransferErrorKind::Config("chunk buffer allocation failed"))
         })?;
     buffer.resize(config.chunk_size, 0);
-    loop {
-        let bytes_read = timeout(CHUNK_TIMEOUT, source.read(&mut buffer))
+    let remaining_len = sender.remaining_len();
+    while sender.bytes_sent() < remaining_len {
+        let remaining = remaining_len.saturating_sub(sender.bytes_sent());
+        let read_limit =
+            usize::try_from(remaining.min(u64::from(chunk_size))).map_err(|_error| {
+                context.error(TransferErrorKind::Internal("source read size is invalid"))
+            })?;
+        let read_buffer = buffer.get_mut(..read_limit).ok_or_else(|| {
+            context.error(TransferErrorKind::Internal(
+                "source read buffer range is invalid",
+            ))
+        })?;
+        let bytes_read = timeout(CHUNK_TIMEOUT, source.read(read_buffer))
             .await
             .map_err(|_source| context.error(TransferErrorKind::Timeout))?
             .map_err(|error| context.error(TransferErrorKind::SourceIo(error)))?;
         if bytes_read == 0 {
-            break;
+            return Err(context.error(TransferErrorKind::SourceIo(io::Error::new(
+                io::ErrorKind::UnexpectedEof,
+                format!(
+                    "source ended after {} of {} bytes",
+                    sender.bytes_sent(),
+                    remaining_len
+                ),
+            ))));
         }
 
         let capacity = bytes_read.checked_add(GCM_TAG_LEN).ok_or_else(|| {
@@ -216,16 +292,22 @@ where
         })?;
         context.bytes_transferred = sender.bytes_sent();
         send_with_timeout(transport, ciphertext, CHUNK_TIMEOUT, *context).await?;
-        on_progress(file_len, sender.bytes_sent());
+        let absolute_position = resume_offset
+            .checked_add(sender.bytes_sent())
+            .ok_or_else(|| context.error(TransferErrorKind::Internal("progress overflow")))?;
+        on_progress(file_len, absolute_position);
     }
-    if sender.bytes_sent() != file_len {
+    let extra_buffer = buffer.get_mut(..1).ok_or_else(|| {
+        context.error(TransferErrorKind::Internal("source probe buffer is empty"))
+    })?;
+    let extra = timeout(CHUNK_TIMEOUT, source.read(extra_buffer))
+        .await
+        .map_err(|_source| context.error(TransferErrorKind::Timeout))?
+        .map_err(|error| context.error(TransferErrorKind::SourceIo(error)))?;
+    if extra > 0 {
         return Err(context.error(TransferErrorKind::SourceIo(io::Error::new(
-            io::ErrorKind::UnexpectedEof,
-            format!(
-                "source ended after {} of {} bytes",
-                sender.bytes_sent(),
-                file_len
-            ),
+            io::ErrorKind::InvalidData,
+            "source is longer than the advertised file length",
         ))));
     }
     let payload_seconds = payload_started.elapsed().as_secs_f64();
@@ -271,7 +353,8 @@ where
     }
 
     Ok(TransferMetrics {
-        bytes_transferred: file_len,
+        bytes_transferred: sender.bytes_sent(),
+        file_size: file_len,
         chunk_size,
         handshake_seconds,
         payload_seconds,

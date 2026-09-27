@@ -194,9 +194,17 @@ rustytransfer recv --code 1234-ABCDE --out ./received.bin
 ## Network requirements
 
 Failed transfers report a stable `RTY-*` code and exit with a code matching the
-failure category. The receiver writes to a temporary file in the destination
+failure category. The receiver writes to a partial file in the destination
 directory and publishes the result only after the transfer is confirmed. An
-existing destination is never overwritten. Set `RUSTYTRANSFER_METRICS_JSONL`
+existing destination is never overwritten. Resumable receive keeps a
+same-directory partial file named `.<output-name>.rustytransfer.part`; run
+`recv` again with the same `--out` path and a new share code or direct Iroh
+invite to resume it. Direct Iroh reconnects do not use the rendezvous backend.
+The prefix is checked against the sender's source before saved bytes
+are reused. This partial file contains plaintext; remove
+`.<output-name>.rustytransfer.part` to discard it. Both peers must run this
+protocol version because its authenticated message lengths changed. Set
+`RUSTYTRANSFER_METRICS_JSONL`
 to record both successful and failed transfers; failure records include the
 phase, error code, transferred byte count, and completion state. `--verbose`
 adds redacted diagnostic context.
@@ -210,9 +218,11 @@ adds redacted diagnostic context.
   rustytransfer backend is offline. A relay path is still end-to-end encrypted.
 
 After a transient connection failure, `send` and `recv` retry up to three
-times with 1, 2, and 4 second delays. Each retry starts a new session from byte
-zero, and incomplete receiver output is discarded. Authentication, protocol,
-and file errors do not trigger retries.
+times with 1, 2, and 4 second delays. Each retry creates a fresh encrypted
+session. The receiver offers the length and SHA3-256 digest of its saved prefix;
+the sender resumes at that offset only when the source prefix matches. If it
+does not match, the authenticated session resets the partial file and sends
+from byte zero. Authentication, protocol, and file errors do not trigger retries.
 ---
 
 ## Use of AI

@@ -6,12 +6,14 @@ use rustytransfer_crypto::dem::DemStreamOpener;
 use rustytransfer_crypto::kem::KemState;
 use rustytransfer_crypto::mac::MacState;
 use rustytransfer_crypto::pake::PakeState;
+use sha3::{Digest, Sha3_256};
 
 const KEM_CT_LEN: usize = <<MlKem768 as KemCore>::CiphertextSize as Unsigned>::USIZE;
 const TAG_LEN: usize = 32;
 const NONCE_LEN: usize = 12;
 const NONCE_PREFIX_LEN: usize = 8;
 const MAX_CHUNK_SIZE: u32 = 1024 * 1024;
+const PREFIX_DIGEST_LEN: usize = 32;
 
 type SmtHeader<'a> = (
     &'a [u8],
@@ -19,11 +21,12 @@ type SmtHeader<'a> = (
     [u8; NONCE_PREFIX_LEN],
     u64,
     u32,
+    (u64, [u8; PREFIX_DIGEST_LEN]),
 );
 type SmtMessage<'a> = (&'a [u8], Ciphertext<MlKem768>, [u8; NONCE_LEN], &'a [u8]);
 
 fn parse_smt_header(input: &[u8]) -> Result<SmtHeader<'_>, StepError> {
-    let need = TAG_LEN + KEM_CT_LEN + NONCE_PREFIX_LEN + 8 + 4;
+    let need = TAG_LEN + KEM_CT_LEN + NONCE_PREFIX_LEN + 8 + 4 + 8 + PREFIX_DIGEST_LEN;
     if input.len() != need {
         return Err(StepError::InvalidTransition(format!(
             "invalid SMT header length: got {}, expected {}",
@@ -36,7 +39,7 @@ fn parse_smt_header(input: &[u8]) -> Result<SmtHeader<'_>, StepError> {
     let (kem_ct_bytes, rest) = rest.split_at(KEM_CT_LEN);
     let (prefix_bytes, rest) = rest.split_at(NONCE_PREFIX_LEN);
     let (file_len_bytes, rest) = rest.split_at(8);
-    let (chunk_size_bytes, _rest) = rest.split_at(4);
+    let (chunk_size_bytes, resume_bytes) = rest.split_at(4);
 
     let kem_ct: Ciphertext<MlKem768> = kem_ct_bytes.try_into().map_err(|error| {
         StepError::InvalidTransition(format!("Bad KEM ciphertext length: {error}"))
@@ -58,7 +61,23 @@ fn parse_smt_header(input: &[u8]) -> Result<SmtHeader<'_>, StepError> {
             .map_err(|error| StepError::InvalidTransition(format!("Bad chunk_size: {error}")))?,
     );
 
-    Ok((tag_bytes, kem_ct, prefix, file_len, chunk_size))
+    let (offset_bytes, digest_bytes) = resume_bytes.split_at(8);
+    let offset =
+        u64::from_be_bytes(offset_bytes.try_into().map_err(|error| {
+            StepError::InvalidTransition(format!("Bad resume offset: {error}"))
+        })?);
+    let digest = digest_bytes
+        .try_into()
+        .map_err(|error| StepError::InvalidTransition(format!("Bad resume digest: {error}")))?;
+
+    Ok((
+        tag_bytes,
+        kem_ct,
+        prefix,
+        file_len,
+        chunk_size,
+        (offset, digest),
+    ))
 }
 
 /// Parses an SMT message into its authenticated fields.
@@ -108,11 +127,15 @@ pub struct ReceiverFsm {
     bytes_recv: u64,
     header_received: bool,
     dem_stream: Option<DemStreamOpener>,
+    offered_offset: u64,
+    offered_digest: [u8; PREFIX_DIGEST_LEN],
+    resume_offset: u64,
+    resume_digest: [u8; PREFIX_DIGEST_LEN],
 }
 
 impl ReceiverFsm {
     #[must_use]
-    pub fn new(pw: Vec<u8>) -> Self {
+    pub fn new(pw: Vec<u8>, offer: crate::sender::ResumeOffer) -> Self {
         ReceiverFsm {
             state: State::Init {
                 role: Role::Receiver,
@@ -123,13 +146,17 @@ impl ReceiverFsm {
             bytes_recv: 0,
             header_received: false,
             dem_stream: None,
+            offered_offset: offer.offset,
+            offered_digest: offer.prefix_digest,
+            resume_offset: 0,
+            resume_digest: Sha3_256::digest([]).into(),
         }
     }
 
     /// Creates a receiver state machine that uses a shared direct-transfer
     /// token instead of the PAKE exchange.
     #[must_use]
-    pub fn new_direct(token: &[u8; 16]) -> Self {
+    pub fn new_direct(token: &[u8; 16], offer: crate::sender::ResumeOffer) -> Self {
         ReceiverFsm {
             state: State::DirectAuth {
                 role: Role::Receiver,
@@ -140,6 +167,10 @@ impl ReceiverFsm {
             bytes_recv: 0,
             header_received: false,
             dem_stream: None,
+            offered_offset: offer.offset,
+            offered_digest: offer.prefix_digest,
+            resume_offset: 0,
+            resume_digest: Sha3_256::digest([]).into(),
         }
     }
 
@@ -155,20 +186,51 @@ impl ReceiverFsm {
     pub fn chunk_size(&self) -> u32 {
         self.chunk_size
     }
+
     #[must_use]
-    pub fn is_complete(&self) -> bool {
-        self.header_received && self.bytes_recv == self.file_len
+    pub fn resume_offset(&self) -> u64 {
+        self.resume_offset
     }
 
-    fn start_auth_kem(shared_key: &[u8]) -> Result<(State, Option<Vec<u8>>), StepError> {
+    #[must_use]
+    pub fn remaining_len(&self) -> u64 {
+        self.file_len.saturating_sub(self.resume_offset)
+    }
+
+    #[must_use]
+    pub fn resume_digest(&self) -> [u8; PREFIX_DIGEST_LEN] {
+        self.resume_digest
+    }
+    #[must_use]
+    pub fn is_complete(&self) -> bool {
+        self.header_received && self.bytes_recv == self.remaining_len()
+    }
+
+    fn start_auth_kem(
+        shared_key: &[u8],
+        resume_offer: (u64, [u8; PREFIX_DIGEST_LEN]),
+    ) -> Result<(State, Option<Vec<u8>>), StepError> {
         let mut kem = KemState::new();
         kem.generate_keypair();
         let mac = MacState::new(shared_key);
         let pub_bytes = kem.public_key_bytes()?;
-        let tag = mac.tag(&pub_bytes);
+        let mac_input_len = pub_bytes
+            .len()
+            .checked_add(8)
+            .and_then(|length| length.checked_add(PREFIX_DIGEST_LEN))
+            .ok_or_else(|| {
+                StepError::InvalidTransition("resume authentication input length overflow".into())
+            })?;
+        let mut mac_input = Vec::with_capacity(mac_input_len);
+        mac_input.extend_from_slice(pub_bytes.as_ref());
+        mac_input.extend_from_slice(&resume_offer.0.to_be_bytes());
+        mac_input.extend_from_slice(&resume_offer.1);
+        let tag = mac.tag(&mac_input);
         let mut outbox = Vec::new();
         outbox.extend_from_slice(tag.as_ref());
         outbox.extend_from_slice(pub_bytes.as_ref());
+        outbox.extend_from_slice(&resume_offer.0.to_be_bytes());
+        outbox.extend_from_slice(&resume_offer.1);
         Ok((
             State::KemAuth {
                 role: Role::Receiver,
@@ -228,7 +290,7 @@ impl ReceiverFsm {
                     StepError::InvalidTransition("Expected input for PakeStart".into())
                 })?;
                 let sender_key = pake_state.finish(&pake_receiver_msg)?;
-                Self::start_auth_kem(&sender_key)?
+                Self::start_auth_kem(&sender_key, (self.offered_offset, self.offered_digest))?
             }
             (
                 State::DirectAuth {
@@ -237,7 +299,7 @@ impl ReceiverFsm {
                 },
                 "DIRECT_AUTH",
                 None,
-            ) => Self::start_auth_kem(&shared_key)?,
+            ) => Self::start_auth_kem(&shared_key, (self.offered_offset, self.offered_digest))?,
             // Receive SMT HEADER (tag || kem_ct || prefix || file_len || chunk_size), verify, decap, init stream opener
             (
                 State::KemAuth {
@@ -252,7 +314,7 @@ impl ReceiverFsm {
                     StepError::InvalidTransition("Missing SMT header input".into())
                 })?;
 
-                let (tag_bytes, kem_ct, prefix, file_len, chunk_size) =
+                let (tag_bytes, kem_ct, prefix, file_len, chunk_size, resume) =
                     parse_smt_header(input_bytes)?;
 
                 // Verify MAC over (kem_ct || prefix || file_len || chunk_size)
@@ -261,6 +323,8 @@ impl ReceiverFsm {
                 mac_input.extend_from_slice(&prefix);
                 mac_input.extend_from_slice(&file_len.to_be_bytes());
                 mac_input.extend_from_slice(&chunk_size.to_be_bytes());
+                mac_input.extend_from_slice(&resume.0.to_be_bytes());
+                mac_input.extend_from_slice(&resume.1);
 
                 let vfy_flag = mac.verify(mac_input.as_ref(), tag_bytes);
                 if !vfy_flag {
@@ -283,6 +347,18 @@ impl ReceiverFsm {
                         "advertised file exceeds the stream nonce limit".into(),
                     ));
                 }
+                let empty_digest: [u8; PREFIX_DIGEST_LEN] = Sha3_256::digest([]).into();
+                let selected_offer = resume.0 == self.offered_offset
+                    && resume.1 == self.offered_digest
+                    && resume.0 <= file_len;
+                let selected_reset = resume.0 == 0 && resume.1 == empty_digest;
+                if !selected_offer && !selected_reset {
+                    return Err(StepError::InvalidTransition(
+                        "sender selected an invalid resume prefix".into(),
+                    ));
+                }
+                self.resume_offset = resume.0;
+                self.resume_digest = resume.1;
                 let dem_key = kem.decapsulate(&kem_ct)?;
 
                 self.file_len = file_len;
@@ -335,7 +411,7 @@ impl ReceiverFsm {
                 let received = self.bytes_recv.checked_add(chunk_len).ok_or_else(|| {
                     StepError::InvalidTransition("received byte count overflow".into())
                 })?;
-                if received > self.file_len {
+                if received > self.remaining_len() {
                     return Err(StepError::InvalidTransition(
                         "received beyond file_len".into(),
                     ));
@@ -358,7 +434,7 @@ impl ReceiverFsm {
                 "SMT",
                 None,
             ) => {
-                if self.bytes_recv != self.file_len {
+                if self.bytes_recv != self.remaining_len() {
                     return Err(StepError::InvalidTransition(
                         "SMT finalize called before full file received".into(),
                     ));

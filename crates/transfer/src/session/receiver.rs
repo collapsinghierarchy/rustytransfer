@@ -1,3 +1,4 @@
+use crate::output::ResumeOutput;
 use crate::*;
 
 /// Run the receiver side of one encrypted file transfer.
@@ -71,21 +72,33 @@ where
     F: FnMut(u64, u64) + Send,
 {
     let mut context = TransferContext::new();
-    let mut temporary = TempOutput::new();
+    let mut resume_output = match ResumeOutput::open(output_path).await {
+        Ok(output) => output,
+        Err(error) => {
+            let mut error = context.error(TransferErrorKind::DestinationIo(error));
+            if let Err(issue) = abort_transport(transport).await {
+                error.add_cleanup_issue(issue);
+            }
+            return Err(error);
+        }
+    };
     let result = receive_file_inner(
         transport,
         authentication,
         output_path,
         on_progress,
         &mut context,
-        &mut temporary,
+        &mut resume_output,
     )
     .await;
     match result {
         Ok(metrics) => Ok(metrics),
         Err(mut error) => {
-            if let Err(issue) = temporary.cleanup().await {
-                error.add_cleanup_issue(format!("temporary output cleanup failed: {issue}"));
+            if let Err(issue) = resume_output.flush().await {
+                error.add_cleanup_issue(format!("partial output flush failed: {issue}"));
+            }
+            if let Err(issue) = resume_output.sync_data().await {
+                error.add_cleanup_issue(format!("partial output sync failed: {issue}"));
             }
             if let Err(issue) = abort_transport(transport).await {
                 error.add_cleanup_issue(issue);
@@ -101,15 +114,16 @@ async fn receive_file_inner<T, F>(
     output_path: &Path,
     mut on_progress: F,
     context: &mut TransferContext,
-    temporary: &mut TempOutput,
+    resume_output: &mut ResumeOutput,
 ) -> std::result::Result<TransferMetrics, TransferError>
 where
     T: TransferTransport,
     F: FnMut(u64, u64) + Send,
 {
+    let offer = resume_output.candidate();
     let mut receiver = match authentication {
-        Authentication::Pake(password) => ReceiverFsm::new(password.to_vec()),
-        Authentication::Direct(token) => ReceiverFsm::new_direct(token),
+        Authentication::Pake(password) => ReceiverFsm::new(password.to_vec(), offer),
+        Authentication::Direct(token) => ReceiverFsm::new_direct(token, offer),
     };
     context.phase = match authentication {
         Authentication::Pake(_) => Phase::Pake,
@@ -167,16 +181,17 @@ where
         )));
     }
     let total = receiver.file_len();
+    let resume_offset = receiver.resume_offset();
     let handshake_seconds = handshake_started.elapsed().as_secs_f64();
 
-    let mut output = temporary
-        .create(output_path)
+    resume_output
+        .select(resume_offset, receiver.resume_digest())
         .await
         .map_err(|error| context.error(TransferErrorKind::DestinationIo(error)))?;
     context.phase = Phase::Payload;
-    on_progress(total, 0);
+    on_progress(total, resume_offset);
     let payload_started = Instant::now();
-    while receiver.bytes_received() < total {
+    while receiver.bytes_received() < receiver.remaining_len() {
         let ciphertext = receive_with_timeout(transport, CHUNK_TIMEOUT, *context).await?;
         let plaintext = required_output(
             "receiver plaintext block",
@@ -187,14 +202,17 @@ where
         .map_err(|_source| {
             context.error(TransferErrorKind::Internal("receiver plaintext missing"))
         })?;
-        output
+        resume_output
             .write_all(&plaintext)
             .await
             .map_err(|error| context.error(TransferErrorKind::DestinationIo(error)))?;
         context.bytes_transferred = receiver.bytes_received();
-        on_progress(total, receiver.bytes_received());
+        let absolute_position = resume_offset
+            .checked_add(receiver.bytes_received())
+            .ok_or_else(|| context.error(TransferErrorKind::Internal("progress overflow")))?;
+        on_progress(total, absolute_position);
     }
-    output
+    resume_output
         .flush()
         .await
         .map_err(|error| context.error(TransferErrorKind::DestinationIo(error)))?;
@@ -223,9 +241,8 @@ where
         return Err(context.error(TransferErrorKind::Internal("receiver did not complete")));
     }
     let path_end = transport.observe_path().await.ok().flatten();
-    drop(output);
     context.phase = Phase::Finalize;
-    temporary
+    resume_output
         .commit(output_path)
         .await
         .map_err(|error| context.error(TransferErrorKind::CommitIo(error)))?;
@@ -254,7 +271,8 @@ where
     }
 
     Ok(TransferMetrics {
-        bytes_transferred: total,
+        bytes_transferred: receiver.bytes_received(),
+        file_size: total,
         chunk_size: receiver.chunk_size(),
         handshake_seconds,
         payload_seconds,

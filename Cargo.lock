@@ -4106,6 +4106,7 @@ version = "0.1.0"
 dependencies = [
  "ml-kem",
  "rustytransfer-crypto",
+ "sha3",
 ]
 
 [[package]]
@@ -4114,10 +4115,13 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "async-trait",
+ "libc",
  "rustytransfer-protocol",
  "serde",
+ "sha3",
  "thiserror 2.0.20",
  "tokio",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

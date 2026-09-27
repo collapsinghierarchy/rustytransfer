@@ -42,14 +42,14 @@ async fn local_iroh_pair() -> Result<(IrohState, IrohState)> {
         .secret_key(SecretKey::generate())
         .relay_mode(RelayMode::Custom(relay_map.clone()))
         .ca_tls_config(iroh::tls::CaTlsConfig::insecure_skip_verify())
-        .alpns(vec![b"rustytransfer/1".to_vec()])
+        .alpns(vec![b"rustytransfer/2".to_vec()])
         .bind()
         .await?;
     let endpoint_b = Endpoint::builder(presets::Minimal)
         .secret_key(SecretKey::generate())
         .relay_mode(RelayMode::Custom(relay_map))
         .ca_tls_config(iroh::tls::CaTlsConfig::insecure_skip_verify())
-        .alpns(vec![b"rustytransfer/1".to_vec()])
+        .alpns(vec![b"rustytransfer/2".to_vec()])
         .bind()
         .await?;
 

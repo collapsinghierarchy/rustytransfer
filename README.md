@@ -250,9 +250,11 @@ session. The receiver offers the length and SHA3-256 digest of its saved prefix;
 the sender resumes at that offset only when the source prefix matches. If it
 does not match, the authenticated session resets the partial file and sends
 from byte zero. Authentication, protocol, and file errors do not trigger retries.
+
 ---
 
 ## Use of AI
+
 - Early throw-away unit and integration tests.
 - CLI wiring (bin crate) is almost 90% chatgpt 5.2.
 - The cli_ui crate is also 80-90% chatgpt 5.2.

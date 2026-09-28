@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if ! command -v python3 >/dev/null 2>&1; then
   echo 'python3 is required to write the Firefox native-host manifest.' >&2
   exit 1
 fi
-cargo build --manifest-path "$repo_root/Cargo.toml" -p rustytransfer-firefox-host --release
 
-source="$repo_root/target/release/rustytransfer-firefox-host"
+source="$script_dir/rustytransfer-firefox-host"
+if [ ! -f "$source" ]; then
+  repo_root="$(cd "$script_dir/.." && pwd)"
+  if [ ! -f "$repo_root/Cargo.toml" ]; then
+    echo 'No bundled native host or Cargo.toml was found.' >&2
+    exit 1
+  fi
+  cargo build --manifest-path "$repo_root/Cargo.toml" -p rustytransfer-firefox-host --release
+  source="$repo_root/target/release/rustytransfer-firefox-host"
+fi
+
 if [ ! -f "$source" ]; then
   echo "Expected native host executable was not found: $source" >&2
   exit 1

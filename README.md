@@ -39,19 +39,12 @@ needed to authorize a transfer.
 
 ## Installation
 
-### Option A: Download a prebuilt binary (recommended)
+### Option A: Download a prebuilt package (recommended)
 
-Go to GitHub Releases and download the appropriate asset for your OS/architecture.
-
-Example (Linux/macOS) pattern:
-
-```bash
-TAG="alpha-0.0.1"
-ASSET="rustytransfer-<platform>-<arch>"  # replace with the actual asset filename
-curl -L -o rustytransfer "https://github.com/collapsinghierarchy/rustytransfer/releases/download/${TAG}/${ASSET}"
-chmod +x ./rustytransfer
-./rustytransfer --help
-```
+Open [GitHub Releases](https://github.com/collapsinghierarchy/rustytransfer/releases)
+and download the archive for your OS and architecture. Extract it and run
+`rustytransfer` (or `rustytransfer.exe` on Windows). New packages also include
+the Firefox native host and its installer; follow the included `INSTALL.txt`.
 
 ### Option B: Build from source (Rust toolchain required)
 
@@ -99,7 +92,10 @@ native messaging process used by the Firefox extension.
 ### Firefox desktop extension (direct Iroh preview)
 
 The Firefox extension uses a local native host for file access and direct Iroh
-transfers. Install the host on the **same operating system as Firefox**:
+transfers. Install the host on the **same operating system as Firefox**. From a
+GitHub release archive, run the included `install-firefox-host` script; it uses
+the bundled binary and does not need Rust. From a source checkout, these scripts
+build the host first:
 
 ```powershell
 # Windows PowerShell, from the repository root
@@ -113,11 +109,12 @@ bash scripts/install-firefox-host.sh
 
 For Windows Firefox, use the Windows installer rather than installing the host
 inside WSL. The Linux/macOS installer also needs Python 3 to write the host
-manifest. Then open `about:debugging#/runtime/this-firefox`, choose **Load
-Temporary Add-on**, and select `extension/firefox/manifest.json`. Temporary
-add-ons must be loaded again after restarting Firefox. The installer registers
-the host for the extension ID in that manifest; Firefox requires this separate
-native-host registration. See [Mozilla's native messaging guide](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging).
+manifest. Until the add-on is listed on Mozilla Add-ons, open
+`about:debugging#/runtime/this-firefox`, choose **Load Temporary Add-on**, and
+select `extension/firefox/manifest.json`. Temporary add-ons must be loaded again
+after restarting Firefox. The installer registers the host for the extension ID
+in that manifest; Firefox requires this separate native-host registration. See
+[Mozilla's native messaging guide](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging).
 
 Choose **Send** to pick a file and copy its direct invite. On the other peer,
 paste that invite into **Receive** and choose the destination. This preview uses

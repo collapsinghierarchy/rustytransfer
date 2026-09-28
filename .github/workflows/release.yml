@@ -1,0 +1,115 @@
+name: Release packages
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/release.yml
+      - .github/amo-metadata.json
+      - .github/release-install.txt
+      - Cargo.toml
+      - Cargo.lock
+      - src/**
+      - crates/**
+      - extension/firefox/**
+      - scripts/install-firefox-host.*
+  push:
+    tags: ["alpha-*"]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.97.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test Rust workspace
+        run: cargo test --workspace --locked
+      - name: Validate Firefox extension
+        run: npx --yes web-ext@10.5.0 lint --source-dir=extension/firefox --no-input
+      - name: Build AMO submission archive
+        run: npx --yes web-ext@10.5.0 build --source-dir=extension/firefox --artifacts-dir=dist/amo --no-input
+      - uses: actions/upload-artifact@v4
+        with:
+          name: amo-submission-unsigned
+          path: dist/amo/*.zip
+          if-no-files-found: error
+
+  build:
+    needs: verify
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            platform: linux-x86_64
+          - runner: windows-2022
+            platform: windows-x86_64
+          - runner: macos-15
+            platform: macos-aarch64
+          - runner: macos-15-intel
+            platform: macos-x86_64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.97.0
+      - name: Build CLI and Firefox native host
+        run: cargo build --release --locked -p rustytransfer -p rustytransfer-firefox-host
+      - name: Package Unix binaries
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          mkdir -p package dist
+          cp target/release/rustytransfer target/release/rustytransfer-firefox-host package/
+          cp scripts/install-firefox-host.sh package/
+          cp LICENSE package/
+          cp .github/release-install.txt package/INSTALL.txt
+          tar -C package -czf "dist/rustytransfer-${{ matrix.platform }}.tar.gz" .
+      - name: Package Windows binaries
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path package, dist -Force | Out-Null
+          Copy-Item target/release/rustytransfer.exe, target/release/rustytransfer-firefox-host.exe -Destination package
+          Copy-Item scripts/install-firefox-host.ps1, LICENSE -Destination package
+          Copy-Item .github/release-install.txt package/INSTALL.txt
+          Compress-Archive -Path package/* -DestinationPath "dist/rustytransfer-${{ matrix.platform }}.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: dist/*
+          if-no-files-found: error
+
+  draft:
+    if: startsWith(github.ref, 'refs/tags/alpha-')
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        run: |
+          cd dist
+          sha256sum rustytransfer-*.tar.gz rustytransfer-*.zip > SHA256SUMS.txt
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --verify-tag --draft --prerelease \
+            --title "RustyTransfer $GITHUB_REF_NAME" \
+            --notes-file .github/release-draft-notes.md

@@ -3,20 +3,26 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$repoRoot = Split-Path -Parent $PSScriptRoot
-$manifestPath = Join-Path $repoRoot 'Cargo.toml'
 $InstallDir = [System.IO.Path]::GetFullPath($InstallDir)
+$source = Join-Path $PSScriptRoot 'rustytransfer-firefox-host.exe'
 
-if (-not (Get-Command cargo -ErrorAction SilentlyContinue)) {
-  throw 'cargo was not found. Install the Rust toolchain for Windows first.'
+if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+  $repoRoot = Split-Path -Parent $PSScriptRoot
+  $manifestPath = Join-Path $repoRoot 'Cargo.toml'
+  if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+    throw 'No bundled native host or Cargo.toml was found.'
+  }
+  if (-not (Get-Command cargo -ErrorAction SilentlyContinue)) {
+    throw 'cargo was not found. Install the Rust toolchain for Windows first.'
+  }
+
+  & cargo build --manifest-path $manifestPath -p rustytransfer-firefox-host --release
+  if ($LASTEXITCODE -ne 0) {
+    throw 'Building the Firefox native host failed.'
+  }
+  $source = Join-Path $repoRoot 'target\release\rustytransfer-firefox-host.exe'
 }
 
-& cargo build --manifest-path $manifestPath -p rustytransfer-firefox-host --release
-if ($LASTEXITCODE -ne 0) {
-  throw 'Building the Firefox native host failed.'
-}
-
-$source = Join-Path $repoRoot 'target\release\rustytransfer-firefox-host.exe'
 if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
   throw "Expected Windows executable was not found: $source"
 }

@@ -1,0 +1,16 @@
+{
+  "summary": {
+    "en-US": "Send files directly between desktops with RustyTransfer."
+  },
+  "description": {
+    "en-US": "Send or receive a file from the Firefox toolbar using a one-time invite. The extension needs the separate RustyTransfer desktop host, available from the project's GitHub releases. Transfers use Iroh peer discovery and relays when needed; they do not use the RustyTransfer rendezvous backend. The extension does not access open tabs or website contents."
+  },
+  "categories": ["other"],
+  "homepage": {
+    "en-US": "https://github.com/collapsinghierarchy/rustytransfer"
+  },
+  "version": {
+    "license": "AGPL-3.0-only",
+    "approval_notes": "Desktop only. A separate native messaging host is required. Its source and install scripts are in https://github.com/collapsinghierarchy/rustytransfer. Build and register it with scripts/install-firefox-host.sh or scripts/install-firefox-host.ps1, then use Send on one desktop and Receive with the copied invite on another. No account or RustyTransfer backend is required. The extension's JavaScript, HTML, and CSS are shipped as readable source without a build step."
+  }
+}

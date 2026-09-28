@@ -1,0 +1,16 @@
+RustyTransfer desktop release
+
+Run rustytransfer (or rustytransfer.exe on Windows) from this directory, or copy
+it to a directory on your PATH.
+
+To use the Firefox add-on, install the native host from this extracted directory:
+
+  Windows PowerShell:  .\install-firefox-host.ps1
+  Linux / macOS:     bash install-firefox-host.sh
+
+The installer copies the bundled host binary and registers it for your Firefox
+profile. Rust and Cargo are not needed for the release package. Install the
+Firefox add-on from its addons.mozilla.org listing after it is approved.
+
+Source and further instructions:
+https://github.com/collapsinghierarchy/rustytransfer

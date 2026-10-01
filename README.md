@@ -109,11 +109,10 @@ bash scripts/install-firefox-host.sh
 
 For Windows Firefox, use the Windows installer rather than installing the host
 inside WSL. The Linux/macOS installer also needs Python 3 to write the host
-manifest. Until the add-on is listed on Mozilla Add-ons, open
-`about:debugging#/runtime/this-firefox`, choose **Load Temporary Add-on**, and
-select `extension/firefox/manifest.json`. Temporary add-ons must be loaded again
-after restarting Firefox. The installer registers the host for the extension ID
-in that manifest; Firefox requires this separate native-host registration. See
+manifest. Install the Firefox add-on from
+[Mozilla Add-ons](https://addons.mozilla.org/firefox/addon/rustytransfer/).
+The installer registers the host for the extension ID in the add-on manifest;
+Firefox requires this separate native-host registration. See
 [Mozilla's native messaging guide](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging).
 
 Choose **Send** to pick a file and copy its direct invite. On the other peer,
@@ -218,38 +217,39 @@ rustytransfer recv --code 1234-ABCDE --out ./received.bin
 
 ---
 
+## Transfer reliability
+
+- **Output safety:** The receiver saves incoming bytes in
+  `.<output-name>.rustytransfer.part` next to the requested output. It publishes
+  the file only after the transfer is confirmed and never overwrites an existing
+  destination. The partial file contains plaintext; delete it to discard an
+  unfinished transfer.
+- **Resume:** Run `recv` again with the same `--out` path and a new share code or
+  direct Iroh invite. The receiver reports its saved prefix length and SHA3-256
+  digest. The sender resumes at that offset only if the prefix matches its
+  source; otherwise the authenticated transfer clears the partial file and
+  starts at byte zero.
+- **Reconnect:** After a transient connection failure, `send` and `recv` retry
+  up to three times after 1, 2, and 4 seconds. Each attempt creates a fresh
+  encrypted session. Authentication, protocol, and file errors stop immediately.
+- **Diagnostics:** Failed transfers report a stable `RTY-*` code and an exit
+  code for the failure category. Set `RUSTYTRANSFER_METRICS_JSONL` to log
+  successful and failed transfers, including phase, error code, byte count,
+  and completion state. `--verbose` adds redacted diagnostic context.
+
+Use the same version on both peers; older builds are incompatible with this
+transfer protocol.
+
 ## Network requirements
 
-Failed transfers report a stable `RTY-*` code and exit with a code matching the
-failure category. The receiver writes to a partial file in the destination
-directory and publishes the result only after the transfer is confirmed. An
-existing destination is never overwritten. Resumable receive keeps a
-same-directory partial file named `.<output-name>.rustytransfer.part`; run
-`recv` again with the same `--out` path and a new share code or direct Iroh
-invite to resume it. Direct Iroh reconnects do not use the rendezvous backend.
-The prefix is checked against the sender's source before saved bytes
-are reused. This partial file contains plaintext; remove
-`.<output-name>.rustytransfer.part` to discard it. Both peers must run this
-protocol version because its authenticated message lengths changed. Set
-`RUSTYTRANSFER_METRICS_JSONL`
-to record both successful and failed transfers; failure records include the
-phase, error code, transferred byte count, and completion state. `--verbose`
-adds redacted diagnostic context.
-
-- Outbound HTTP/WS access to the rendezvous/signaling service. Set
-  `RUSTYTRANSFER_BACKEND_URL` to override the backend base URL, for example
+- Share codes require outbound HTTP/WebSocket access to the rendezvous backend.
+  Set `RUSTYTRANSFER_BACKEND_URL` to override its base URL, for example
   `https://transfer.example`.
-- WebRTC connectivity depends on local network/NAT behavior when `--transport webrtc` is used.
-- Iroh connectivity uses its QUIC/relay path when `--transport iroh` is used.
+- WebRTC connectivity depends on local network and NAT behavior when using
+  `--transport webrtc`.
+- Iroh uses its QUIC and relay paths when using `--transport iroh`.
 - Direct invites use Iroh's public `N0` lookup and relays, even when the
-  rustytransfer backend is offline. A relay path is still end-to-end encrypted.
-
-After a transient connection failure, `send` and `recv` retry up to three
-times with 1, 2, and 4 second delays. Each retry creates a fresh encrypted
-session. The receiver offers the length and SHA3-256 digest of its saved prefix;
-the sender resumes at that offset only when the source prefix matches. If it
-does not match, the authenticated session resets the partial file and sends
-from byte zero. Authentication, protocol, and file errors do not trigger retries.
+  rustytransfer backend is offline. Relay traffic remains end-to-end encrypted.
 
 ---
 

@@ -48,6 +48,17 @@ phase boundaries from Croc's debug stream. Give Croc and Rustytransfer the same
 uncompressed input file and keep both output directories on the same
 filesystem when comparing them.
 
+`run_oracle_transfer.py` requires `--build-id` and `--storage-class` so its
+summaries keep builds and storage placement separate. `--rusty-auth invite`
+selects direct-invite authentication; `--direction oracle-to-wsl` runs the
+reverse endpoint roles and is available with `--rusty-only`. For a strict
+direct-only sweep, build both endpoints with the benchmark path observer and
+use `--rusty-path direct`. The runner records per-endpoint payload STREAM-frame
+deltas from Iroh path events; it retains diagnostic rows but stops the sweep
+unless both endpoints verify direct traffic. Lagged, missing, relay, or mixed
+evidence is not accepted as direct. Historical rows with only start/end path
+samples remain readable, but are excluded from strict direct summaries.
+
 Summarize medians, extrema, and MAD while keeping each JSONL input intact:
 
 ```sh

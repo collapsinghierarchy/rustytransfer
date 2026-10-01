@@ -32,7 +32,8 @@ rustytransfer
 
 # Local cleanup/archive material
 /tmp/
-/docs/
+/docs/*
+!/docs/direct-transfer-desktop-plan.md
 **/.amo-upload-uuid
 
 # Preserve benchmark measurements in Git; keep per-run diagnostic logs local.

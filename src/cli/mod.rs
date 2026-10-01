@@ -83,6 +83,7 @@ struct TransferMetric {
     path: &'static str,
     path_start: &'static str,
     path_end: &'static str,
+    path_evidence: Option<crate::transport::PathEvidence>,
     local_candidate_type: Option<String>,
     remote_candidate_type: Option<String>,
     size_bytes: u64,
@@ -116,6 +117,7 @@ struct TransferTiming {
 struct MetricPaths {
     start: PathObservation,
     end: PathObservation,
+    path_evidence: Option<crate::transport::PathEvidence>,
 }
 
 struct MetricOutcome {
@@ -210,6 +212,7 @@ pub async fn main() -> ExitCode {
                     MetricPaths {
                         start: unknown_path(),
                         end: unknown_path(),
+                        path_evidence: None,
                     },
                     run.size_bytes,
                     run.chunk_size,
@@ -295,6 +298,7 @@ pub async fn main() -> ExitCode {
                 MetricPaths {
                     start: unknown_path(),
                     end: unknown_path(),
+                    path_evidence: None,
                 },
                 size_bytes,
                 run.chunk_size,

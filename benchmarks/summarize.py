@@ -2,10 +2,34 @@
 """Summarize version-1 Rustytransfer and Croc JSONL measurements."""
 
 import argparse
+import hashlib
 import json
+import math
+import re
 import statistics
 from collections import defaultdict
 from pathlib import Path
+
+
+SHA256 = re.compile(r"^[a-fA-F0-9]{64}$")
+GROUP_FIELDS = (
+    "transport",
+    "build_id",
+    "sender_binary_sha256",
+    "receiver_binary_sha256",
+    "direction",
+    "host_pair",
+    "storage_class",
+    "pairing_mode",
+    "direct_route_verified_both",
+    "legacy_input",
+    "path",
+    "size_bytes",
+    "chunk_size",
+    "pipeline_depth",
+    "role",
+    "transport_mode",
+)
 
 
 def median_absolute_deviation(values, center):
@@ -22,61 +46,109 @@ def describe(values):
     }
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("inputs", nargs="+", type=Path)
-    parser.add_argument("--output", type=Path)
-    args = parser.parse_args()
+def group_key(record):
+    key = []
+    for field in GROUP_FIELDS:
+        if field == "legacy_input":
+            # Historical rows have no build provenance, so only combine them
+            # when they came from the same input file. Keep that source visible.
+            value = record.get("_legacy_input", "unknown") if record.get("build_id") is None else "unknown"
+        else:
+            value = record.get(field)
+        key.append("unknown" if value is None else value)
+    return tuple(key)
 
+
+def load_records(input_paths):
+    records = []
+    for input_path in input_paths:
+        source_id = "legacy-file-" + hashlib.sha256(
+            str(input_path.resolve()).encode("utf-8")
+        ).hexdigest()[:12]
+        with input_path.open(encoding="utf-8") as source:
+            for line in source:
+                if line.strip():
+                    record = json.loads(line)
+                    if record.get("build_id") is None:
+                        record["_legacy_input"] = source_id
+                    records.append(record)
+    return records
+
+
+def rejection_reason(record):
+    if record.get("success") is not True:
+        return "transfer failed"
+    if record.get("path") not in ("direct", "relay"):
+        return "path is mixed, unknown, or auto"
+    if record.get("transport") == "iroh" and record.get("path") == "direct":
+        if record.get("direct_route_verified_both") is not True:
+            return "direct route was not verified by both endpoints"
+    source_hash = record.get("source_sha256")
+    received_hash = record.get("received_sha256")
+    if not isinstance(source_hash, str) or not SHA256.fullmatch(source_hash):
+        return "source SHA-256 is missing or invalid"
+    if not isinstance(received_hash, str) or not SHA256.fullmatch(received_hash):
+        return "received SHA-256 is missing or invalid"
+    if source_hash.lower() != received_hash.lower():
+        return "source and received SHA-256 values do not match"
+
+    wall = record.get("wall_seconds")
+    if not isinstance(wall, (int, float)) or isinstance(wall, bool) or wall <= 0:
+        return "wall duration is missing or invalid"
+    try:
+        wall = float(wall)
+    except OverflowError:
+        return "wall duration is missing or invalid"
+    if not math.isfinite(wall):
+        return "wall duration is missing or invalid"
+    size_bytes = record.get("size_bytes")
+    if not isinstance(size_bytes, int) or isinstance(size_bytes, bool) or size_bytes <= 0:
+        return "size is missing or invalid"
+
+    build_id = record.get("build_id")
+    sender_binary_hash = record.get("sender_binary_sha256")
+    receiver_binary_hash = record.get("receiver_binary_sha256")
+    if build_id is not None:
+        if not isinstance(build_id, str) or not build_id.strip():
+            return "build ID is invalid"
+        if not isinstance(sender_binary_hash, str) or not SHA256.fullmatch(sender_binary_hash):
+            return "sender binary SHA-256 is missing or invalid"
+        if not isinstance(receiver_binary_hash, str) or not SHA256.fullmatch(receiver_binary_hash):
+            return "receiver binary SHA-256 is missing or invalid"
+        for field in ("direction", "host_pair", "storage_class", "pairing_mode"):
+            value = record.get(field)
+            if not isinstance(value, str) or not value.strip():
+                return f"{field} is missing or invalid"
+    elif sender_binary_hash is not None or receiver_binary_hash is not None:
+        if not isinstance(sender_binary_hash, str) or not SHA256.fullmatch(sender_binary_hash):
+            return "sender binary SHA-256 is invalid"
+        if not isinstance(receiver_binary_hash, str) or not SHA256.fullmatch(receiver_binary_hash):
+            return "receiver binary SHA-256 is invalid"
+    return None
+
+
+def summarize_records(records):
     groups = defaultdict(list)
     rejected = defaultdict(int)
-    for input_path in args.inputs:
-        with input_path.open(encoding="utf-8") as source:
-            for line_number, line in enumerate(source, 1):
-                if not line.strip():
-                    continue
-                record = json.loads(line)
-                if record.get("warmup", False):
-                    continue
-                key = (
-                    record.get("transport"),
-                    record.get("path"),
-                    record.get("size_bytes"),
-                    record.get("chunk_size"),
-                    record.get("pipeline_depth"),
-                    record.get("role", "pair"),
-                    record.get("transport_mode") or "",
-                )
-                if not record.get("success"):
-                    rejected[key] += 1
-                    continue
-                if record.get("path") not in ("direct", "relay"):
-                    rejected[key] += 1
-                    continue
-                if record.get("source_sha256") != record.get("received_sha256"):
-                    rejected[key] += 1
-                    continue
-                groups[key].append(record)
+    for record in records:
+        if record.get("warmup", False):
+            continue
+        key = group_key(record)
+        reason = rejection_reason(record)
+        if reason is not None:
+            rejected[(key, reason)] += 1
+            continue
+        groups[key].append(record)
 
     rows = []
-    for key, records in sorted(groups.items()):
-        wall_durations = [
-            record.get("wall_seconds")
-            or sum(
-                record.get(field) or 0.0
-                for field in (
-                    "handshake_seconds",
-                    "payload_seconds",
-                    "shutdown_seconds",
-                )
-            )
-            for record in records
-        ]
-        size_mib = key[2] / (1024.0 * 1024.0)
+    for key, group_records in sorted(groups.items(), key=lambda item: json.dumps(item[0])):
+        dimensions = dict(zip(GROUP_FIELDS, key))
+        wall_durations = [float(record["wall_seconds"]) for record in group_records]
+        size_mib = dimensions["size_bytes"] / (1024.0 * 1024.0)
         rates = [size_mib / duration for duration in wall_durations]
         phase_summaries = {}
         for field in ("handshake_seconds", "payload_seconds", "shutdown_seconds"):
-            values = [record[field] for record in records if record.get(field) is not None]
+            values = [record[field] for record in group_records if record.get(field) is not None]
             phase_summaries[field] = describe(values) if values else None
         resource_summaries = {}
         for field in (
@@ -85,18 +157,12 @@ def main():
             "sender_max_rss_kib",
             "receiver_max_rss_kib",
         ):
-            values = [record[field] for record in records if record.get(field) is not None]
+            values = [record[field] for record in group_records if record.get(field) is not None]
             resource_summaries[field] = describe(values) if values else None
         rows.append(
             {
-                "transport": key[0],
-                "path": key[1],
-                "size_bytes": key[2],
-                "chunk_size": key[3],
-                "pipeline_depth": key[4],
-                "role": key[5],
-                "transport_mode": key[6] or None,
-                "successful_runs": len(records),
+                **dimensions,
+                "successful_runs": len(group_records),
                 "effective_mib_per_second": describe(rates),
                 "wall_seconds": describe(wall_durations),
                 "handshake_seconds": phase_summaries["handshake_seconds"],
@@ -107,30 +173,36 @@ def main():
                 "sender_max_rss_kib": resource_summaries["sender_max_rss_kib"],
                 "receiver_max_rss_kib": resource_summaries["receiver_max_rss_kib"],
                 "endpoint_process_cpu_and_rss_available": all(
-                    record["sender_cpu_seconds"] is not None
-                    and record["receiver_cpu_seconds"] is not None
-                    and record["sender_max_rss_kib"] is not None
-                    and record["receiver_max_rss_kib"] is not None
-                    for record in records
+                    record.get("sender_cpu_seconds") is not None
+                    and record.get("receiver_cpu_seconds") is not None
+                    and record.get("sender_max_rss_kib") is not None
+                    and record.get("receiver_max_rss_kib") is not None
+                    for record in group_records
                 ),
             }
         )
 
-    result = {"schema_version": 1, "groups": rows, "rejected_rows": []}
-    for key, count in sorted(rejected.items()):
-        result["rejected_rows"].append(
+    rejected_rows = []
+    for (key, reason), count in sorted(
+        rejected.items(), key=lambda item: json.dumps(item[0])
+    ):
+        rejected_rows.append(
             {
-                "transport": key[0],
-                "path": key[1],
-                "size_bytes": key[2],
-                "chunk_size": key[3],
-                "pipeline_depth": key[4],
-                "role": key[5],
-                "transport_mode": key[6] or None,
+                **dict(zip(GROUP_FIELDS, key)),
                 "count": count,
-                "reason": "failed, hash mismatch, or path is mixed/unknown/auto",
+                "reason": reason,
             }
         )
+    return {"schema_version": 1, "groups": rows, "rejected_rows": rejected_rows}
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("inputs", nargs="+", type=Path)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+
+    result = summarize_records(load_records(args.inputs))
 
     rendered = json.dumps(result, indent=2, sort_keys=True) + "\n"
     if args.output:

@@ -5,6 +5,14 @@ use super::DataTransport;
 
 #[async_trait::async_trait]
 impl TransferTransport for DataTransport {
+    fn begin_payload_observation(&mut self) {
+        DataTransport::begin_payload_observation(self);
+    }
+
+    fn end_payload_observation(&mut self) {
+        DataTransport::end_payload_observation(self);
+    }
+
     async fn send_message(&mut self, data: Vec<u8>) -> Result<()> {
         self.send_vec(data).await
     }

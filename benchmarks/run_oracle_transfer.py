@@ -18,6 +18,14 @@ from run_croc_baseline import CapturedOutput, git_output, parse_time, selected_a
 
 TIME_FORMAT = '{"user_cpu_seconds":%U,"system_cpu_seconds":%S,"max_rss_kib":%M}'
 SHARE_CODE = re.compile(r"Share this code:\s*([0-9]{4}-[A-Z]{5})")
+DIRECT_INVITE = re.compile(r"Direct invite:\s*(rt1:[^\s]+)")
+DIRECT_INVITE_TOKEN = re.compile(r"rt1:[^\s]+")
+REMOTE_REDACT_SCRIPT = (
+    "from pathlib import Path; import re, sys; "
+    "path = Path(sys.argv[1]); "
+    "text = path.read_text(encoding='utf-8', errors='replace'); "
+    "path.write_text(re.sub(r'rt1:\\S+', '<redacted>', text), encoding='utf-8')"
+)
 PAYLOAD_MARKERS = ("payload_start", "sender_payload_end", "receiver_payload_end")
 METRIC_FIELDS = (
     "schema_version",
@@ -26,9 +34,18 @@ METRIC_FIELDS = (
     "role",
     "transport",
     "transport_mode",
+    "build_id",
+    "sender_binary_sha256",
+    "receiver_binary_sha256",
+    "direction",
+    "host_pair",
+    "storage_class",
+    "pairing_mode",
     "path",
     "path_start",
     "path_end",
+    "path_evidence",
+    "direct_route_verified_both",
     "local_candidate_type",
     "remote_candidate_type",
     "size_bytes",
@@ -89,6 +106,43 @@ def remote(args, command, *, capture_output=True):
     return result.stdout.strip() if result.stdout is not None else ""
 
 
+def remote_sha256(args, path):
+    output = remote(args, f"sha256sum -- {remote_quote(path)}")
+    digest = output.split(maxsplit=1)[0] if output else ""
+    if not re.fullmatch(r"[a-fA-F0-9]{64}", digest):
+        raise RuntimeError(f"remote sha256sum returned an invalid digest for {path}")
+    return digest.lower()
+
+
+def rust_provenance(args):
+    local_hash = args.local_rusty_sha256
+    remote_hash = args.remote_rusty_sha256
+    if args.direction == "wsl-to-oracle":
+        sender_hash, receiver_hash = local_hash, remote_hash
+    else:
+        sender_hash, receiver_hash = remote_hash, local_hash
+    return {
+        "build_id": args.build_id,
+        "sender_binary_sha256": sender_hash,
+        "receiver_binary_sha256": receiver_hash,
+        "direction": args.direction,
+        "host_pair": f"WSL/{args.user}@{args.host}",
+        "storage_class": args.storage_class,
+    }
+
+
+def croc_provenance(args):
+    return {
+        "build_id": "croc-11.5.3",
+        "sender_binary_sha256": args.local_croc_sha256,
+        "receiver_binary_sha256": args.remote_croc_sha256,
+        "direction": "wsl-to-oracle",
+        "host_pair": f"WSL/{args.user}@{args.host}",
+        "storage_class": args.storage_class,
+        "pairing_mode": "croc-secret",
+    }
+
+
 def remote_quote(value):
     return shlex.quote(str(value))
 
@@ -106,6 +160,21 @@ def redact(path, secret):
     path.write_text(text.replace(secret, "<redacted>"), encoding="utf-8")
 
 
+def redact_direct_invites(path):
+    if not path or not path.exists():
+        return
+    text = path.read_text(encoding="utf-8", errors="replace")
+    path.write_text(DIRECT_INVITE_TOKEN.sub("<redacted>", text), encoding="utf-8")
+
+
+def redact_remote_direct_invites(args, path):
+    remote(
+        args,
+        f"if test -f {remote_quote(path)}; then "
+        f"python3 -c {remote_quote(REMOTE_REDACT_SCRIPT)} {remote_quote(path)}; fi",
+    )
+
+
 def wait_for_share_code(process, log_path, timeout_seconds=120):
     deadline = time.monotonic() + timeout_seconds
     while time.monotonic() < deadline:
@@ -118,6 +187,38 @@ def wait_for_share_code(process, log_path, timeout_seconds=120):
             raise RuntimeError(f"Rustytransfer sender exited before publishing a code ({code})")
         time.sleep(0.05)
     raise RuntimeError("Rustytransfer did not publish a share code within 120 seconds")
+
+
+def wait_for_direct_invite(process, log_path, timeout_seconds=120):
+    deadline = time.monotonic() + timeout_seconds
+    while time.monotonic() < deadline:
+        text = log_path.read_text(encoding="utf-8", errors="replace") if log_path.exists() else ""
+        match = DIRECT_INVITE.search(text)
+        if match:
+            return match.group(1)
+        code = process.poll()
+        if code is not None:
+            raise RuntimeError(f"Rustytransfer sender exited before publishing an invite ({code})")
+        time.sleep(0.05)
+    raise RuntimeError("Rustytransfer did not publish a direct invite within 120 seconds")
+
+
+def wait_for_remote_authorization(args, process, remote_log, mode, timeout_seconds=120):
+    deadline = time.monotonic() + timeout_seconds
+    pattern = DIRECT_INVITE if mode == "invite" else SHARE_CODE
+    description = "direct invite" if mode == "invite" else "share code"
+    while time.monotonic() < deadline:
+        text = remote(args, f"if test -f {remote_quote(remote_log)}; then cat -- {remote_quote(remote_log)}; fi")
+        match = pattern.search(text)
+        if match:
+            return match.group(1)
+        code = process.poll()
+        if code is not None:
+            raise RuntimeError(
+                f"Oracle Rustytransfer sender exited before publishing a {description} ({code})"
+            )
+        time.sleep(0.1)
+    raise RuntimeError(f"Oracle Rustytransfer did not publish a {description} within 120 seconds")
 
 
 def wait_for_pair(sender, receiver, timeout_seconds, sender_log, receiver_log):
@@ -174,6 +275,114 @@ def verify_remote_file(args, path, expected_size, expected_hash):
     return received_hash
 
 
+def verify_local_file(path, expected_size, expected_hash):
+    received_size = path.stat().st_size
+    received_hash = sha256_file(path)
+    if received_size != expected_size or received_hash != expected_hash:
+        raise RuntimeError(
+            f"local file mismatch at {path}: size={received_size}, sha256={received_hash}"
+        )
+    return received_hash
+
+
+def copy_to_remote(args, source, destination):
+    command = [
+        args.scp,
+        "-i",
+        str(args.ssh_key),
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "StrictHostKeyChecking=yes",
+        "-o",
+        "ConnectTimeout=10",
+        str(source),
+        f"{args.user}@{args.host}:{destination}",
+    ]
+    subprocess.run(command, check=True, capture_output=True, text=True)
+
+
+def terminate_remote_process_group(args, pid_path, run_dir):
+    command = (
+        f"for attempt in 1 2 3 4 5 6 7 8 9 10; do "
+        f"test -s {remote_quote(pid_path)} && break; sleep 0.1; done; "
+        f"pid=$(cat -- {remote_quote(pid_path)} 2>/dev/null) || exit 0; "
+        "case \"$pid\" in ''|*[!0-9]*) exit 0;; esac; "
+        "pgid=$(ps -o pgid= -p \"$pid\" 2>/dev/null | tr -d ' '); "
+        f"cwd=$(readlink -f -- /proc/\"$pid\"/cwd 2>/dev/null); "
+        f"trial_dir=$(readlink -f -- {remote_quote(run_dir)} 2>/dev/null) || exit 0; "
+        "test \"$pgid\" = \"$pid\" && test \"$cwd\" = \"$trial_dir\" || exit 0; "
+        "if kill -0 -- \"-$pid\" 2>/dev/null; then "
+        "kill -TERM -- \"-$pid\" 2>/dev/null || true; sleep 1; "
+        "kill -KILL -- \"-$pid\" 2>/dev/null || true; fi"
+    )
+    remote(args, command)
+
+
+def remote_process_command(
+    args,
+    run_dir,
+    endpoint_command,
+    metrics_path,
+    time_path,
+    log_path,
+    pid_path,
+):
+    path_env = (
+        "RUSTYTRANSFER_BENCH_WAIT_DIRECT"
+        if args.rusty_path == "direct"
+        else "RUSTYTRANSFER_BENCH_RELAY_ONLY"
+    )
+    command = " ".join(remote_quote(item) for item in endpoint_command)
+    env_command = (
+        f"env {path_env}=1 RUSTYTRANSFER_BENCH_PATH_EVIDENCE=1 "
+        f"RUSTYTRANSFER_METRICS_JSONL={remote_quote(metrics_path)} "
+        f"/usr/bin/time -f {remote_quote(TIME_FORMAT)} "
+        f"-o {remote_quote(time_path)} {command}"
+    )
+    child_script = (
+        f"printf '%s\\n' \"$$\" > {remote_quote(pid_path)} || exit 1; "
+        f"exec {env_command}"
+    )
+    return (
+        f"cd -- {remote_quote(run_dir)} || exit 1; "
+        f"setsid --wait /bin/sh -c {remote_quote(child_script)} "
+        f">{remote_quote(log_path)} 2>&1 < /dev/null & "
+        "setsid_pid=$!; wait \"$setsid_pid\""
+    )
+
+
+def remote_sender_command(args, run_dir, source_path, metrics_path, time_path, log_path, pid_path):
+    command = [args.remote_rusty, "--transport", "iroh", "send"]
+    if args.rusty_auth == "invite":
+        command.append("--direct")
+    command.extend(["--file", source_path])
+    if args.rusty_auth == "pake":
+        command.extend(["--password", "ABCDE"])
+    return remote_process_command(
+        args, run_dir, command, metrics_path, time_path, log_path, pid_path
+    )
+
+
+def remote_receiver_command(
+    args, run_dir, output_path, authorization, metrics_path, time_path, log_path, pid_path
+):
+    auth_flag = "--invite" if args.rusty_auth == "invite" else "--code"
+    command = [
+        args.remote_rusty,
+        "--transport",
+        "iroh",
+        "recv",
+        auth_flag,
+        authorization,
+        "--out",
+        output_path,
+    ]
+    return remote_process_command(
+        args, run_dir, command, metrics_path, time_path, log_path, pid_path
+    )
+
+
 def cleanup_remote(args, run_dir, files, directories=()):
     root = Path(args.remote_root)
     paths = [Path(path) for path in (*files, *directories, run_dir)]
@@ -189,23 +398,94 @@ def cleanup_remote(args, run_dir, files, directories=()):
     remote(args, command)
 
 
-def resource_values(local_time, remote_time):
-    sender_cpu = local_time["user_cpu_seconds"] + local_time["system_cpu_seconds"]
-    receiver_cpu = remote_time["user_cpu_seconds"] + remote_time["system_cpu_seconds"]
+def resource_values(sender_time, receiver_time):
+    sender_cpu = sender_time["user_cpu_seconds"] + sender_time["system_cpu_seconds"]
+    receiver_cpu = receiver_time["user_cpu_seconds"] + receiver_time["system_cpu_seconds"]
     return {
         "sender_cpu_seconds": sender_cpu,
         "receiver_cpu_seconds": receiver_cpu,
-        "sender_max_rss_kib": local_time["max_rss_kib"],
-        "receiver_max_rss_kib": remote_time["max_rss_kib"],
+        "sender_max_rss_kib": sender_time["max_rss_kib"],
+        "receiver_max_rss_kib": receiver_time["max_rss_kib"],
     }
 
 
-def rust_rows(metrics_path, receiver_metrics, source_hash, received_hash, expected_size, wall, local_time, remote_time, run_index, warmup):
-    sender_metrics = json.loads(metrics_path.read_text(encoding="utf-8").splitlines()[0])
-    resources = resource_values(local_time, remote_time)
+def verified_direct_evidence(metric):
+    evidence = metric.get("path_evidence")
+    return (
+        isinstance(evidence, dict)
+        and evidence.get("classification") == "direct"
+        and evidence.get("verified") is True
+        and evidence.get("lagged") is False
+        and evidence.get("missing_path_stats") is False
+        and evidence.get("relay_selected") is False
+        and evidence.get("relay_stream_tx") == 0
+        and evidence.get("relay_stream_rx") == 0
+        and (evidence.get("direct_stream_tx", 0) + evidence.get("direct_stream_rx", 0)) > 0
+    )
+
+
+def ensure_direct_route_evidence(rows, requested_path):
+    if requested_path == "direct" and any(
+        row.get("direct_route_verified_both") is not True for row in rows
+    ):
+        raise RuntimeError(
+            "direct-only sweep stopped: payload STREAM-frame evidence was not verified "
+            "as direct by both endpoints; diagnostic rows were retained"
+        )
+
+
+def append_and_validate_rust_rows(raw_path, rows, requested_path, actual_path):
+    append_rows(raw_path, rows)
+    ensure_direct_route_evidence(rows, requested_path)
+    if actual_path != requested_path:
+        raise RuntimeError(
+            f"Rustytransfer selected {actual_path}; requested benchmark path was {requested_path}"
+        )
+
+
+def rust_rows(
+    sender_metrics,
+    receiver_metrics,
+    source_hash,
+    received_hash,
+    expected_size,
+    wall,
+    sender_time,
+    receiver_time,
+    run_index,
+    warmup,
+    provenance,
+):
+    endpoint_metrics = (("sender", sender_metrics), ("receiver", receiver_metrics))
+    for role, metric in endpoint_metrics:
+        if metric.get("success") is not True:
+            raise RuntimeError(f"Rustytransfer {role} metric did not report success")
+        if metric.get("size_bytes") != expected_size:
+            raise RuntimeError(
+                f"Rustytransfer {role} reported {metric.get('size_bytes')} bytes; "
+                f"expected {expected_size}"
+            )
+    sender_chunk_size = sender_metrics.get("chunk_size")
+    receiver_chunk_size = receiver_metrics.get("chunk_size")
+    if (
+        not isinstance(sender_chunk_size, int)
+        or isinstance(sender_chunk_size, bool)
+        or sender_chunk_size <= 0
+        or sender_chunk_size != receiver_chunk_size
+    ):
+        raise RuntimeError(
+            "Rustytransfer sender and receiver reported invalid or different chunk sizes: "
+            f"{sender_chunk_size} / {receiver_chunk_size}"
+        )
+    if wall <= 0:
+        raise RuntimeError("Rustytransfer process wall time must be positive")
+
+    resources = resource_values(sender_time, receiver_time)
+    effective_mib_per_second = (sender_metrics["size_bytes"] / (1024 * 1024)) / wall
+    direct_route_verified_both = verified_direct_evidence(sender_metrics) and verified_direct_evidence(receiver_metrics)
     rows = []
     for role, metric in (("sender", sender_metrics), ("receiver", receiver_metrics)):
-        row = {key: metric.get(key) for key in METRIC_FIELDS}
+        row = {key: metric[key] for key in METRIC_FIELDS if key in metric}
         row.update(
             {
                 "schema_version": 1,
@@ -213,22 +493,23 @@ def rust_rows(metrics_path, receiver_metrics, source_hash, received_hash, expect
                 "working_tree_dirty": bool(git_output("status", "--porcelain")),
                 "role": role,
                 "transport": "iroh",
-                "transport_mode": None,
-                "size_bytes": expected_size,
-                "chunk_size": 262144,
-                "pipeline_depth": 1,
+                **provenance,
                 "wall_seconds": wall,
-                "effective_mib_per_second": (expected_size / (1024 * 1024)) / wall,
+                "effective_mib_per_second": effective_mib_per_second,
                 "source_sha256": source_hash,
                 "received_sha256": received_hash,
                 "success": True,
+                "direct_route_verified_both": direct_route_verified_both,
                 "run_index": run_index,
                 "warmup": warmup,
-                "measurement_scope": "separate sender and receiver processes (WSL to Oracle)",
+                "measurement_scope": (
+                    "separate sender and receiver processes "
+                    f"({'WSL to Oracle' if provenance['direction'] == 'wsl-to-oracle' else 'Oracle to WSL'})"
+                ),
                 **resources,
             }
         )
-        rows.append({key: row.get(key) for key in METRIC_FIELDS})
+        rows.append({key: row[key] for key in METRIC_FIELDS if key in row})
     return rows
 
 
@@ -239,14 +520,21 @@ def prepare_local_logs(log_root, run_name):
 
 
 def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_index, warmup):
+    if args.direction == "oracle-to-wsl":
+        return run_rusty_reverse(
+            args, source, size_mib, expected_size, source_hash, log_root, run_index, warmup
+        )
+
     tag = "warmup" if warmup else str(run_index)
-    run_name = f"rustytransfer-{size_mib}mib-{tag}"
+    run_name = f"rustytransfer-wsl-to-oracle-{size_mib}mib-{tag}"
     logs = prepare_local_logs(log_root, run_name)
     run_dir = f"{args.remote_root}/{run_name}"
     remote(args, f"mkdir -- {remote_quote(run_dir)}")
     output_path = f"{run_dir}/received.bin"
     remote_metrics_path = f"{run_dir}/receiver.jsonl"
     remote_time_path = f"{run_dir}/receiver.time.json"
+    remote_receiver_log = f"{run_dir}/receiver.log"
+    remote_receiver_pid = f"{run_dir}/receiver.pid"
     sender_metrics_path = logs / "sender.jsonl"
     sender_time_path = logs / "sender.time.json"
     sender_log = logs / "sender.log"
@@ -259,16 +547,21 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
         else "RUSTYTRANSFER_BENCH_RELAY_ONLY"
     )
     sender_env[path_env] = "1"
+    sender_env["RUSTYTRANSFER_BENCH_PATH_EVIDENCE"] = "1"
     sender_command = [
         str(args.rusty_sender),
         "--transport",
         "iroh",
         "send",
+    ]
+    if args.rusty_auth == "invite":
+        sender_command.append("--direct")
+    sender_command.extend([
         "--file",
         str(source),
-        "--password",
-        "ABCDE",
-    ]
+    ])
+    if args.rusty_auth == "pake":
+        sender_command.extend(["--password", "ABCDE"])
 
     started = time.monotonic()
     sender, sender_output = time_command(
@@ -276,16 +569,22 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
     )
     receiver = None
     receiver_output = None
-    share_code = None
+    authorization = None
     try:
-        share_code = wait_for_share_code(sender, sender_log)
-        remote_receiver = (
-            f"env {path_env}=1 "
-            f"RUSTYTRANSFER_METRICS_JSONL={remote_quote(remote_metrics_path)} "
-            f"/usr/bin/time -f {remote_quote(TIME_FORMAT)} "
-            f"-o {remote_quote(remote_time_path)} {remote_quote(args.remote_rusty)} "
-            f"--transport iroh recv --code {remote_quote(share_code)} "
-            f"--out {remote_quote(output_path)}"
+        authorization = (
+            wait_for_direct_invite(sender, sender_log)
+            if args.rusty_auth == "invite"
+            else wait_for_share_code(sender, sender_log)
+        )
+        remote_receiver = remote_receiver_command(
+            args,
+            run_dir,
+            output_path,
+            authorization,
+            remote_metrics_path,
+            remote_time_path,
+            remote_receiver_log,
+            remote_receiver_pid,
         )
         receiver = subprocess.Popen(
             ssh_command(args, remote_receiver),
@@ -294,7 +593,13 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
         )
         receiver_output = CapturedOutput(receiver.stdout, receiver_log)
         wait_for_pair(sender, receiver, args.timeout, sender_log, receiver_log)
+        wall = time.monotonic() - started
+    except Exception as error:
+        with sender_log.open("a", encoding="utf-8") as log:
+            log.write(f"\nBenchmark runner failure: {error}\n")
+        raise
     finally:
+        cleanup_errors = []
         if sender.poll() is None:
             sender.kill()
         if receiver is not None and receiver.poll() is None:
@@ -302,10 +607,31 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
         sender_output.wait()
         if receiver_output is not None:
             receiver_output.wait()
-        redact(sender_log, share_code)
-        redact(receiver_log, share_code)
+        try:
+            terminate_remote_process_group(args, remote_receiver_pid, run_dir)
+        except Exception as error:
+            cleanup_errors.append(f"failed to terminate Oracle receiver process group: {error}")
+        try:
+            remote_text = remote(args, f"cat -- {remote_quote(remote_receiver_log)}")
+            receiver_log.write_text(remote_text + "\n", encoding="utf-8")
+        except Exception as error:
+            with receiver_log.open("a", encoding="utf-8") as log:
+                log.write(f"\nCould not retrieve Oracle receiver log: {error}\n")
+        try:
+            redact_remote_direct_invites(args, remote_receiver_log)
+        except Exception as error:
+            cleanup_errors.append(f"failed to redact Oracle receiver log: {error}")
+        if cleanup_errors:
+            with receiver_log.open("a", encoding="utf-8") as log:
+                log.write("\nRemote cleanup errors: " + "; ".join(cleanup_errors) + "\n")
+        redact(sender_log, authorization)
+        redact(receiver_log, authorization)
+        redact_direct_invites(sender_log)
+        redact_direct_invites(receiver_log)
 
-    wall = time.monotonic() - started
+    if cleanup_errors:
+        raise RuntimeError("; ".join(cleanup_errors))
+
     sender_time = read_time(sender_time_path)
     receiver_time = read_remote_json(args, remote_time_path)
     received_hash = verify_remote_file(args, output_path, expected_size, source_hash)
@@ -320,7 +646,7 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
     if path not in ("direct", "relay"):
         raise RuntimeError(f"Rustytransfer selected an unusable comparison path: {path}")
     rows = rust_rows(
-        sender_metrics_path,
+        sender_metric,
         receiver_metric,
         source_hash,
         received_hash,
@@ -330,8 +656,164 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
         receiver_time,
         run_index,
         warmup,
+        {**rust_provenance(args), "pairing_mode": args.rusty_auth},
     )
-    cleanup_remote(args, run_dir, (output_path, remote_metrics_path, remote_time_path))
+    cleanup_remote(
+        args,
+        run_dir,
+        (
+            output_path,
+            remote_metrics_path,
+            remote_time_path,
+            remote_receiver_log,
+            remote_receiver_pid,
+        ),
+    )
+    return rows, path
+
+
+def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_root, run_index, warmup):
+    tag = "warmup" if warmup else str(run_index)
+    run_name = f"rustytransfer-oracle-to-wsl-{size_mib}mib-{tag}"
+    logs = prepare_local_logs(log_root, run_name)
+    run_dir = f"{args.remote_root}/{run_name}"
+    remote(args, f"mkdir -- {remote_quote(run_dir)}")
+    remote_source = f"{run_dir}/source.bin"
+    remote_metrics_path = f"{run_dir}/sender.jsonl"
+    remote_time_path = f"{run_dir}/sender.time.json"
+    remote_log = f"{run_dir}/sender.log"
+    remote_pid = f"{run_dir}/sender.pid"
+    copy_to_remote(args, source, remote_source)
+    verify_remote_file(args, remote_source, expected_size, source_hash)
+
+    receiver_output_path = logs / "received.bin"
+    receiver_metrics_path = logs / "receiver.jsonl"
+    receiver_time_path = logs / "receiver.time.json"
+    sender_log = logs / "sender.log"
+    receiver_log = logs / "receiver.log"
+    path_env = (
+        "RUSTYTRANSFER_BENCH_WAIT_DIRECT"
+        if args.rusty_path == "direct"
+        else "RUSTYTRANSFER_BENCH_RELAY_ONLY"
+    )
+
+    started = time.monotonic()
+    sender = subprocess.Popen(
+        ssh_command(
+            args,
+            remote_sender_command(
+                args,
+                run_dir,
+                remote_source,
+                remote_metrics_path,
+                remote_time_path,
+                remote_log,
+                remote_pid,
+            ),
+        ),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    sender_output = CapturedOutput(sender.stdout, sender_log)
+    receiver = None
+    receiver_output = None
+    authorization = None
+    cleanup_errors = []
+    try:
+        authorization = wait_for_remote_authorization(
+            args, sender, remote_log, args.rusty_auth
+        )
+        auth_flag = "--invite" if args.rusty_auth == "invite" else "--code"
+        receiver_env = os.environ.copy()
+        receiver_env[path_env] = "1"
+        receiver_env["RUSTYTRANSFER_BENCH_PATH_EVIDENCE"] = "1"
+        receiver_env["RUSTYTRANSFER_METRICS_JSONL"] = str(receiver_metrics_path)
+        receiver_command = [
+            str(args.rusty_sender),
+            "--transport",
+            "iroh",
+            "recv",
+            auth_flag,
+            authorization,
+            "--out",
+            str(receiver_output_path),
+        ]
+        receiver, receiver_output = time_command(
+            receiver_command, receiver_time_path, receiver_log, receiver_env
+        )
+        wait_for_pair(sender, receiver, args.timeout, sender_log, receiver_log)
+        wall = time.monotonic() - started
+    except Exception as error:
+        with receiver_log.open("a", encoding="utf-8") as log:
+            log.write(f"\nBenchmark runner failure: {error}\n")
+        raise
+    finally:
+        if sender.poll() is None:
+            sender.kill()
+        if receiver is not None and receiver.poll() is None:
+            receiver.kill()
+        sender_output.wait()
+        if receiver_output is not None:
+            receiver_output.wait()
+        try:
+            terminate_remote_process_group(args, remote_pid, run_dir)
+        except Exception as error:
+            cleanup_errors.append(f"failed to terminate Oracle sender process group: {error}")
+        try:
+            remote_text = remote(args, f"cat -- {remote_quote(remote_log)}")
+            sender_log.write_text(remote_text + "\n", encoding="utf-8")
+        except Exception as error:
+            with sender_log.open("a", encoding="utf-8") as log:
+                log.write(f"\nCould not retrieve Oracle sender log: {error}\n")
+        try:
+            redact_remote_direct_invites(args, remote_log)
+        except Exception as error:
+            cleanup_errors.append(f"failed to redact Oracle sender log: {error}")
+        if cleanup_errors:
+            with sender_log.open("a", encoding="utf-8") as log:
+                log.write("\nRemote cleanup errors: " + "; ".join(cleanup_errors) + "\n")
+        redact(sender_log, authorization)
+        redact(receiver_log, authorization)
+        redact_direct_invites(sender_log)
+        redact_direct_invites(receiver_log)
+
+    if cleanup_errors:
+        raise RuntimeError("; ".join(cleanup_errors))
+
+    sender_time = read_remote_json(args, remote_time_path)
+    receiver_time = read_time(receiver_time_path)
+    received_hash = verify_local_file(
+        receiver_output_path, expected_size, source_hash
+    )
+    sender_metric = read_remote_json(args, remote_metrics_path)
+    receiver_metric = json.loads(receiver_metrics_path.read_text(encoding="utf-8").splitlines()[0])
+    if sender_metric["path"] != receiver_metric["path"]:
+        raise RuntimeError(
+            f"sender/receiver selected different paths: "
+            f"{sender_metric['path']} / {receiver_metric['path']}"
+        )
+    path = sender_metric["path"]
+    if path not in ("direct", "relay"):
+        raise RuntimeError(f"Rustytransfer selected an unusable comparison path: {path}")
+    rows = rust_rows(
+        sender_metric,
+        receiver_metric,
+        source_hash,
+        received_hash,
+        expected_size,
+        wall,
+        sender_time,
+        receiver_time,
+        run_index,
+        warmup,
+        {**rust_provenance(args), "pairing_mode": args.rusty_auth},
+    )
+    cleanup_remote(
+        args,
+        run_dir,
+        (remote_source, remote_metrics_path, remote_time_path, remote_log, remote_pid),
+    )
+    receiver_output_path.unlink()
     return rows, path
 
 
@@ -360,6 +842,7 @@ def croc_rows(args, source_hash, received_hash, expected_size, wall, sender_time
             "working_tree_dirty": bool(git_output("status", "--porcelain")),
             "role": role,
             "transport": "croc",
+            **croc_provenance(args),
             "transport_mode": mode,
             "path": path,
             "path_start": path,
@@ -382,7 +865,7 @@ def croc_rows(args, source_hash, received_hash, expected_size, wall, sender_time
             "measurement_scope": "separate sender and receiver processes (WSL to Oracle)",
             **resources,
         }
-        rows.append({key: row.get(key) for key in METRIC_FIELDS})
+        rows.append({key: row[key] for key in METRIC_FIELDS if key in row})
     return rows
 
 
@@ -495,7 +978,7 @@ def run_size(args, size_mib, source, raw_path, log_root):
     rusty_warmup, expected_path = run_rusty(
         args, source, size_mib, expected_size, source_hash, log_root, 0, True
     )
-    append_rows(raw_path, rusty_warmup)
+    append_and_validate_rust_rows(raw_path, rusty_warmup, args.rusty_path, expected_path)
     mode = "auto" if expected_path == "direct" else "relay"
     croc_warmup, _ = run_croc(
         args,
@@ -518,10 +1001,7 @@ def run_size(args, size_mib, source, raw_path, log_root):
                 rows, path = run_rusty(
                     args, source, size_mib, expected_size, source_hash, log_root, trial, False
                 )
-                if path != expected_path:
-                    raise RuntimeError(
-                        f"Rustytransfer path changed from {expected_path} to {path} during sweep"
-                    )
+                append_and_validate_rust_rows(raw_path, rows, args.rusty_path, path)
             else:
                 rows, path = run_croc(
                     args,
@@ -535,7 +1015,8 @@ def run_size(args, size_mib, source, raw_path, log_root):
                     mode,
                     expected_path,
                 )
-            append_rows(raw_path, rows)
+            if candidate == "croc":
+                append_rows(raw_path, rows)
             print(
                 f"size={size_mib} MiB transport={candidate} path={path} "
                 f"trial={trial} warmup={str(False).lower()} sha256={source_hash}"
@@ -550,58 +1031,81 @@ def run_rusty_only_size(args, size_mib, source, raw_path, log_root):
     rows, expected_path = run_rusty(
         args, source, size_mib, expected_size, source_hash, log_root, 0, True
     )
-    if expected_path != args.rusty_path:
-        raise RuntimeError(
-            f"Rustytransfer selected {expected_path}; requested benchmark path was {args.rusty_path}"
-        )
-    append_rows(raw_path, rows)
+    append_and_validate_rust_rows(raw_path, rows, args.rusty_path, expected_path)
 
     for trial in range(1, args.runs + 1):
         rows, path = run_rusty(
             args, source, size_mib, expected_size, source_hash, log_root, trial, False
         )
-        if path != expected_path:
-            raise RuntimeError(
-                f"Rustytransfer path changed from {expected_path} to {path} during sweep"
-            )
-        append_rows(raw_path, rows)
+        append_and_validate_rust_rows(raw_path, rows, args.rusty_path, path)
         print(
             f"size={size_mib} MiB transport=rustytransfer path={path} "
             f"trial={trial} warmup=false sha256={source_hash}"
         )
 
 
-def main():
+def build_parser():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", required=True)
     parser.add_argument("--user", default="ubuntu")
     parser.add_argument("--ssh", default="ssh")
+    parser.add_argument("--scp", default="scp")
     parser.add_argument("--ssh-key", required=True, type=Path)
-    parser.add_argument("--croc", required=True, type=Path, help="local Croc 11.5.3 binary")
-    parser.add_argument("--remote-croc", required=True)
+    parser.add_argument("--croc", type=Path, help="local Croc 11.5.3 binary")
+    parser.add_argument("--remote-croc")
     parser.add_argument("--rusty-sender", required=True, type=Path)
     parser.add_argument("--remote-rusty", required=True)
     parser.add_argument("--input-64", required=True, type=Path)
     parser.add_argument("--input-512", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--remote-root", required=True)
+    parser.add_argument("--build-id", required=True, help="candidate/build identifier for Rustytransfer")
+    parser.add_argument("--storage-class", required=True, help="input and destination storage description")
     parser.add_argument("--runs", type=int, default=5)
+    parser.add_argument(
+        "--direction",
+        choices=("wsl-to-oracle", "oracle-to-wsl"),
+        default="wsl-to-oracle",
+    )
     parser.add_argument("--rusty-path", choices=("direct", "relay"), default="direct")
+    parser.add_argument("--rusty-auth", choices=("pake", "invite"), default="pake")
     parser.add_argument(
         "--rusty-only",
         action="store_true",
         help="measure Rustytransfer alone; use this when Croc cannot select the same path",
     )
     parser.add_argument("--timeout", type=int, default=900)
-    args = parser.parse_args()
+    return parser
 
+
+def validate_local_args(parser, args):
     if args.runs < 1:
         parser.error("--runs must be positive")
-    for path in (args.ssh_key, args.croc, args.rusty_sender, args.input_64, args.input_512):
+    if not args.build_id.strip():
+        parser.error("--build-id cannot be empty")
+    if not args.storage_class.strip():
+        parser.error("--storage-class cannot be empty")
+    if args.direction == "oracle-to-wsl" and not args.rusty_only:
+        parser.error("Oracle-to-WSL currently requires --rusty-only; Croc reverse comparison is unavailable")
+    required = [args.ssh_key, args.rusty_sender, args.input_64, args.input_512]
+    if not args.rusty_only:
+        if args.croc is None:
+            parser.error("--croc is required unless --rusty-only is set")
+        if not args.remote_croc:
+            parser.error("--remote-croc is required unless --rusty-only is set")
+        required.append(args.croc)
+    for path in required:
         if not path.is_file():
             parser.error(f"required local file is missing: {path}")
     if not args.output_dir.is_dir():
         parser.error(f"output directory must already exist: {args.output_dir}")
+
+
+def main():
+    parser = build_parser()
+    args = parser.parse_args()
+
+    validate_local_args(parser, args)
 
     raw_paths = {
         64: args.output_dir / "oracle-64.jsonl",
@@ -615,8 +1119,15 @@ def main():
     log_root.mkdir(exist_ok=False)
 
     remote(args, f"test ! -e {remote_quote(args.remote_root)} && mkdir -- {remote_quote(args.remote_root)}")
-    remote(args, f"test -x {remote_quote(args.remote_croc)} && test -x {remote_quote(args.remote_rusty)} && command -v sha256sum")
+    remote(
+        args,
+        f"test -x {remote_quote(args.remote_rusty)} && command -v sha256sum "
+        "&& command -v setsid && test -x /usr/bin/time && command -v python3",
+    )
+    args.local_rusty_sha256 = sha256_file(args.rusty_sender)
+    args.remote_rusty_sha256 = remote_sha256(args, args.remote_rusty)
     if not args.rusty_only:
+        remote(args, f"test -x {remote_quote(args.remote_croc)}")
         remote_version = remote(args, f"{remote_quote(args.remote_croc)} --version")
         if "11.5.3" not in remote_version:
             raise RuntimeError(f"unexpected Oracle Croc version: {remote_version}")
@@ -625,6 +1136,8 @@ def main():
         ).stdout
         if "11.5.3" not in local_version:
             raise RuntimeError(f"unexpected WSL Croc version: {local_version.strip()}")
+        args.local_croc_sha256 = sha256_file(args.croc)
+        args.remote_croc_sha256 = remote_sha256(args, args.remote_croc)
 
     try:
         runner = run_rusty_only_size if args.rusty_only else run_size

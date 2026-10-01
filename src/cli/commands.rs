@@ -478,6 +478,7 @@ pub(super) async fn send_cmd(
         drop(progress.take());
     }
     let path_end = transfer_metrics.path_end.unwrap_or(path.clone());
+    let path_evidence = st.take_path_evidence().await;
 
     if write_transfer_metric(
         "sender",
@@ -485,6 +486,7 @@ pub(super) async fn send_cmd(
         MetricPaths {
             start: path,
             end: path_end,
+            path_evidence,
         },
         file_len,
         transfer_metrics.chunk_size,
@@ -686,6 +688,7 @@ pub(super) async fn recv_cmd(
         drop(progress.take());
     }
     let path_end = transfer_metrics.path_end.unwrap_or(path.clone());
+    let path_evidence = st.take_path_evidence().await;
 
     if write_transfer_metric(
         "receiver",
@@ -693,6 +696,7 @@ pub(super) async fn recv_cmd(
         MetricPaths {
             start: path,
             end: path_end,
+            path_evidence,
         },
         transfer_metrics.file_size,
         transfer_metrics.chunk_size,

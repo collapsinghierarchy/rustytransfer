@@ -31,6 +31,12 @@ pub trait TransferTransport: Send {
     async fn wait_for_peer_close(&mut self) -> Result<()>;
     async fn close_transport(&mut self) -> Result<()>;
 
+    /// Mark the exact beginning of application payload traffic for optional transport diagnostics.
+    fn begin_payload_observation(&mut self) {}
+
+    /// Mark the exact end of application payload traffic for optional transport diagnostics.
+    fn end_payload_observation(&mut self) {}
+
     async fn abort(&mut self) -> Result<()> {
         self.close_transport().await
     }

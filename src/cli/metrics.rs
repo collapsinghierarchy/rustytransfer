@@ -51,6 +51,7 @@ pub(super) fn write_transfer_metric(
         path,
         path_start: paths.start.path,
         path_end: paths.end.path,
+        path_evidence: paths.path_evidence,
         local_candidate_type: paths.start.local_candidate_type,
         remote_candidate_type: paths.start.remote_candidate_type,
         size_bytes,

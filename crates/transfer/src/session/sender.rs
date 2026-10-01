@@ -231,6 +231,7 @@ where
 
     context.phase = Phase::Payload;
     on_progress(file_len, resume_offset);
+    transport.begin_payload_observation();
     let payload_started = Instant::now();
     let mut buffer = Vec::new();
     buffer
@@ -310,6 +311,7 @@ where
             "source is longer than the advertised file length",
         ))));
     }
+    transport.end_payload_observation();
     let payload_seconds = payload_started.elapsed().as_secs_f64();
 
     context.phase = Phase::Finalize;

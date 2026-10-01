@@ -1,4 +1,5 @@
 use anyhow::{Context, Result, anyhow, ensure};
+use futures_util::StreamExt;
 use iroh::{
     Endpoint, EndpointAddr, EndpointId, SecretKey,
     endpoint::{Connection, RecvStream, SendStream, presets},
@@ -11,12 +12,14 @@ use std::{
     path::{Path, PathBuf},
 };
 use tokio::io::AsyncWriteExt;
+use tokio::sync::oneshot;
+use tokio::task::JoinHandle;
 use tokio::time::{Duration, timeout};
 
-use crate::transport::PathObservation;
 use crate::transport::errors::TransportError;
 use crate::transport::frames::Frame;
 use crate::transport::websocket::{WsRead, WsRoomTransport, wait_for_room_full};
+use crate::transport::{PathEvidence, PathObservation};
 
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(90);
 const ENDPOINT_READY_TIMEOUT: Duration = Duration::from_secs(10);
@@ -95,6 +98,47 @@ pub struct IrohState {
     connection: Connection,
     send: SendStream,
     recv: RecvStream,
+    path_evidence: Option<PathEvidenceSession>,
+}
+
+struct PathSample {
+    id: String,
+    kind: PathKind,
+    selected: bool,
+    stream_tx: u64,
+    stream_rx: u64,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum PathKind {
+    Direct,
+    Relay,
+    Unknown,
+}
+
+struct PathEventSummary {
+    closed: Vec<PathSample>,
+    opened: Vec<(String, PathKind)>,
+    selected: Vec<(String, PathKind)>,
+    lagged: bool,
+}
+
+struct PathEvidenceSession {
+    baseline: Vec<PathSample>,
+    ending: Vec<PathSample>,
+    stop: Option<oneshot::Sender<()>>,
+    task: Option<JoinHandle<PathEventSummary>>,
+}
+
+impl Drop for PathEvidenceSession {
+    fn drop(&mut self) {
+        if let Some(stop) = self.stop.take() {
+            let _stop_sent = stop.send(()).is_ok();
+        }
+        if let Some(task) = self.task.as_ref() {
+            task.abort();
+        }
+    }
 }
 
 impl IrohState {
@@ -104,7 +148,81 @@ impl IrohState {
             connection,
             send,
             recv,
+            path_evidence: None,
         }
+    }
+
+    pub fn begin_payload_observation(&mut self) {
+        if std::env::var("RUSTYTRANSFER_BENCH_PATH_EVIDENCE").as_deref() != Ok("1") {
+            return;
+        }
+        let mut events = self.connection.path_events();
+        let baseline = snapshot_paths(&self.connection);
+        let (stop, mut stop_rx) = oneshot::channel();
+        let task = tokio::spawn(async move {
+            let mut summary = PathEventSummary {
+                closed: Vec::new(),
+                opened: Vec::new(),
+                selected: Vec::new(),
+                lagged: false,
+            };
+            loop {
+                tokio::select! {
+                    biased;
+                    event = events.next() => {
+                        let Some(event) = event else { break };
+                        use iroh::endpoint::PathEvent;
+                        match event {
+                            PathEvent::Opened { id, remote_addr, .. } => {
+                                summary.opened.push((id.to_string(), path_kind(remote_addr.is_ip(), remote_addr.is_relay())));
+                            }
+                            PathEvent::Closed { id, remote_addr, last_stats, .. } => {
+                                summary.closed.push(PathSample {
+                                    id: id.to_string(),
+                                    kind: path_kind(remote_addr.is_ip(), remote_addr.is_relay()),
+                                    selected: false,
+                                    stream_tx: last_stats.frame_tx.stream,
+                                    stream_rx: last_stats.frame_rx.stream,
+                                });
+                            }
+                            PathEvent::Selected { id, remote_addr, .. } => {
+                                summary.selected.push((id.to_string(), path_kind(remote_addr.is_ip(), remote_addr.is_relay())));
+                            }
+                            PathEvent::Lagged { .. } => summary.lagged = true,
+                            _ => summary.lagged = true,
+                        }
+                    }
+                    _ = &mut stop_rx => break,
+                }
+            }
+            summary
+        });
+        self.path_evidence = Some(PathEvidenceSession {
+            baseline,
+            ending: Vec::new(),
+            stop: Some(stop),
+            task: Some(task),
+        });
+    }
+
+    pub fn end_payload_observation(&mut self) {
+        if let Some(session) = self.path_evidence.as_mut() {
+            session.ending = snapshot_paths(&self.connection);
+            if let Some(stop) = session.stop.take() {
+                let _stop_sent = stop.send(()).is_ok();
+            }
+        }
+    }
+
+    pub async fn take_path_evidence(&mut self) -> Option<PathEvidence> {
+        let mut session = self.path_evidence.take()?;
+        let task = session.task.take()?;
+        let summary = task.await.ok()?;
+        Some(classify_path_evidence(
+            &session.baseline,
+            &session.ending,
+            &summary,
+        ))
     }
 
     /// Sends one length-prefixed message over the QUIC stream.
@@ -235,6 +353,121 @@ impl IrohState {
         let mut data = vec![0u8; length];
         self.recv.read_exact(&mut data).await?;
         Ok(data)
+    }
+}
+
+fn path_kind(is_ip: bool, is_relay: bool) -> PathKind {
+    if is_ip {
+        PathKind::Direct
+    } else if is_relay {
+        PathKind::Relay
+    } else {
+        PathKind::Unknown
+    }
+}
+
+fn snapshot_paths(connection: &Connection) -> Vec<PathSample> {
+    connection
+        .paths()
+        .iter()
+        .map(|path| {
+            let stats = path.stats();
+            PathSample {
+                id: path.id().to_string(),
+                kind: path_kind(path.is_ip(), path.is_relay()),
+                selected: path.is_selected(),
+                stream_tx: stats.frame_tx.stream,
+                stream_rx: stats.frame_rx.stream,
+            }
+        })
+        .collect()
+}
+
+fn classify_path_evidence(
+    baseline: &[PathSample],
+    ending: &[PathSample],
+    events: &PathEventSummary,
+) -> PathEvidence {
+    let mut direct_stream_tx = 0_u64;
+    let mut direct_stream_rx = 0_u64;
+    let mut relay_stream_tx = 0_u64;
+    let mut relay_stream_rx = 0_u64;
+    let mut missing_path_stats = false;
+    let mut observed_ids = std::collections::HashSet::new();
+    let baseline_for = |id: &str| baseline.iter().find(|sample| sample.id == id);
+    let mut apply_delta = |sample: &PathSample| {
+        observed_ids.insert(sample.id.clone());
+        let before = baseline_for(&sample.id);
+        let (base_tx, base_rx) = before.map_or((0, 0), |value| (value.stream_tx, value.stream_rx));
+        let tx = sample.stream_tx.saturating_sub(base_tx);
+        let rx = sample.stream_rx.saturating_sub(base_rx);
+        match sample.kind {
+            PathKind::Direct => {
+                direct_stream_tx = direct_stream_tx.saturating_add(tx);
+                direct_stream_rx = direct_stream_rx.saturating_add(rx);
+            }
+            PathKind::Relay => {
+                relay_stream_tx = relay_stream_tx.saturating_add(tx);
+                relay_stream_rx = relay_stream_rx.saturating_add(rx);
+            }
+            PathKind::Unknown if tx > 0 || rx > 0 => missing_path_stats = true,
+            PathKind::Unknown => {}
+        }
+    };
+
+    let ending_ids: std::collections::HashSet<_> = ending.iter().map(|s| s.id.as_str()).collect();
+    for sample in ending.iter().chain(
+        events
+            .closed
+            .iter()
+            .filter(|s| !ending_ids.contains(s.id.as_str())),
+    ) {
+        apply_delta(sample);
+    }
+    for sample in baseline {
+        if !observed_ids.contains(&sample.id) {
+            missing_path_stats = true;
+        }
+    }
+    let closed_ids: std::collections::HashSet<_> =
+        events.closed.iter().map(|s| s.id.as_str()).collect();
+    if events
+        .opened
+        .iter()
+        .any(|(id, _)| !ending_ids.contains(id.as_str()) && !closed_ids.contains(id.as_str()))
+    {
+        missing_path_stats = true;
+    }
+
+    let direct = direct_stream_tx > 0 || direct_stream_rx > 0;
+    let relay = relay_stream_tx > 0 || relay_stream_rx > 0;
+    let relay_selected = baseline
+        .iter()
+        .any(|sample| sample.selected && sample.kind == PathKind::Relay)
+        || events
+            .selected
+            .iter()
+            .any(|(_, kind)| *kind == PathKind::Relay);
+    let verified = !events.lagged && !missing_path_stats && (direct || relay);
+    let classification = if !verified {
+        "unverified"
+    } else if (direct && relay) || (direct && relay_selected) {
+        "mixed"
+    } else if relay {
+        "relay"
+    } else {
+        "direct"
+    };
+    PathEvidence {
+        classification,
+        verified,
+        direct_stream_tx,
+        direct_stream_rx,
+        relay_stream_tx,
+        relay_stream_rx,
+        lagged: events.lagged,
+        missing_path_stats,
+        relay_selected,
     }
 }
 
@@ -462,4 +695,98 @@ pub fn state(
     recv: RecvStream,
 ) -> IrohState {
     IrohState::new(endpoint, connection, send, recv)
+}
+
+#[cfg(test)]
+mod path_evidence_tests {
+    use super::{PathEventSummary, PathKind, PathSample, classify_path_evidence};
+
+    fn sample(id: &str, kind: PathKind, tx: u64, rx: u64) -> PathSample {
+        PathSample {
+            id: id.to_owned(),
+            kind,
+            selected: false,
+            stream_tx: tx,
+            stream_rx: rx,
+        }
+    }
+
+    fn events() -> PathEventSummary {
+        PathEventSummary {
+            closed: vec![],
+            opened: vec![],
+            selected: vec![],
+            lagged: false,
+        }
+    }
+
+    #[test]
+    fn stream_deltas_verify_direct_payload_route() {
+        let baseline = [sample("ip", PathKind::Direct, 100, 40)];
+        let ending = [sample("ip", PathKind::Direct, 120, 70)];
+        let evidence = classify_path_evidence(&baseline, &ending, &events());
+        assert_eq!(evidence.classification, "direct");
+        assert!(evidence.verified);
+        assert_eq!(evidence.direct_stream_tx, 20);
+        assert_eq!(evidence.direct_stream_rx, 30);
+    }
+
+    #[test]
+    fn closed_path_final_stats_are_counted_but_post_end_snapshot_wins() {
+        let baseline = [
+            sample("ip", PathKind::Direct, 5, 7),
+            sample("relay", PathKind::Relay, 2, 3),
+        ];
+        let ending = [sample("ip", PathKind::Direct, 15, 17)];
+        let mut events = events();
+        events.closed.push(sample("ip", PathKind::Direct, 900, 900));
+        events.closed.push(sample("relay", PathKind::Relay, 12, 13));
+        let evidence = classify_path_evidence(&baseline, &ending, &events);
+        assert_eq!(evidence.direct_stream_tx, 10);
+        assert_eq!(evidence.direct_stream_rx, 10);
+        assert_eq!(evidence.relay_stream_tx, 10);
+        assert_eq!(evidence.relay_stream_rx, 10);
+        assert_eq!(evidence.classification, "mixed");
+        assert!(evidence.verified);
+    }
+
+    #[test]
+    fn lagged_or_missing_events_are_unverified_and_relay_selection_is_conservative() {
+        let baseline = [sample("ip", PathKind::Direct, 0, 0)];
+        let ending = [sample("ip", PathKind::Direct, 10, 0)];
+        let mut event_summary = events();
+        event_summary
+            .selected
+            .push(("relay".to_owned(), PathKind::Relay));
+        let evidence = classify_path_evidence(&baseline, &ending, &event_summary);
+        assert_eq!(evidence.classification, "mixed");
+        assert!(evidence.relay_selected);
+
+        event_summary.lagged = true;
+        let evidence = classify_path_evidence(&baseline, &ending, &event_summary);
+        assert_eq!(evidence.classification, "unverified");
+        assert!(!evidence.verified);
+
+        let mut baseline = [sample("relay", PathKind::Relay, 0, 0)];
+        baseline[0].selected = true;
+        let ending = [
+            sample("relay", PathKind::Relay, 0, 0),
+            sample("ip", PathKind::Direct, 10, 0),
+        ];
+        let evidence = classify_path_evidence(&baseline, &ending, &events());
+        assert_eq!(evidence.classification, "mixed");
+        assert!(evidence.relay_selected);
+
+        let baseline = [sample("ip", PathKind::Direct, 0, 0)];
+        let evidence = classify_path_evidence(
+            &baseline,
+            &[],
+            &PathEventSummary {
+                lagged: false,
+                ..events()
+            },
+        );
+        assert!(evidence.missing_path_stats);
+        assert_eq!(evidence.classification, "unverified");
+    }
 }

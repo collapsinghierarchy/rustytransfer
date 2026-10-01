@@ -190,6 +190,7 @@ where
         .map_err(|error| context.error(TransferErrorKind::DestinationIo(error)))?;
     context.phase = Phase::Payload;
     on_progress(total, resume_offset);
+    transport.begin_payload_observation();
     let payload_started = Instant::now();
     while receiver.bytes_received() < receiver.remaining_len() {
         let ciphertext = receive_with_timeout(transport, CHUNK_TIMEOUT, *context).await?;
@@ -216,6 +217,7 @@ where
         .flush()
         .await
         .map_err(|error| context.error(TransferErrorKind::DestinationIo(error)))?;
+    transport.end_payload_observation();
     let payload_seconds = payload_started.elapsed().as_secs_f64();
 
     context.phase = Phase::Finalize;

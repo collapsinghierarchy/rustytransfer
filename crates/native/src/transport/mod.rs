@@ -9,6 +9,19 @@ pub mod webrtc;
 use anyhow::Result;
 pub use rustytransfer_transfer::PathObservation;
 
+#[derive(Debug, Clone, serde::Serialize, PartialEq, Eq)]
+pub struct PathEvidence {
+    pub classification: &'static str,
+    pub verified: bool,
+    pub direct_stream_tx: u64,
+    pub direct_stream_rx: u64,
+    pub relay_stream_tx: u64,
+    pub relay_stream_rx: u64,
+    pub lagged: bool,
+    pub missing_path_stats: bool,
+    pub relay_selected: bool,
+}
+
 #[cfg(feature = "iroh")]
 use self::iroh::IrohState;
 #[cfg(feature = "webrtc")]
@@ -24,6 +37,33 @@ pub enum DataTransport {
 }
 
 impl DataTransport {
+    pub fn begin_payload_observation(&mut self) {
+        match self {
+            #[cfg(feature = "webrtc")]
+            Self::WebRtc(_) => {}
+            #[cfg(feature = "iroh")]
+            Self::Iroh(state) => state.begin_payload_observation(),
+        }
+    }
+
+    pub fn end_payload_observation(&mut self) {
+        match self {
+            #[cfg(feature = "webrtc")]
+            Self::WebRtc(_) => {}
+            #[cfg(feature = "iroh")]
+            Self::Iroh(state) => state.end_payload_observation(),
+        }
+    }
+
+    pub async fn take_path_evidence(&mut self) -> Option<PathEvidence> {
+        match self {
+            #[cfg(feature = "webrtc")]
+            Self::WebRtc(_) => None,
+            #[cfg(feature = "iroh")]
+            Self::Iroh(state) => state.take_path_evidence().await,
+        }
+    }
+
     /// Return the selected network path without exposing candidate addresses.
     ///
     /// # Errors

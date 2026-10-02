@@ -1,0 +1,12 @@
+{
+  "binary_sha256": "1b5d0d2a27b9be1fb2c463866f0afa8ff93298a905839f10baa12d2c9ad54b31",
+  "sizes_mib": [
+    64,
+    512
+  ],
+  "measured_runs_per_mode_size_series": 5,
+  "series": 2,
+  "ordering": "series1 standard then profile; series2 profile then standard",
+  "storage": "sources WSL ext4; destination WSL /tmp ext4",
+  "scope": "both endpoints in one process; diagnostic wall comparison, no per-endpoint CPU/RSS"
+}

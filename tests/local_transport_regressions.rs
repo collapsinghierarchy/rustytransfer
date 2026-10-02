@@ -333,10 +333,14 @@ struct EndpointTimings {
     role: &'static str,
     path_start: PathObservation,
     path_end: PathObservation,
+    path_evidence: Option<rustytransfer::transport::PathEvidence>,
+    direct_route_verified_both: bool,
     chunk_size: u32,
+    bytes_transferred: u64,
     handshake_seconds: f64,
     payload_seconds: f64,
     shutdown_seconds: f64,
+    payload_profile: Option<transfer::PayloadProfile>,
 }
 
 #[derive(Serialize)]
@@ -349,10 +353,14 @@ struct LocalBaselineRecord {
     path: &'static str,
     path_start: &'static str,
     path_end: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    path_evidence: Option<rustytransfer::transport::PathEvidence>,
+    direct_route_verified_both: bool,
     local_candidate_type: Option<String>,
     remote_candidate_type: Option<String>,
     size_bytes: u64,
     chunk_size: u32,
+    bytes_transferred: u64,
     pipeline_depth: u8,
     handshake_seconds: f64,
     payload_seconds: f64,
@@ -366,6 +374,9 @@ struct LocalBaselineRecord {
     source_sha256: String,
     received_sha256: String,
     success: bool,
+    profile_mode: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    payload_profile: Option<transfer::PayloadProfile>,
     run_index: usize,
     warmup: bool,
     measurement_scope: &'static str,
@@ -410,6 +421,11 @@ fn prepare_local_benchmark_files(
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "manual local full-file performance baseline"]
 async fn local_full_file_performance_baseline() -> Result<()> {
+    let transports = local_baseline_transports_from(
+        std::env::var("RUSTYTRANSFER_LOCAL_BENCH_TRANSPORT")
+            .ok()
+            .as_deref(),
+    )?;
     let size_mib = std::env::var("RUSTYTRANSFER_BENCH_SIZE_MIB")
         .unwrap_or_else(|_| "512".to_owned())
         .parse::<u64>()
@@ -434,11 +450,11 @@ async fn local_full_file_performance_baseline() -> Result<()> {
     let (persistent_source, source_path, received_path, source_sha256) =
         prepare_local_benchmark_files(&temp_dir, size_bytes)?;
 
-    // One unscored warm-up for each transport, then five runs in alternating order.
-    for transport in ["webrtc", "iroh"] {
+    // One unscored warm-up per selected transport, then five runs in alternating order.
+    for transport in &transports {
         eprintln!("local warmup start transport={transport} size_mib={size_mib}");
         let (_sender_timing, _receiver_timing) = run_local_full_transfer(
-            transport,
+            *transport,
             &source_path,
             &received_path,
             size_bytes,
@@ -454,7 +470,10 @@ async fn local_full_file_performance_baseline() -> Result<()> {
         "webrtc", "iroh", "iroh", "webrtc", "webrtc", "iroh", "iroh", "webrtc", "webrtc", "iroh",
     ];
     let mut per_transport_run = [0_usize; 2];
-    for transport in run_order {
+    for transport in run_order
+        .into_iter()
+        .filter(|transport| transports.contains(transport))
+    {
         let transport_index = usize::from(transport == "iroh");
         let run_count = per_transport_run
             .get_mut(transport_index)
@@ -501,6 +520,13 @@ async fn local_full_file_performance_baseline() -> Result<()> {
             &source_sha256,
             &received_sha256,
         )?;
+        let expected_path =
+            std::env::var("RUSTYTRANSFER_BENCH_EXPECTED_PATH").unwrap_or_else(|_| "direct".into());
+        if transport == "iroh" && expected_path == "direct" && !sender.direct_route_verified_both {
+            anyhow::bail!(
+                "Iroh diagnostic row was retained, but direct STREAM-frame evidence was not verified by both endpoints"
+            );
+        }
         println!(
             "local transport={transport} size_mib={size_mib} chunk_size={} trial={trial} sender_payload_s={:.3} receiver_payload_s={:.3} path={} sha256={received_sha256}",
             sender.chunk_size,
@@ -516,6 +542,17 @@ async fn local_full_file_performance_baseline() -> Result<()> {
     fs::remove_file(&received_path).context("failed to remove local baseline output")?;
     fs::remove_dir(&temp_dir).context("failed to remove local baseline temp directory")?;
     Ok(())
+}
+
+fn local_baseline_transports_from(filter: Option<&str>) -> Result<Vec<&'static str>> {
+    match filter {
+        None | Some("all") => Ok(vec!["webrtc", "iroh"]),
+        Some("webrtc") => Ok(vec!["webrtc"]),
+        Some("iroh") => Ok(vec!["iroh"]),
+        Some(other) => anyhow::bail!(
+            "unsupported local baseline transport filter: {other}; choose iroh, webrtc, or all"
+        ),
+    }
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
@@ -732,6 +769,7 @@ async fn run_local_full_transfer(
     size_bytes: u64,
     chunk_size: u32,
 ) -> Result<(EndpointTimings, EndpointTimings)> {
+    remove_stale_local_benchmark_output(source_path, received_path)?;
     let setup_started = Instant::now();
     let expected_path =
         std::env::var("RUSTYTRANSFER_BENCH_EXPECTED_PATH").unwrap_or_else(|_| "direct".to_owned());
@@ -802,7 +840,14 @@ async fn run_local_full_transfer(
     .await
     .context("local full-file transfer exceeded 15 minutes")?;
     match (sender_result, receiver_result) {
-        (Ok(sender), Ok(receiver)) => Ok((sender, receiver)),
+        (Ok(mut sender), Ok(mut receiver)) => {
+            let direct_route_verified_both =
+                verified_direct_evidence(sender.path_evidence.as_ref())
+                    && verified_direct_evidence(receiver.path_evidence.as_ref());
+            sender.direct_route_verified_both = direct_route_verified_both;
+            receiver.direct_route_verified_both = direct_route_verified_both;
+            Ok((sender, receiver))
+        }
         (Err(sender), Err(receiver)) => Err(anyhow!(
             "{transport} sender failed: {sender:#}; receiver failed: {receiver:#}"
         )),
@@ -858,15 +903,20 @@ async fn send_local_file(
     let path_end = metrics
         .path_end
         .ok_or_else(|| anyhow!("sender path observation is missing"))?;
+    let path_evidence = transport.take_path_evidence().await;
 
     Ok(EndpointTimings {
         role: "sender",
         path_start,
         path_end,
+        path_evidence,
+        direct_route_verified_both: false,
         chunk_size: metrics.chunk_size,
+        bytes_transferred: metrics.bytes_transferred,
         handshake_seconds: setup_seconds + metrics.handshake_seconds,
         payload_seconds: metrics.payload_seconds,
         shutdown_seconds: metrics.shutdown_seconds,
+        payload_profile: metrics.payload_profile,
     })
 }
 
@@ -891,15 +941,20 @@ async fn receive_local_file(
     let path_end = metrics
         .path_end
         .ok_or_else(|| anyhow!("receiver path observation is missing"))?;
+    let path_evidence = transport.take_path_evidence().await;
 
     Ok(EndpointTimings {
         role: "receiver",
         path_start,
         path_end,
+        path_evidence,
+        direct_route_verified_both: false,
         chunk_size: metrics.chunk_size,
+        bytes_transferred: metrics.bytes_transferred,
         handshake_seconds: setup_seconds + metrics.handshake_seconds,
         payload_seconds: metrics.payload_seconds,
         shutdown_seconds: metrics.shutdown_seconds,
+        payload_profile: metrics.payload_profile,
     })
 }
 
@@ -973,10 +1028,13 @@ fn append_local_metric(
         path,
         path_start: timing.path_start.path,
         path_end: timing.path_end.path,
+        path_evidence: timing.path_evidence.clone(),
+        direct_route_verified_both: timing.direct_route_verified_both,
         local_candidate_type: timing.path_start.local_candidate_type.clone(),
         remote_candidate_type: timing.path_start.remote_candidate_type.clone(),
         size_bytes,
         chunk_size: timing.chunk_size,
+        bytes_transferred: timing.bytes_transferred,
         pipeline_depth: 1,
         handshake_seconds: timing.handshake_seconds,
         payload_seconds: timing.payload_seconds,
@@ -991,6 +1049,14 @@ fn append_local_metric(
         source_sha256: source_sha256.to_owned(),
         received_sha256: received_sha256.to_owned(),
         success: true,
+        profile_mode: if std::env::var("RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE")
+            .is_ok_and(|value| value == "1")
+        {
+            "payload-profile"
+        } else {
+            "standard"
+        },
+        payload_profile: timing.payload_profile.clone(),
         run_index,
         warmup,
         measurement_scope: "sender and receiver share one process",
@@ -1003,6 +1069,37 @@ fn append_local_metric(
     serde_json::to_writer(&mut output, &record)
         .context("failed to serialize local baseline JSONL")?;
     writeln!(output).context("failed to finish local baseline JSONL")?;
+    Ok(())
+}
+
+fn verified_direct_evidence(evidence: Option<&rustytransfer::transport::PathEvidence>) -> bool {
+    evidence.is_some_and(|value| {
+        value.verified
+            && value.classification == "direct"
+            && (value.direct_stream_tx > 0 || value.direct_stream_rx > 0)
+            && value.relay_stream_tx == 0
+            && value.relay_stream_rx == 0
+            && !value.lagged
+            && !value.missing_path_stats
+            && !value.relay_selected
+    })
+}
+
+fn remove_stale_local_benchmark_output(source_path: &Path, received_path: &Path) -> Result<()> {
+    if received_path.exists() {
+        let source_identity = fs::canonicalize(source_path)
+            .context("failed to resolve test-owned benchmark source")?;
+        let output_identity = fs::canonicalize(received_path)
+            .context("failed to resolve existing test-owned benchmark output")?;
+        ensure!(
+            source_identity != output_identity,
+            "refusing to remove the benchmark source as a stale test output"
+        );
+        // This path is created by prepare_local_benchmark_files for the
+        // ignored benchmark. Remove only that known output before the next
+        // receive; product no-overwrite behavior stays unchanged.
+        fs::remove_file(received_path).context("failed to remove stale test-owned output")?;
+    }
     Ok(())
 }
 
@@ -1024,6 +1121,108 @@ fn git_output(args: &[&str]) -> Option<String> {
         .filter(|output| output.status.success())
         .and_then(|output| String::from_utf8(output.stdout).ok())
         .map(|output| output.trim().to_owned())
+}
+
+#[cfg(test)]
+mod local_baseline_tests {
+    use super::*;
+
+    #[test]
+    fn transport_filter_defaults_to_both_and_can_select_iroh() -> Result<()> {
+        assert_eq!(
+            local_baseline_transports_from(None)?,
+            vec!["webrtc", "iroh"]
+        );
+        assert_eq!(
+            local_baseline_transports_from(Some("all"))?,
+            vec!["webrtc", "iroh"]
+        );
+        assert_eq!(local_baseline_transports_from(Some("iroh"))?, vec!["iroh"]);
+        assert_eq!(
+            local_baseline_transports_from(Some("webrtc"))?,
+            vec!["webrtc"]
+        );
+        assert!(local_baseline_transports_from(Some("other")).is_err());
+        Ok(())
+    }
+
+    #[test]
+    fn direct_evidence_requires_verified_direct_classification() {
+        let evidence = || rustytransfer::transport::PathEvidence {
+            classification: "direct",
+            verified: true,
+            direct_stream_tx: 1,
+            direct_stream_rx: 1,
+            relay_stream_tx: 0,
+            relay_stream_rx: 0,
+            lagged: false,
+            missing_path_stats: false,
+            relay_selected: false,
+        };
+        assert!(verified_direct_evidence(Some(&evidence())));
+
+        let mut invalid = evidence();
+        invalid.verified = false;
+        assert!(!verified_direct_evidence(Some(&invalid)));
+
+        let mut invalid = evidence();
+        invalid.classification = "mixed";
+        assert!(!verified_direct_evidence(Some(&invalid)));
+
+        let mut invalid = evidence();
+        invalid.direct_stream_tx = 0;
+        invalid.direct_stream_rx = 0;
+        assert!(!verified_direct_evidence(Some(&invalid)));
+
+        let mut invalid = evidence();
+        invalid.relay_stream_tx = 1;
+        assert!(!verified_direct_evidence(Some(&invalid)));
+
+        let mut invalid = evidence();
+        invalid.relay_stream_rx = 1;
+        assert!(!verified_direct_evidence(Some(&invalid)));
+
+        let mut invalid = evidence();
+        invalid.lagged = true;
+        assert!(!verified_direct_evidence(Some(&invalid)));
+
+        let mut invalid = evidence();
+        invalid.missing_path_stats = true;
+        assert!(!verified_direct_evidence(Some(&invalid)));
+
+        let mut invalid = evidence();
+        invalid.relay_selected = true;
+        assert!(!verified_direct_evidence(Some(&invalid)));
+
+        assert!(!verified_direct_evidence(None));
+    }
+
+    #[test]
+    fn stale_output_cleanup_removes_only_the_known_output() -> Result<()> {
+        let temp_dir = std::env::temp_dir().join(format!(
+            "rustytransfer-stale-output-test-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)?
+                .as_nanos()
+        ));
+        fs::create_dir_all(&temp_dir)?;
+        let source = temp_dir.join("source.bin");
+        let output = temp_dir.join("received.bin");
+        fs::write(&source, b"source")?;
+        fs::write(&output, b"old result")?;
+
+        remove_stale_local_benchmark_output(&source, &output)?;
+
+        ensure!(source.exists(), "source should remain in place");
+        ensure!(!output.exists(), "stale output should be removed");
+        ensure!(
+            remove_stale_local_benchmark_output(&source, &source).is_err(),
+            "cleanup must reject a received path that aliases the source"
+        );
+        fs::remove_dir_all(temp_dir)?;
+        Ok(())
+    }
 }
 
 trait LocalMessageTransport {

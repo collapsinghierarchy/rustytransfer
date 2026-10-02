@@ -40,6 +40,16 @@ CPU and RSS fields are deliberately `null`; these measurements are useful for
 payload throughput and correctness only, not the separate-process resource
 gates. The WebRTC fixture uses the production 1 MiB send-buffer limit.
 
+Set `RUSTYTRANSFER_LOCAL_BENCH_TRANSPORT=iroh` or `webrtc` to select one transport;
+the default is both. A persistent `RUSTYTRANSFER_BENCH_SOURCE` fixture is preserved.
+Enable `RUSTYTRANSFER_BENCH_PATH_EVIDENCE=1` for strict direct Iroh acceptance and
+`RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE=1` for optional stage diagnostics. Iroh direct
+rows are retained before rejection when both-endpoint STREAM evidence is missing.
+Only test-owned received outputs are removed between trials. The
+[two-series overhead check](results/local-20261002-profile-overhead/README.md) and
+[Oracle stage diagnostics](results/oracle-20261002-payload-profile/README.md)
+record the current profiling evidence.
+
 For Croc 11.5.3, `run_croc_baseline.py` starts a temporary local relay and
 separate sender and receiver processes. It records the selected auto path from
 Croc's debug output, uses `--transport relay` for the forced-relay mode, and

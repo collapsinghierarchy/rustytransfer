@@ -1,6 +1,6 @@
 # Direct transfer optimization and desktop implementation plan
 
-Status: in progress; verified direct five-run Oracle baseline complete; payload profiling in implementation.
+Status: in progress; verified direct five-run Oracle baseline and payload profiling complete; ARM crypto candidate under evaluation.
 Prepared: 2026-09-29 against repository commit `4ba7b01`.
 
 ## Objectives and release boundary
@@ -529,4 +529,14 @@ or platform testing are named limitations, never reported as passed checks.
   `04f2756a5b2e554ee0f3ca0ae615014ec41c20ee207d1a82747c2f408f1ef01a`:
   WSL `56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e`,
   Oracle `f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e`.
-  Stage measurements and instrumentation-overhead checks are pending.
+  Stage measurements and instrumentation-overhead checks are complete; see below.
+- 2026-10-02: [WAN stage diagnostics](../benchmarks/results/oracle-20261002-payload-profile/README.md)
+  passed all 16 endpoint records. Oracle encryption/decryption each took about
+  10 seconds per 512 MiB; x86 sender copy/encryption took 0.41 seconds while
+  send waits dominated. A [local profiling-overhead check](../benchmarks/results/local-20261002-profile-overhead/README.md)
+  passed 40 measured transfers in two reversed-order series: median payload
+  differences ranged from -2.56% to +1.48%, with no repeatable regression.
+  Extended the existing local harness with strict route evidence, optional
+  profiles, an Iroh filter, and safe removal of test-owned outputs between runs.
+  Evaluating pinned AES/POLYVAL runtime ARM dispatch cfgs on Linux/macOS AArch64;
+  no candidate optimization has passed its numerical gate yet.

@@ -69,6 +69,7 @@ where
         Authentication::Pake(password),
         config,
         on_progress,
+        payload_profile_enabled_from_env(),
     )
     .await
 }
@@ -102,6 +103,7 @@ where
         Authentication::Direct(token),
         config,
         on_progress,
+        payload_profile_enabled_from_env(),
     )
     .await
 }
@@ -119,6 +121,7 @@ async fn send_file_with_auth<T, R, F>(
     authentication: Authentication<'_>,
     config: TransferConfig,
     on_progress: F,
+    profile_enabled: bool,
 ) -> std::result::Result<TransferMetrics, TransferError>
 where
     T: TransferTransport,
@@ -126,6 +129,7 @@ where
     F: FnMut(u64, u64) + Send,
 {
     let mut context = TransferContext::new();
+    context.payload_profile_enabled = profile_enabled;
     let result = send_file_inner(
         transport,
         source,
@@ -145,6 +149,33 @@ where
             Err(error)
         }
     }
+}
+
+#[cfg(test)]
+pub(crate) async fn send_file_with_profile<T, R, F>(
+    transport: &mut T,
+    source: R,
+    file_len: u64,
+    password: &[u8],
+    config: TransferConfig,
+    on_progress: F,
+    profile_enabled: bool,
+) -> std::result::Result<TransferMetrics, TransferError>
+where
+    T: TransferTransport,
+    R: AsyncRead + AsyncSeek + Unpin + Send,
+    F: FnMut(u64, u64) + Send,
+{
+    send_file_with_auth(
+        transport,
+        source,
+        file_len,
+        Authentication::Pake(password),
+        config,
+        on_progress,
+        profile_enabled,
+    )
+    .await
 }
 
 async fn send_file_inner<T, R, F>(
@@ -233,6 +264,11 @@ where
     on_progress(file_len, resume_offset);
     transport.begin_payload_observation();
     let payload_started = Instant::now();
+    let mut payload_profile =
+        crate::PayloadProfile::for_enabled_transfer(context.payload_profile_enabled);
+    let allocation_started = payload_profile
+        .as_ref()
+        .map(crate::PayloadProfile::start_stage);
     let mut buffer = Vec::new();
     buffer
         .try_reserve_exact(config.chunk_size)
@@ -240,6 +276,9 @@ where
             context.error(TransferErrorKind::Config("chunk buffer allocation failed"))
         })?;
     buffer.resize(config.chunk_size, 0);
+    if let (Some(profile), Some(started)) = (&mut payload_profile, allocation_started) {
+        profile.record_stage(PayloadStage::AllocationCopyEncrypt, started);
+    }
     let remaining_len = sender.remaining_len();
     while sender.bytes_sent() < remaining_len {
         let remaining = remaining_len.saturating_sub(sender.bytes_sent());
@@ -252,10 +291,16 @@ where
                 "source read buffer range is invalid",
             ))
         })?;
+        let read_started = payload_profile
+            .as_ref()
+            .map(crate::PayloadProfile::start_stage);
         let bytes_read = timeout(CHUNK_TIMEOUT, source.read(read_buffer))
             .await
             .map_err(|_source| context.error(TransferErrorKind::Timeout))?
             .map_err(|error| context.error(TransferErrorKind::SourceIo(error)))?;
+        if let (Some(profile), Some(started)) = (&mut payload_profile, read_started) {
+            profile.record_stage(PayloadStage::SourceRead, started);
+        }
         if bytes_read == 0 {
             return Err(context.error(TransferErrorKind::SourceIo(io::Error::new(
                 io::ErrorKind::UnexpectedEof,
@@ -267,6 +312,9 @@ where
             ))));
         }
 
+        let crypto_started = payload_profile
+            .as_ref()
+            .map(crate::PayloadProfile::start_stage);
         let capacity = bytes_read.checked_add(GCM_TAG_LEN).ok_or_else(|| {
             context.error(TransferErrorKind::Internal(
                 "plaintext chunk capacity overflow",
@@ -291,8 +339,19 @@ where
         .map_err(|_source| {
             context.error(TransferErrorKind::Internal("sender ciphertext missing"))
         })?;
+        if let (Some(profile), Some(started)) = (&mut payload_profile, crypto_started) {
+            profile.record_stage(PayloadStage::AllocationCopyEncrypt, started);
+        }
         context.bytes_transferred = sender.bytes_sent();
+        let send_started = payload_profile
+            .as_ref()
+            .map(crate::PayloadProfile::start_stage);
         send_with_timeout(transport, ciphertext, CHUNK_TIMEOUT, *context).await?;
+        if let (Some(profile), Some(started)) = (&mut payload_profile, send_started) {
+            profile.record_stage(PayloadStage::SendWait, started);
+            profile.chunk_count = profile.chunk_count.saturating_add(1);
+            profile.payload_bytes = sender.bytes_sent();
+        }
         let absolute_position = resume_offset
             .checked_add(sender.bytes_sent())
             .ok_or_else(|| context.error(TransferErrorKind::Internal("progress overflow")))?;
@@ -301,10 +360,16 @@ where
     let extra_buffer = buffer.get_mut(..1).ok_or_else(|| {
         context.error(TransferErrorKind::Internal("source probe buffer is empty"))
     })?;
+    let eof_probe_started = payload_profile
+        .as_ref()
+        .map(crate::PayloadProfile::start_stage);
     let extra = timeout(CHUNK_TIMEOUT, source.read(extra_buffer))
         .await
         .map_err(|_source| context.error(TransferErrorKind::Timeout))?
         .map_err(|error| context.error(TransferErrorKind::SourceIo(error)))?;
+    if let (Some(profile), Some(started)) = (&mut payload_profile, eof_probe_started) {
+        profile.record_stage(PayloadStage::SourceRead, started);
+    }
     if extra > 0 {
         return Err(context.error(TransferErrorKind::SourceIo(io::Error::new(
             io::ErrorKind::InvalidData,
@@ -363,5 +428,6 @@ where
         shutdown_seconds: shutdown_started.elapsed().as_secs_f64(),
         path_end,
         cleanup_issues,
+        payload_profile,
     })
 }

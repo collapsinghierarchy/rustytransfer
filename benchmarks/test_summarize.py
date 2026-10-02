@@ -42,6 +42,64 @@ def record(**updates):
 
 
 class SummarizeTests(unittest.TestCase):
+    def test_profile_mode_separates_diagnostic_rows_and_legacy_defaults_to_standard(self):
+        rows = [
+            record(),
+            record(
+                profile_mode="payload-profile",
+                payload_profile={
+                    "source_read_seconds": 0.0,
+                    "allocation_copy_encrypt_seconds": 0.0,
+                    "send_wait_seconds": 0.0,
+                    "receive_wait_seconds": 0.0,
+                    "decrypt_seconds": 0.0,
+                    "destination_write_seconds": 0.0,
+                    "chunk_count": 1,
+                    "payload_bytes": 1024 * 1024,
+                },
+                bytes_transferred=1024 * 1024,
+            ),
+            record(profile_mode="standard"),
+        ]
+        rows[2].pop("profile_mode")
+        summary = summarize.summarize_records(rows)
+        self.assertEqual(len(summary["groups"]), 2)
+        by_profile = {group["profile_mode"]: group for group in summary["groups"]}
+        self.assertEqual(by_profile["standard"]["successful_runs"], 2)
+        self.assertEqual(by_profile["payload-profile"]["successful_runs"], 1)
+
+    def test_invalid_payload_profile_is_rejected_from_success_summary(self):
+        row = record(
+            profile_mode="payload-profile",
+            payload_profile={
+                "source_read_seconds": 0.1,
+                "allocation_copy_encrypt_seconds": 0.2,
+                "send_wait_seconds": 0.3,
+                "receive_wait_seconds": 0.0,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "chunk_count": 1,
+                "payload_bytes": 1024,
+            },
+            bytes_transferred=1023,
+        )
+        summary = summarize.summarize_records([row])
+        self.assertEqual(summary["groups"], [])
+        self.assertIn("payload profile byte count", summary["rejected_rows"][0]["reason"])
+
+    def test_source_staging_separates_pre_staged_rows_and_legacy_defaults(self):
+        rows = [
+            record(),
+            record(source_staging="pre-staged"),
+            record(source_staging="per-trial"),
+        ]
+        rows[2].pop("source_staging")
+        summary = summarize.summarize_records(rows)
+        self.assertEqual(len(summary["groups"]), 2)
+        by_staging = {group["source_staging"]: group for group in summary["groups"]}
+        self.assertEqual(by_staging["per-trial"]["successful_runs"], 2)
+        self.assertEqual(by_staging["pre-staged"]["successful_runs"], 1)
+
     def test_groups_keep_build_direction_pairing_host_and_storage_separate(self):
         rows = [
             record(),

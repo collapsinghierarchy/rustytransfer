@@ -494,6 +494,7 @@ pub(super) async fn send_cmd(
             handshake_seconds: setup_handshake_seconds + transfer_metrics.handshake_seconds,
             payload_seconds: transfer_metrics.payload_seconds,
             shutdown_seconds: transfer_metrics.shutdown_seconds,
+            payload_profile: transfer_metrics.payload_profile.clone(),
         },
         MetricOutcome {
             run_id: run.run_id.clone(),
@@ -704,6 +705,7 @@ pub(super) async fn recv_cmd(
             handshake_seconds: setup_handshake_seconds + transfer_metrics.handshake_seconds,
             payload_seconds: transfer_metrics.payload_seconds,
             shutdown_seconds: transfer_metrics.shutdown_seconds,
+            payload_profile: transfer_metrics.payload_profile.clone(),
         },
         MetricOutcome {
             run_id: run.run_id.clone(),

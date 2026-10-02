@@ -17,6 +17,16 @@ import run_oracle_transfer as runner
 
 class RustRowsTests(unittest.TestCase):
     def test_rows_keep_endpoint_metrics_and_add_pairing_provenance(self):
+        payload_profile = {
+            "source_read_seconds": 0.1,
+            "allocation_copy_encrypt_seconds": 0.2,
+            "send_wait_seconds": 0.3,
+            "receive_wait_seconds": 0.0,
+            "decrypt_seconds": 0.0,
+            "destination_write_seconds": 0.0,
+            "chunk_count": 3,
+            "payload_bytes": 12345,
+        }
         sender_metric = {
             "role": "sender",
             "size_bytes": 12345,
@@ -29,6 +39,7 @@ class RustRowsTests(unittest.TestCase):
             "wall_seconds": 1.7,
             "effective_mib_per_second": 0.0069,
             "path": "direct",
+            "payload_profile": payload_profile,
         }
         receiver_metric = {**sender_metric, "role": "receiver"}
         with patch.object(runner, "git_output", return_value="commit"):
@@ -51,6 +62,7 @@ class RustRowsTests(unittest.TestCase):
                     "host_pair": "WSL/ubuntu@oracle",
                     "storage_class": "wsl-native-oracle-home",
                     "pairing_mode": "invite",
+                    "profile_mode": "payload-profile",
                 },
             )
 
@@ -70,6 +82,8 @@ class RustRowsTests(unittest.TestCase):
         self.assertEqual(rows[0]["receiver_cpu_seconds"], 2.25)
         self.assertIn("WSL to Oracle", rows[0]["measurement_scope"])
         self.assertFalse(rows[0]["direct_route_verified_both"])
+        self.assertEqual(rows[0]["profile_mode"], "payload-profile")
+        self.assertEqual(rows[0]["payload_profile"], payload_profile)
 
     def test_direct_only_sweep_stops_after_retaining_unverified_endpoint_rows(self):
         evidence = {
@@ -234,7 +248,18 @@ class OracleRunnerArgumentTests(unittest.TestCase):
                 )
             self.assertEqual(len(output.read_text(encoding="utf-8").splitlines()), 2)
 
-    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake"):
+    def test_payload_profile_missing_endpoint_is_retained_then_rejected(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir) / "profile.jsonl"
+            rows = [
+                {"profile_mode": "payload-profile", "payload_profile": {}},
+                {"profile_mode": "payload-profile"},
+            ]
+            with self.assertRaisesRegex(RuntimeError, "invalid or missing payload_profile"):
+                runner.append_and_validate_rust_rows(output, rows, "relay", "relay")
+            self.assertEqual(len(output.read_text(encoding="utf-8").splitlines()), 2)
+
+    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake", profile=False, remote_inputs=None):
         root = Path(temp_dir)
         paths = [root / name for name in ("key", "rusty", "64.bin", "512.bin")]
         for path in paths:
@@ -257,6 +282,10 @@ class OracleRunnerArgumentTests(unittest.TestCase):
         ]
         if rusty_only:
             argv.append("--rusty-only")
+        if profile:
+            argv.append("--payload-profile")
+        if remote_inputs is not None:
+            argv.extend(["--remote-input-64", remote_inputs[0], "--remote-input-512", remote_inputs[1]])
         parser = runner.build_parser()
         return parser, parser.parse_args(argv)
 
@@ -266,6 +295,34 @@ class OracleRunnerArgumentTests(unittest.TestCase):
             runner.validate_local_args(parser, args)
             self.assertIsNone(args.croc)
             self.assertIsNone(args.remote_croc)
+
+    def test_profile_flag_is_opt_in_and_clears_inherited_environment(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            env = {"RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE": "1"}
+            runner.configure_profile_env(env, SimpleNamespace())
+            self.assertNotIn("RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE", env)
+
+            parser, args = self.parse(temp_dir, rusty_only=True, profile=True)
+            self.assertTrue(args.payload_profile)
+            env = {}
+            runner.configure_profile_env(env, args)
+            self.assertEqual(env["RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE"], "1")
+
+            command = runner.remote_process_command(
+                SimpleNamespace(
+                    rusty_path="direct",
+                    rusty_auth="invite",
+                    payload_profile=True,
+                ),
+                "/tmp/run",
+                ["/opt/rustytransfer", "send"],
+                "/tmp/run/metrics.jsonl",
+                "/tmp/run/time.json",
+                "/tmp/run/sender.log",
+                "/tmp/run/sender.pid",
+            )
+            self.assertIn("env -u RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE", command)
+            self.assertIn("RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE=1", command)
 
     def test_comparison_requires_both_croc_paths(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -287,6 +344,85 @@ class OracleRunnerArgumentTests(unittest.TestCase):
                 runner.validate_local_args(parser, args)
         self.assertEqual(raised.exception.code, 2)
         self.assertIn("Croc reverse comparison is unavailable", error.getvalue())
+
+    def test_pre_staged_inputs_require_a_pair_and_reverse_direction(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(
+                temp_dir,
+                rusty_only=True,
+                direction="oracle-to-wsl",
+                remote_inputs=("/oracle/inputs/64.bin", "/oracle/inputs/512.bin"),
+            )
+            runner.validate_local_args(parser, args)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(
+                temp_dir,
+                rusty_only=True,
+                remote_inputs=("/oracle/inputs/64.bin", "/oracle/inputs/512.bin"),
+            )
+            with self.assertRaises(SystemExit):
+                runner.validate_local_args(parser, args)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(temp_dir, rusty_only=True, direction="oracle-to-wsl")
+            args.remote_input_64 = "/oracle/inputs/64.bin"
+            with self.assertRaises(SystemExit):
+                runner.validate_local_args(parser, args)
+
+    def test_pre_staged_source_is_verified_without_scp_or_cleanup(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            _parser, args = self.parse(
+                temp_dir,
+                rusty_only=True,
+                direction="oracle-to-wsl",
+                remote_inputs=("/oracle/inputs/64.bin", "/oracle/inputs/512.bin"),
+            )
+            with patch.object(runner, "verify_remote_file", return_value="a" * 64) as verify:
+                with patch.object(runner, "copy_to_remote") as copy:
+                    selected, temporary = runner.prepare_remote_source(
+                        args,
+                        Path("input-64.bin"),
+                        "/tmp/bench/trial/source.bin",
+                        64,
+                        64 * 1024 * 1024,
+                        "a" * 64,
+                    )
+            self.assertEqual(selected, "/oracle/inputs/64.bin")
+            self.assertFalse(temporary)
+            verify.assert_called_once_with(
+                args, "/oracle/inputs/64.bin", 64 * 1024 * 1024, "a" * 64
+            )
+            copy.assert_not_called()
+            files = runner.reverse_trial_cleanup_files(
+                selected,
+                temporary,
+                "/tmp/bench/trial/sender.jsonl",
+                "/tmp/bench/trial/sender.time.json",
+                "/tmp/bench/trial/sender.log",
+                "/tmp/bench/trial/sender.pid",
+            )
+            self.assertNotIn(selected, files)
+
+    def test_pre_staged_source_must_match_expected_size_and_hash(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            _parser, args = self.parse(
+                temp_dir,
+                rusty_only=True,
+                direction="oracle-to-wsl",
+                remote_inputs=("/oracle/inputs/64.bin", "/oracle/inputs/512.bin"),
+            )
+            with patch.object(runner, "remote", return_value=f"12\n{'a' * 64}  file"):
+                self.assertEqual(
+                    runner.verify_remote_file(args, "/oracle/inputs/64.bin", 12, "a" * 64),
+                    "a" * 64,
+                )
+            with patch.object(runner, "remote", return_value=f"11\n{'a' * 64}  file"):
+                with self.assertRaisesRegex(RuntimeError, "remote file mismatch"):
+                    runner.verify_remote_file(args, "/oracle/inputs/64.bin", 12, "a" * 64)
+            with patch.object(runner, "remote", return_value=f"12\n{'b' * 64}  file"):
+                with self.assertRaisesRegex(RuntimeError, "remote file mismatch"):
+                    runner.verify_remote_file(args, "/oracle/inputs/64.bin", 12, "a" * 64)
 
     def test_reverse_direction_dispatches_to_remote_sender_runner(self):
         with tempfile.TemporaryDirectory() as temp_dir:

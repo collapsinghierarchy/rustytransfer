@@ -12,6 +12,14 @@ from pathlib import Path
 
 
 SHA256 = re.compile(r"^[a-fA-F0-9]{64}$")
+PROFILE_TIME_FIELDS = (
+    "source_read_seconds",
+    "allocation_copy_encrypt_seconds",
+    "send_wait_seconds",
+    "receive_wait_seconds",
+    "decrypt_seconds",
+    "destination_write_seconds",
+)
 GROUP_FIELDS = (
     "transport",
     "build_id",
@@ -21,6 +29,8 @@ GROUP_FIELDS = (
     "host_pair",
     "storage_class",
     "pairing_mode",
+    "profile_mode",
+    "source_staging",
     "direct_route_verified_both",
     "legacy_input",
     "path",
@@ -55,8 +65,54 @@ def group_key(record):
             value = record.get("_legacy_input", "unknown") if record.get("build_id") is None else "unknown"
         else:
             value = record.get(field)
+            if field == "profile_mode" and value is None:
+                value = "standard"
+            if field == "source_staging" and value is None:
+                value = "per-trial"
         key.append("unknown" if value is None else value)
     return tuple(key)
+
+
+def payload_profile_rejection_reason(profile, bytes_transferred, payload_seconds):
+    if not isinstance(profile, dict):
+        return "payload profile is missing or invalid"
+    if (
+        not isinstance(bytes_transferred, int)
+        or isinstance(bytes_transferred, bool)
+        or bytes_transferred < 0
+    ):
+        return "payload profile endpoint byte count is missing or invalid"
+    if (
+        not isinstance(payload_seconds, (int, float))
+        or isinstance(payload_seconds, bool)
+        or not math.isfinite(payload_seconds)
+        or payload_seconds < 0
+    ):
+        return "payload profile payload duration is missing or invalid"
+    for field in PROFILE_TIME_FIELDS:
+        value = profile.get(field)
+        if (
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(value)
+            or value < 0
+        ):
+            return "payload profile is missing or invalid"
+    for field in ("chunk_count", "payload_bytes"):
+        value = profile.get(field)
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            return "payload profile is missing or invalid"
+    if profile["payload_bytes"] != bytes_transferred:
+        return "payload profile byte count does not match endpoint bytes"
+    if profile["payload_bytes"] > 0 and profile["chunk_count"] == 0:
+        return "payload profile chunk count is missing or invalid"
+    try:
+        stage_sum = math.fsum(profile[field] for field in PROFILE_TIME_FIELDS)
+    except OverflowError:
+        return "payload profile stage duration is invalid"
+    if stage_sum > payload_seconds + 1e-6:
+        return "payload profile stage durations exceed payload duration"
+    return None
 
 
 def load_records(input_paths):
@@ -78,6 +134,19 @@ def load_records(input_paths):
 def rejection_reason(record):
     if record.get("success") is not True:
         return "transfer failed"
+    profile_mode = record.get("profile_mode", "standard")
+    if profile_mode not in (None, "standard", "payload-profile"):
+        return "profile mode is invalid"
+    if profile_mode == "payload-profile":
+        profile_error = payload_profile_rejection_reason(
+            record.get("payload_profile"),
+            record.get("bytes_transferred"),
+            record.get("payload_seconds"),
+        )
+        if profile_error is not None:
+            return profile_error
+    if record.get("source_staging", "per-trial") not in ("per-trial", "pre-staged"):
+        return "source staging mode is invalid"
     if record.get("path") not in ("direct", "relay"):
         return "path is mixed, unknown, or auto"
     if record.get("transport") == "iroh" and record.get("path") == "direct":
@@ -159,6 +228,12 @@ def summarize_records(records):
         ):
             values = [record[field] for record in group_records if record.get(field) is not None]
             resource_summaries[field] = describe(values) if values else None
+        profile_summary = None
+        if dimensions["profile_mode"] == "payload-profile":
+            profile_summary = {
+                field: describe([record["payload_profile"][field] for record in group_records])
+                for field in (*PROFILE_TIME_FIELDS, "chunk_count", "payload_bytes")
+            }
         rows.append(
             {
                 **dimensions,
@@ -168,6 +243,7 @@ def summarize_records(records):
                 "handshake_seconds": phase_summaries["handshake_seconds"],
                 "payload_seconds": phase_summaries["payload_seconds"],
                 "shutdown_seconds": phase_summaries["shutdown_seconds"],
+                "payload_profile": profile_summary,
                 "sender_cpu_seconds": resource_summaries["sender_cpu_seconds"],
                 "receiver_cpu_seconds": resource_summaries["receiver_cpu_seconds"],
                 "sender_max_rss_kib": resource_summaries["sender_max_rss_kib"],

@@ -12,8 +12,12 @@ mod metrics;
 mod output;
 mod session;
 pub use session::{receive_file, receive_file_direct, send_file, send_file_direct};
+#[cfg(test)]
+use session::{receive_file_with_profile, send_file_with_profile};
 mod transport_api;
-pub use metrics::TransferMetrics;
+pub(crate) use metrics::PayloadStage;
+pub(crate) use metrics::payload_profile_enabled_from_env;
+pub use metrics::{PayloadProfile, TransferMetrics};
 pub use transport_api::{PathObservation, TransferTransport};
 
 use crate::error::{CompletionState, Phase, TransferError, TransferErrorKind};
@@ -35,6 +39,7 @@ struct TransferContext {
     phase: Phase,
     bytes_transferred: u64,
     completion: CompletionState,
+    payload_profile_enabled: bool,
 }
 
 impl TransferContext {
@@ -43,6 +48,7 @@ impl TransferContext {
             phase: Phase::Input,
             bytes_transferred: 0,
             completion: CompletionState::NotStarted,
+            payload_profile_enabled: false,
         }
     }
 
@@ -315,6 +321,79 @@ mod tests {
             .with_context(|| format!("failed to read test output {}", output.display()))?;
         tokio::fs::remove_file(&output).await?;
         Ok(bytes)
+    }
+
+    async fn transfer_metrics_with_profile(
+        data: Vec<u8>,
+        chunk_size: usize,
+        profile_enabled: bool,
+    ) -> Result<(TransferMetrics, TransferMetrics)> {
+        let (sender, receiver) =
+            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
+        let expected_len = u64::try_from(data.len()).context("test input length exceeds u64")?;
+        let output = output_path();
+        let sender_future = async move {
+            let mut sender = sender;
+            send_file_with_profile(
+                &mut sender,
+                Cursor::new(data),
+                expected_len,
+                b"ABCDE",
+                TransferConfig { chunk_size },
+                |_, _| {},
+                profile_enabled,
+            )
+            .await
+        };
+        let output_for_receiver = output.clone();
+        let receiver_future = async move {
+            let mut receiver = receiver;
+            receive_file_with_profile(
+                &mut receiver,
+                b"ABCDE",
+                &output_for_receiver,
+                |_, _| {},
+                profile_enabled,
+            )
+            .await
+        };
+        let (sender_metrics, receiver_metrics) = timeout(TEST_TIMEOUT, async {
+            tokio::join!(sender_future, receiver_future)
+        })
+        .await
+        .context("in-memory profiled transfer timed out")?;
+        tokio::fs::remove_file(&output).await?;
+        Ok((sender_metrics?, receiver_metrics?))
+    }
+
+    #[tokio::test]
+    async fn payload_profile_is_opt_in_and_counts_payload_chunks() -> Result<()> {
+        let (sender_metrics, receiver_metrics) =
+            transfer_metrics_with_profile(vec![7; 9], 4, false).await?;
+        assert!(sender_metrics.payload_profile.is_none());
+        assert!(receiver_metrics.payload_profile.is_none());
+
+        for length in [0, 8, 9] {
+            let (sender_metrics, receiver_metrics) =
+                transfer_metrics_with_profile(vec![7; length], 4, true).await?;
+            let expected_chunks = u64::try_from(length.div_ceil(4))?;
+            for (metrics, profile) in [(sender_metrics, "sender"), (receiver_metrics, "receiver")] {
+                let profile_data = metrics
+                    .payload_profile
+                    .as_ref()
+                    .with_context(|| format!("{profile} profile was not enabled"))?;
+                assert_eq!(profile_data.chunk_count, expected_chunks);
+                assert_eq!(profile_data.payload_bytes, u64::try_from(length)?);
+                let stage_sum = profile_data.source_read_seconds
+                    + profile_data.allocation_copy_encrypt_seconds
+                    + profile_data.send_wait_seconds
+                    + profile_data.receive_wait_seconds
+                    + profile_data.decrypt_seconds
+                    + profile_data.destination_write_seconds;
+                assert!(stage_sum <= metrics.payload_seconds + 1e-6);
+            }
+        }
+        Ok(())
     }
 
     async fn transfer_bytes_direct(data: Vec<u8>, chunk_size: usize) -> Result<Vec<u8>> {

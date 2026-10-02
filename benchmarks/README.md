@@ -59,6 +59,17 @@ unless both endpoints verify direct traffic. Lagged, missing, relay, or mixed
 evidence is not accepted as direct. Historical rows with only start/end path
 samples remain readable, but are excluded from strict direct summaries.
 
+Use `--payload-profile` to collect opt-in sender read/allocation-copy-encrypt/send
+wait and receiver receive/decrypt/write stage timings. These are elapsed spans,
+including async wait and backpressure, rather than CPU time; sender read includes
+the EOF probe and receiver write includes payload flush. The profile is absent
+by default, uses additive JSON fields, and forms a separate `profile_mode` summary
+group. For repeated Oracle-to-WSL runs, optional `--remote-input-64` and
+`--remote-input-512` paths select already staged Oracle fixtures. Supply both
+with `--direction oracle-to-wsl`; the runner verifies each fixture's full size
+and SHA-256 before every trial and leaves those inputs untouched. `source_staging`
+keeps pre-staged and per-trial inputs in separate summary groups.
+
 Summarize medians, extrema, and MAD while keeping each JSONL input intact:
 
 ```sh

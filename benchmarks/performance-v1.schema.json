@@ -42,6 +42,31 @@
     "host_pair": { "type": "string", "minLength": 1 },
     "storage_class": { "type": "string", "minLength": 1 },
     "pairing_mode": { "enum": ["pake", "invite", "croc-secret"] },
+    "profile_mode": { "enum": ["standard", "payload-profile"] },
+    "source_staging": { "enum": ["per-trial", "pre-staged"] },
+    "payload_profile": {
+      "type": "object",
+      "required": [
+        "source_read_seconds",
+        "allocation_copy_encrypt_seconds",
+        "send_wait_seconds",
+        "receive_wait_seconds",
+        "decrypt_seconds",
+        "destination_write_seconds",
+        "chunk_count",
+        "payload_bytes"
+      ],
+      "properties": {
+        "source_read_seconds": { "type": "number", "minimum": 0 },
+        "allocation_copy_encrypt_seconds": { "type": "number", "minimum": 0 },
+        "send_wait_seconds": { "type": "number", "minimum": 0 },
+        "receive_wait_seconds": { "type": "number", "minimum": 0 },
+        "decrypt_seconds": { "type": "number", "minimum": 0 },
+        "destination_write_seconds": { "type": "number", "minimum": 0 },
+        "chunk_count": { "type": "integer", "minimum": 0 },
+        "payload_bytes": { "type": "integer", "minimum": 0 }
+      }
+    },
     "path": { "enum": ["direct", "relay", "mixed", "unknown", "auto"] },
     "path_start": { "enum": ["direct", "relay", "unknown"] },
     "path_end": { "enum": ["direct", "relay", "unknown"] },
@@ -86,6 +111,7 @@
         { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" }
       ]
     },
+    "bytes_transferred": { "type": "integer", "minimum": 0 },
     "success": { "type": "boolean" }
   }
 }

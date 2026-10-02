@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import os
+import posixpath
 import re
 import shlex
 import subprocess
@@ -14,6 +15,7 @@ import uuid
 from pathlib import Path
 
 from run_croc_baseline import CapturedOutput, git_output, parse_time, selected_auto_path, time_command
+from summarize import payload_profile_rejection_reason
 
 
 TIME_FORMAT = '{"user_cpu_seconds":%U,"system_cpu_seconds":%S,"max_rss_kib":%M}'
@@ -41,10 +43,13 @@ METRIC_FIELDS = (
     "host_pair",
     "storage_class",
     "pairing_mode",
+    "profile_mode",
+    "source_staging",
     "path",
     "path_start",
     "path_end",
     "path_evidence",
+    "payload_profile",
     "direct_route_verified_both",
     "local_candidate_type",
     "remote_candidate_type",
@@ -63,6 +68,7 @@ METRIC_FIELDS = (
     "source_sha256",
     "received_sha256",
     "success",
+    "bytes_transferred",
     "run_index",
     "warmup",
     "measurement_scope",
@@ -128,6 +134,8 @@ def rust_provenance(args):
         "direction": args.direction,
         "host_pair": f"WSL/{args.user}@{args.host}",
         "storage_class": args.storage_class,
+        "profile_mode": "payload-profile" if payload_profile_enabled(args) else "standard",
+        "source_staging": "pre-staged" if remote_staged_input(args, args.direction == "oracle-to-wsl", 64) else "per-trial",
     }
 
 
@@ -140,11 +148,23 @@ def croc_provenance(args):
         "host_pair": f"WSL/{args.user}@{args.host}",
         "storage_class": args.storage_class,
         "pairing_mode": "croc-secret",
+        "profile_mode": "standard",
+        "source_staging": "per-trial",
     }
 
 
 def remote_quote(value):
     return shlex.quote(str(value))
+
+
+def payload_profile_enabled(args):
+    return bool(getattr(args, "payload_profile", False))
+
+
+def configure_profile_env(environment, args):
+    environment.pop("RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE", None)
+    if payload_profile_enabled(args):
+        environment["RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE"] = "1"
 
 
 def append_rows(path, rows):
@@ -302,6 +322,29 @@ def copy_to_remote(args, source, destination):
     subprocess.run(command, check=True, capture_output=True, text=True)
 
 
+def remote_staged_input(args, reverse, size_mib):
+    if not reverse:
+        return None
+    return getattr(args, f"remote_input_{size_mib}", None)
+
+
+def prepare_remote_source(args, source, run_source, size_mib, expected_size, source_hash):
+    staged_source = remote_staged_input(args, True, size_mib)
+    if staged_source:
+        verify_remote_file(args, staged_source, expected_size, source_hash)
+        return staged_source, False
+    copy_to_remote(args, source, run_source)
+    verify_remote_file(args, run_source, expected_size, source_hash)
+    return run_source, True
+
+
+def reverse_trial_cleanup_files(remote_source, source_is_temporary, metrics_path, time_path, log_path, pid_path):
+    files = [metrics_path, time_path, log_path, pid_path]
+    if source_is_temporary:
+        files.insert(0, remote_source)
+    return tuple(files)
+
+
 def terminate_remote_process_group(args, pid_path, run_dir):
     command = (
         f"for attempt in 1 2 3 4 5 6 7 8 9 10; do "
@@ -334,8 +377,14 @@ def remote_process_command(
         else "RUSTYTRANSFER_BENCH_RELAY_ONLY"
     )
     command = " ".join(remote_quote(item) for item in endpoint_command)
+    profile_env = (
+        "RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE=1 "
+        if payload_profile_enabled(args)
+        else ""
+    )
     env_command = (
-        f"env {path_env}=1 RUSTYTRANSFER_BENCH_PATH_EVIDENCE=1 "
+        f"env -u RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE {profile_env}"
+        f"{path_env}=1 RUSTYTRANSFER_BENCH_PATH_EVIDENCE=1 "
         f"RUSTYTRANSFER_METRICS_JSONL={remote_quote(metrics_path)} "
         f"/usr/bin/time -f {remote_quote(TIME_FORMAT)} "
         f"-o {remote_quote(time_path)} {command}"
@@ -436,6 +485,21 @@ def ensure_direct_route_evidence(rows, requested_path):
 
 def append_and_validate_rust_rows(raw_path, rows, requested_path, actual_path):
     append_rows(raw_path, rows)
+    if any(
+        row.get("profile_mode") == "payload-profile"
+        and payload_profile_rejection_reason(
+            row.get("payload_profile"),
+            row.get("bytes_transferred"),
+            row.get("payload_seconds"),
+        )
+        is not None
+        for row in rows
+    ):
+        raise RuntimeError(
+            "payload profile was requested but an endpoint reported invalid or missing "
+            "payload_profile; "
+            "diagnostic rows were retained"
+        )
     ensure_direct_route_evidence(rows, requested_path)
     if actual_path != requested_path:
         raise RuntimeError(
@@ -540,6 +604,7 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
     sender_log = logs / "sender.log"
     receiver_log = logs / "receiver.log"
     sender_env = os.environ.copy()
+    configure_profile_env(sender_env, args)
     sender_env["RUSTYTRANSFER_METRICS_JSONL"] = str(sender_metrics_path)
     path_env = (
         "RUSTYTRANSFER_BENCH_WAIT_DIRECT"
@@ -678,13 +743,14 @@ def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_ro
     logs = prepare_local_logs(log_root, run_name)
     run_dir = f"{args.remote_root}/{run_name}"
     remote(args, f"mkdir -- {remote_quote(run_dir)}")
-    remote_source = f"{run_dir}/source.bin"
+    run_source = f"{run_dir}/source.bin"
     remote_metrics_path = f"{run_dir}/sender.jsonl"
     remote_time_path = f"{run_dir}/sender.time.json"
     remote_log = f"{run_dir}/sender.log"
     remote_pid = f"{run_dir}/sender.pid"
-    copy_to_remote(args, source, remote_source)
-    verify_remote_file(args, remote_source, expected_size, source_hash)
+    remote_source, source_is_temporary = prepare_remote_source(
+        args, source, run_source, size_mib, expected_size, source_hash
+    )
 
     receiver_output_path = logs / "received.bin"
     receiver_metrics_path = logs / "receiver.jsonl"
@@ -725,6 +791,7 @@ def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_ro
         )
         auth_flag = "--invite" if args.rusty_auth == "invite" else "--code"
         receiver_env = os.environ.copy()
+        configure_profile_env(receiver_env, args)
         receiver_env[path_env] = "1"
         receiver_env["RUSTYTRANSFER_BENCH_PATH_EVIDENCE"] = "1"
         receiver_env["RUSTYTRANSFER_METRICS_JSONL"] = str(receiver_metrics_path)
@@ -811,7 +878,14 @@ def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_ro
     cleanup_remote(
         args,
         run_dir,
-        (remote_source, remote_metrics_path, remote_time_path, remote_log, remote_pid),
+        reverse_trial_cleanup_files(
+            remote_source,
+            source_is_temporary,
+            remote_metrics_path,
+            remote_time_path,
+            remote_log,
+            remote_pid,
+        ),
     )
     receiver_output_path.unlink()
     return rows, path
@@ -1059,6 +1133,8 @@ def build_parser():
     parser.add_argument("--input-512", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--remote-root", required=True)
+    parser.add_argument("--remote-input-64", help="pre-staged Oracle source for reverse 64 MiB trials")
+    parser.add_argument("--remote-input-512", help="pre-staged Oracle source for reverse 512 MiB trials")
     parser.add_argument("--build-id", required=True, help="candidate/build identifier for Rustytransfer")
     parser.add_argument("--storage-class", required=True, help="input and destination storage description")
     parser.add_argument("--runs", type=int, default=5)
@@ -1069,6 +1145,11 @@ def build_parser():
     )
     parser.add_argument("--rusty-path", choices=("direct", "relay"), default="direct")
     parser.add_argument("--rusty-auth", choices=("pake", "invite"), default="pake")
+    parser.add_argument(
+        "--payload-profile",
+        action="store_true",
+        help="enable opt-in payload stage wall-time diagnostics on both endpoints",
+    )
     parser.add_argument(
         "--rusty-only",
         action="store_true",
@@ -1087,6 +1168,21 @@ def validate_local_args(parser, args):
         parser.error("--storage-class cannot be empty")
     if args.direction == "oracle-to-wsl" and not args.rusty_only:
         parser.error("Oracle-to-WSL currently requires --rusty-only; Croc reverse comparison is unavailable")
+    has_remote_input_64 = bool(args.remote_input_64)
+    has_remote_input_512 = bool(args.remote_input_512)
+    if has_remote_input_64 != has_remote_input_512:
+        parser.error("--remote-input-64 and --remote-input-512 must be provided together")
+    if (has_remote_input_64 or has_remote_input_512) and args.direction != "oracle-to-wsl":
+        parser.error("pre-staged remote inputs are only valid for --direction oracle-to-wsl")
+    if has_remote_input_64:
+        remote_root = posixpath.normpath(args.remote_root)
+        if not remote_root.startswith("/"):
+            parser.error("--remote-root must be absolute when pre-staged inputs are used")
+        for remote_path in (args.remote_input_64, args.remote_input_512):
+            if not remote_path.startswith("/"):
+                parser.error("pre-staged remote input paths must be absolute")
+            if posixpath.commonpath((remote_root, posixpath.normpath(remote_path))) == remote_root:
+                parser.error("pre-staged remote inputs must be outside --remote-root")
     required = [args.ssh_key, args.rusty_sender, args.input_64, args.input_512]
     if not args.rusty_only:
         if args.croc is None:

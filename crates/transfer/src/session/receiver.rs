@@ -23,6 +23,7 @@ where
         Authentication::Pake(password),
         output_path,
         on_progress,
+        payload_profile_enabled_from_env(),
     )
     .await
 }
@@ -51,6 +52,7 @@ where
         Authentication::Direct(token),
         output_path,
         on_progress,
+        payload_profile_enabled_from_env(),
     )
     .await
 }
@@ -66,12 +68,14 @@ async fn receive_file_with_auth<T, F>(
     authentication: Authentication<'_>,
     output_path: &Path,
     on_progress: F,
+    profile_enabled: bool,
 ) -> std::result::Result<TransferMetrics, TransferError>
 where
     T: TransferTransport,
     F: FnMut(u64, u64) + Send,
 {
     let mut context = TransferContext::new();
+    context.payload_profile_enabled = profile_enabled;
     let mut resume_output = match ResumeOutput::open(output_path).await {
         Ok(output) => output,
         Err(error) => {
@@ -106,6 +110,28 @@ where
             Err(error)
         }
     }
+}
+
+#[cfg(test)]
+pub(crate) async fn receive_file_with_profile<T, F>(
+    transport: &mut T,
+    password: &[u8],
+    output_path: &Path,
+    on_progress: F,
+    profile_enabled: bool,
+) -> std::result::Result<TransferMetrics, TransferError>
+where
+    T: TransferTransport,
+    F: FnMut(u64, u64) + Send,
+{
+    receive_file_with_auth(
+        transport,
+        Authentication::Pake(password),
+        output_path,
+        on_progress,
+        profile_enabled,
+    )
+    .await
 }
 
 async fn receive_file_inner<T, F>(
@@ -192,8 +218,19 @@ where
     on_progress(total, resume_offset);
     transport.begin_payload_observation();
     let payload_started = Instant::now();
+    let mut payload_profile =
+        crate::PayloadProfile::for_enabled_transfer(context.payload_profile_enabled);
     while receiver.bytes_received() < receiver.remaining_len() {
+        let receive_started = payload_profile
+            .as_ref()
+            .map(crate::PayloadProfile::start_stage);
         let ciphertext = receive_with_timeout(transport, CHUNK_TIMEOUT, *context).await?;
+        if let (Some(profile), Some(started)) = (&mut payload_profile, receive_started) {
+            profile.record_stage(PayloadStage::ReceiveWait, started);
+        }
+        let decrypt_started = payload_profile
+            .as_ref()
+            .map(crate::PayloadProfile::start_stage);
         let plaintext = required_output(
             "receiver plaintext block",
             receiver
@@ -203,20 +240,37 @@ where
         .map_err(|_source| {
             context.error(TransferErrorKind::Internal("receiver plaintext missing"))
         })?;
+        if let (Some(profile), Some(started)) = (&mut payload_profile, decrypt_started) {
+            profile.record_stage(PayloadStage::Decrypt, started);
+        }
+        let write_started = payload_profile
+            .as_ref()
+            .map(crate::PayloadProfile::start_stage);
         resume_output
             .write_all(&plaintext)
             .await
             .map_err(|error| context.error(TransferErrorKind::DestinationIo(error)))?;
+        if let (Some(profile), Some(started)) = (&mut payload_profile, write_started) {
+            profile.record_stage(PayloadStage::DestinationWrite, started);
+            profile.chunk_count = profile.chunk_count.saturating_add(1);
+            profile.payload_bytes = receiver.bytes_received();
+        }
         context.bytes_transferred = receiver.bytes_received();
         let absolute_position = resume_offset
             .checked_add(receiver.bytes_received())
             .ok_or_else(|| context.error(TransferErrorKind::Internal("progress overflow")))?;
         on_progress(total, absolute_position);
     }
+    let flush_started = payload_profile
+        .as_ref()
+        .map(crate::PayloadProfile::start_stage);
     resume_output
         .flush()
         .await
         .map_err(|error| context.error(TransferErrorKind::DestinationIo(error)))?;
+    if let (Some(profile), Some(started)) = (&mut payload_profile, flush_started) {
+        profile.record_stage(PayloadStage::DestinationWrite, started);
+    }
     transport.end_payload_observation();
     let payload_seconds = payload_started.elapsed().as_secs_f64();
 
@@ -281,5 +335,6 @@ where
         shutdown_seconds: shutdown_started.elapsed().as_secs_f64(),
         path_end,
         cleanup_issues,
+        payload_profile,
     })
 }

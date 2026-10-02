@@ -518,3 +518,15 @@ or platform testing are named limitations, never reported as passed checks.
   for build hashes, phase/resource statistics, storage policy, and limitations.
   An interrupted earlier sweep remains preserved and excluded. Payload stage
   profiling is the next step; no optimization claim has been accepted.
+- 2026-10-02: Added opt-in payload-stage elapsed timings without stage clock
+  calls when disabled. The existing runner preserves profiles, validates
+  bytes/chunks/timing consistency, and separates diagnostic runs in summaries.
+  Reverse trials may use pre-staged inputs verified before each trial; these
+  caller-owned sources are never removed. Workspace tests, wasm check, formatting,
+  34 Python checks, workspace Clippy/SARIF with the three existing findings,
+  identity/report gates, and cargo-deny workspace checks passed. Built matching
+  diagnostic binaries from Rust source archive SHA-256
+  `04f2756a5b2e554ee0f3ca0ae615014ec41c20ee207d1a82747c2f408f1ef01a`:
+  WSL `56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e`,
+  Oracle `f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e`.
+  Stage measurements and instrumentation-overhead checks are pending.

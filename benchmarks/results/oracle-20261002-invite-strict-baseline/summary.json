@@ -1,0 +1,622 @@
+{
+  "groups": [
+    {
+      "build_id": "a49fa18-route-baseline",
+      "chunk_size": 262144,
+      "direct_route_verified_both": true,
+      "direction": "wsl-to-oracle",
+      "effective_mib_per_second": {
+        "mad": 0.028015602073850232,
+        "maximum": 5.660535303717102,
+        "median": 5.632519701643251,
+        "minimum": 4.747792095399466
+      },
+      "endpoint_process_cpu_and_rss_available": true,
+      "handshake_seconds": {
+        "mad": 0.03246645400000003,
+        "maximum": 0.5153558319999999,
+        "median": 0.43316301,
+        "minimum": 0.400696556
+      },
+      "host_pair": "WSL/ubuntu@141.147.1.21",
+      "legacy_input": "unknown",
+      "pairing_mode": "invite",
+      "path": "direct",
+      "payload_profile": null,
+      "payload_seconds": {
+        "mad": 0.2971320259999999,
+        "maximum": 104.391482348,
+        "median": 87.12405899,
+        "minimum": 86.826926964
+      },
+      "pipeline_depth": 1,
+      "profile_mode": "standard",
+      "receiver_binary_sha256": "a37d080db5dd2d587df3f8b43b3424d11a45c51f0bda353f4208cece8fb99b85",
+      "receiver_cpu_seconds": {
+        "mad": 0.2699999999999996,
+        "maximum": 33.52,
+        "median": 31.61,
+        "minimum": 31.14
+      },
+      "receiver_max_rss_kib": {
+        "mad": 356,
+        "maximum": 31940,
+        "median": 30540,
+        "minimum": 29820
+      },
+      "role": "receiver",
+      "sender_binary_sha256": "0497c6740bc7b8cf4ce206b5cd91b2dfcdbf5e3085b54c5dc2edc9a97fee1b41",
+      "sender_cpu_seconds": {
+        "mad": 0.19000000000000128,
+        "maximum": 9.17,
+        "median": 8.719999999999999,
+        "minimum": 7.75
+      },
+      "sender_max_rss_kib": {
+        "mad": 244,
+        "maximum": 25652,
+        "median": 25276,
+        "minimum": 24992
+      },
+      "shutdown_seconds": {
+        "mad": 0.09853045000000016,
+        "maximum": 1.5138939630000001,
+        "median": 1.415363513,
+        "minimum": 0.594347151
+      },
+      "size_bytes": 536870912,
+      "source_staging": "per-trial",
+      "storage_class": "wsl-ext4-to-oracle-ext4",
+      "successful_runs": 5,
+      "transport": "iroh",
+      "transport_mode": "unknown",
+      "wall_seconds": {
+        "mad": 0.44989347900002485,
+        "maximum": 107.839599905,
+        "median": 90.90070290400001,
+        "minimum": 90.45080942499999
+      }
+    },
+    {
+      "build_id": "a49fa18-route-baseline",
+      "chunk_size": 262144,
+      "direct_route_verified_both": true,
+      "direction": "wsl-to-oracle",
+      "effective_mib_per_second": {
+        "mad": 0.028015602073850232,
+        "maximum": 5.660535303717102,
+        "median": 5.632519701643251,
+        "minimum": 4.747792095399466
+      },
+      "endpoint_process_cpu_and_rss_available": true,
+      "handshake_seconds": {
+        "mad": 0.03221285100000015,
+        "maximum": 1.255885998,
+        "median": 1.169078166,
+        "minimum": 1.1368653149999999
+      },
+      "host_pair": "WSL/ubuntu@141.147.1.21",
+      "legacy_input": "unknown",
+      "pairing_mode": "invite",
+      "path": "direct",
+      "payload_profile": null,
+      "payload_seconds": {
+        "mad": 0.2227413580000075,
+        "maximum": 104.131731421,
+        "median": 86.88006583,
+        "minimum": 86.657324472
+      },
+      "pipeline_depth": 1,
+      "profile_mode": "standard",
+      "receiver_binary_sha256": "a37d080db5dd2d587df3f8b43b3424d11a45c51f0bda353f4208cece8fb99b85",
+      "receiver_cpu_seconds": {
+        "mad": 0.2699999999999996,
+        "maximum": 33.52,
+        "median": 31.61,
+        "minimum": 31.14
+      },
+      "receiver_max_rss_kib": {
+        "mad": 356,
+        "maximum": 31940,
+        "median": 30540,
+        "minimum": 29820
+      },
+      "role": "sender",
+      "sender_binary_sha256": "0497c6740bc7b8cf4ce206b5cd91b2dfcdbf5e3085b54c5dc2edc9a97fee1b41",
+      "sender_cpu_seconds": {
+        "mad": 0.19000000000000128,
+        "maximum": 9.17,
+        "median": 8.719999999999999,
+        "minimum": 7.75
+      },
+      "sender_max_rss_kib": {
+        "mad": 244,
+        "maximum": 25652,
+        "median": 25276,
+        "minimum": 24992
+      },
+      "shutdown_seconds": {
+        "mad": 0.1654688150000001,
+        "maximum": 1.770965807,
+        "median": 1.5952774280000002,
+        "minimum": 0.830837089
+      },
+      "size_bytes": 536870912,
+      "source_staging": "per-trial",
+      "storage_class": "wsl-ext4-to-oracle-ext4",
+      "successful_runs": 5,
+      "transport": "iroh",
+      "transport_mode": "unknown",
+      "wall_seconds": {
+        "mad": 0.44989347900002485,
+        "maximum": 107.839599905,
+        "median": 90.90070290400001,
+        "minimum": 90.45080942499999
+      }
+    },
+    {
+      "build_id": "a49fa18-route-baseline",
+      "chunk_size": 262144,
+      "direct_route_verified_both": true,
+      "direction": "wsl-to-oracle",
+      "effective_mib_per_second": {
+        "mad": 0.06706585505063778,
+        "maximum": 4.815871090495153,
+        "median": 4.69097263106624,
+        "minimum": 4.623906776015602
+      },
+      "endpoint_process_cpu_and_rss_available": true,
+      "handshake_seconds": {
+        "mad": 0.008977979999999997,
+        "maximum": 0.529893807,
+        "median": 0.493054765,
+        "minimum": 0.394713517
+      },
+      "host_pair": "WSL/ubuntu@141.147.1.21",
+      "legacy_input": "unknown",
+      "pairing_mode": "invite",
+      "path": "direct",
+      "payload_profile": null,
+      "payload_seconds": {
+        "mad": 0.022618349000000038,
+        "maximum": 11.083353849,
+        "median": 10.87524608,
+        "minimum": 10.852627731
+      },
+      "pipeline_depth": 1,
+      "profile_mode": "standard",
+      "receiver_binary_sha256": "a37d080db5dd2d587df3f8b43b3424d11a45c51f0bda353f4208cece8fb99b85",
+      "receiver_cpu_seconds": {
+        "mad": 0.020000000000000018,
+        "maximum": 4.09,
+        "median": 3.94,
+        "minimum": 3.91
+      },
+      "receiver_max_rss_kib": {
+        "mad": 2016,
+        "maximum": 33136,
+        "median": 31120,
+        "minimum": 28060
+      },
+      "role": "receiver",
+      "sender_binary_sha256": "0497c6740bc7b8cf4ce206b5cd91b2dfcdbf5e3085b54c5dc2edc9a97fee1b41",
+      "sender_cpu_seconds": {
+        "mad": 0.06000000000000005,
+        "maximum": 1.37,
+        "median": 1.1600000000000001,
+        "minimum": 1.04
+      },
+      "sender_max_rss_kib": {
+        "mad": 188,
+        "maximum": 25644,
+        "median": 25148,
+        "minimum": 24812
+      },
+      "shutdown_seconds": {
+        "mad": 0.002267853999999986,
+        "maximum": 0.207467405,
+        "median": 0.192345105,
+        "minimum": 0.186084024
+      },
+      "size_bytes": 67108864,
+      "source_staging": "per-trial",
+      "storage_class": "wsl-ext4-to-oracle-ext4",
+      "successful_runs": 5,
+      "transport": "iroh",
+      "transport_mode": "unknown",
+      "wall_seconds": {
+        "mad": 0.19788344899998833,
+        "maximum": 13.841109498999998,
+        "median": 13.64322605000001,
+        "minimum": 13.289392261000017
+      }
+    },
+    {
+      "build_id": "a49fa18-route-baseline",
+      "chunk_size": 262144,
+      "direct_route_verified_both": true,
+      "direction": "wsl-to-oracle",
+      "effective_mib_per_second": {
+        "mad": 0.06706585505063778,
+        "maximum": 4.815871090495153,
+        "median": 4.69097263106624,
+        "minimum": 4.623906776015602
+      },
+      "endpoint_process_cpu_and_rss_available": true,
+      "handshake_seconds": {
+        "mad": 0.12114186699999996,
+        "maximum": 1.5676561569999998,
+        "median": 1.3071726879999999,
+        "minimum": 1.133405283
+      },
+      "host_pair": "WSL/ubuntu@141.147.1.21",
+      "legacy_input": "unknown",
+      "pairing_mode": "invite",
+      "path": "direct",
+      "payload_profile": null,
+      "payload_seconds": {
+        "mad": 0.023505711000000318,
+        "maximum": 10.91615641,
+        "median": 10.698211073,
+        "minimum": 10.674705362
+      },
+      "pipeline_depth": 1,
+      "profile_mode": "standard",
+      "receiver_binary_sha256": "a37d080db5dd2d587df3f8b43b3424d11a45c51f0bda353f4208cece8fb99b85",
+      "receiver_cpu_seconds": {
+        "mad": 0.020000000000000018,
+        "maximum": 4.09,
+        "median": 3.94,
+        "minimum": 3.91
+      },
+      "receiver_max_rss_kib": {
+        "mad": 2016,
+        "maximum": 33136,
+        "median": 31120,
+        "minimum": 28060
+      },
+      "role": "sender",
+      "sender_binary_sha256": "0497c6740bc7b8cf4ce206b5cd91b2dfcdbf5e3085b54c5dc2edc9a97fee1b41",
+      "sender_cpu_seconds": {
+        "mad": 0.06000000000000005,
+        "maximum": 1.37,
+        "median": 1.1600000000000001,
+        "minimum": 1.04
+      },
+      "sender_max_rss_kib": {
+        "mad": 188,
+        "maximum": 25644,
+        "median": 25148,
+        "minimum": 24812
+      },
+      "shutdown_seconds": {
+        "mad": 0.0031085539999999856,
+        "maximum": 0.399535745,
+        "median": 0.380638798,
+        "minimum": 0.377530244
+      },
+      "size_bytes": 67108864,
+      "source_staging": "per-trial",
+      "storage_class": "wsl-ext4-to-oracle-ext4",
+      "successful_runs": 5,
+      "transport": "iroh",
+      "transport_mode": "unknown",
+      "wall_seconds": {
+        "mad": 0.19788344899998833,
+        "maximum": 13.841109498999998,
+        "median": 13.64322605000001,
+        "minimum": 13.289392261000017
+      }
+    },
+    {
+      "build_id": "a49fa18-route-baseline",
+      "chunk_size": 262144,
+      "direct_route_verified_both": true,
+      "direction": "oracle-to-wsl",
+      "effective_mib_per_second": {
+        "mad": 0.9592136048921489,
+        "maximum": 25.13808900590942,
+        "median": 21.44343384295171,
+        "minimum": 17.34931648439713
+      },
+      "endpoint_process_cpu_and_rss_available": true,
+      "handshake_seconds": {
+        "mad": 0.050514083999999904,
+        "maximum": 0.5711238399999999,
+        "median": 0.520609756,
+        "minimum": 0.449896366
+      },
+      "host_pair": "WSL/ubuntu@141.147.1.21",
+      "legacy_input": "unknown",
+      "pairing_mode": "invite",
+      "path": "direct",
+      "payload_profile": null,
+      "payload_seconds": {
+        "mad": 0.2513151279999981,
+        "maximum": 21.812432694,
+        "median": 17.325013531,
+        "minimum": 16.688785595
+      },
+      "pipeline_depth": 1,
+      "profile_mode": "standard",
+      "receiver_binary_sha256": "0497c6740bc7b8cf4ce206b5cd91b2dfcdbf5e3085b54c5dc2edc9a97fee1b41",
+      "receiver_cpu_seconds": {
+        "mad": 0.1200000000000001,
+        "maximum": 6.91,
+        "median": 6.71,
+        "minimum": 6.52
+      },
+      "receiver_max_rss_kib": {
+        "mad": 672,
+        "maximum": 25816,
+        "median": 24856,
+        "minimum": 24028
+      },
+      "role": "receiver",
+      "sender_binary_sha256": "a37d080db5dd2d587df3f8b43b3424d11a45c51f0bda353f4208cece8fb99b85",
+      "sender_cpu_seconds": {
+        "mad": 0.049999999999998934,
+        "maximum": 14.18,
+        "median": 13.719999999999999,
+        "minimum": 13.67
+      },
+      "sender_max_rss_kib": {
+        "mad": 540,
+        "maximum": 32324,
+        "median": 30220,
+        "minimum": 28836
+      },
+      "shutdown_seconds": {
+        "mad": 1.0014058410000004,
+        "maximum": 5.474632395,
+        "median": 4.473226554,
+        "minimum": 1.353229494
+      },
+      "size_bytes": 536870912,
+      "source_staging": "per-trial",
+      "storage_class": "oracle-ext4-to-wsl-ext4",
+      "successful_runs": 5,
+      "transport": "iroh",
+      "transport_mode": "unknown",
+      "wall_seconds": {
+        "mad": 1.022331197999847,
+        "maximum": 29.511249072000055,
+        "median": 23.87677289699991,
+        "minimum": 20.367498893000175
+      }
+    },
+    {
+      "build_id": "a49fa18-route-baseline",
+      "chunk_size": 262144,
+      "direct_route_verified_both": true,
+      "direction": "oracle-to-wsl",
+      "effective_mib_per_second": {
+        "mad": 0.9592136048921489,
+        "maximum": 25.13808900590942,
+        "median": 21.44343384295171,
+        "minimum": 17.34931648439713
+      },
+      "endpoint_process_cpu_and_rss_available": true,
+      "handshake_seconds": {
+        "mad": 0.02705297200000001,
+        "maximum": 1.5551077150000001,
+        "median": 0.997756367,
+        "minimum": 0.8846070669999999
+      },
+      "host_pair": "WSL/ubuntu@141.147.1.21",
+      "legacy_input": "unknown",
+      "pairing_mode": "invite",
+      "path": "direct",
+      "payload_profile": null,
+      "payload_seconds": {
+        "mad": 0.2507576510000007,
+        "maximum": 21.788920215,
+        "median": 17.304759128,
+        "minimum": 16.665346703
+      },
+      "pipeline_depth": 1,
+      "profile_mode": "standard",
+      "receiver_binary_sha256": "0497c6740bc7b8cf4ce206b5cd91b2dfcdbf5e3085b54c5dc2edc9a97fee1b41",
+      "receiver_cpu_seconds": {
+        "mad": 0.1200000000000001,
+        "maximum": 6.91,
+        "median": 6.71,
+        "minimum": 6.52
+      },
+      "receiver_max_rss_kib": {
+        "mad": 672,
+        "maximum": 25816,
+        "median": 24856,
+        "minimum": 24028
+      },
+      "role": "sender",
+      "sender_binary_sha256": "a37d080db5dd2d587df3f8b43b3424d11a45c51f0bda353f4208cece8fb99b85",
+      "sender_cpu_seconds": {
+        "mad": 0.049999999999998934,
+        "maximum": 14.18,
+        "median": 13.719999999999999,
+        "minimum": 13.67
+      },
+      "sender_max_rss_kib": {
+        "mad": 540,
+        "maximum": 32324,
+        "median": 30220,
+        "minimum": 28836
+      },
+      "shutdown_seconds": {
+        "mad": 0.11118722499999922,
+        "maximum": 4.570771322,
+        "median": 4.4595840970000005,
+        "minimum": 1.379066084
+      },
+      "size_bytes": 536870912,
+      "source_staging": "per-trial",
+      "storage_class": "oracle-ext4-to-wsl-ext4",
+      "successful_runs": 5,
+      "transport": "iroh",
+      "transport_mode": "unknown",
+      "wall_seconds": {
+        "mad": 1.022331197999847,
+        "maximum": 29.511249072000055,
+        "median": 23.87677289699991,
+        "minimum": 20.367498893000175
+      }
+    },
+    {
+      "build_id": "a49fa18-route-baseline",
+      "chunk_size": 262144,
+      "direct_route_verified_both": true,
+      "direction": "oracle-to-wsl",
+      "effective_mib_per_second": {
+        "mad": 0.08347058406566177,
+        "maximum": 12.736471876743359,
+        "median": 12.653001292677697,
+        "minimum": 11.372189403036161
+      },
+      "endpoint_process_cpu_and_rss_available": true,
+      "handshake_seconds": {
+        "mad": 0.010465583999999861,
+        "maximum": 0.5383426649999999,
+        "median": 0.5278770810000001,
+        "minimum": 0.44390790700000005
+      },
+      "host_pair": "WSL/ubuntu@141.147.1.21",
+      "legacy_input": "unknown",
+      "pairing_mode": "invite",
+      "path": "direct",
+      "payload_profile": null,
+      "payload_seconds": {
+        "mad": 0.00020908300000010982,
+        "maximum": 2.139340221,
+        "median": 2.1391311379999998,
+        "minimum": 2.119542476
+      },
+      "pipeline_depth": 1,
+      "profile_mode": "standard",
+      "receiver_binary_sha256": "0497c6740bc7b8cf4ce206b5cd91b2dfcdbf5e3085b54c5dc2edc9a97fee1b41",
+      "receiver_cpu_seconds": {
+        "mad": 0.029999999999999916,
+        "maximum": 0.98,
+        "median": 0.93,
+        "minimum": 0.79
+      },
+      "receiver_max_rss_kib": {
+        "mad": 44,
+        "maximum": 24992,
+        "median": 24948,
+        "minimum": 24448
+      },
+      "role": "receiver",
+      "sender_binary_sha256": "a37d080db5dd2d587df3f8b43b3424d11a45c51f0bda353f4208cece8fb99b85",
+      "sender_cpu_seconds": {
+        "mad": 0.019999999999999796,
+        "maximum": 1.7999999999999998,
+        "median": 1.7400000000000002,
+        "minimum": 1.72
+      },
+      "sender_max_rss_kib": {
+        "mad": 708,
+        "maximum": 30456,
+        "median": 29748,
+        "minimum": 27248
+      },
+      "shutdown_seconds": {
+        "mad": 0.06907982099999999,
+        "maximum": 1.246041343,
+        "median": 0.596096117,
+        "minimum": 0.527016296
+      },
+      "size_bytes": 67108864,
+      "source_staging": "per-trial",
+      "storage_class": "oracle-ext4-to-wsl-ext4",
+      "successful_runs": 5,
+      "transport": "iroh",
+      "transport_mode": "unknown",
+      "wall_seconds": {
+        "mad": 0.03314902299996447,
+        "maximum": 5.6277641650000305,
+        "median": 5.058088473999987,
+        "minimum": 5.024939451000023
+      }
+    },
+    {
+      "build_id": "a49fa18-route-baseline",
+      "chunk_size": 262144,
+      "direct_route_verified_both": true,
+      "direction": "oracle-to-wsl",
+      "effective_mib_per_second": {
+        "mad": 0.08347058406566177,
+        "maximum": 12.736471876743359,
+        "median": 12.653001292677697,
+        "minimum": 11.372189403036161
+      },
+      "endpoint_process_cpu_and_rss_available": true,
+      "handshake_seconds": {
+        "mad": 0.03385822199999988,
+        "maximum": 0.975810702,
+        "median": 0.9419524800000001,
+        "minimum": 0.867854032
+      },
+      "host_pair": "WSL/ubuntu@141.147.1.21",
+      "legacy_input": "unknown",
+      "pairing_mode": "invite",
+      "path": "direct",
+      "payload_profile": null,
+      "payload_seconds": {
+        "mad": 0.0013088489999999453,
+        "maximum": 2.115011759,
+        "median": 2.11370291,
+        "minimum": 2.091918767
+      },
+      "pipeline_depth": 1,
+      "profile_mode": "standard",
+      "receiver_binary_sha256": "0497c6740bc7b8cf4ce206b5cd91b2dfcdbf5e3085b54c5dc2edc9a97fee1b41",
+      "receiver_cpu_seconds": {
+        "mad": 0.029999999999999916,
+        "maximum": 0.98,
+        "median": 0.93,
+        "minimum": 0.79
+      },
+      "receiver_max_rss_kib": {
+        "mad": 44,
+        "maximum": 24992,
+        "median": 24948,
+        "minimum": 24448
+      },
+      "role": "sender",
+      "sender_binary_sha256": "a37d080db5dd2d587df3f8b43b3424d11a45c51f0bda353f4208cece8fb99b85",
+      "sender_cpu_seconds": {
+        "mad": 0.019999999999999796,
+        "maximum": 1.7999999999999998,
+        "median": 1.7400000000000002,
+        "minimum": 1.72
+      },
+      "sender_max_rss_kib": {
+        "mad": 708,
+        "maximum": 30456,
+        "median": 29748,
+        "minimum": 27248
+      },
+      "shutdown_seconds": {
+        "mad": 0.07135718999999996,
+        "maximum": 1.269240314,
+        "median": 0.619438957,
+        "minimum": 0.548081767
+      },
+      "size_bytes": 67108864,
+      "source_staging": "per-trial",
+      "storage_class": "oracle-ext4-to-wsl-ext4",
+      "successful_runs": 5,
+      "transport": "iroh",
+      "transport_mode": "unknown",
+      "wall_seconds": {
+        "mad": 0.03314902299996447,
+        "maximum": 5.6277641650000305,
+        "median": 5.058088473999987,
+        "minimum": 5.024939451000023
+      }
+    }
+  ],
+  "rejected_rows": [],
+  "schema_version": 1
+}

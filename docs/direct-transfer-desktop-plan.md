@@ -1,6 +1,6 @@
 # Direct transfer optimization and desktop implementation plan
 
-Status: in progress; benchmark runner work started, with no new performance measurements completed.
+Status: in progress; verified direct five-run Oracle baseline complete; payload profiling in implementation.
 Prepared: 2026-09-29 against repository commit `4ba7b01`.
 
 ## Objectives and release boundary
@@ -509,3 +509,12 @@ or platform testing are named limitations, never reported as passed checks.
   64/512 MiB smoke in both directions verified direct payload paths and matching
   hashes. See [`oracle-20261001-invite-strict-smoke`](../benchmarks/results/oracle-20261001-invite-strict-smoke/README.md).
   Its one measured run per case is not the five-run comparison baseline.
+- 2026-10-02: Completed one warm-up plus five measured 64/512 MiB trials in
+  both directions on frozen `a49fa18` release binaries. All 48 endpoint rows
+  had matching output hashes and verified direct payload paths; eight measured
+  endpoint groups have five samples each and no rejected rows. The 512 MiB
+  median rates were 5.633 MiB/s WSL-to-Oracle and 21.443 MiB/s Oracle-to-WSL.
+  See the [baseline evidence](../benchmarks/results/oracle-20261002-invite-strict-baseline/README.md)
+  for build hashes, phase/resource statistics, storage policy, and limitations.
+  An interrupted earlier sweep remains preserved and excluded. Payload stage
+  profiling is the next step; no optimization claim has been accepted.

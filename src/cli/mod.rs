@@ -4,10 +4,9 @@ use serde::Serialize;
 mod args;
 mod commands;
 mod contacts;
-mod invite;
 use args::{Cli, Command, ContactCommand};
 use commands::{DirectSendOptions, recv_cmd, send_cmd};
-use invite::DirectInvite;
+pub(super) use rustytransfer_native::direct::DirectInvite;
 mod metrics;
 use metrics::write_transfer_metric;
 use std::{

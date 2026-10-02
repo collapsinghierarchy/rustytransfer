@@ -215,10 +215,8 @@ shared payload changes. Do not turn WAN throughput into a flaky per-PR CI gate.
 
 ### 2A. Extract only what the third frontend needs
 
-Introduce a small `native::direct` module, with a shared invite type and direct
-session functions. Move the duplicated parsing/formatting from
-[`src/cli/invite.rs`](../src/cli/invite.rs) and
-[`firefox-host/src/invite.rs`](../crates/firefox-host/src/invite.rs), retaining the
+Introduce a small [`native::direct`](../crates/native/src/direct.rs) module, with a shared invite type and direct
+session functions. Move the duplicated CLI/Firefox parsing and formatting, retaining the
 exact `rt1:` representation and validation behavior. Consolidate retry eligibility,
 four-attempt policy, 1/2/4-second backoff, and direct reconnect behavior from the
 CLI and Firefox host. Keep PAKE/rendezvous orchestration in the CLI until another
@@ -540,3 +538,9 @@ or platform testing are named limitations, never reported as passed checks.
   profiles, an Iroh filter, and safe removal of test-owned outputs between runs.
   Evaluating pinned AES/POLYVAL runtime ARM dispatch cfgs on Linux/macOS AArch64;
   no candidate optimization has passed its numerical gate yet.
+- 2026-10-02: Consolidated direct invite parsing/generation and retry eligibility,
+  attempt limit, and backoff in `native::direct`. CLI and Firefox consume the same
+  primitives; the `rt1:` format, case acceptance, frontend interfaces, and their
+  existing reconnect-error handling are preserved. Root/native/Firefox tests,
+  formatting, wasm check, and exact workspace Clippy/SARIF gates passed with
+  the three existing findings. Cancellable session orchestration is next.

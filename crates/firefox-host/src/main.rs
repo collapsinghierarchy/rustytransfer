@@ -1,18 +1,15 @@
-mod invite;
 mod messaging;
 
 use anyhow::{Context, Result, anyhow};
-use invite::DirectInvite;
 use messaging::{Direction, Event, InvalidRequest, Request, read_frame, write_frame};
+use rustytransfer_native::direct::{
+    DirectInvite, MAX_TRANSFER_ATTEMPTS, can_retry_transfer, retry_backoff as reconnect_backoff,
+};
 use rustytransfer_native::transport::DataTransport;
 use rustytransfer_native::transport::iroh::{
     accept_direct, bind_direct_sender, connect_direct, default_identity_path,
 };
-use rustytransfer_transfer::{
-    TransferConfig,
-    error::{CompletionState, ErrorCode, RetryAdvice, TransferError},
-    receive_file_direct, send_file_direct,
-};
+use rustytransfer_transfer::{TransferConfig, receive_file_direct, send_file_direct};
 use std::{
     io,
     path::{Path, PathBuf},
@@ -24,8 +21,6 @@ use tokio::{
     sync::{Mutex, mpsc, watch},
     time::sleep,
 };
-
-const MAX_TRANSFER_ATTEMPTS: usize = 4;
 
 #[derive(Debug)]
 enum Input {
@@ -537,25 +532,6 @@ fn progress_reporter(
     }
 }
 
-fn can_retry_transfer(error: &TransferError) -> bool {
-    error.retry_advice() == RetryAdvice::NewSession
-        && error.code() != ErrorCode::Cancelled
-        && matches!(
-            error.completion,
-            CompletionState::NotStarted
-                | CompletionState::InProgress
-                | CompletionState::DataCompleteUnconfirmed
-        )
-}
-
-fn reconnect_backoff(attempt: usize) -> Duration {
-    match attempt {
-        2 => Duration::from_secs(1),
-        3 => Duration::from_secs(2),
-        _ => Duration::from_secs(4),
-    }
-}
-
 fn display_file_name(path: &Path) -> String {
     path.file_name()
         .map(|name| name.to_string_lossy().into_owned())
@@ -565,34 +541,6 @@ fn display_file_name(path: &Path) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rustytransfer_transfer::error::{Phase, TransferErrorKind};
-
-    #[test]
-    fn retry_policy_accepts_interruptions_but_rejects_confirmed_or_file_errors() {
-        let interrupted = TransferError::new(
-            TransferErrorKind::Timeout,
-            Phase::Payload,
-            10,
-            CompletionState::InProgress,
-        );
-        assert!(can_retry_transfer(&interrupted));
-
-        let confirmed = TransferError::new(
-            TransferErrorKind::Timeout,
-            Phase::Shutdown,
-            10,
-            CompletionState::ProtocolConfirmed,
-        );
-        assert!(!can_retry_transfer(&confirmed));
-
-        let file_error = TransferError::new(
-            TransferErrorKind::SourceIo(io::Error::other("read failed")),
-            Phase::Payload,
-            10,
-            CompletionState::InProgress,
-        );
-        assert!(!can_retry_transfer(&file_error));
-    }
 
     #[tokio::test]
     async fn cancel_acknowledgement_waits_for_the_active_worker() {

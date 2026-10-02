@@ -1,5 +1,8 @@
 use super::*;
 use crate::transport::errors::TransportError;
+use rustytransfer_native::direct::{
+    MAX_TRANSFER_ATTEMPTS, can_retry_transfer, retry_backoff as reconnect_backoff,
+};
 
 pub(super) struct DirectSendOptions {
     pub(super) direct: bool,
@@ -36,13 +39,6 @@ enum ReceiverReconnect {
     },
 }
 
-const MAX_TRANSFER_ATTEMPTS: usize = 4;
-const RECONNECT_BACKOFFS: [Duration; 3] = [
-    Duration::from_secs(1),
-    Duration::from_secs(2),
-    Duration::from_secs(4),
-];
-
 #[derive(Debug)]
 struct PermanentReconnectError(&'static str);
 
@@ -53,24 +49,6 @@ impl std::fmt::Display for PermanentReconnectError {
 }
 
 impl std::error::Error for PermanentReconnectError {}
-
-fn reconnect_backoff(attempt: usize) -> Duration {
-    RECONNECT_BACKOFFS
-        .get(attempt.saturating_sub(2))
-        .copied()
-        .unwrap_or(Duration::from_secs(4))
-}
-
-fn can_retry_transfer(error: &TransferError) -> bool {
-    error.retry_advice() == crate::error::RetryAdvice::NewSession
-        && error.code() != ErrorCode::Cancelled
-        && matches!(
-            error.completion,
-            crate::error::CompletionState::NotStarted
-                | crate::error::CompletionState::InProgress
-                | crate::error::CompletionState::DataCompleteUnconfirmed
-        )
-}
 
 fn retryable_reconnect_error(plan_is_pake: bool, error: &anyhow::Error) -> bool {
     let permanent = error.chain().any(|cause| {
@@ -726,44 +704,4 @@ pub(super) async fn recv_cmd(
     }
     println!("Wrote {}", out.display());
     Ok(())
-}
-
-#[cfg(test)]
-mod reconnect_tests {
-    use super::*;
-    use crate::error::{CompletionState, Phase, TransferErrorKind};
-
-    #[test]
-    fn retries_only_unconfirmed_transient_transfer_failures() {
-        let interrupted = TransferError::new(
-            TransferErrorKind::Timeout,
-            Phase::Payload,
-            128,
-            CompletionState::InProgress,
-        );
-        let protocol = TransferError::new(
-            TransferErrorKind::Config("invalid test configuration"),
-            Phase::Input,
-            0,
-            CompletionState::NotStarted,
-        );
-        let confirmed = TransferError::new(
-            TransferErrorKind::Timeout,
-            Phase::Shutdown,
-            128,
-            CompletionState::ProtocolConfirmed,
-        );
-
-        assert!(can_retry_transfer(&interrupted));
-        assert!(!can_retry_transfer(&protocol));
-        assert!(!can_retry_transfer(&confirmed));
-    }
-
-    #[test]
-    fn reconnect_backoff_is_bounded_to_three_retries() {
-        assert_eq!(reconnect_backoff(2), Duration::from_secs(1));
-        assert_eq!(reconnect_backoff(3), Duration::from_secs(2));
-        assert_eq!(reconnect_backoff(4), Duration::from_secs(4));
-        assert_eq!(reconnect_backoff(5), Duration::from_secs(4));
-    }
 }

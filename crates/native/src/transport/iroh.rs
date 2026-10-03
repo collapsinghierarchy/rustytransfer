@@ -2,7 +2,7 @@ use anyhow::{Context, Result, anyhow, ensure};
 use futures_util::StreamExt;
 use iroh::{
     Endpoint, EndpointAddr, EndpointId, SecretKey,
-    endpoint::{Connection, RecvStream, SendStream, presets},
+    endpoint::{Connection, QuicTransportConfig, RecvStream, SendStream, VarInt, presets},
 };
 #[cfg(unix)]
 use std::os::unix::fs::OpenOptionsExt;
@@ -30,6 +30,10 @@ const IROH_ALPN: &[u8] = b"rustytransfer/2";
 const DIRECT_ALPN: &[u8] = b"rustytransfer/direct/2";
 pub const IROH_PROBE_ALPN: &[u8] = b"rustytransfer/probe/1";
 const CONNECTION_SAMPLE_INTERVAL: Duration = Duration::from_millis(250);
+const STREAM_WINDOW_ENV: &str = "RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES";
+const MIN_STREAM_WINDOW_BYTES: u32 = 1_250_000;
+const MAX_STREAM_WINDOW_BYTES: u32 = 5_000_000;
+const CONNECTION_RECEIVE_WINDOW_BYTES: u32 = 5_000_000;
 
 /// Return the per-user key path used by direct transfers.
 pub fn default_identity_path() -> Result<PathBuf> {
@@ -722,10 +726,39 @@ pub async fn bind_endpoint_with_key(
     let mut builder = Endpoint::builder(presets::N0)
         .secret_key(key)
         .alpns(vec![alpn.to_vec()]);
+    if let Some(stream_window_bytes) = benchmark_stream_window_from_env()? {
+        let transport_config = QuicTransportConfig::builder()
+            .stream_receive_window(VarInt::from_u32(stream_window_bytes))
+            .receive_window(VarInt::from_u32(CONNECTION_RECEIVE_WINDOW_BYTES))
+            .build();
+        eprintln!(
+            "Applied benchmark Iroh receive windows: stream={stream_window_bytes} bytes, connection={CONNECTION_RECEIVE_WINDOW_BYTES} bytes"
+        );
+        builder = builder.transport_config(transport_config);
+    }
     if relay_only {
         builder = builder.clear_ip_transports();
     }
     Ok(builder.bind().await?)
+}
+
+fn parse_benchmark_stream_window(value: &str) -> Result<u32> {
+    let bytes = value
+        .parse::<u32>()
+        .context("benchmark stream window must be an integer byte count")?;
+    ensure!(
+        (MIN_STREAM_WINDOW_BYTES..=MAX_STREAM_WINDOW_BYTES).contains(&bytes),
+        "benchmark stream window must be between {MIN_STREAM_WINDOW_BYTES} and {MAX_STREAM_WINDOW_BYTES} bytes"
+    );
+    Ok(bytes)
+}
+
+fn benchmark_stream_window_from_env() -> Result<Option<u32>> {
+    match std::env::var(STREAM_WINDOW_ENV) {
+        Ok(value) => parse_benchmark_stream_window(&value).map(Some),
+        Err(std::env::VarError::NotPresent) => Ok(None),
+        Err(error) => Err(error).context("cannot read benchmark stream window"),
+    }
 }
 
 /// Returns the endpoint address after allowing Iroh to initialize its transports.
@@ -928,7 +961,7 @@ pub fn state(
 mod path_evidence_tests {
     use super::{
         ConnectionSample, IrohConnectionProfile, PathEventSummary, PathKind, PathSample,
-        classify_path_evidence,
+        classify_path_evidence, parse_benchmark_stream_window,
     };
     use std::time::{Duration, Instant};
 
@@ -1090,5 +1123,27 @@ mod path_evidence_tests {
         assert_eq!(evidence.send_stalls_over_1ms, 2);
         assert_eq!(evidence.send_stalls_over_10ms, 1);
         assert_eq!(evidence.send_wait_max_us, 10_001);
+    }
+
+    #[test]
+    fn benchmark_stream_window_parser_enforces_the_experiment_bounds() {
+        assert_eq!(
+            parse_benchmark_stream_window("1250000").ok(),
+            Some(1_250_000)
+        );
+        assert_eq!(
+            parse_benchmark_stream_window("2500000").ok(),
+            Some(2_500_000)
+        );
+        assert_eq!(
+            parse_benchmark_stream_window("5000000").ok(),
+            Some(5_000_000)
+        );
+        for invalid in ["", "nope", "0", "1249999", "5000001", "4294967296"] {
+            assert!(
+                parse_benchmark_stream_window(invalid).is_err(),
+                "accepted invalid window {invalid:?}"
+            );
+        }
     }
 }

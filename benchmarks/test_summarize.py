@@ -165,6 +165,15 @@ class SummarizeTests(unittest.TestCase):
         self.assertEqual(by_staging["per-trial"]["successful_runs"], 2)
         self.assertEqual(by_staging["pre-staged"]["successful_runs"], 1)
 
+    def test_stream_window_separates_default_and_benchmark_window_rows(self):
+        rows = [record(), record(stream_window_bytes=2_500_000)]
+        summary = summarize.summarize_records(rows)
+        self.assertEqual(len(summary["groups"]), 2)
+        self.assertEqual(
+            {group["stream_window_bytes"] for group in summary["groups"]},
+            {"unknown", 2_500_000},
+        )
+
     def test_groups_keep_build_direction_pairing_host_and_storage_separate(self):
         rows = [
             record(),

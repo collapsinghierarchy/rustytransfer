@@ -259,7 +259,7 @@ class OracleRunnerArgumentTests(unittest.TestCase):
                 runner.append_and_validate_rust_rows(output, rows, "relay", "relay")
             self.assertEqual(len(output.read_text(encoding="utf-8").splitlines()), 2)
 
-    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake", profile=False, remote_inputs=None, with_croc=False, croc_version="11.5.3", chunk_size=None):
+    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake", profile=False, remote_inputs=None, with_croc=False, croc_version="11.5.3", chunk_size=None, stream_window_bytes=None):
         root = Path(temp_dir)
         paths = [root / name for name in ("key", "rusty", "64.bin", "512.bin", "croc")]
         for path in paths:
@@ -289,6 +289,8 @@ class OracleRunnerArgumentTests(unittest.TestCase):
             argv.append("--payload-profile")
         if chunk_size is not None:
             argv.extend(["--chunk-size", str(chunk_size)])
+        if stream_window_bytes is not None:
+            argv.extend(["--stream-window-bytes", str(stream_window_bytes)])
         if remote_inputs is not None:
             argv.extend(["--remote-input-64", remote_inputs[0], "--remote-input-512", remote_inputs[1]])
         parser = runner.build_parser()
@@ -351,6 +353,48 @@ class OracleRunnerArgumentTests(unittest.TestCase):
 
             args.chunk_size = None
             self.assertNotIn("--chunk-size", runner.rusty_sender_argv(args, args.rusty_sender, "source.bin"))
+
+    def test_stream_window_flag_is_bounded_and_configures_both_process_environments(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(
+                temp_dir,
+                rusty_only=True,
+                stream_window_bytes=2_500_000,
+            )
+            runner.validate_local_args(parser, args)
+            self.assertEqual(args.stream_window_bytes, 2_500_000)
+            args.local_rusty_sha256 = "a" * 64
+            args.remote_rusty_sha256 = "b" * 64
+            self.assertEqual(runner.rust_provenance(args)["stream_window_bytes"], 2_500_000)
+
+            environment = {"RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES": "5000000"}
+            runner.configure_stream_window_env(environment, SimpleNamespace())
+            self.assertNotIn("RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES", environment)
+            runner.configure_stream_window_env(environment, args)
+            self.assertEqual(environment["RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES"], "2500000")
+
+            command = runner.remote_process_command(
+                SimpleNamespace(
+                    rusty_path="direct",
+                    rusty_auth="invite",
+                    stream_window_bytes=2_500_000,
+                ),
+                "/tmp/run",
+                ["/opt/rustytransfer", "recv"],
+                "/tmp/run/metrics.jsonl",
+                "/tmp/run/time.json",
+                "/tmp/run/receiver.log",
+                "/tmp/run/receiver.pid",
+            )
+            self.assertIn("-u RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES", command)
+            self.assertIn("RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES=2500000", command)
+
+            args.stream_window_bytes = 1_249_999
+            with self.assertRaises(SystemExit):
+                runner.validate_local_args(parser, args)
+            args.stream_window_bytes = 5_000_001
+            with self.assertRaises(SystemExit):
+                runner.validate_local_args(parser, args)
 
     def test_comparison_requires_both_croc_paths(self):
         with tempfile.TemporaryDirectory() as temp_dir:

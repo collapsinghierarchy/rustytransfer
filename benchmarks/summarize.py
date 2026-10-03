@@ -100,6 +100,7 @@ GROUP_FIELDS = (
     "storage_class",
     "pairing_mode",
     "profile_mode",
+    "stream_window_bytes",
     "source_staging",
     "direct_route_verified_both",
     "legacy_input",

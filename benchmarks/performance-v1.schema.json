@@ -43,6 +43,12 @@
     "storage_class": { "type": "string", "minLength": 1 },
     "pairing_mode": { "enum": ["pake", "invite", "croc-secret"] },
     "profile_mode": { "enum": ["standard", "payload-profile"] },
+    "stream_window_bytes": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "integer", "minimum": 1250000, "maximum": 5000000 }
+      ]
+    },
     "source_staging": { "enum": ["per-trial", "pre-staged"] },
     "payload_profile": {
       "type": "object",

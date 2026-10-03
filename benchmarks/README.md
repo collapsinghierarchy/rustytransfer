@@ -62,6 +62,16 @@ The Oracle runner accepts `--chunk-size BYTES` (1 through 1048576). It passes
 the setting to the sender in either direction; the receiver uses the
 authenticated chunk-size negotiation. Omit it to retain the CLI default.
 
+For a bounded receive-window experiment, `--stream-window-bytes BYTES` accepts
+1250000 through 5000000 and sets `RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES` on
+both endpoints. An enabled experiment also caps the connection receive window
+at 5000000 bytes; all other Iroh transport settings retain their defaults.
+The endpoint logs the applied byte counts. Omitting the option clears inherited
+benchmark window settings in both runner process environments and keeps the
+production defaults. The optional `stream_window_bytes` provenance field keeps
+these cohorts separate in summaries. This control is for measurement and does
+not select a new production default.
+
 With both `RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE=1` and
 `RUSTYTRANSFER_BENCH_PATH_EVIDENCE=1`, Iroh records connection diagnostics in
 `path_evidence.connection_stats`: start/end and sampled RTT/congestion windows,

@@ -59,6 +59,7 @@ METRIC_FIELDS = (
     "path_end",
     "path_evidence",
     "payload_profile",
+    "stream_window_bytes",
     "direct_route_verified_both",
     "local_candidate_type",
     "remote_candidate_type",
@@ -144,6 +145,7 @@ def rust_provenance(args):
         "host_pair": f"WSL/{args.user}@{args.host}",
         "storage_class": args.storage_class,
         "profile_mode": "payload-profile" if payload_profile_enabled(args) else "standard",
+        "stream_window_bytes": getattr(args, "stream_window_bytes", None),
         "source_staging": "pre-staged" if remote_staged_input(args, args.direction == "oracle-to-wsl", 64) else "per-trial",
     }
 
@@ -164,6 +166,7 @@ def croc_provenance(args):
         "storage_class": args.storage_class,
         "pairing_mode": "croc-secret",
         "profile_mode": "standard",
+        "stream_window_bytes": None,
         "source_staging": "pre-staged" if remote_staged_input(args, args.direction == "oracle-to-wsl", 64) else "per-trial",
     }
 
@@ -180,6 +183,13 @@ def configure_profile_env(environment, args):
     environment.pop("RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE", None)
     if payload_profile_enabled(args):
         environment["RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE"] = "1"
+
+
+def configure_stream_window_env(environment, args):
+    environment.pop("RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES", None)
+    stream_window_bytes = getattr(args, "stream_window_bytes", None)
+    if stream_window_bytes is not None:
+        environment["RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES"] = str(stream_window_bytes)
 
 
 def append_rows(path, rows):
@@ -397,8 +407,14 @@ def remote_process_command(
         if payload_profile_enabled(args)
         else ""
     )
+    stream_window_env = (
+        f"RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES={args.stream_window_bytes} "
+        if getattr(args, "stream_window_bytes", None) is not None
+        else ""
+    )
     env_command = (
-        f"env -u RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE {profile_env}"
+        f"env -u RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE "
+        f"-u RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES {profile_env}{stream_window_env}"
         f"{path_env}=1 RUSTYTRANSFER_BENCH_PATH_EVIDENCE=1 "
         f"RUSTYTRANSFER_METRICS_JSONL={remote_quote(metrics_path)} "
         f"/usr/bin/time -f {remote_quote(TIME_FORMAT)} "
@@ -627,6 +643,7 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
     receiver_log = logs / "receiver.log"
     sender_env = os.environ.copy()
     configure_profile_env(sender_env, args)
+    configure_stream_window_env(sender_env, args)
     sender_env["RUSTYTRANSFER_METRICS_JSONL"] = str(sender_metrics_path)
     path_env = (
         "RUSTYTRANSFER_BENCH_WAIT_DIRECT"
@@ -801,6 +818,7 @@ def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_ro
         auth_flag = "--invite" if args.rusty_auth == "invite" else "--code"
         receiver_env = os.environ.copy()
         configure_profile_env(receiver_env, args)
+        configure_stream_window_env(receiver_env, args)
         receiver_env[path_env] = "1"
         receiver_env["RUSTYTRANSFER_BENCH_PATH_EVIDENCE"] = "1"
         receiver_env["RUSTYTRANSFER_METRICS_JSONL"] = str(receiver_metrics_path)
@@ -1583,6 +1601,11 @@ def build_parser():
         help="sender payload chunk size in bytes (1 through 1048576); receiver negotiates it",
     )
     parser.add_argument(
+        "--stream-window-bytes",
+        type=int,
+        help="opt-in Iroh stream receive window (1250000 through 5000000 bytes)",
+    )
+    parser.add_argument(
         "--direction",
         choices=("wsl-to-oracle", "oracle-to-wsl"),
         default="wsl-to-oracle",
@@ -1609,6 +1632,9 @@ def validate_local_args(parser, args):
     chunk_size = getattr(args, "chunk_size", None)
     if chunk_size is not None and not 1 <= chunk_size <= 1_048_576:
         parser.error("--chunk-size must be between 1 and 1048576 bytes")
+    stream_window_bytes = getattr(args, "stream_window_bytes", None)
+    if stream_window_bytes is not None and not 1_250_000 <= stream_window_bytes <= 5_000_000:
+        parser.error("--stream-window-bytes must be between 1250000 and 5000000 bytes")
     if not args.build_id.strip():
         parser.error("--build-id cannot be empty")
     if not args.storage_class.strip():

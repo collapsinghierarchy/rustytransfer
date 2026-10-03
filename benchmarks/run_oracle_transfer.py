@@ -60,6 +60,10 @@ METRIC_FIELDS = (
     "path_evidence",
     "payload_profile",
     "stream_window_bytes",
+    "experimental_protocol_version",
+    "parallel_streams",
+    "payload_key_count",
+    "kem_sessions",
     "direct_route_verified_both",
     "local_candidate_type",
     "remote_candidate_type",
@@ -130,7 +134,7 @@ def remote_sha256(args, path):
     return digest.lower()
 
 
-def rust_provenance(args):
+def rust_provenance(args, size_mib=64):
     local_hash = args.local_rusty_sha256
     remote_hash = args.remote_rusty_sha256
     if args.direction == "wsl-to-oracle":
@@ -146,11 +150,11 @@ def rust_provenance(args):
         "storage_class": args.storage_class,
         "profile_mode": "payload-profile" if payload_profile_enabled(args) else "standard",
         "stream_window_bytes": getattr(args, "stream_window_bytes", None),
-        "source_staging": "pre-staged" if remote_staged_input(args, args.direction == "oracle-to-wsl", 64) else "per-trial",
+        "source_staging": "pre-staged" if remote_staged_input(args, args.direction == "oracle-to-wsl", size_mib) else "per-trial",
     }
 
 
-def croc_provenance(args):
+def croc_provenance(args, size_mib=64):
     local_hash = args.local_croc_sha256
     remote_hash = args.remote_croc_sha256
     if args.direction == "wsl-to-oracle":
@@ -167,7 +171,7 @@ def croc_provenance(args):
         "pairing_mode": "croc-secret",
         "profile_mode": "standard",
         "stream_window_bytes": None,
-        "source_staging": "pre-staged" if remote_staged_input(args, args.direction == "oracle-to-wsl", 64) else "per-trial",
+        "source_staging": "pre-staged" if remote_staged_input(args, args.direction == "oracle-to-wsl", size_mib) else "per-trial",
     }
 
 
@@ -445,6 +449,8 @@ def rusty_sender_argv(args, executable, source_path):
         command.append("--direct")
     if getattr(args, "chunk_size", None) is not None:
         command.extend(["--chunk-size", str(args.chunk_size)])
+    if getattr(args, "experimental_streams", None) is not None:
+        command.extend(["--streams", str(args.experimental_streams)])
     command.extend(["--file", source_path])
     if args.rusty_auth == "pake":
         command.extend(["--password", "ABCDE"])
@@ -557,6 +563,7 @@ def rust_rows(
     run_index,
     warmup,
     provenance,
+    experimental_streams=None,
 ):
     endpoint_metrics = (("sender", sender_metrics), ("receiver", receiver_metrics))
     for role, metric in endpoint_metrics:
@@ -567,6 +574,25 @@ def rust_rows(
                 f"Rustytransfer {role} reported {metric.get('size_bytes')} bytes; "
                 f"expected {expected_size}"
             )
+        if metric.get("bytes_transferred") != expected_size:
+            raise RuntimeError(
+                f"Rustytransfer {role} reported {metric.get('bytes_transferred')} transferred bytes; "
+                f"expected {expected_size}"
+            )
+        requested_streams = experimental_streams
+        if requested_streams is not None:
+            expected_experimental = {
+                "experimental_protocol_version": "shared-key-parallel/1",
+                "parallel_streams": requested_streams,
+                "payload_key_count": 1,
+                "kem_sessions": 1,
+            }
+            for field, expected in expected_experimental.items():
+                if metric.get(field) != expected:
+                    raise RuntimeError(
+                        f"Rustytransfer {role} reported {field}={metric.get(field)!r}; "
+                        f"expected {expected!r} for the requested shared-key experiment"
+                    )
     sender_chunk_size = sender_metrics.get("chunk_size")
     receiver_chunk_size = receiver_metrics.get("chunk_size")
     if (
@@ -747,7 +773,8 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
         receiver_time,
         run_index,
         warmup,
-        {**rust_provenance(args), "pairing_mode": args.rusty_auth},
+        {**rust_provenance(args, size_mib), "pairing_mode": args.rusty_auth},
+        getattr(args, "experimental_streams", None),
     )
     cleanup_remote(
         args,
@@ -900,7 +927,8 @@ def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_ro
         receiver_time,
         run_index,
         warmup,
-        {**rust_provenance(args), "pairing_mode": args.rusty_auth},
+        {**rust_provenance(args, size_mib), "pairing_mode": args.rusty_auth},
+        getattr(args, "experimental_streams", None),
     )
     cleanup_remote(
         args,
@@ -1121,7 +1149,7 @@ def croc_rows(args, source_hash, received_hash, expected_size, wall, sender_time
             "working_tree_dirty": bool(git_output("status", "--porcelain")),
             "role": role,
             "transport": "croc",
-            **croc_provenance(args),
+            **croc_provenance(args, expected_size // (1024 * 1024)),
             "transport_mode": mode,
             "path": path,
             "path_start": path,
@@ -1618,6 +1646,12 @@ def build_parser():
         help="enable opt-in payload stage wall-time diagnostics on both endpoints",
     )
     parser.add_argument(
+        "--experimental-streams",
+        type=int,
+        choices=(1, 4),
+        help="run the test-only shared-key parallel-stream example with 1 or 4 streams",
+    )
+    parser.add_argument(
         "--rusty-only",
         action="store_true",
         help="measure Rustytransfer alone; use this when Croc cannot select the same path",
@@ -1635,6 +1669,15 @@ def validate_local_args(parser, args):
     stream_window_bytes = getattr(args, "stream_window_bytes", None)
     if stream_window_bytes is not None and not 1_250_000 <= stream_window_bytes <= 5_000_000:
         parser.error("--stream-window-bytes must be between 1250000 and 5000000 bytes")
+    experimental_streams = getattr(args, "experimental_streams", None)
+    if experimental_streams not in (None, 1, 4):
+        parser.error("--experimental-streams must be 1 or 4")
+    if experimental_streams is not None and (not args.rusty_only or args.rusty_auth != "invite"):
+        parser.error("--experimental-streams requires --rusty-only --rusty-auth invite and the shared-key benchmark example binary")
+    if experimental_streams is not None and getattr(args, "chunk_size", None) is None:
+        parser.error("--experimental-streams requires an explicit --chunk-size")
+    if experimental_streams is not None and payload_profile_enabled(args):
+        parser.error("--payload-profile is not supported by the shared-key benchmark example")
     if not args.build_id.strip():
         parser.error("--build-id cannot be empty")
     if not args.storage_class.strip():

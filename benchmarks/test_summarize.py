@@ -174,6 +174,19 @@ class SummarizeTests(unittest.TestCase):
             {"unknown", 2_500_000},
         )
 
+    def test_shared_key_stream_experiments_group_apart_from_production_and_each_other(self):
+        rows = [
+            record(),
+            record(experimental_protocol_version="shared-key-parallel/1", parallel_streams=1, payload_key_count=1, kem_sessions=1),
+            record(experimental_protocol_version="shared-key-parallel/1", parallel_streams=4, payload_key_count=1, kem_sessions=1),
+        ]
+        summary = summarize.summarize_records(rows)
+        self.assertEqual(len(summary["groups"]), 3)
+        self.assertEqual(
+            {group["parallel_streams"] for group in summary["groups"]},
+            {"unknown", 1, 4},
+        )
+
     def test_groups_keep_build_direction_pairing_host_and_storage_separate(self):
         rows = [
             record(),

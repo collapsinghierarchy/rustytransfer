@@ -49,6 +49,10 @@
         { "type": "integer", "minimum": 1250000, "maximum": 5000000 }
       ]
     },
+    "experimental_protocol_version": { "type": "string", "minLength": 1 },
+    "parallel_streams": { "type": "integer", "enum": [1, 4] },
+    "payload_key_count": { "type": "integer", "const": 1 },
+    "kem_sessions": { "type": "integer", "const": 1 },
     "source_staging": { "enum": ["per-trial", "pre-staged"] },
     "payload_profile": {
       "type": "object",

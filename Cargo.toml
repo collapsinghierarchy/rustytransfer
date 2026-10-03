@@ -65,8 +65,10 @@ rustytransfer-protocol = { version = "0.1.0", path = "crates/protocol" }
 
 [dev-dependencies]
 async-trait.workspace = true
+aes-gcm.workspace = true
 iroh = { workspace = true, features = ["test-utils"] }
 ml-kem.workspace = true
+sha3.workspace = true
 uuid = { workspace = true, features = ["v4"] }
 webrtc.workspace = true
 

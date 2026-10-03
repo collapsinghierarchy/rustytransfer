@@ -30,6 +30,7 @@ class RustRowsTests(unittest.TestCase):
         sender_metric = {
             "role": "sender",
             "size_bytes": 12345,
+            "bytes_transferred": 12345,
             "chunk_size": 4096,
             "success": True,
             "pipeline_depth": 3,
@@ -99,6 +100,7 @@ class RustRowsTests(unittest.TestCase):
         }
         sender = {
             "size_bytes": 12,
+            "bytes_transferred": 12,
             "chunk_size": 4,
             "success": True,
             "path_evidence": evidence,
@@ -133,9 +135,10 @@ class RustRowsTests(unittest.TestCase):
         runner.ensure_direct_route_evidence(rows, "relay")
 
     def test_rows_reject_endpoint_metric_disagreement(self):
-        sender_metric = {"size_bytes": 12345, "chunk_size": 4096, "success": True}
+        sender_metric = {"size_bytes": 12345, "bytes_transferred": 12345, "chunk_size": 4096, "success": True}
         invalid_metrics = (
             ({**sender_metric, "size_bytes": 12344}, "receiver reported 12344 bytes"),
+            ({**sender_metric, "bytes_transferred": 12344}, "receiver reported 12344 transferred bytes"),
             ({**sender_metric, "chunk_size": 8192}, "invalid or different chunk sizes"),
             ({**sender_metric, "success": False}, "receiver metric did not report success"),
         )
@@ -166,6 +169,7 @@ class RustRowsTests(unittest.TestCase):
     def test_reverse_rows_label_direction_and_use_sender_receiver_resources(self):
         sender_metric = {
             "size_bytes": 12345,
+            "bytes_transferred": 12345,
             "chunk_size": 4096,
             "success": True,
             "role": "sender",
@@ -259,7 +263,7 @@ class OracleRunnerArgumentTests(unittest.TestCase):
                 runner.append_and_validate_rust_rows(output, rows, "relay", "relay")
             self.assertEqual(len(output.read_text(encoding="utf-8").splitlines()), 2)
 
-    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake", profile=False, remote_inputs=None, with_croc=False, croc_version="11.5.3", chunk_size=None, stream_window_bytes=None):
+    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake", profile=False, remote_inputs=None, with_croc=False, croc_version="11.5.3", chunk_size=None, stream_window_bytes=None, experimental_streams=None):
         root = Path(temp_dir)
         paths = [root / name for name in ("key", "rusty", "64.bin", "512.bin", "croc")]
         for path in paths:
@@ -291,6 +295,8 @@ class OracleRunnerArgumentTests(unittest.TestCase):
             argv.extend(["--chunk-size", str(chunk_size)])
         if stream_window_bytes is not None:
             argv.extend(["--stream-window-bytes", str(stream_window_bytes)])
+        if experimental_streams is not None:
+            argv.extend(["--experimental-streams", str(experimental_streams)])
         if remote_inputs is not None:
             argv.extend(["--remote-input-64", remote_inputs[0], "--remote-input-512", remote_inputs[1]])
         parser = runner.build_parser()
@@ -721,6 +727,69 @@ class OracleRunnerArgumentTests(unittest.TestCase):
         self.assertEqual(forward["receiver_binary_sha256"], "b" * 64)
         self.assertEqual(reverse["sender_binary_sha256"], "b" * 64)
         self.assertEqual(reverse["receiver_binary_sha256"], "a" * 64)
+
+    def test_source_staging_provenance_uses_the_actual_fixture_size(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            _parser, args = self.parse(
+                temp_dir,
+                rusty_only=True,
+                direction="oracle-to-wsl",
+                remote_inputs=("/oracle/input-64.bin", "/oracle/input-512.bin"),
+            )
+            args.local_rusty_sha256 = "a" * 64
+            args.remote_rusty_sha256 = "b" * 64
+            args.local_croc_sha256 = "c" * 64
+            args.remote_croc_sha256 = "d" * 64
+            rust_small = runner.rust_provenance(args, 0.0625)
+            rust_64 = runner.rust_provenance(args, 64)
+            rust_512 = runner.rust_provenance(args, 512)
+            croc_small = runner.croc_provenance(args, 0.0625)
+            self.assertEqual(rust_small["source_staging"], "per-trial")
+            self.assertEqual(rust_64["source_staging"], "pre-staged")
+            self.assertEqual(rust_512["source_staging"], "pre-staged")
+            self.assertEqual(croc_small["source_staging"], "per-trial")
+
+    def test_experimental_stream_flag_is_sender_only_and_requires_invite_rust_only(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(temp_dir, rusty_only=True, auth="invite", chunk_size=4096, experimental_streams=4)
+            runner.validate_local_args(parser, args)
+            command = runner.rusty_sender_argv(args, "bench-example", "source.bin")
+            self.assertEqual(command, ["bench-example", "--transport", "iroh", "send", "--direct", "--chunk-size", "4096", "--streams", "4", "--file", "source.bin"])
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(temp_dir, rusty_only=True, auth="pake", chunk_size=4096, experimental_streams=1)
+            with self.assertRaises(SystemExit):
+                runner.validate_local_args(parser, args)
+
+        for invalid in (0, 2, 5):
+            with tempfile.TemporaryDirectory() as temp_dir:
+                with self.assertRaises(SystemExit):
+                    self.parse(temp_dir, rusty_only=True, auth="invite", chunk_size=4096, experimental_streams=invalid)
+
+    def test_experimental_endpoint_metrics_must_match_requested_crypto_mode(self):
+        base = {
+            "success": True,
+            "size_bytes": 100,
+            "chunk_size": 10,
+            "bytes_transferred": 100,
+            "experimental_protocol_version": "shared-key-parallel/1",
+            "parallel_streams": 4,
+            "payload_key_count": 1,
+            "kem_sessions": 1,
+        }
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(temp_dir, rusty_only=True, auth="invite", chunk_size=10, experimental_streams=4)
+            time_value = {"user_cpu_seconds": 0.1, "system_cpu_seconds": 0.0, "max_rss_kib": 1}
+            rows = runner.rust_rows(base, base, "a" * 64, "a" * 64, 100, 1.0, time_value, time_value, 1, False, {"direction": "wsl-to-oracle"}, 4)
+            self.assertEqual(rows[0]["parallel_streams"], 4)
+            for field, value in (("payload_key_count", 4), ("kem_sessions", 4), ("parallel_streams", 1), ("experimental_protocol_version", "other")):
+                invalid = dict(base, **{field: value})
+                with self.assertRaisesRegex(RuntimeError, field):
+                    runner.rust_rows(invalid, base, "a" * 64, "a" * 64, 100, 1.0, time_value, time_value, 1, False, {"direction": "wsl-to-oracle"}, 4)
+            invalid = dict(base)
+            del invalid["kem_sessions"]
+            with self.assertRaisesRegex(RuntimeError, "kem_sessions"):
+                runner.rust_rows(invalid, base, "a" * 64, "a" * 64, 100, 1.0, time_value, time_value, 1, False, {"direction": "wsl-to-oracle"}, 4)
 
     def test_remote_sender_command_uses_invite_mode_and_scoped_session(self):
         with tempfile.TemporaryDirectory() as temp_dir:

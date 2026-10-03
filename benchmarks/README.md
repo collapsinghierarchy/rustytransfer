@@ -72,6 +72,33 @@ production defaults. The optional `stream_window_bytes` provenance field keeps
 these cohorts separate in summaries. This control is for measurement and does
 not select a new production default.
 
+The test-only `examples/shared_key_parallel.rs` binary can compare one versus
+four payload streams on a single Iroh connection. Build it with
+`cargo build --release --example shared_key_parallel` and point the Oracle
+runner's local and remote Rustytransfer executable paths at that example binary.
+Use `--rusty-only --rusty-auth invite --chunk-size BYTES
+--experimental-streams 1` or `--experimental-streams 4`; the runner sends
+`--streams` only to the sender, and the receiver negotiates the count.
+
+This experiment uses a separate versioned ALPN and framing protocol. One
+authenticated ML-KEM session supplies one AES-256-GCM payload key shared by
+every stream. Authenticated, contiguous chunk ranges use disjoint global chunk
+indices for nonces, and chunk AAD binds the protocol version, session, stream,
+range, offset, and plaintext length. All streams share one connection and its
+congestion budget. The harness writes chunks to disjoint offsets in a bounded,
+file-backed partial output and promotes it only after authenticated completion.
+Both endpoints require a direct path to remain selected for 500 ms before
+READY, within the startup timer;
+payload path evidence ends after the data streams complete and before FIN/ACK
+shutdown. Control and stream I/O have 30-second idle limits, and SIGINT/SIGTERM
+abort and join active streams before owned partial output cleanup. SIGKILL cannot
+run cleanup and may leave a partial file; this experiment has no resume support.
+It is fresh-transfer only and makes no resume claim. The harness uses separate
+per-chunk encryption/decryption buffers, so its CPU and allocation profile is
+not identical to the production single-stream path. This isolated benchmark
+does not change the production protocol, production defaults, or production
+resume behavior.
+
 With both `RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE=1` and
 `RUSTYTRANSFER_BENCH_PATH_EVIDENCE=1`, Iroh records connection diagnostics in
 `path_evidence.connection_stats`: start/end and sampled RTT/congestion windows,

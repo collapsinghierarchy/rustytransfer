@@ -563,3 +563,14 @@ or platform testing are named limitations, never reported as passed checks.
   the temporary client-only instance firewall rule was restored exactly.
   See the [final report](direct-transfer-efficiency-report.md) and its raw evidence.
   No further desktop/device implementation is part of this execution.
+- 2026-10-03: Added the requested direct-only 1/2 GiB Croc followups and a fresh
+  512 MiB control with unchanged frozen binaries, independently generated
+  matching fixtures, one warmup and five alternating measured pairs per size.
+  Rustytransfer/Croc medians were 25.18/28.74 MiB/s at fresh 512 MiB,
+  27.59/29.30 at 1 GiB, and 28.42/30.17 at 2 GiB. The larger-size rate gap
+  plateaued around 6%; the fresh control also establishes time-window variation.
+  All payload paths and hashes passed. The 512 MiB lease teardown required scoped
+  recovery after completed trials; independent checks prove exact INPUT-chain
+  restoration, and the 2 GiB job cleaned up normally. The report explains the
+  CPU optimization, transport hypotheses, and future minimal-change experiments;
+  no additional optimization or desktop/device implementation was started.

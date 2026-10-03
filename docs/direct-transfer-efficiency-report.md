@@ -42,7 +42,51 @@ payload transfers only**; rates include process startup and completion.
 | 64 MiB | 12.48 | 19.28 | 54.5% |
 | 512 MiB | 23.02 | 28.87 | 25.4% |
 
-Croc was faster and used less sender CPU in this pair. It used four TCP data
+The requested larger-file followups and a fresh 512 MiB control used the exact
+same frozen binaries. Each cohort has one warmup per tool and five alternating
+measured pairs; all twelve transfers passed direct-route and full-file checks.
+Sizes use binary units: 1 GiB is 1,073,741,824 bytes and 2 GiB is 2,147,483,648.
+
+| File/cohort | Rustytransfer median MiB/s | Croc direct median MiB/s | Croc rate advantage | Median wall seconds, Rustytransfer/Croc |
+| --- | ---: | ---: | ---: | ---: |
+| [512 MiB fresh control](../benchmarks/results/oracle-20261003-croc-direct-512-control/README.md) | 25.18 | 28.74 | 14.2% | 20.34 / 17.81 |
+| [1 GiB](../benchmarks/results/oracle-20261003-croc-direct-1g/README.md) | 27.59 | 29.30 | 6.2% | 37.11 / 34.95 |
+| [2 GiB](../benchmarks/results/oracle-20261003-croc-direct-2g/README.md) | 28.42 | 30.17 | 6.1% | 72.05 / 67.88 |
+
+Rate advantage means `(Croc median / Rustytransfer median - 1) * 100`; it is
+not the percentage reduction in completion time. At 2 GiB the difference
+between median completion times is 4.17 seconds. The unrounded rate gap changed
+from 6.18% at 1 GiB to 6.14% at 2 GiB: effectively a plateau, not convincing
+confirmation of continued narrowing. The 2 GiB individual rates ranged from
+28.08-29.52 MiB/s for Rustytransfer and 29.21-30.20 for Croc; respective MADs
+were 0.35 and 0.03 MiB/s. All five paired Croc runs were faster at 2 GiB; two
+were slower at 1 GiB and remain included.
+
+The earlier 512 MiB gap was 25.4%, whereas the fresh control measured 14.2%.
+That change at the same size demonstrates that payload size is not the only
+variable. Cohorts ran sequentially in 1 GiB, fresh 512 MiB, then 2 GiB order;
+they do not isolate size from WAN variation, cache state, or the time window.
+Fixed setup costs become a smaller fraction of larger transfers and are one
+plausible explanation for narrowing, but these data do not fit or prove that
+model. No valid performance outlier was discarded.
+
+At 2 GiB, median Oracle sender CPU was 26.23 seconds for Rustytransfer and 6.80
+for Croc, or 13.12 versus 3.40 CPU seconds/GiB. Receiver CPU was 27.99 versus
+22.76 seconds; peak-RSS medians were 30,464/24,692 KiB on the sender and
+25,468/25,856 KiB on the receiver. The much larger sender CPU gap remains
+despite close throughput. Per-cohort audit reports preserve ranges/MAD,
+executable/fixture provenance, route excerpts, canonical rows, and cleanup.
+
+The fresh 512 MiB harness completed all valid transfers but failed during
+firewall teardown because its stop check expected three process arguments
+instead of the configured four. A separately audited recovery matched the
+unique rule, PID, cwd, exact arguments, and client /32 before stopping that
+lease. The original INPUT-chain hash was restored exactly. A separate cleanup
+check passed before 2 GiB; the 2 GiB job completed with normal teardown. All
+cohorts have independent post-run checks showing no benchmark endpoints or
+Croc listeners, with OCI settings unchanged.
+
+Croc had higher median rates and used less sender CPU on this endpoint pair. It used four TCP data
 channels directly into its embedded listener on the Oracle sender; Rustytransfer
 used Iroh/QUIC. The comparison does not isolate the cause of the difference or
 establish universal transport optimality. Croc's global `--local`, `send
@@ -62,3 +106,73 @@ configuration is separately validated by the final comparison and resume check.
 No physical LAN, native Windows, macOS performance, or physical ARM software
 fallback measurement is claimed. Oracle permissions prevented CPU `perf`
 sampling; stage diagnostics measure elapsed time.
+
+The accepted optimization enables hardware AES and authentication-field
+arithmetic in the pinned RustCrypto dependencies through five Cargo config
+lines. It is runtime dispatched on supported Linux/macOS ARM64 processors,
+retains software fallback, and does not weaken encryption or change the wire
+protocol. The matched experiment establishes a reduction in CPU cost, not a
+corresponding increase in network speed. Removing CPU work helps efficiency
+even when another resource determines completion time.
+
+The Croc comparison identifies architectural differences, but it does not
+identify one proven cause of the remaining gap. Croc's verified four TCP data
+connections can distribute file work across independent network flows;
+Rustytransfer's [Iroh adapter](../crates/native/src/transport/iroh.rs) carries the
+ordered payload on one bidirectional QUIC stream. Different flow/congestion
+behavior is a plausible contributor. Four streams on one QUIC connection would
+still share its path's congestion budget; they do not reproduce four independent
+TCP connections. The [QUIC recovery specification](https://www.rfc-editor.org/rfc/rfc9002.html#section-7)
+describes congestion control at the packet/path level, and
+[Iroh's stream documentation](https://docs.rs/iroh/1.2.0/iroh/endpoint/struct.Connection.html#method.open_uni)
+describes multiplexing streams within a connection.
+
+Rustytransfer encrypts each application chunk with AES-256-GCM and then sends
+it through QUIC's encrypted transport. The compared Croc path uses encrypted
+application messages over plain TCP sockets, as shown by its
+[cryptography](https://github.com/schollz/croc/blob/v11.5.4/src/crypt/crypt.go) and
+[TCP implementation](https://github.com/schollz/croc/blob/v11.5.4/src/comm/comm.go).
+This gives Rustytransfer additional transport processing. The sender also
+copies its reusable read buffer into a newly allocated owned chunk, then seals
+in place and awaits a send; the receiver decrypts and writes each chunk before
+receiving the next. These are concrete places to investigate, but their share
+of the current gap has not been measured. The Iroh flush call is a no-op, so
+removing it is not a credible large optimization; awaiting a stream write does
+not mean waiting one network round trip per chunk.
+
+The [earlier stage profile](../benchmarks/results/oracle-20261002-payload-profile/README.md)
+measured 10.010 seconds of allocation/copy/encryption and 6.379 seconds of send
+wait in a 512 MiB Oracle-to-WSL payload. It predates the ARM acceleration and
+combines three operations; it cannot quantify today's copy or crypto bottleneck.
+In the opposite direction, send waits dominated instead. Post-optimization
+profiles and transport statistics are needed before attributing the current
+gap to CPU, disk, flow control, or packet loss. Large-file sender CPU/wall ratios
+also do not show the Oracle process continuously using its entire CPU.
+
+The next work should proceed as small, independently measured experiments;
+none of the following optimizations has been implemented or accepted here.
+
+| Priority | Experiment | Likely value and architectural scope |
+| --- | --- | --- |
+| 1 | Refresh opt-in stage profiles and record QUIC RTT, loss, congestion state, and send stalls; then test bounded transport-window changes only if the evidence shows a limit. | Best chance of a substantial throughput gain with a small transport-local change if flow control is the bottleneck. No measured gain is promised. Preserve NAT traversal defaults and cap memory. |
+| 2 | Sweep the existing CLI `--chunk-size` from 256 KiB to 512 KiB and 1 MiB. | Cheapest experiment, with no product code change. Larger chunks reduce per-message allocation, FSM, framing, and progress overhead. They do not enlarge QUIC packets or automatically increase the congestion window. |
+| 3 | Read directly into the owned plaintext chunk passed to the sender FSM. | Removes the visible buffer-to-chunk copy while preserving the existing in-place encryption and protocol. Likely a CPU/allocation improvement; bandwidth upside is uncertain. Preserve short reads, tag capacity, truncation checks, and resume behavior. |
+| 4 | If profiles show application gaps, test a small bounded prefetch/write pipeline. | Overlaps file work with transport waits. Keep encryption nonce order, bounded queues, cancellation, and output finalization intact. The existing small disk-stage times make a large storage-only gain unlikely on these hosts. |
+| 5 | Experiment with multiple payload streams or connections only after the smaller tests. | Larger architectural change with potential throughput upside if flow behavior or scheduling is limiting. Requires authenticated offsets/order, unique nonce handling, bounded reassembly, resume and route-proof changes; extra streams alone do not multiply bandwidth. |
+
+Iroh exposes [connection statistics and congestion state](https://docs.rs/iroh/1.2.0/iroh/endpoint/struct.Connection.html#method.stats)
+and [transport configuration](https://docs.rs/iroh/1.2.0/iroh/endpoint/struct.QuicTransportConfig.html).
+The latter supports tuning windows to bandwidth, RTT, and memory; its documented
+100 Mbps/100 ms default tuning is not a 100 Mbps speed cap. Change windows only
+after distinguishing flow-control blocking from congestion or application
+starvation. Each accepted candidate needs alternating baseline/candidate trials,
+direct payload proof, hashes, CPU/GiB and RSS, plus small-file and resume checks.
+Reversing the size-cohort order would also help test whether the shrinking gap
+persists independently of the time of day.
+
+Matching Croc's large-file rates with Iroh is a plausible engineering target.
+These measurements do not establish a fundamental QUIC/Iroh ceiling or require
+replacing Iroh. They also cannot guarantee parity on this WAN, other machines,
+or small files. The measured remaining throughput gap is modest; the sender CPU
+gap is considerably larger and deserves its own efficiency target. Keep both
+targets explicit and retain the current cryptographic and resume guarantees.

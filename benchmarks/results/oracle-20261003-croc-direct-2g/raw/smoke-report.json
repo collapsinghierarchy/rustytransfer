@@ -1,0 +1,16 @@
+{
+  "transfer_started": false,
+  "configured_lease_seconds": 2,
+  "observed_lease_context_seconds": 2.6877024670000083,
+  "lease_launcher_exit_code": 0,
+  "scoped_stop_while_live": true,
+  "accepted_configured_maximum_lease_seconds": 1800,
+  "rejected_lease_seconds_1801": true,
+  "input_chain_sha256_before": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+  "input_chain_sha256_from_lease_before": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+  "input_chain_sha256_from_lease_after": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+  "input_chain_sha256_after": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+  "exact_input_chain_restored": true,
+  "listeners_before": [],
+  "listeners_after": []
+}

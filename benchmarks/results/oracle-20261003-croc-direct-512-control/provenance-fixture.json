@@ -1,0 +1,8 @@
+{
+  "size_bytes": 536870912,
+  "local_path": "/home/wasilij/rustytransfer-bench/input-512.bin",
+  "remote_path": "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-512.bin",
+  "sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+  "first_512_mib_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+  "source_staging": "caller-owned pre-staged Oracle fixture; verified before every transfer"
+}

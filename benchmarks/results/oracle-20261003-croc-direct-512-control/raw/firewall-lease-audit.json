@@ -1,0 +1,29 @@
+{
+  "tag": "rt-croc-a5904ac88b74",
+  "cidr": "46.5.248.165/32",
+  "exact_input_chain_restored": true,
+  "before_sha256": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+  "after_sha256": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+  "temporary_tcp_ports": [
+    9009,
+    9010,
+    9011,
+    9012,
+    9013
+  ],
+  "source_restriction": "single-client IPv4 /32",
+  "maximum_lease_seconds": 1200,
+  "recovery": {
+    "performed_after_control_completion": true,
+    "scoped_pid": 451088,
+    "validated_argv_tail": [
+      "46.5.248.165/32",
+      "rt-croc-a5904ac88b74",
+      "/home/ubuntu/rustytransfer-bench/rt-croc-a5904ac88b74",
+      "1200"
+    ],
+    "current_input_chain_sha256": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+    "recovery_helper": "recover-croc-512-lease.py",
+    "only_recorded_lease_files_removed": true
+  }
+}

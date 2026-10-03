@@ -1,0 +1,25 @@
+{
+  "local": {
+    "free_bytes": 999807705088,
+    "load_average": [
+      0.4404296875,
+      0.15966796875,
+      0.05322265625
+    ],
+    "cpu_count": 16,
+    "active_benchmark_endpoints": []
+  },
+  "oracle": {
+    "free_bytes": 30934716416,
+    "load_average": [
+      0.5546875,
+      0.546875,
+      0.43408203125
+    ],
+    "cpu_count": 1,
+    "active_benchmark_endpoints": []
+  },
+  "oracle_croc_listeners": [],
+  "oracle_input_chain_sha256": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+  "fixture_first_1_gib_sha256": "d37dfb4cb391e50e142f164f25a5d9b87b01b1c811d714f985c73aae53ac80c5"
+}

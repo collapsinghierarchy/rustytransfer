@@ -1,0 +1,27 @@
+{
+  "prepared_at_utc": "2026-10-03T09:11:20.979344+00:00",
+  "direction": "oracle-to-wsl",
+  "size_mib": 512,
+  "size_bytes": 536870912,
+  "fixture_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+  "fixture_manifest_sha256": "8a61961d44da3842b353a462e241d3dcc43b19aea63f76da530bb755e14cf76e",
+  "rusty_manifest_sha256": "a636dbd2506c84d747b2037400fbabe235f35dfb29281c5d662f5e479b44b05d",
+  "croc_manifest_sha256": "0204e0efbf5e81f9598beddacbd3f5ba2dbb9d0d353f402ace2590683d035b78",
+  "rusty_manifest_path": "/home/wasilij/rustytransfer-bench/final-build-20261003.json",
+  "croc_manifest_path": "/home/wasilij/rustytransfer-bench/tools/croc-11.5.4/manifest.json",
+  "one_g_comparison_manifest_path": "/home/wasilij/rustytransfer-bench/results/croc-direct-1g-20261003/comparison-manifest.json",
+  "one_g_comparison_manifest_sha256": "9d30e2be56c0c1d25b18ba593435df25bcc2a55006b0f6e0e32cd8a9bbcf2303",
+  "candidate_paths": {
+    "rustytransfer": "Iroh QUIC; direct route must be verified at both endpoints",
+    "croc": "Croc 11.5.4 local-auto TCP to Oracle sender endpoint-local listeners"
+  },
+  "croc_mode": "global --local; send --transport auto; no Tailcat/external relay",
+  "warmups_per_candidate": 1,
+  "measured_pairs": 5,
+  "schedule": "runner.run_size: warmup Rusty then Croc; odd measured pairs Rusty-first, even pairs Croc-first",
+  "same_final_binaries_as_1g_comparison": true,
+  "source_staging": "pre-staged caller-owned source; runner verifies remote size/hash before each trial; source is not removed",
+  "run_started_at_utc": "2026-10-03T09:11:25.445508+00:00",
+  "run_finished_at_utc": "2026-10-03T09:17:07.057510+00:00",
+  "run_status": "completed"
+}

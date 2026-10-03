@@ -1,0 +1,23 @@
+{
+  "direction": "oracle-to-wsl",
+  "size_mib": 1024,
+  "size_bytes": 1073741824,
+  "candidates": {
+    "rustytransfer": "Iroh QUIC; direct route must be verified at both endpoints",
+    "croc": "Croc 11.5.4 local-auto TCP to Oracle sender endpoint-local listeners"
+  },
+  "croc_mode": "global --local; send --transport auto; no Tailcat/external relay",
+  "warmups_per_candidate": 1,
+  "measured_pairs": 5,
+  "order": "warmups Rusty then Croc; measured pairs alternate Rusty-first/Croc-first",
+  "rusty_manifest_path": "/home/wasilij/rustytransfer-bench/final-build-20261003.json",
+  "rusty_manifest_sha256": "a636dbd2506c84d747b2037400fbabe235f35dfb29281c5d662f5e479b44b05d",
+  "croc_manifest_path": "/home/wasilij/rustytransfer-bench/tools/croc-11.5.4/manifest.json",
+  "croc_manifest_sha256": "0204e0efbf5e81f9598beddacbd3f5ba2dbb9d0d353f402ace2590683d035b78",
+  "fixture_manifest_path": "/home/wasilij/rustytransfer-bench/fixtures-1024-20261003.json",
+  "fixture_manifest_sha256": "f7dc21133fa5112b4139dd7f3fb377f7ce9d12c786b4d669aca9b8287e8bf176",
+  "fixture_sha256": "d37dfb4cb391e50e142f164f25a5d9b87b01b1c811d714f985c73aae53ac80c5",
+  "fixture_generation": "OpenSSL AES-256-CTR over 1 GiB of zero bytes",
+  "source_staging": "pre-staged; runner verifies remote size/hash before every timed trial; caller-owned file is never removed",
+  "comparison_output_is_new": true
+}

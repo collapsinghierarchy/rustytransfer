@@ -1,0 +1,26 @@
+{
+  "prepared_at_utc": "2026-10-03T09:23:23.703377+00:00",
+  "direction": "oracle-to-wsl",
+  "size_mib": 2048,
+  "size_bytes": 2147483648,
+  "fixture_sha256": "fd23e40748d31513a8d01ee79911e637d22bd39d02da98d47471c24f804fad28",
+  "fixture_manifest_sha256": "6aa68515b1ed7e4ba373cb7d6824d261046f36809555a0d1992edb761b6cf0ae",
+  "rusty_manifest_sha256": "a636dbd2506c84d747b2037400fbabe235f35dfb29281c5d662f5e479b44b05d",
+  "croc_manifest_sha256": "0204e0efbf5e81f9598beddacbd3f5ba2dbb9d0d353f402ace2590683d035b78",
+  "one_g_comparison_manifest_path": "/home/wasilij/rustytransfer-bench/results/croc-direct-1g-20261003/comparison-manifest.json",
+  "one_g_comparison_manifest_sha256": "9d30e2be56c0c1d25b18ba593435df25bcc2a55006b0f6e0e32cd8a9bbcf2303",
+  "candidate_paths": {
+    "rustytransfer": "Iroh QUIC; verified direct payload route at both endpoints",
+    "croc": "Croc 11.5.4 local-auto TCP to Oracle sender endpoint-local listeners"
+  },
+  "croc_mode": "global --local; send --transport auto; no Tailcat/external relay",
+  "warmups_per_candidate": 1,
+  "measured_pairs": 5,
+  "schedule": "warmup Rusty then Croc; odd measured pairs Rusty-first, even pairs Croc-first",
+  "source_staging": "pre-staged caller-owned fixture, verified before each trial and never removed",
+  "firewall_lease_seconds": 1800,
+  "firewall_lease_maximum_seconds": 1800,
+  "run_started_at_utc": "2026-10-03T09:23:28.161615+00:00",
+  "run_finished_at_utc": "2026-10-03T09:41:41.201629+00:00",
+  "run_status": "completed"
+}

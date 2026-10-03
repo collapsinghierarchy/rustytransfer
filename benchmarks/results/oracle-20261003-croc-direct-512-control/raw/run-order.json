@@ -1,0 +1,74 @@
+[
+  {
+    "size_mib": 512,
+    "candidate": "rustytransfer",
+    "run_index": 0,
+    "warmup": true
+  },
+  {
+    "size_mib": 512,
+    "candidate": "croc",
+    "run_index": 0,
+    "warmup": true
+  },
+  {
+    "size_mib": 512,
+    "candidate": "rustytransfer",
+    "run_index": 1,
+    "warmup": false
+  },
+  {
+    "size_mib": 512,
+    "candidate": "croc",
+    "run_index": 1,
+    "warmup": false
+  },
+  {
+    "size_mib": 512,
+    "candidate": "croc",
+    "run_index": 2,
+    "warmup": false
+  },
+  {
+    "size_mib": 512,
+    "candidate": "rustytransfer",
+    "run_index": 2,
+    "warmup": false
+  },
+  {
+    "size_mib": 512,
+    "candidate": "rustytransfer",
+    "run_index": 3,
+    "warmup": false
+  },
+  {
+    "size_mib": 512,
+    "candidate": "croc",
+    "run_index": 3,
+    "warmup": false
+  },
+  {
+    "size_mib": 512,
+    "candidate": "croc",
+    "run_index": 4,
+    "warmup": false
+  },
+  {
+    "size_mib": 512,
+    "candidate": "rustytransfer",
+    "run_index": 4,
+    "warmup": false
+  },
+  {
+    "size_mib": 512,
+    "candidate": "rustytransfer",
+    "run_index": 5,
+    "warmup": false
+  },
+  {
+    "size_mib": 512,
+    "candidate": "croc",
+    "run_index": 5,
+    "warmup": false
+  }
+]

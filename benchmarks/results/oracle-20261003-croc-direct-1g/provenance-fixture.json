@@ -1,0 +1,12 @@
+{
+  "size_bytes": 1073741824,
+  "generation": "OpenSSL AES-256-CTR over 1 GiB of zero bytes",
+  "key_hex": "0000000000000000000000000000000000000000000000000000000000000000",
+  "iv_hex": "00000000000000000000000000000000",
+  "local_path": "/home/wasilij/rustytransfer-bench/input-1024.bin",
+  "remote_path": "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-1024.bin",
+  "sha256": "d37dfb4cb391e50e142f164f25a5d9b87b01b1c811d714f985c73aae53ac80c5",
+  "first_512_mib_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+  "caller_owned_pre_staged_input": true,
+  "generation_is_not_transfer_measurement": true
+}

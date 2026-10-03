@@ -1,0 +1,679 @@
+{
+  "comparison_manifest": {
+    "prepared_at_utc": "2026-10-03T09:23:23.703377+00:00",
+    "direction": "oracle-to-wsl",
+    "size_mib": 2048,
+    "size_bytes": 2147483648,
+    "fixture_sha256": "fd23e40748d31513a8d01ee79911e637d22bd39d02da98d47471c24f804fad28",
+    "fixture_manifest_sha256": "6aa68515b1ed7e4ba373cb7d6824d261046f36809555a0d1992edb761b6cf0ae",
+    "rusty_manifest_sha256": "a636dbd2506c84d747b2037400fbabe235f35dfb29281c5d662f5e479b44b05d",
+    "croc_manifest_sha256": "0204e0efbf5e81f9598beddacbd3f5ba2dbb9d0d353f402ace2590683d035b78",
+    "one_g_comparison_manifest_path": "/home/wasilij/rustytransfer-bench/results/croc-direct-1g-20261003/comparison-manifest.json",
+    "one_g_comparison_manifest_sha256": "9d30e2be56c0c1d25b18ba593435df25bcc2a55006b0f6e0e32cd8a9bbcf2303",
+    "candidate_paths": {
+      "rustytransfer": "Iroh QUIC; verified direct payload route at both endpoints",
+      "croc": "Croc 11.5.4 local-auto TCP to Oracle sender endpoint-local listeners"
+    },
+    "croc_mode": "global --local; send --transport auto; no Tailcat/external relay",
+    "warmups_per_candidate": 1,
+    "measured_pairs": 5,
+    "schedule": "warmup Rusty then Croc; odd measured pairs Rusty-first, even pairs Croc-first",
+    "source_staging": "pre-staged caller-owned fixture, verified before each trial and never removed",
+    "firewall_lease_seconds": 1800,
+    "firewall_lease_maximum_seconds": 1800,
+    "run_started_at_utc": "2026-10-03T09:23:28.161615+00:00",
+    "run_finished_at_utc": "2026-10-03T09:41:41.201629+00:00",
+    "run_status": "completed"
+  },
+  "comparison": {
+    "size_mib": 2048,
+    "size_bytes": 2147483648,
+    "variants": {
+      "iroh": {
+        "effective_mib_per_second": {
+          "median": 28.42484973243368,
+          "mad": 0.3463697651179025,
+          "min": 28.07847996731578,
+          "max": 29.515955002936753,
+          "count": 5
+        },
+        "wall_seconds": {
+          "median": 72.04963330600003,
+          "mad": 0.8887879469999689,
+          "min": 69.38620145599998,
+          "max": 72.938421253,
+          "count": 5
+        },
+        "sender_cpu_seconds": {
+          "median": 26.23,
+          "mad": 0.2099999999999973,
+          "min": 25.6,
+          "max": 26.439999999999998,
+          "count": 5
+        },
+        "receiver_cpu_seconds": {
+          "median": 27.990000000000002,
+          "mad": 0.46999999999999886,
+          "min": 26.950000000000003,
+          "max": 28.46,
+          "count": 5
+        },
+        "sender_max_rss_kib": {
+          "median": 30464,
+          "mad": 1332,
+          "min": 27056,
+          "max": 32420,
+          "count": 5
+        },
+        "receiver_max_rss_kib": {
+          "median": 25468,
+          "mad": 76,
+          "min": 25288,
+          "max": 25932,
+          "count": 5
+        },
+        "setup_seconds": {
+          "median": 0.993476559,
+          "mad": 0.09255909499999992,
+          "min": 0.8978282839999999,
+          "max": 1.3770667870000002,
+          "count": 5
+        }
+      },
+      "croc": {
+        "effective_mib_per_second": {
+          "median": 30.170045101167418,
+          "mad": 0.027930311301378907,
+          "min": 29.210078560386467,
+          "max": 30.197975412468796,
+          "count": 5
+        },
+        "wall_seconds": {
+          "median": 67.88190051200002,
+          "mad": 0.06278442799998629,
+          "min": 67.81911608400003,
+          "max": 70.11278644000004,
+          "count": 5
+        },
+        "sender_cpu_seconds": {
+          "median": 6.800000000000001,
+          "mad": 0.03999999999999915,
+          "min": 6.72,
+          "max": 6.84,
+          "count": 5
+        },
+        "receiver_cpu_seconds": {
+          "median": 22.76,
+          "mad": 0.5900000000000034,
+          "min": 22.169999999999998,
+          "max": 27.7,
+          "count": 5
+        },
+        "sender_max_rss_kib": {
+          "median": 24692,
+          "mad": 8,
+          "min": 24392,
+          "max": 25420,
+          "count": 5
+        },
+        "receiver_max_rss_kib": {
+          "median": 25856,
+          "mad": 136,
+          "min": 25652,
+          "max": 25992,
+          "count": 5
+        },
+        "setup_seconds": null
+      }
+    },
+    "paired_deltas": [
+      {
+        "run_index": 1,
+        "throughput_delta_percent_croc_vs_rusty": 6.533233092554913,
+        "wall_delta_seconds_croc_minus_rusty": -4.470282316000066
+      },
+      {
+        "run_index": 2,
+        "throughput_delta_percent_croc_vs_rusty": 4.030127679233009,
+        "wall_delta_seconds_croc_minus_rusty": -2.825634812999965
+      },
+      {
+        "run_index": 3,
+        "throughput_delta_percent_croc_vs_rusty": 6.1396819513962475,
+        "wall_delta_seconds_croc_minus_rusty": -4.167732794000017
+      },
+      {
+        "run_index": 4,
+        "throughput_delta_percent_croc_vs_rusty": 3.978032415902333,
+        "wall_delta_seconds_croc_minus_rusty": -2.6978664219999473
+      },
+      {
+        "run_index": 5,
+        "throughput_delta_percent_croc_vs_rusty": 2.275043390934539,
+        "wall_delta_seconds_croc_minus_rusty": -1.5434519880000153
+      }
+    ]
+  },
+  "actual_fixture": {
+    "path": "/home/wasilij/rustytransfer-bench/input-2048.bin",
+    "size_bytes": 2147483648,
+    "sha256": "fd23e40748d31513a8d01ee79911e637d22bd39d02da98d47471c24f804fad28",
+    "first_512_mib_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de"
+  },
+  "canonical_endpoint_rows": 24,
+  "run_order_transfers": 12,
+  "firewall_restored_exactly": true,
+  "croc_route_log_audit": [
+    {
+      "run_index": 0,
+      "warmup": true,
+      "ssh_connection_source_ip": "46.5.248.165",
+      "path_evidence": {
+        "kind": "croc-local-direct-tcp",
+        "verified": true,
+        "control_target": "141.147.1.21:9009",
+        "data_targets": [
+          "141.147.1.21:9010",
+          "141.147.1.21:9011",
+          "141.147.1.21:9012",
+          "141.147.1.21:9013"
+        ],
+        "sender_local_targets": [
+          "127.0.0.1:9009",
+          "127.0.0.1:9010",
+          "127.0.0.1:9011",
+          "127.0.0.1:9012",
+          "127.0.0.1:9013"
+        ],
+        "sender_listen_ports": [
+          9009,
+          9010,
+          9011,
+          9012,
+          9013
+        ],
+        "sender_remote_peer_ip": "46.5.248.165",
+        "sender_remote_peer_connections": 5,
+        "sender_loopback_peer_connections": 10,
+        "local_only": true,
+        "transport_mode": "auto",
+        "rationale": "Croc v11.5.4 --local disables Tailcat negotiation and external relay setup; receiver --ip targets the sender endpoint directly."
+      },
+      "sender": {
+        "redacted_full_log_sha256": "e65dc6113e914b29208d7b3c6c2cdd2a29b5add847f11a532d88f20f70cc7864",
+        "tcp_route_lines": [
+          "[info]\t2026/10/03 09:25:20 starting TCP server on :9009",
+          "[info]\t2026/10/03 09:25:20 starting TCP server on :9010",
+          "[info]\t2026/10/03 09:25:20 starting TCP server on :9011",
+          "[info]\t2026/10/03 09:25:20 starting TCP server on :9012",
+          "[info]\t2026/10/03 09:25:20 starting TCP server on :9013",
+          "[debug]\t09:25:20 tcp.go:245: client 127.0.0.1:46182 connected",
+          "[debug]\t09:25:20 tcp.go:245: client 127.0.0.1:47176 connected",
+          "[debug]\t09:25:20 tcp.go:245: client 127.0.0.1:39142 connected",
+          "[debug]\t09:25:20 tcp.go:245: client 127.0.0.1:43852 connected",
+          "[debug]\t09:25:20 tcp.go:245: client 127.0.0.1:41262 connected",
+          "[debug]\t09:25:20 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t09:25:20 tcp.go:245: client 127.0.0.1:46186 connected",
+          "Hashing input-204...  58% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588         | (1.2/2.1 GB, 1.6 GB/s) [0s:0s][debug]\t09:25:20 tcp.go:245: client 46.5.248.165:57122 connected",
+          "[debug]\t09:25:20 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t09:25:20 tcp.go:245: client 127.0.0.1:39150 connected",
+          "[debug]\t09:25:20 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t09:25:20 tcp.go:245: client 127.0.0.1:43856 connected",
+          "[debug]\t09:25:21 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t09:25:21 tcp.go:245: client 127.0.0.1:41270 connected",
+          "[debug]\t09:25:21 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t09:25:21 tcp.go:245: client 127.0.0.1:47178 connected",
+          "[debug]\t09:25:21 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t09:25:21 tcp.go:245: client 46.5.248.165:57152 connected",
+          "[debug]\t09:25:21 tcp.go:245: client 46.5.248.165:57144 connected",
+          "[debug]\t09:25:21 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t09:25:21 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t09:25:21 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t09:25:21 tcp.go:245: client 46.5.248.165:57108 connected",
+          "[debug]\t09:25:21 tcp.go:245: client 46.5.248.165:57168 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "69781a5894d973b0ca2f1cd45aa3fbcf46a2e4e5556f1fdca96e0cadabac38e0",
+        "tcp_route_lines": [
+          "[debug]\t11:25:19 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t11:25:20 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t11:25:20 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t11:25:20 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t11:25:20 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t11:25:20 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t11:25:20 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t11:25:20 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t11:25:20 croc.go:2849: connected to 141.147.1.21:9012"
+        ]
+      }
+    },
+    {
+      "run_index": 1,
+      "warmup": false,
+      "ssh_connection_source_ip": "46.5.248.165",
+      "path_evidence": {
+        "kind": "croc-local-direct-tcp",
+        "verified": true,
+        "control_target": "141.147.1.21:9009",
+        "data_targets": [
+          "141.147.1.21:9010",
+          "141.147.1.21:9011",
+          "141.147.1.21:9012",
+          "141.147.1.21:9013"
+        ],
+        "sender_local_targets": [
+          "127.0.0.1:9009",
+          "127.0.0.1:9010",
+          "127.0.0.1:9011",
+          "127.0.0.1:9012",
+          "127.0.0.1:9013"
+        ],
+        "sender_listen_ports": [
+          9009,
+          9010,
+          9011,
+          9012,
+          9013
+        ],
+        "sender_remote_peer_ip": "46.5.248.165",
+        "sender_remote_peer_connections": 5,
+        "sender_loopback_peer_connections": 10,
+        "local_only": true,
+        "transport_mode": "auto",
+        "rationale": "Croc v11.5.4 --local disables Tailcat negotiation and external relay setup; receiver --ip targets the sender endpoint directly."
+      },
+      "sender": {
+        "redacted_full_log_sha256": "bf5ea45016186e75d67807431dcd1929f1ecdcc428ec620b9d05aa2ff520cb45",
+        "tcp_route_lines": [
+          "[info]\t2026/10/03 09:28:28 starting TCP server on :9009",
+          "[info]\t2026/10/03 09:28:28 starting TCP server on :9010",
+          "[info]\t2026/10/03 09:28:28 starting TCP server on :9011",
+          "[info]\t2026/10/03 09:28:28 starting TCP server on :9012",
+          "[info]\t2026/10/03 09:28:28 starting TCP server on :9013",
+          "[debug]\t09:28:28 tcp.go:245: client 127.0.0.1:44114 connected",
+          "[debug]\t09:28:28 tcp.go:245: client 127.0.0.1:45476 connected",
+          "[debug]\t09:28:28 tcp.go:245: client 127.0.0.1:53614 connected",
+          "[debug]\t09:28:28 tcp.go:245: client 127.0.0.1:45398 connected",
+          "[debug]\t09:28:28 tcp.go:245: client 127.0.0.1:44584 connected",
+          "Hashing input-204...  38% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588             | (834 MB/2.1 GB, 1.6 GB/s) [0s:0s][debug]\t09:28:28 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t09:28:28 tcp.go:245: client 127.0.0.1:44592 connected",
+          "[debug]\t09:28:28 tcp.go:245: client 46.5.248.165:57162 connected",
+          "[debug]\t09:28:29 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t09:28:29 tcp.go:245: client 127.0.0.1:44128 connected",
+          "[debug]\t09:28:29 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t09:28:29 tcp.go:245: client 127.0.0.1:45486 connected",
+          "[debug]\t09:28:29 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t09:28:29 tcp.go:245: client 127.0.0.1:53620 connected",
+          "[debug]\t09:28:29 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t09:28:29 tcp.go:245: client 127.0.0.1:45408 connected",
+          "[debug]\t09:28:29 tcp.go:245: client 46.5.248.165:57080 connected",
+          "[debug]\t09:28:29 tcp.go:245: client 46.5.248.165:57158 connected",
+          "[debug]\t09:28:29 tcp.go:245: client 46.5.248.165:57076 connected",
+          "[debug]\t09:28:29 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t09:28:29 tcp.go:245: client 46.5.248.165:57082 connected",
+          "[debug]\t09:28:29 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t09:28:29 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t09:28:29 croc.go:2849: connected to 127.0.0.1:9012"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "3f52c2ab84f6fb1cbcf9ce70383bf79fa7a234acbafb60062a85d9360d66f416",
+        "tcp_route_lines": [
+          "[debug]\t11:28:27 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t11:28:28 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t11:28:28 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t11:28:28 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t11:28:28 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t11:28:28 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t11:28:28 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t11:28:28 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t11:28:28 croc.go:2849: connected to 141.147.1.21:9012"
+        ]
+      }
+    },
+    {
+      "run_index": 2,
+      "warmup": false,
+      "ssh_connection_source_ip": "46.5.248.165",
+      "path_evidence": {
+        "kind": "croc-local-direct-tcp",
+        "verified": true,
+        "control_target": "141.147.1.21:9009",
+        "data_targets": [
+          "141.147.1.21:9010",
+          "141.147.1.21:9011",
+          "141.147.1.21:9012",
+          "141.147.1.21:9013"
+        ],
+        "sender_local_targets": [
+          "127.0.0.1:9009",
+          "127.0.0.1:9010",
+          "127.0.0.1:9011",
+          "127.0.0.1:9012",
+          "127.0.0.1:9013"
+        ],
+        "sender_listen_ports": [
+          9009,
+          9010,
+          9011,
+          9012,
+          9013
+        ],
+        "sender_remote_peer_ip": "46.5.248.165",
+        "sender_remote_peer_connections": 5,
+        "sender_loopback_peer_connections": 10,
+        "local_only": true,
+        "transport_mode": "auto",
+        "rationale": "Croc v11.5.4 --local disables Tailcat negotiation and external relay setup; receiver --ip targets the sender endpoint directly."
+      },
+      "sender": {
+        "redacted_full_log_sha256": "9541ded958c9e8f48783a1d5d704c125ecad52d6d2f78e3901a8e02b9f3515b0",
+        "tcp_route_lines": [
+          "[info]\t2026/10/03 09:29:56 starting TCP server on :9009",
+          "[info]\t2026/10/03 09:29:56 starting TCP server on :9010",
+          "[info]\t2026/10/03 09:29:56 starting TCP server on :9011",
+          "[info]\t2026/10/03 09:29:56 starting TCP server on :9012",
+          "[info]\t2026/10/03 09:29:56 starting TCP server on :9013",
+          "[debug]\t09:29:56 tcp.go:245: client 127.0.0.1:44352 connected",
+          "[debug]\t09:29:56 tcp.go:245: client 127.0.0.1:45872 connected",
+          "[debug]\t09:29:56 tcp.go:245: client 127.0.0.1:56662 connected",
+          "[debug]\t09:29:56 tcp.go:245: client 127.0.0.1:34392 connected",
+          "[debug]\t09:29:56 tcp.go:245: client 127.0.0.1:47408 connected",
+          "[debug]\t09:29:57 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t09:29:57 tcp.go:245: client 127.0.0.1:56674 connected",
+          "[debug]\t09:29:57 tcp.go:245: client 46.5.248.165:57166 connected",
+          "[debug]\t09:29:57 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t09:29:57 tcp.go:245: client 127.0.0.1:44538 connected",
+          "[debug]\t09:29:57 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t09:29:57 tcp.go:245: client 127.0.0.1:55216 connected",
+          "[debug]\t09:29:57 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t09:29:57 tcp.go:245: client 127.0.0.1:52868 connected",
+          "Hashing input-204...  59% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588         | (1.3/2.1 GB, 1.6 GB/s) [0s:0s][debug]\t09:29:57 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t09:29:57 tcp.go:245: client 127.0.0.1:33538 connected",
+          "[debug]\t09:29:57 tcp.go:245: client 46.5.248.165:57154 connected",
+          "[debug]\t09:29:57 tcp.go:245: client 46.5.248.165:57152 connected",
+          "[debug]\t09:29:57 tcp.go:245: client 46.5.248.165:57128 connected",
+          "[debug]\t09:29:57 tcp.go:245: client 46.5.248.165:57138 connected",
+          "[debug]\t09:29:57 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t09:29:57 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t09:29:57 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t09:29:57 croc.go:2849: connected to 127.0.0.1:9012"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "04244dc4c0fbd420d323e71506d91541bd767398a85cb27a13b9e131879eed13",
+        "tcp_route_lines": [
+          "[debug]\t11:29:56 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t11:29:56 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t11:29:56 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t11:29:56 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t11:29:56 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t11:29:56 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t11:29:56 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t11:29:56 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t11:29:56 croc.go:2849: connected to 141.147.1.21:9013"
+        ]
+      }
+    },
+    {
+      "run_index": 3,
+      "warmup": false,
+      "ssh_connection_source_ip": "46.5.248.165",
+      "path_evidence": {
+        "kind": "croc-local-direct-tcp",
+        "verified": true,
+        "control_target": "141.147.1.21:9009",
+        "data_targets": [
+          "141.147.1.21:9010",
+          "141.147.1.21:9011",
+          "141.147.1.21:9012",
+          "141.147.1.21:9013"
+        ],
+        "sender_local_targets": [
+          "127.0.0.1:9009",
+          "127.0.0.1:9010",
+          "127.0.0.1:9011",
+          "127.0.0.1:9012",
+          "127.0.0.1:9013"
+        ],
+        "sender_listen_ports": [
+          9009,
+          9010,
+          9011,
+          9012,
+          9013
+        ],
+        "sender_remote_peer_ip": "46.5.248.165",
+        "sender_remote_peer_connections": 5,
+        "sender_loopback_peer_connections": 10,
+        "local_only": true,
+        "transport_mode": "auto",
+        "rationale": "Croc v11.5.4 --local disables Tailcat negotiation and external relay setup; receiver --ip targets the sender endpoint directly."
+      },
+      "sender": {
+        "redacted_full_log_sha256": "2dedb313029bcc873b1eb0298cc850706fba0daed9d2e7feaff5831172f0c344",
+        "tcp_route_lines": [
+          "[info]\t2026/10/03 09:34:32 starting TCP server on :9009",
+          "[info]\t2026/10/03 09:34:32 starting TCP server on :9010",
+          "[info]\t2026/10/03 09:34:32 starting TCP server on :9011",
+          "[info]\t2026/10/03 09:34:32 starting TCP server on :9012",
+          "[info]\t2026/10/03 09:34:32 starting TCP server on :9013",
+          "[debug]\t09:34:32 tcp.go:245: client 127.0.0.1:58780 connected",
+          "[debug]\t09:34:32 tcp.go:245: client 127.0.0.1:35512 connected",
+          "[debug]\t09:34:32 tcp.go:245: client 127.0.0.1:46664 connected",
+          "[debug]\t09:34:32 tcp.go:245: client 127.0.0.1:45842 connected",
+          "[debug]\t09:34:32 tcp.go:245: client 127.0.0.1:51290 connected",
+          "Hashing input-204...  39% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588             | (840 MB/2.1 GB, 1.6 GB/s) [0s:0s][debug]\t09:34:32 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t09:34:32 tcp.go:245: client 127.0.0.1:58794 connected",
+          "[debug]\t09:34:33 tcp.go:245: client 46.5.248.165:57108 connected",
+          "[debug]\t09:34:33 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t09:34:33 tcp.go:245: client 127.0.0.1:46666 connected",
+          "[debug]\t09:34:33 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t09:34:33 tcp.go:245: client 127.0.0.1:45850 connected",
+          "[debug]\t09:34:33 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t09:34:33 tcp.go:245: client 127.0.0.1:51292 connected",
+          "[debug]\t09:34:33 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t09:34:33 tcp.go:245: client 127.0.0.1:35520 connected",
+          "[debug]\t09:34:33 tcp.go:245: client 46.5.248.165:57150 connected",
+          "[debug]\t09:34:33 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t09:34:33 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t09:34:33 tcp.go:245: client 46.5.248.165:57166 connected",
+          "[debug]\t09:34:33 tcp.go:245: client 46.5.248.165:57152 connected",
+          "[debug]\t09:34:33 tcp.go:245: client 46.5.248.165:57164 connected",
+          "[debug]\t09:34:33 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t09:34:33 croc.go:2849: connected to 127.0.0.1:9013"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "3ff2b4ec268461bc33f8626e6897c31aad38e9d3ede27df1d2e1a687d2420e3b",
+        "tcp_route_lines": [
+          "[debug]\t11:34:32 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t11:34:32 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t11:34:32 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t11:34:32 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t11:34:32 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t11:34:32 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t11:34:32 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t11:34:32 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t11:34:32 croc.go:2849: connected to 141.147.1.21:9010"
+        ]
+      }
+    },
+    {
+      "run_index": 4,
+      "warmup": false,
+      "ssh_connection_source_ip": "46.5.248.165",
+      "path_evidence": {
+        "kind": "croc-local-direct-tcp",
+        "verified": true,
+        "control_target": "141.147.1.21:9009",
+        "data_targets": [
+          "141.147.1.21:9010",
+          "141.147.1.21:9011",
+          "141.147.1.21:9012",
+          "141.147.1.21:9013"
+        ],
+        "sender_local_targets": [
+          "127.0.0.1:9009",
+          "127.0.0.1:9010",
+          "127.0.0.1:9011",
+          "127.0.0.1:9012",
+          "127.0.0.1:9013"
+        ],
+        "sender_listen_ports": [
+          9009,
+          9010,
+          9011,
+          9012,
+          9013
+        ],
+        "sender_remote_peer_ip": "46.5.248.165",
+        "sender_remote_peer_connections": 5,
+        "sender_loopback_peer_connections": 10,
+        "local_only": true,
+        "transport_mode": "auto",
+        "rationale": "Croc v11.5.4 --local disables Tailcat negotiation and external relay setup; receiver --ip targets the sender endpoint directly."
+      },
+      "sender": {
+        "redacted_full_log_sha256": "8f4fddfb61d258576d03d166f07018f8fb4a27a33b39f3c9a2fe93c17ddcdd81",
+        "tcp_route_lines": [
+          "[info]\t2026/10/03 09:36:01 starting TCP server on :9009",
+          "[info]\t2026/10/03 09:36:01 starting TCP server on :9010",
+          "[info]\t2026/10/03 09:36:01 starting TCP server on :9011",
+          "[info]\t2026/10/03 09:36:01 starting TCP server on :9012",
+          "[info]\t2026/10/03 09:36:01 starting TCP server on :9013",
+          "[debug]\t09:36:01 tcp.go:245: client 127.0.0.1:42180 connected",
+          "[debug]\t09:36:01 tcp.go:245: client 127.0.0.1:40690 connected",
+          "[debug]\t09:36:01 tcp.go:245: client 127.0.0.1:36528 connected",
+          "[debug]\t09:36:01 tcp.go:245: client 127.0.0.1:41474 connected",
+          "[debug]\t09:36:01 tcp.go:245: client 127.0.0.1:59896 connected",
+          "Hashing input-204...  37% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588             | (813 MB/2.1 GB, 1.6 GB/s) [0s:0s][debug]\t09:36:01 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t09:36:01 tcp.go:245: client 127.0.0.1:59900 connected",
+          "[debug]\t09:36:01 tcp.go:245: client 46.5.248.165:57076 connected",
+          "Hashing input-204...  57% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588         | (1.2/2.1 GB, 1.6 GB/s) [0s:0s][debug]\t09:36:01 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t09:36:01 tcp.go:245: client 127.0.0.1:40700 connected",
+          "[debug]\t09:36:02 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t09:36:02 tcp.go:245: client 127.0.0.1:36536 connected",
+          "[debug]\t09:36:02 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t09:36:02 tcp.go:245: client 127.0.0.1:41488 connected",
+          "[debug]\t09:36:02 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t09:36:02 tcp.go:245: client 127.0.0.1:42192 connected",
+          "[debug]\t09:36:02 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t09:36:02 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t09:36:02 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t09:36:02 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t09:36:02 tcp.go:245: client 46.5.248.165:57100 connected",
+          "[debug]\t09:36:02 tcp.go:245: client 46.5.248.165:57130 connected",
+          "[debug]\t09:36:02 tcp.go:245: client 46.5.248.165:57082 connected",
+          "Hashing input-204...  60% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588        | (1.3/2.1 GB, 1.6 GB/s) [0s:0s][debug]\t09:36:02 tcp.go:245: client 46.5.248.165:57092 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "a771fa50e8bb35a582c554c3ff7e6874815087628445f0d58cb99981312067b8",
+        "tcp_route_lines": [
+          "[debug]\t11:36:00 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t11:36:01 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t11:36:01 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t11:36:01 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t11:36:01 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t11:36:01 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t11:36:01 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t11:36:01 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t11:36:01 croc.go:2849: connected to 141.147.1.21:9011"
+        ]
+      }
+    },
+    {
+      "run_index": 5,
+      "warmup": false,
+      "ssh_connection_source_ip": "46.5.248.165",
+      "path_evidence": {
+        "kind": "croc-local-direct-tcp",
+        "verified": true,
+        "control_target": "141.147.1.21:9009",
+        "data_targets": [
+          "141.147.1.21:9010",
+          "141.147.1.21:9011",
+          "141.147.1.21:9012",
+          "141.147.1.21:9013"
+        ],
+        "sender_local_targets": [
+          "127.0.0.1:9009",
+          "127.0.0.1:9010",
+          "127.0.0.1:9011",
+          "127.0.0.1:9012",
+          "127.0.0.1:9013"
+        ],
+        "sender_listen_ports": [
+          9009,
+          9010,
+          9011,
+          9012,
+          9013
+        ],
+        "sender_remote_peer_ip": "46.5.248.165",
+        "sender_remote_peer_connections": 5,
+        "sender_loopback_peer_connections": 10,
+        "local_only": true,
+        "transport_mode": "auto",
+        "rationale": "Croc v11.5.4 --local disables Tailcat negotiation and external relay setup; receiver --ip targets the sender endpoint directly."
+      },
+      "sender": {
+        "redacted_full_log_sha256": "c64e26db7c0f403f351dcb73b56f538f082a9733e2a74f04e001cd101bdf596f",
+        "tcp_route_lines": [
+          "[info]\t2026/10/03 09:40:29 starting TCP server on :9009",
+          "[info]\t2026/10/03 09:40:29 starting TCP server on :9010",
+          "[info]\t2026/10/03 09:40:29 starting TCP server on :9011",
+          "[info]\t2026/10/03 09:40:29 starting TCP server on :9012",
+          "[info]\t2026/10/03 09:40:29 starting TCP server on :9013",
+          "[debug]\t09:40:29 tcp.go:245: client 127.0.0.1:47392 connected",
+          "[debug]\t09:40:29 tcp.go:245: client 127.0.0.1:56884 connected",
+          "[debug]\t09:40:29 tcp.go:245: client 127.0.0.1:43422 connected",
+          "[debug]\t09:40:29 tcp.go:245: client 127.0.0.1:46210 connected",
+          "[debug]\t09:40:29 tcp.go:245: client 127.0.0.1:55482 connected",
+          "[debug]\t09:40:29 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t09:40:29 tcp.go:245: client 127.0.0.1:47400 connected",
+          "[debug]\t09:40:29 tcp.go:245: client 46.5.248.165:57076 connected",
+          "[debug]\t09:40:29 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t09:40:29 tcp.go:245: client 127.0.0.1:43428 connected",
+          "[debug]\t09:40:29 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t09:40:29 tcp.go:245: client 127.0.0.1:46220 connected",
+          "[debug]\t09:40:29 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t09:40:29 tcp.go:245: client 127.0.0.1:55490 connected",
+          "[debug]\t09:40:29 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t09:40:29 tcp.go:245: client 127.0.0.1:56894 connected",
+          "[debug]\t09:40:29 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t09:40:29 tcp.go:245: client 46.5.248.165:57154 connected",
+          "[debug]\t09:40:29 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t09:40:29 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t09:40:29 tcp.go:245: client 46.5.248.165:57112 connected",
+          "[debug]\t09:40:29 tcp.go:245: client 46.5.248.165:57162 connected",
+          "[debug]\t09:40:29 tcp.go:245: client 46.5.248.165:57082 connected",
+          "[debug]\t09:40:29 croc.go:2849: connected to 127.0.0.1:9013"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "dac4e3100e023935091fe5bf50e60d636f7fc5d019f30b0df4ece511ee02a473",
+        "tcp_route_lines": [
+          "[debug]\t11:40:28 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t11:40:28 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t11:40:28 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t11:40:28 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t11:40:28 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t11:40:28 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t11:40:28 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t11:40:28 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t11:40:28 croc.go:2849: connected to 141.147.1.21:9011"
+        ]
+      }
+    }
+  ],
+  "provenance_sha256": {
+    "rusty_manifest_sha256": "a636dbd2506c84d747b2037400fbabe235f35dfb29281c5d662f5e479b44b05d",
+    "croc_manifest_sha256": "0204e0efbf5e81f9598beddacbd3f5ba2dbb9d0d353f402ace2590683d035b78",
+    "fixture_manifest_sha256": "6aa68515b1ed7e4ba373cb7d6824d261046f36809555a0d1992edb761b6cf0ae"
+  },
+  "one_g_comparison_manifest_sha256": "9d30e2be56c0c1d25b18ba593435df25bcc2a55006b0f6e0e32cd8a9bbcf2303",
+  "claims_limit": "One matched 2 GiB Oracle-to-WSL experiment using the 1 GiB run's exact binaries; results remain separate from smaller payload cases."
+}

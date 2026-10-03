@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
-"""Measure Croc 11.5.3 and Rustytransfer from WSL to one Oracle host."""
+"""Measure Croc and Rustytransfer between WSL and one Oracle host."""
 
 import argparse
 import hashlib
+import ipaddress
 import json
 import os
 import posixpath
 import re
 import shlex
+import signal
 import subprocess
 import sys
 import time
 import uuid
 from pathlib import Path
+from types import SimpleNamespace
 
 from run_croc_baseline import CapturedOutput, git_output, parse_time, selected_auto_path, time_command
 from summarize import payload_profile_rejection_reason
@@ -27,6 +30,12 @@ REMOTE_REDACT_SCRIPT = (
     "path = Path(sys.argv[1]); "
     "text = path.read_text(encoding='utf-8', errors='replace'); "
     "path.write_text(re.sub(r'rt1:\\S+', '<redacted>', text), encoding='utf-8')"
+)
+REMOTE_REDACT_SECRET_SCRIPT = (
+    "from pathlib import Path; import sys; "
+    "path = Path(sys.argv[1]); "
+    "text = path.read_text(encoding='utf-8', errors='replace'); "
+    "path.write_text(text.replace(sys.argv[2], '<redacted>'), encoding='utf-8')"
 )
 PAYLOAD_MARKERS = ("payload_start", "sender_payload_end", "receiver_payload_end")
 METRIC_FIELDS = (
@@ -140,16 +149,22 @@ def rust_provenance(args):
 
 
 def croc_provenance(args):
+    local_hash = args.local_croc_sha256
+    remote_hash = args.remote_croc_sha256
+    if args.direction == "wsl-to-oracle":
+        sender_hash, receiver_hash = local_hash, remote_hash
+    else:
+        sender_hash, receiver_hash = remote_hash, local_hash
     return {
-        "build_id": "croc-11.5.3",
-        "sender_binary_sha256": args.local_croc_sha256,
-        "receiver_binary_sha256": args.remote_croc_sha256,
-        "direction": "wsl-to-oracle",
+        "build_id": f"croc-{getattr(args, 'croc_version', '11.5.3')}",
+        "sender_binary_sha256": sender_hash,
+        "receiver_binary_sha256": receiver_hash,
+        "direction": args.direction,
         "host_pair": f"WSL/{args.user}@{args.host}",
         "storage_class": args.storage_class,
         "pairing_mode": "croc-secret",
         "profile_mode": "standard",
-        "source_staging": "per-trial",
+        "source_staging": "pre-staged" if remote_staged_input(args, args.direction == "oracle-to-wsl", 64) else "per-trial",
     }
 
 
@@ -891,21 +906,199 @@ def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_ro
     return rows, path
 
 
-def croc_rows(args, source_hash, received_hash, expected_size, wall, sender_time, receiver_time, path, mode, sender_metric, receiver_metric, run_index, warmup):
+def remote_croc_sender_argv(args, source_path):
+    return [
+        args.remote_croc,
+        "--local",
+        "--no-compress",
+        "--debug",
+        "--disable-clipboard",
+        "--ignore-stdin",
+        "send",
+        "--transport",
+        "auto",
+        "--port",
+        "9009",
+        "--transfers",
+        "4",
+        source_path,
+    ]
+
+
+def remote_croc_sender_command(args, run_dir, source_path, secret, time_path, log_path, pid_path, peer_path):
+    endpoint_command = remote_croc_sender_argv(args, source_path)
+    env_command = (
+        "env -u CROC_RELAY -u CROC_RELAY6 -u CROC_SECRET -u CROC_PASS "
+        "-u SOCKS5_PROXY -u HTTP_PROXY -u HTTPS_PROXY -u ALL_PROXY "
+        f"CROC_SECRET={remote_quote(secret)} CROC_PASS=pass123 "
+        f"/usr/bin/time -f {remote_quote(TIME_FORMAT)} -o {remote_quote(time_path)} "
+        + " ".join(remote_quote(item) for item in endpoint_command)
+    )
+    child_script = (
+        f"printf '%s\\n' \"$SSH_CONNECTION\" > {remote_quote(peer_path)} || exit 1; "
+        f"printf '%s\\n' \"$$\" > {remote_quote(pid_path)} || exit 1; "
+        f"exec {env_command}"
+    )
+    return (
+        f"cd -- {remote_quote(run_dir)} || exit 1; "
+        f"setsid --wait /bin/sh -c {remote_quote(child_script)} "
+        f">{remote_quote(log_path)} 2>&1 < /dev/null & "
+        "setsid_pid=$!; wait \"$setsid_pid\""
+    )
+
+
+def wait_for_remote_croc_listeners(args, process, log_path, expected_ports, timeout_seconds=30):
+    deadline = time.monotonic() + timeout_seconds
+    while time.monotonic() < deadline:
+        text = remote(
+            args,
+            f"if test -f {remote_quote(log_path)}; then cat -- {remote_quote(log_path)}; fi",
+        )
+        listening = {
+            int(match.group(1))
+            for match in re.finditer(r"starting TCP server on .*:(\d+)", text)
+        }
+        if expected_ports.issubset(listening):
+            return text
+        code = process.poll()
+        if code is not None:
+            raise RuntimeError(
+                f"Oracle Croc sender exited before opening its local TCP listeners ({code})"
+            )
+        time.sleep(0.1)
+    raise RuntimeError("Oracle Croc sender did not open all expected local TCP listeners")
+
+
+def _croc_host_port(value):
+    value = value.strip().strip("'\"),;]")
+    if value.startswith("["):
+        closing = value.find("]")
+        if closing < 0 or value[closing + 1 : closing + 2] != ":":
+            return None
+        host, port = value[1:closing], value[closing + 2 :]
+    else:
+        host, separator, port = value.rpartition(":")
+        if not separator:
+            return None
+    try:
+        return host.lower(), int(port)
+    except ValueError:
+        return None
+
+
+def _canonical_ip(value):
+    address = ipaddress.ip_address(value)
+    mapped = getattr(address, "ipv4_mapped", None)
+    if mapped is not None:
+        address = mapped
+    return address.compressed.lower()
+
+
+def _croc_connected_targets(text):
+    addresses = re.findall(
+        r"connected to ['\"]?(\[[^\]]+\]:\d+|[^\s'\"),]+)['\"]?",
+        text,
+    )
+    return [_croc_host_port(address) for address in addresses]
+
+
+def croc_direct_tcp_evidence(
+    sender_text,
+    receiver_text,
+    ssh_connection,
+    oracle_host,
+    expected_peer_ip=None,
+    base_port=9009,
+    transfers=4,
+):
+    try:
+        expected_host = _canonical_ip(oracle_host)
+        ssh_fields = ssh_connection.split()
+        source_ip = _canonical_ip(ssh_fields[0])
+    except (ValueError, IndexError) as error:
+        raise RuntimeError("Croc direct TCP evidence lacks a literal Oracle IP or valid SSH_CONNECTION") from error
+    if expected_peer_ip is not None and _canonical_ip(expected_peer_ip) != source_ip:
+        raise RuntimeError("SSH_CONNECTION source does not match the leased Croc firewall peer")
+    expected_ports = set(range(base_port, base_port + transfers + 1))
+    listeners = {
+        int(match.group(1))
+        for match in re.finditer(r"starting TCP server on .*:(\d+)", sender_text)
+    }
+    peer_addresses = re.findall(r"client\s+(\[[^\]]+\]:\d+|[^\s]+)\s+connected", sender_text)
+    peer_ips = []
+    for address in peer_addresses:
+        parsed = _croc_host_port(address)
+        if parsed is None:
+            raise RuntimeError("Croc sender logged an unparseable accepted TCP peer")
+        try:
+            peer_ips.append(_canonical_ip(parsed[0]))
+        except ValueError as error:
+            raise RuntimeError("Croc sender logged a non-IP accepted TCP peer") from error
+    sender_targets = _croc_connected_targets(sender_text)
+    receiver_targets = _croc_connected_targets(receiver_text)
+    expected_targets = {(expected_host, port) for port in expected_ports}
+    local_targets = {("127.0.0.1", port) for port in expected_ports}
+    has_forbidden_transport = re.search(r"tailcat|\bderp\b", sender_text + receiver_text, re.IGNORECASE)
+    if listeners != expected_ports:
+        raise RuntimeError(f"Croc sender listeners were {sorted(listeners)}, expected {sorted(expected_ports)}")
+    if set(receiver_targets) != expected_targets:
+        raise RuntimeError(
+            "Croc receiver did not connect exclusively to Oracle control/data ports "
+            f"9009-9013: {receiver_targets}"
+        )
+    if set(sender_targets) != local_targets:
+        raise RuntimeError(
+            "Croc sender did not use exclusively its localhost control/data channels "
+            f"9009-9013: {sender_targets}"
+        )
+    if source_ip not in peer_ips:
+        raise RuntimeError("Croc Oracle sender did not observe the SSH_CONNECTION WSL peer")
+    loopback_ips = {"127.0.0.1", "::1"}
+    if set(peer_ips) - loopback_ips - {source_ip}:
+        raise RuntimeError("Croc Oracle sender accepted an unexpected remote TCP peer")
+    remote_peer_count = peer_ips.count(source_ip)
+    loopback_peer_count = sum(peer_ips.count(address) for address in loopback_ips)
+    if remote_peer_count < transfers + 1 or loopback_peer_count < transfers + 1:
+        raise RuntimeError("Croc TCP peer logs did not show the remote peer and local sender channels")
+    if has_forbidden_transport:
+        raise RuntimeError("Croc logs show Tailcat/DERP; direct TCP-only evidence is unavailable")
+    return {
+        "kind": "croc-local-direct-tcp",
+        "verified": True,
+        "control_target": f"{expected_host}:{base_port}",
+        "data_targets": [f"{expected_host}:{port}" for port in sorted(expected_ports - {base_port})],
+        "sender_local_targets": [f"127.0.0.1:{port}" for port in sorted(expected_ports)],
+        "sender_listen_ports": sorted(listeners),
+        "sender_remote_peer_ip": source_ip,
+        "sender_remote_peer_connections": remote_peer_count,
+        "sender_loopback_peer_connections": loopback_peer_count,
+        "local_only": True,
+        "transport_mode": "auto",
+        "rationale": (
+            "Croc v11.5.4 --local disables Tailcat negotiation and external relay setup; "
+            "receiver --ip targets the sender endpoint directly."
+        ),
+    }
+
+
+def croc_rows(args, source_hash, received_hash, expected_size, wall, sender_time, receiver_time, path, mode, sender_metric, receiver_metric, run_index, warmup, path_evidence=None):
     payload_start = sender_metric.events.get("payload_start")
     payload_ends = [
         sender_metric.events.get("sender_payload_end"),
         receiver_metric.events.get("receiver_payload_end"),
     ]
     payload_ends = [item for item in payload_ends if item is not None]
-    if payload_start is None or not payload_ends:
+    handshake = payload = shutdown = None
+    reverse_direct = bool(path_evidence and path_evidence.get("kind") == "croc-local-direct-tcp")
+    if payload_start is not None and payload_ends:
+        started = args._trial_started
+        handshake = payload_start - started
+        payload = max(payload_ends) - payload_start
+        shutdown = wall - handshake - payload
+        if min(handshake, payload, shutdown) < 0:
+            raise RuntimeError("Croc returned invalid phase timings")
+    elif not reverse_direct:
         raise RuntimeError("Croc output lacked phase markers; inspect the preserved log files")
-    started = args._trial_started
-    handshake = payload_start - started
-    payload = max(payload_ends) - payload_start
-    shutdown = wall - handshake - payload
-    if min(handshake, payload, shutdown) < 0:
-        raise RuntimeError("Croc returned invalid phase timings")
 
     resources = resource_values(sender_time, receiver_time)
     rows = []
@@ -936,14 +1129,261 @@ def croc_rows(args, source_hash, received_hash, expected_size, wall, sender_time
             "success": True,
             "run_index": run_index,
             "warmup": warmup,
-            "measurement_scope": "separate sender and receiver processes (WSL to Oracle)",
+            "measurement_scope": (
+                "separate sender and receiver processes (Oracle to WSL; Croc endpoint-local TCP "
+                "listener, no Tailcat or public relay; phase markers unavailable from detached "
+                "Oracle sender)"
+                if reverse_direct
+                else "separate sender and receiver processes"
+            ),
+            "path_evidence": path_evidence,
+            "direct_route_verified_both": bool(path_evidence and path_evidence.get("verified")),
             **resources,
         }
         rows.append({key: row[key] for key in METRIC_FIELDS if key in row})
     return rows
 
 
+def start_croc_receiver(command, time_path, log_path, environment):
+    wrapped = [
+        "/usr/bin/time",
+        "-f",
+        TIME_FORMAT,
+        "-o",
+        str(time_path),
+        *command,
+    ]
+    process = subprocess.Popen(
+        wrapped,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        env=environment,
+        start_new_session=True,
+    )
+    if process.stdout is None:
+        raise RuntimeError("Croc receiver output pipe was not created")
+    return process, CapturedOutput(process.stdout, log_path)
+
+
+def terminate_local_process_group(process, timeout_seconds=5):
+    if process is None:
+        return
+
+    def group_exists():
+        try:
+            os.killpg(process.pid, 0)
+            return True
+        except ProcessLookupError:
+            return False
+
+    try:
+        os.killpg(process.pid, signal.SIGTERM)
+    except ProcessLookupError:
+        pass
+    deadline = time.monotonic() + timeout_seconds
+    while group_exists() and time.monotonic() < deadline:
+        time.sleep(0.05)
+    if group_exists():
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        deadline = time.monotonic() + timeout_seconds
+        while group_exists() and time.monotonic() < deadline:
+            time.sleep(0.05)
+    process.wait()
+    if group_exists():
+        raise RuntimeError(f"Croc receiver process group {process.pid} did not exit")
+
+
+def run_croc_reverse(args, source, size_mib, expected_size, source_hash, log_root, run_index, warmup, expected_path):
+    tag = "warmup" if warmup else str(run_index)
+    run_name = f"croc-oracle-to-wsl-{size_mib}mib-{tag}"
+    logs = prepare_local_logs(log_root, run_name)
+    run_dir = f"{args.remote_root}/{run_name}"
+    remote(args, f"mkdir -- {remote_quote(run_dir)}")
+    run_source = f"{run_dir}/{source.name}"
+    remote_time_path = f"{run_dir}/sender.time.json"
+    remote_log_path = f"{run_dir}/sender.log"
+    remote_pid_path = f"{run_dir}/sender.pid"
+    remote_peer_path = f"{run_dir}/ssh-connection.txt"
+    remote_source, source_is_temporary = prepare_remote_source(
+        args, source, run_source, size_mib, expected_size, source_hash
+    )
+
+    sender_log = logs / "sender.log"
+    receiver_log = logs / "receiver.log"
+    receiver_time_path = logs / "receiver.time.json"
+    out_dir = logs / "out"
+    out_dir.mkdir()
+    receiver_path = out_dir / source.name
+    secret = f"rtoracle-{size_mib}-{run_index}-{uuid.uuid4().hex[:12]}"
+    sender_command = remote_croc_sender_command(
+        args,
+        run_dir,
+        remote_source,
+        secret,
+        remote_time_path,
+        remote_log_path,
+        remote_pid_path,
+        remote_peer_path,
+    )
+    receiver_env = os.environ.copy()
+    for name in (
+        "CROC_RELAY",
+        "CROC_RELAY6",
+        "CROC_SECRET",
+        "CROC_PASS",
+        "SOCKS5_PROXY",
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "ALL_PROXY",
+    ):
+        receiver_env.pop(name, None)
+    receiver_env["CROC_SECRET"] = secret
+    receiver_env["CROC_PASS"] = "pass123"
+    receiver_command = [
+        str(args.croc),
+        "--yes",
+        "--overwrite",
+        "--no-compress",
+        "--debug",
+        "--disable-clipboard",
+        "--ignore-stdin",
+        "--ip",
+        f"{args.host}:9009",
+        "--out",
+        str(out_dir),
+    ]
+
+    started = time.monotonic()
+    args._trial_started = started
+    sender = subprocess.Popen(
+        ssh_command(args, sender_command),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    sender_output = CapturedOutput(sender.stdout, sender_log)
+    receiver = None
+    receiver_output = None
+    cleanup_errors = []
+    try:
+        wait_for_remote_croc_listeners(
+            args, sender, remote_log_path, set(range(9009, 9014))
+        )
+        receiver, receiver_output = start_croc_receiver(
+            receiver_command, receiver_time_path, receiver_log, receiver_env
+        )
+        wait_for_pair(sender, receiver, args.timeout, sender_log, receiver_log)
+        wall = time.monotonic() - started
+    except Exception as error:
+        with receiver_log.open("a", encoding="utf-8") as log:
+            log.write(f"\nBenchmark runner failure: {error}\n")
+        raise
+    finally:
+        if sender.poll() is None:
+            sender.kill()
+        try:
+            terminate_local_process_group(receiver)
+        except Exception as error:
+            cleanup_errors.append(f"failed to terminate local Croc receiver process group: {error}")
+        try:
+            sender_output.wait()
+        except Exception as error:
+            cleanup_errors.append(f"failed to collect Oracle Croc sender output: {error}")
+        if receiver_output is not None:
+            try:
+                receiver_output.wait()
+            except Exception as error:
+                cleanup_errors.append(f"failed to collect WSL Croc receiver output: {error}")
+        try:
+            terminate_remote_process_group(args, remote_pid_path, run_dir)
+        except Exception as error:
+            cleanup_errors.append(f"failed to terminate Oracle Croc sender process group: {error}")
+        try:
+            remote_text = remote(args, f"cat -- {remote_quote(remote_log_path)}")
+            sender_log.write_text(remote_text + "\n", encoding="utf-8")
+        except Exception as error:
+            with sender_log.open("a", encoding="utf-8") as log:
+                log.write(f"\nCould not retrieve Oracle Croc sender log: {error}\n")
+        redact(sender_log, secret)
+        try:
+            remote(
+                args,
+                f"if test -f {remote_quote(remote_log_path)}; then "
+                f"python3 -c {remote_quote(REMOTE_REDACT_SECRET_SCRIPT)} "
+                f"{remote_quote(remote_log_path)} {remote_quote(secret)}; fi",
+            )
+        except Exception as error:
+            cleanup_errors.append(f"failed to redact Oracle Croc sender log: {error}")
+        redact(receiver_log, secret)
+        if cleanup_errors:
+            with receiver_log.open("a", encoding="utf-8") as log:
+                log.write("\nCleanup errors: " + "; ".join(cleanup_errors) + "\n")
+
+    if cleanup_errors:
+        raise RuntimeError("; ".join(cleanup_errors))
+
+    sender_time = read_remote_json(args, remote_time_path)
+    receiver_time = read_time(receiver_time_path)
+    received_hash = verify_local_file(receiver_path, expected_size, source_hash)
+    sender_text = sender_log.read_text(encoding="utf-8", errors="replace")
+    receiver_text = receiver_log.read_text(encoding="utf-8", errors="replace")
+    ssh_connection = remote(args, f"cat -- {remote_quote(remote_peer_path)}")
+    evidence = croc_direct_tcp_evidence(
+        sender_text,
+        receiver_text,
+        ssh_connection,
+        args.host,
+        getattr(args, "croc_direct_peer_ip", None),
+    )
+    path = "direct"
+    if path != expected_path:
+        raise RuntimeError(
+            f"Croc selected {path} but Rustytransfer selected {expected_path}; "
+            "same-path comparison is unavailable"
+        )
+    rows = croc_rows(
+        args,
+        source_hash,
+        received_hash,
+        expected_size,
+        wall,
+        sender_time,
+        receiver_time,
+        path,
+        "auto",
+        SimpleNamespace(events={}),
+        receiver_output,
+        run_index,
+        warmup,
+        evidence,
+    )
+    cleanup_remote(
+        args,
+        run_dir,
+        tuple(
+            path
+            for path in (
+                *((remote_source,) if source_is_temporary else ()),
+                remote_time_path,
+                remote_log_path,
+                remote_pid_path,
+                remote_peer_path,
+            )
+        ),
+    )
+    receiver_path.unlink()
+    out_dir.rmdir()
+    return rows, path
+
+
 def run_croc(args, source, size_mib, expected_size, source_hash, log_root, run_index, warmup, mode, expected_path):
+    if args.direction == "oracle-to-wsl":
+        return run_croc_reverse(
+            args, source, size_mib, expected_size, source_hash, log_root, run_index, warmup, expected_path
+        )
+
     tag = "warmup" if warmup else str(run_index)
     run_name = f"croc-{size_mib}mib-{tag}"
     logs = prepare_local_logs(log_root, run_name)
@@ -1125,8 +1565,13 @@ def build_parser():
     parser.add_argument("--ssh", default="ssh")
     parser.add_argument("--scp", default="scp")
     parser.add_argument("--ssh-key", required=True, type=Path)
-    parser.add_argument("--croc", type=Path, help="local Croc 11.5.3 binary")
+    parser.add_argument("--croc", type=Path, help="local Croc binary")
     parser.add_argument("--remote-croc")
+    parser.add_argument(
+        "--croc-version",
+        default="11.5.3",
+        help="required matching Croc version for both endpoints (default: %(default)s)",
+    )
     parser.add_argument("--rusty-sender", required=True, type=Path)
     parser.add_argument("--remote-rusty", required=True)
     parser.add_argument("--input-64", required=True, type=Path)
@@ -1167,7 +1612,16 @@ def validate_local_args(parser, args):
     if not args.storage_class.strip():
         parser.error("--storage-class cannot be empty")
     if args.direction == "oracle-to-wsl" and not args.rusty_only:
-        parser.error("Oracle-to-WSL currently requires --rusty-only; Croc reverse comparison is unavailable")
+        if args.rusty_path != "direct":
+            parser.error("Oracle-to-WSL Croc comparisons require --rusty-path direct")
+        if args.croc_version != "11.5.4":
+            parser.error("Oracle-to-WSL direct Croc comparison requires the source-audited --croc-version 11.5.4")
+        try:
+            oracle_address = ipaddress.ip_address(args.host)
+        except ValueError:
+            parser.error("Oracle-to-WSL Croc direct comparison requires --host to be a literal IPv4 address")
+        if oracle_address.version != 4:
+            parser.error("Oracle-to-WSL Croc direct comparison currently supports IPv4 only")
     has_remote_input_64 = bool(args.remote_input_64)
     has_remote_input_512 = bool(args.remote_input_512)
     if has_remote_input_64 != has_remote_input_512:
@@ -1225,12 +1679,12 @@ def main():
     if not args.rusty_only:
         remote(args, f"test -x {remote_quote(args.remote_croc)}")
         remote_version = remote(args, f"{remote_quote(args.remote_croc)} --version")
-        if "11.5.3" not in remote_version:
+        if args.croc_version not in remote_version:
             raise RuntimeError(f"unexpected Oracle Croc version: {remote_version}")
         local_version = subprocess.run(
             [str(args.croc), "--version"], check=True, capture_output=True, text=True
         ).stdout
-        if "11.5.3" not in local_version:
+        if args.croc_version not in local_version:
             raise RuntimeError(f"unexpected WSL Croc version: {local_version.strip()}")
         args.local_croc_sha256 = sha256_file(args.croc)
         args.remote_croc_sha256 = remote_sha256(args, args.remote_croc)

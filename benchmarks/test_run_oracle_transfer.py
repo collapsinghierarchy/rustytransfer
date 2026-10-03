@@ -259,15 +259,15 @@ class OracleRunnerArgumentTests(unittest.TestCase):
                 runner.append_and_validate_rust_rows(output, rows, "relay", "relay")
             self.assertEqual(len(output.read_text(encoding="utf-8").splitlines()), 2)
 
-    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake", profile=False, remote_inputs=None):
+    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake", profile=False, remote_inputs=None, with_croc=False, croc_version="11.5.3"):
         root = Path(temp_dir)
-        paths = [root / name for name in ("key", "rusty", "64.bin", "512.bin")]
+        paths = [root / name for name in ("key", "rusty", "64.bin", "512.bin", "croc")]
         for path in paths:
             path.touch()
         output = root / "out"
         output.mkdir()
         argv = [
-            "--host", "example.invalid",
+            "--host", "141.147.1.21",
             "--ssh-key", str(paths[0]),
             "--rusty-sender", str(paths[1]),
             "--remote-rusty", "/opt/rustytransfer",
@@ -279,9 +279,12 @@ class OracleRunnerArgumentTests(unittest.TestCase):
             "--storage-class", "wsl-native-oracle-home",
             "--direction", direction,
             "--rusty-auth", auth,
+            "--croc-version", croc_version,
         ]
         if rusty_only:
             argv.append("--rusty-only")
+        if with_croc:
+            argv.extend(["--croc", str(paths[4]), "--remote-croc", "/opt/croc"])
         if profile:
             argv.append("--payload-profile")
         if remote_inputs is not None:
@@ -330,20 +333,220 @@ class OracleRunnerArgumentTests(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 runner.validate_local_args(parser, args)
 
+
+    def setUp(self):
+        self.sender_log = "\n".join(
+            [
+                f"[info] starting TCP server on :{port}" for port in range(9009, 9014)
+            ]
+            + [
+                *(f"client 127.0.0.1:{port} connected" for port in range(40000, 40006)),
+                *(f"client 198.51.100.24:{port} connected" for port in range(41000, 41005)),
+                *(f"connected to '127.0.0.1:{port}'" for port in range(9009, 9014)),
+            ]
+        )
+        self.receiver_log = "\n".join(
+            f"connected to '141.147.1.21:{port}'" for port in range(9009, 9014)
+        )
+        self.ssh_connection = "198.51.100.24 52000 141.147.1.21 22"
+
+    def evidence(self, sender_log=None, receiver_log=None, ssh_connection=None):
+        return runner.croc_direct_tcp_evidence(
+            self.sender_log if sender_log is None else sender_log,
+            self.receiver_log if receiver_log is None else receiver_log,
+            self.ssh_connection if ssh_connection is None else ssh_connection,
+            "141.147.1.21",
+        )
+
+    def test_exact_oracle_data_ports_and_ssh_peer_are_verified(self):
+        evidence = self.evidence()
+        self.assertTrue(evidence["verified"])
+        self.assertEqual(evidence["kind"], "croc-local-direct-tcp")
+        self.assertEqual(evidence["data_targets"], [f"141.147.1.21:{port}" for port in range(9010, 9014)])
+        self.assertEqual(evidence["sender_remote_peer_ip"], "198.51.100.24")
+
+    def test_route_evidence_rejects_missing_or_alternate_channel(self):
+        with self.assertRaisesRegex(RuntimeError, "listeners"):
+            self.evidence(sender_log=self.sender_log.replace("[info] starting TCP server on :9013\n", ""))
+        with self.assertRaisesRegex(RuntimeError, "connect exclusively"):
+            self.evidence(receiver_log=self.receiver_log.replace("141.147.1.21:9013", "203.0.113.1:9013"))
+        with self.assertRaisesRegex(RuntimeError, "localhost control/data channels"):
+            self.evidence(sender_log=self.sender_log.replace("127.0.0.1:9013", "203.0.113.1:9013", 1))
+        with self.assertRaisesRegex(RuntimeError, "Tailcat/DERP"):
+            self.evidence(receiver_log=self.receiver_log + "\nTailcat transport: path=derp")
+
+    def test_route_evidence_rejects_peer_outside_ssh_connection(self):
+        sender_log = self.sender_log + "\nclient 203.0.113.8:42000 connected"
+        with self.assertRaisesRegex(RuntimeError, "unexpected remote TCP peer"):
+            self.evidence(sender_log=sender_log)
+        with self.assertRaisesRegex(RuntimeError, "SSH_CONNECTION WSL peer"):
+            self.evidence(ssh_connection="203.0.113.9 52000 141.147.1.21 22")
+        with self.assertRaisesRegex(RuntimeError, "leased Croc firewall peer"):
+            runner.croc_direct_tcp_evidence(
+                self.sender_log,
+                self.receiver_log,
+                self.ssh_connection,
+                "141.147.1.21",
+                expected_peer_ip="203.0.113.9",
+            )
+
+    def test_remote_sender_forces_only_local_auto_and_clears_relay_environment(self):
+        args = SimpleNamespace(remote_croc="/opt/croc",)
+        argv = runner.remote_croc_sender_argv(args, "/tmp/run/input.bin")
+        command = runner.remote_croc_sender_command(
+            args,
+            "/tmp/run",
+            "/tmp/run/input.bin",
+            "unique-secret",
+            "/tmp/run/time.json",
+            "/tmp/run/sender.log",
+            "/tmp/run/sender.pid",
+            "/tmp/run/ssh-connection.txt",
+        )
+        self.assertLess(argv.index("--local"), argv.index("send"))
+        self.assertEqual(argv[argv.index("send") + 1 : argv.index("send") + 3], ["--transport", "auto"])
+        self.assertIn("--port 9009 --transfers 4", command)
+        self.assertIn("--port 9009 --transfers 4", command)
+        self.assertIn("-u CROC_RELAY -u CROC_RELAY6", command)
+        self.assertIn("CROC_SECRET=unique-secret", command)
+        self.assertIn("SSH_CONNECTION", command)
+
+    def test_reverse_croc_provenance_swaps_sender_and_receiver_hashes(self):
+        args = SimpleNamespace(
+            local_croc_sha256="a" * 64,
+            remote_croc_sha256="b" * 64,
+            direction="oracle-to-wsl",
+            host="141.147.1.21",
+            user="ubuntu",
+            storage_class="oracle-home-wsl-native",
+            croc_version="11.5.4",
+            remote_input_64="/oracle/input-64.bin",
+        )
+        provenance = runner.croc_provenance(args)
+        self.assertEqual(provenance["build_id"], "croc-11.5.4")
+        self.assertEqual(provenance["sender_binary_sha256"], "b" * 64)
+        self.assertEqual(provenance["receiver_binary_sha256"], "a" * 64)
+        self.assertEqual(provenance["source_staging"], "pre-staged")
+
+    def test_reverse_croc_rows_map_remote_sender_resources_and_route_evidence(self):
+        args = SimpleNamespace(
+            direction="oracle-to-wsl",
+            local_croc_sha256="a" * 64,
+            remote_croc_sha256="b" * 64,
+            croc_version="11.5.4",
+            host="141.147.1.21",
+            user="ubuntu",
+            storage_class="oracle-home-wsl-native",
+            remote_input_64="/oracle/input-64.bin",
+            remote_input_512="/oracle/input-512.bin",
+        )
+        evidence = {"kind": "croc-local-direct-tcp", "verified": True}
+        with patch.object(runner, "git_output", return_value="commit"):
+            rows = runner.croc_rows(
+                args,
+                "a" * 64,
+                "a" * 64,
+                1024,
+                2.0,
+                {"user_cpu_seconds": 1.0, "system_cpu_seconds": 0.5, "max_rss_kib": 100},
+                {"user_cpu_seconds": 2.0, "system_cpu_seconds": 0.25, "max_rss_kib": 200},
+                "direct",
+                "auto",
+                SimpleNamespace(events={}),
+                SimpleNamespace(events={}),
+                1,
+                False,
+                evidence,
+            )
+        self.assertEqual(rows[0]["sender_binary_sha256"], "b" * 64)
+        self.assertEqual(rows[1]["receiver_binary_sha256"], "a" * 64)
+        self.assertEqual(rows[0]["sender_cpu_seconds"], 1.5)
+        self.assertEqual(rows[0]["receiver_cpu_seconds"], 2.25)
+        self.assertEqual(rows[0]["path_evidence"], evidence)
+        self.assertTrue(rows[0]["direct_route_verified_both"])
+        self.assertIsNone(rows[0]["payload_seconds"])
+
     def test_reverse_direction_is_available_only_for_rusty_only(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             parser, args = self.parse(temp_dir, rusty_only=True, direction="oracle-to-wsl")
             runner.validate_local_args(parser, args)
             self.assertEqual(args.direction, "oracle-to-wsl")
 
-    def test_reverse_croc_comparison_is_rejected_explicitly(self):
+    def test_reverse_croc_comparison_is_available_for_direct_path(self):
         with tempfile.TemporaryDirectory() as temp_dir:
-            parser, args = self.parse(temp_dir, rusty_only=False, direction="oracle-to-wsl")
-            error = io.StringIO()
-            with redirect_stderr(error), self.assertRaises(SystemExit) as raised:
+            parser, args = self.parse(
+                temp_dir,
+                rusty_only=False,
+                direction="oracle-to-wsl",
+                with_croc=True,
+                croc_version="11.5.4",
+            )
+            runner.validate_local_args(parser, args)
+            self.assertEqual(args.direction, "oracle-to-wsl")
+
+    def test_reverse_croc_direct_comparison_rejects_ipv6_host(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(
+                temp_dir,
+                rusty_only=False,
+                direction="oracle-to-wsl",
+                with_croc=True,
+                croc_version="11.5.4",
+            )
+            args.host = "2001:db8::1"
+            with self.assertRaises(SystemExit):
                 runner.validate_local_args(parser, args)
-        self.assertEqual(raised.exception.code, 2)
-        self.assertIn("Croc reverse comparison is unavailable", error.getvalue())
+
+    def test_croc_phase_markers_remain_required_for_forward_measurements(self):
+        args = SimpleNamespace(
+            direction="wsl-to-oracle",
+            local_croc_sha256="a" * 64,
+            remote_croc_sha256="b" * 64,
+            croc_version="11.5.4",
+            host="141.147.1.21",
+            user="ubuntu",
+            storage_class="wsl-to-oracle",
+        )
+        with self.assertRaisesRegex(RuntimeError, "lacked phase markers"):
+            runner.croc_rows(
+                args,
+                "a" * 64,
+                "a" * 64,
+                1024,
+                2.0,
+                {},
+                {},
+                "direct",
+                "auto",
+                SimpleNamespace(events={}),
+                SimpleNamespace(events={}),
+                1,
+                False,
+            )
+
+    def test_reverse_croc_comparison_rejects_rusty_relay_path(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(
+                temp_dir,
+                rusty_only=False,
+                direction="oracle-to-wsl",
+                with_croc=True,
+                croc_version="11.5.4",
+            )
+            args.rusty_path = "relay"
+            with self.assertRaises(SystemExit):
+                runner.validate_local_args(parser, args)
+
+    def test_reverse_croc_requires_the_source_audited_version(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(
+                temp_dir,
+                rusty_only=False,
+                direction="oracle-to-wsl",
+                with_croc=True,
+            )
+            with self.assertRaises(SystemExit):
+                runner.validate_local_args(parser, args)
 
     def test_pre_staged_inputs_require_a_pair_and_reverse_direction(self):
         with tempfile.TemporaryDirectory() as temp_dir:

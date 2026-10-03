@@ -1,0 +1,3510 @@
+{
+  "comparisons": [
+    {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 1.12,
+          "maximum": 68.48,
+          "median": 66.88,
+          "minimum": 65.28
+        },
+        "binary_hashes": [
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+          "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+        ],
+        "build_id": "arm-baseline-series1-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 66.88,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 4.385769777986066,
+            "receiver_cpu_seconds": 4.18,
+            "receiver_cpu_seconds_per_gib": 66.88,
+            "receiver_max_rss_kib": 32788.0,
+            "receiver_setup_seconds": 0.480612062,
+            "run_index": 1,
+            "sender_cpu_seconds": 1.26,
+            "sender_cpu_seconds_per_gib": 20.16,
+            "sender_max_rss_kib": 24564.0,
+            "setup_seconds": 1.2122511169999999,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 87.03999999999999,
+            "wall_seconds": 14.592649235999943
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 65.28,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 4.834735355229887,
+            "receiver_cpu_seconds": 4.08,
+            "receiver_cpu_seconds_per_gib": 65.28,
+            "receiver_max_rss_kib": 30968.0,
+            "receiver_setup_seconds": 0.407903067,
+            "run_index": 2,
+            "sender_cpu_seconds": 1.1400000000000001,
+            "sender_cpu_seconds_per_gib": 18.240000000000002,
+            "sender_max_rss_kib": 23912.0,
+            "setup_seconds": 1.141117433,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 83.52000000000001,
+            "wall_seconds": 13.237539450999975
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 68.48,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 4.240478223440659,
+            "receiver_cpu_seconds": 4.28,
+            "receiver_cpu_seconds_per_gib": 68.48,
+            "receiver_max_rss_kib": 28112.0,
+            "receiver_setup_seconds": 0.46653489,
+            "run_index": 3,
+            "sender_cpu_seconds": 1.24,
+            "sender_cpu_seconds_per_gib": 19.84,
+            "sender_max_rss_kib": 24016.0,
+            "setup_seconds": 1.334856614,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 88.32000000000001,
+            "wall_seconds": 15.092637345999947
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 67.52000000000001,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 4.693220716029221,
+            "receiver_cpu_seconds": 4.220000000000001,
+            "receiver_cpu_seconds_per_gib": 67.52000000000001,
+            "receiver_max_rss_kib": 30192.0,
+            "receiver_setup_seconds": 0.408939075,
+            "run_index": 4,
+            "sender_cpu_seconds": 1.2000000000000002,
+            "sender_cpu_seconds_per_gib": 19.200000000000003,
+            "sender_max_rss_kib": 24680.0,
+            "setup_seconds": 1.238273711,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 86.72000000000001,
+            "wall_seconds": 13.63669085100014
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 65.75999999999999,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 4.834531273792747,
+            "receiver_cpu_seconds": 4.109999999999999,
+            "receiver_cpu_seconds_per_gib": 65.75999999999999,
+            "receiver_max_rss_kib": 29432.0,
+            "receiver_setup_seconds": 0.394408379,
+            "run_index": 5,
+            "sender_cpu_seconds": 1.13,
+            "sender_cpu_seconds_per_gib": 18.08,
+            "sender_max_rss_kib": 24312.0,
+            "setup_seconds": 1.12493883,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 83.83999999999999,
+            "wall_seconds": 13.238098250999883
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 1.12,
+          "maximum": 68.48,
+          "median": 66.88,
+          "minimum": 65.28
+        },
+        "receiver_max_rss_kib": {
+          "mad": 776.0,
+          "maximum": 32788.0,
+          "median": 30192.0,
+          "minimum": 28112.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.014531,
+          "maximum": 0.480612,
+          "median": 0.408939,
+          "minimum": 0.394408
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.96,
+          "maximum": 20.16,
+          "median": 19.2,
+          "minimum": 18.08
+        },
+        "sender_max_rss_kib": {
+          "mad": 296.0,
+          "maximum": 24680.0,
+          "median": 24312.0,
+          "minimum": 23912.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.071134,
+          "maximum": 1.334857,
+          "median": 1.212251,
+          "minimum": 1.124939
+        },
+        "throughput_mib_s": {
+          "mad": 0.141515,
+          "maximum": 4.834735,
+          "median": 4.693221,
+          "minimum": 4.240478
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 1.6,
+          "maximum": 88.32,
+          "median": 86.72,
+          "minimum": 83.52
+        },
+        "wall_seconds": {
+          "mad": 0.399151,
+          "maximum": 15.092637,
+          "median": 13.636691,
+          "minimum": 13.237539
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 1.12,
+          "maximum": 52.8,
+          "median": 51.68,
+          "minimum": 48.64
+        },
+        "binary_hashes": [
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+          "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+        ],
+        "build_id": "arm-candidate-series1-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 48.64,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 4.816142446326301,
+            "receiver_cpu_seconds": 3.04,
+            "receiver_cpu_seconds_per_gib": 48.64,
+            "receiver_max_rss_kib": 29564.0,
+            "receiver_setup_seconds": 0.49740237400000004,
+            "run_index": 1,
+            "sender_cpu_seconds": 1.1400000000000001,
+            "sender_cpu_seconds_per_gib": 18.240000000000002,
+            "sender_max_rss_kib": 25104.0,
+            "setup_seconds": 1.231267381,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 66.88,
+            "wall_seconds": 13.288643497000066
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 52.8,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 4.064913656451924,
+            "receiver_cpu_seconds": 3.3,
+            "receiver_cpu_seconds_per_gib": 52.8,
+            "receiver_max_rss_kib": 32880.0,
+            "receiver_setup_seconds": 0.48713170499999997,
+            "run_index": 2,
+            "sender_cpu_seconds": 1.26,
+            "sender_cpu_seconds_per_gib": 20.16,
+            "sender_max_rss_kib": 24052.0,
+            "setup_seconds": 1.230831793,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 72.96,
+            "wall_seconds": 15.74449186600009
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 51.68,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 4.542229417397468,
+            "receiver_cpu_seconds": 3.23,
+            "receiver_cpu_seconds_per_gib": 51.68,
+            "receiver_max_rss_kib": 31472.0,
+            "receiver_setup_seconds": 0.40171786699999995,
+            "run_index": 3,
+            "sender_cpu_seconds": 1.2200000000000002,
+            "sender_cpu_seconds_per_gib": 19.520000000000003,
+            "sender_max_rss_kib": 24496.0,
+            "setup_seconds": 1.1602209079999999,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 71.2,
+            "wall_seconds": 14.089997250000124
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 50.4,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 4.762379572919912,
+            "receiver_cpu_seconds": 3.15,
+            "receiver_cpu_seconds_per_gib": 50.4,
+            "receiver_max_rss_kib": 31244.0,
+            "receiver_setup_seconds": 0.478602729,
+            "run_index": 4,
+            "sender_cpu_seconds": 1.1600000000000001,
+            "sender_cpu_seconds_per_gib": 18.560000000000002,
+            "sender_max_rss_kib": 24768.0,
+            "setup_seconds": 1.2067847809999999,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 68.96000000000001,
+            "wall_seconds": 13.438660026999969
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 51.68,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 4.226314389959546,
+            "receiver_cpu_seconds": 3.23,
+            "receiver_cpu_seconds_per_gib": 51.68,
+            "receiver_max_rss_kib": 31168.0,
+            "receiver_setup_seconds": 0.409669718,
+            "run_index": 5,
+            "sender_cpu_seconds": 1.21,
+            "sender_cpu_seconds_per_gib": 19.36,
+            "sender_max_rss_kib": 24340.0,
+            "setup_seconds": 1.562277473,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 71.03999999999999,
+            "wall_seconds": 15.143217966000066
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 1.12,
+          "maximum": 52.8,
+          "median": 51.68,
+          "minimum": 48.64
+        },
+        "receiver_max_rss_kib": {
+          "mad": 228.0,
+          "maximum": 32880.0,
+          "median": 31244.0,
+          "minimum": 29564.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.0188,
+          "maximum": 0.497402,
+          "median": 0.478603,
+          "minimum": 0.401718
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.8,
+          "maximum": 20.16,
+          "median": 19.36,
+          "minimum": 18.24
+        },
+        "sender_max_rss_kib": {
+          "mad": 272.0,
+          "maximum": 25104.0,
+          "median": 24496.0,
+          "minimum": 24052.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.024047,
+          "maximum": 1.562277,
+          "median": 1.230832,
+          "minimum": 1.160221
+        },
+        "throughput_mib_s": {
+          "mad": 0.273913,
+          "maximum": 4.816142,
+          "median": 4.542229,
+          "minimum": 4.064914
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 1.92,
+          "maximum": 72.96,
+          "median": 71.04,
+          "minimum": 66.88
+        },
+        "wall_seconds": {
+          "mad": 0.801354,
+          "maximum": 15.744492,
+          "median": 14.089997,
+          "minimum": 13.288643
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -22.727,
+      "candidate_receiver_setup_delta_seconds": 0.069664,
+      "candidate_setup_delta_seconds": 0.018581,
+      "candidate_throughput_delta_percent": -3.217,
+      "candidate_wall_delta_seconds": 0.453306,
+      "direction": "wsl-to-oracle",
+      "series": "series1",
+      "size_mib": 64
+    },
+    {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.36,
+          "maximum": 65.52,
+          "median": 64.26,
+          "minimum": 63.9
+        },
+        "binary_hashes": [
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+          "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+        ],
+        "build_id": "arm-baseline-series1-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 65.52000000000001,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 5.269815284889212,
+            "receiver_cpu_seconds": 32.760000000000005,
+            "receiver_cpu_seconds_per_gib": 65.52000000000001,
+            "receiver_max_rss_kib": 30856.0,
+            "receiver_setup_seconds": 0.513115916,
+            "run_index": 1,
+            "sender_cpu_seconds": 9.0,
+            "sender_cpu_seconds_per_gib": 18.0,
+            "sender_max_rss_kib": 25396.0,
+            "setup_seconds": 1.32397406,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 83.52000000000001,
+            "wall_seconds": 97.15710557600005
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 64.25999999999999,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 5.155447062172315,
+            "receiver_cpu_seconds": 32.129999999999995,
+            "receiver_cpu_seconds_per_gib": 64.25999999999999,
+            "receiver_max_rss_kib": 31064.0,
+            "receiver_setup_seconds": 0.499106494,
+            "run_index": 2,
+            "sender_cpu_seconds": 8.36,
+            "sender_cpu_seconds_per_gib": 16.72,
+            "sender_max_rss_kib": 26184.0,
+            "setup_seconds": 1.2882882990000002,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 80.97999999999999,
+            "wall_seconds": 99.31243475600002
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 63.900000000000006,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 5.620749647944729,
+            "receiver_cpu_seconds": 31.950000000000003,
+            "receiver_cpu_seconds_per_gib": 63.900000000000006,
+            "receiver_max_rss_kib": 33416.0,
+            "receiver_setup_seconds": 0.401706091,
+            "run_index": 3,
+            "sender_cpu_seconds": 8.440000000000001,
+            "sender_cpu_seconds_per_gib": 16.880000000000003,
+            "sender_max_rss_kib": 24840.0,
+            "setup_seconds": 1.140782117,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 80.78,
+            "wall_seconds": 91.09105227399994
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 64.8,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 5.487897781946696,
+            "receiver_cpu_seconds": 32.4,
+            "receiver_cpu_seconds_per_gib": 64.8,
+            "receiver_max_rss_kib": 32048.0,
+            "receiver_setup_seconds": 0.498356931,
+            "run_index": 4,
+            "sender_cpu_seconds": 8.67,
+            "sender_cpu_seconds_per_gib": 17.34,
+            "sender_max_rss_kib": 25196.0,
+            "setup_seconds": 1.214812348,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 82.14,
+            "wall_seconds": 93.29619835200003
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 64.22,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 5.435161485051864,
+            "receiver_cpu_seconds": 32.11,
+            "receiver_cpu_seconds_per_gib": 64.22,
+            "receiver_max_rss_kib": 30428.0,
+            "receiver_setup_seconds": 0.402368017,
+            "run_index": 5,
+            "sender_cpu_seconds": 8.58,
+            "sender_cpu_seconds_per_gib": 17.16,
+            "sender_max_rss_kib": 25100.0,
+            "setup_seconds": 1.14087715,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 81.38,
+            "wall_seconds": 94.20143291200009
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.36,
+          "maximum": 65.52,
+          "median": 64.26,
+          "minimum": 63.9
+        },
+        "receiver_max_rss_kib": {
+          "mad": 636.0,
+          "maximum": 33416.0,
+          "median": 31064.0,
+          "minimum": 30428.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.014759,
+          "maximum": 0.513116,
+          "median": 0.498357,
+          "minimum": 0.401706
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.28,
+          "maximum": 18.0,
+          "median": 17.16,
+          "minimum": 16.72
+        },
+        "sender_max_rss_kib": {
+          "mad": 200.0,
+          "maximum": 26184.0,
+          "median": 25196.0,
+          "minimum": 24840.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.073935,
+          "maximum": 1.323974,
+          "median": 1.214812,
+          "minimum": 1.140782
+        },
+        "throughput_mib_s": {
+          "mad": 0.165346,
+          "maximum": 5.62075,
+          "median": 5.435161,
+          "minimum": 5.155447
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.6,
+          "maximum": 83.52,
+          "median": 81.38,
+          "minimum": 80.78
+        },
+        "wall_seconds": {
+          "mad": 2.955673,
+          "maximum": 99.312435,
+          "median": 94.201433,
+          "minimum": 91.091052
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.36,
+          "maximum": 51.32,
+          "median": 49.08,
+          "minimum": 48.72
+        },
+        "binary_hashes": [
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+          "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+        ],
+        "build_id": "arm-candidate-series1-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 49.08,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 5.496444593902306,
+            "receiver_cpu_seconds": 24.54,
+            "receiver_cpu_seconds_per_gib": 49.08,
+            "receiver_max_rss_kib": 28644.0,
+            "receiver_setup_seconds": 0.402890354,
+            "run_index": 1,
+            "sender_cpu_seconds": 8.44,
+            "sender_cpu_seconds_per_gib": 16.88,
+            "sender_max_rss_kib": 25216.0,
+            "setup_seconds": 1.145500329,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 65.96,
+            "wall_seconds": 93.15112546899991
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 48.72,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 5.70573238663078,
+            "receiver_cpu_seconds": 24.36,
+            "receiver_cpu_seconds_per_gib": 48.72,
+            "receiver_max_rss_kib": 30116.0,
+            "receiver_setup_seconds": 0.499231055,
+            "run_index": 2,
+            "sender_cpu_seconds": 9.01,
+            "sender_cpu_seconds_per_gib": 18.02,
+            "sender_max_rss_kib": 25544.0,
+            "setup_seconds": 1.281320764,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 66.74,
+            "wall_seconds": 89.73431722800001
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 51.32,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 5.73157338835316,
+            "receiver_cpu_seconds": 25.66,
+            "receiver_cpu_seconds_per_gib": 51.32,
+            "receiver_max_rss_kib": 29860.0,
+            "receiver_setup_seconds": 0.404778352,
+            "run_index": 3,
+            "sender_cpu_seconds": 8.43,
+            "sender_cpu_seconds_per_gib": 16.86,
+            "sender_max_rss_kib": 25344.0,
+            "setup_seconds": 1.138300567,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 68.18,
+            "wall_seconds": 89.32974687899997
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 50.08,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 5.724385348811126,
+            "receiver_cpu_seconds": 25.04,
+            "receiver_cpu_seconds_per_gib": 50.08,
+            "receiver_max_rss_kib": 31344.0,
+            "receiver_setup_seconds": 0.39891403400000003,
+            "run_index": 4,
+            "sender_cpu_seconds": 8.35,
+            "sender_cpu_seconds_per_gib": 16.7,
+            "sender_max_rss_kib": 25236.0,
+            "setup_seconds": 1.1301329720000002,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 66.78,
+            "wall_seconds": 89.44191713200007
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 48.72,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 5.724988076257602,
+            "receiver_cpu_seconds": 24.36,
+            "receiver_cpu_seconds_per_gib": 48.72,
+            "receiver_max_rss_kib": 28616.0,
+            "receiver_setup_seconds": 0.40144420999999997,
+            "run_index": 5,
+            "sender_cpu_seconds": 8.2,
+            "sender_cpu_seconds_per_gib": 16.4,
+            "sender_max_rss_kib": 26240.0,
+            "setup_seconds": 1.147066933,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 65.12,
+            "wall_seconds": 89.43250067600002
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.36,
+          "maximum": 51.32,
+          "median": 49.08,
+          "minimum": 48.72
+        },
+        "receiver_max_rss_kib": {
+          "mad": 1216.0,
+          "maximum": 31344.0,
+          "median": 29860.0,
+          "minimum": 28616.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.001888,
+          "maximum": 0.499231,
+          "median": 0.40289,
+          "minimum": 0.398914
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 18.02,
+          "median": 16.86,
+          "minimum": 16.4
+        },
+        "sender_max_rss_kib": {
+          "mad": 128.0,
+          "maximum": 26240.0,
+          "median": 25344.0,
+          "minimum": 25216.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.0072,
+          "maximum": 1.281321,
+          "median": 1.1455,
+          "minimum": 1.130133
+        },
+        "throughput_mib_s": {
+          "mad": 0.007188,
+          "maximum": 5.731573,
+          "median": 5.724385,
+          "minimum": 5.496445
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.78,
+          "maximum": 68.18,
+          "median": 66.74,
+          "minimum": 65.12
+        },
+        "wall_seconds": {
+          "mad": 0.11217,
+          "maximum": 93.151125,
+          "median": 89.441917,
+          "minimum": 89.329747
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -23.623,
+      "candidate_receiver_setup_delta_seconds": -0.095467,
+      "candidate_setup_delta_seconds": -0.069312,
+      "candidate_throughput_delta_percent": 5.321,
+      "candidate_wall_delta_seconds": -4.759516,
+      "direction": "wsl-to-oracle",
+      "series": "series1",
+      "size_mib": 512
+    },
+    {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 28.32,
+          "median": 28.0,
+          "minimum": 27.68
+        },
+        "binary_hashes": [
+          "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+        ],
+        "build_id": "arm-baseline-series1-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 28.32,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 12.160313212214602,
+            "receiver_cpu_seconds": 0.99,
+            "receiver_cpu_seconds_per_gib": 15.84,
+            "receiver_max_rss_kib": 24688.0,
+            "receiver_setup_seconds": 0.460875272,
+            "run_index": 1,
+            "sender_cpu_seconds": 1.77,
+            "sender_cpu_seconds_per_gib": 28.32,
+            "sender_max_rss_kib": 30048.0,
+            "setup_seconds": 0.922520584,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 44.16,
+            "wall_seconds": 5.263022331999991
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 28.16,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 11.963681035464294,
+            "receiver_cpu_seconds": 1.0,
+            "receiver_cpu_seconds_per_gib": 16.0,
+            "receiver_max_rss_kib": 24580.0,
+            "receiver_setup_seconds": 0.5473734010000001,
+            "run_index": 2,
+            "sender_cpu_seconds": 1.76,
+            "sender_cpu_seconds_per_gib": 28.16,
+            "sender_max_rss_kib": 30204.0,
+            "setup_seconds": 1.0181290490000001,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 44.16,
+            "wall_seconds": 5.349524097999847
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 28.0,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 11.587518539818939,
+            "receiver_cpu_seconds": 1.0,
+            "receiver_cpu_seconds_per_gib": 16.0,
+            "receiver_max_rss_kib": 24728.0,
+            "receiver_setup_seconds": 0.585876775,
+            "run_index": 3,
+            "sender_cpu_seconds": 1.75,
+            "sender_cpu_seconds_per_gib": 28.0,
+            "sender_max_rss_kib": 30316.0,
+            "setup_seconds": 1.0609164670000002,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 44.0,
+            "wall_seconds": 5.523184259000118
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 27.68,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 10.439175314382089,
+            "receiver_cpu_seconds": 0.98,
+            "receiver_cpu_seconds_per_gib": 15.68,
+            "receiver_max_rss_kib": 25044.0,
+            "receiver_setup_seconds": 1.329101444,
+            "run_index": 4,
+            "sender_cpu_seconds": 1.73,
+            "sender_cpu_seconds_per_gib": 27.68,
+            "sender_max_rss_kib": 27328.0,
+            "setup_seconds": 1.777555617,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 43.36,
+            "wall_seconds": 6.13075248500013
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 27.840000000000003,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 11.594655237138603,
+            "receiver_cpu_seconds": 0.97,
+            "receiver_cpu_seconds_per_gib": 15.52,
+            "receiver_max_rss_kib": 25208.0,
+            "receiver_setup_seconds": 0.5397847539999999,
+            "run_index": 5,
+            "sender_cpu_seconds": 1.7400000000000002,
+            "sender_cpu_seconds_per_gib": 27.840000000000003,
+            "sender_max_rss_kib": 26984.0,
+            "setup_seconds": 1.023183244,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 43.36,
+            "wall_seconds": 5.51978465000002
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 16.0,
+          "median": 15.84,
+          "minimum": 15.52
+        },
+        "receiver_max_rss_kib": {
+          "mad": 148.0,
+          "maximum": 25208.0,
+          "median": 24728.0,
+          "minimum": 24580.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.038503,
+          "maximum": 1.329101,
+          "median": 0.547373,
+          "minimum": 0.460875
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 28.32,
+          "median": 28.0,
+          "minimum": 27.68
+        },
+        "sender_max_rss_kib": {
+          "mad": 268.0,
+          "maximum": 30316.0,
+          "median": 30048.0,
+          "minimum": 26984.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.037733,
+          "maximum": 1.777556,
+          "median": 1.023183,
+          "minimum": 0.922521
+        },
+        "throughput_mib_s": {
+          "mad": 0.369026,
+          "maximum": 12.160313,
+          "median": 11.594655,
+          "minimum": 10.439175
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 44.16,
+          "median": 44.0,
+          "minimum": 43.36
+        },
+        "wall_seconds": {
+          "mad": 0.170261,
+          "maximum": 6.130752,
+          "median": 5.519785,
+          "minimum": 5.263022
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.32,
+          "maximum": 13.76,
+          "median": 13.44,
+          "minimum": 12.8
+        },
+        "binary_hashes": [
+          "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+        ],
+        "build_id": "arm-candidate-series1-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 13.120000000000001,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 12.145451617904,
+            "receiver_cpu_seconds": 1.0,
+            "receiver_cpu_seconds_per_gib": 16.0,
+            "receiver_max_rss_kib": 24736.0,
+            "receiver_setup_seconds": 0.487494039,
+            "run_index": 1,
+            "sender_cpu_seconds": 0.8200000000000001,
+            "sender_cpu_seconds_per_gib": 13.120000000000001,
+            "sender_max_rss_kib": 30012.0,
+            "setup_seconds": 0.944976139,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 29.12,
+            "wall_seconds": 5.269462347999934
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 13.76,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 11.62129599011065,
+            "receiver_cpu_seconds": 1.01,
+            "receiver_cpu_seconds_per_gib": 16.16,
+            "receiver_max_rss_kib": 25280.0,
+            "receiver_setup_seconds": 0.5822401749999999,
+            "run_index": 2,
+            "sender_cpu_seconds": 0.86,
+            "sender_cpu_seconds_per_gib": 13.76,
+            "sender_max_rss_kib": 32996.0,
+            "setup_seconds": 1.046826209,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 29.92,
+            "wall_seconds": 5.507131050999988
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 12.8,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 11.978191691187666,
+            "receiver_cpu_seconds": 0.97,
+            "receiver_cpu_seconds_per_gib": 15.52,
+            "receiver_max_rss_kib": 24344.0,
+            "receiver_setup_seconds": 0.499794635,
+            "run_index": 3,
+            "sender_cpu_seconds": 0.8,
+            "sender_cpu_seconds_per_gib": 12.8,
+            "sender_max_rss_kib": 30104.0,
+            "setup_seconds": 0.935848075,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 28.32,
+            "wall_seconds": 5.343043561999821
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 13.6,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 11.345901217185535,
+            "receiver_cpu_seconds": 1.0,
+            "receiver_cpu_seconds_per_gib": 16.0,
+            "receiver_max_rss_kib": 25124.0,
+            "receiver_setup_seconds": 0.498248603,
+            "run_index": 4,
+            "sender_cpu_seconds": 0.85,
+            "sender_cpu_seconds_per_gib": 13.6,
+            "sender_max_rss_kib": 29308.0,
+            "setup_seconds": 0.9674678160000001,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 29.6,
+            "wall_seconds": 5.640803561999974
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 13.440000000000001,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 11.463702006830955,
+            "receiver_cpu_seconds": 0.96,
+            "receiver_cpu_seconds_per_gib": 15.36,
+            "receiver_max_rss_kib": 24764.0,
+            "receiver_setup_seconds": 0.484983624,
+            "run_index": 5,
+            "sender_cpu_seconds": 0.8400000000000001,
+            "sender_cpu_seconds_per_gib": 13.440000000000001,
+            "sender_max_rss_kib": 26900.0,
+            "setup_seconds": 1.257555956,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 28.8,
+            "wall_seconds": 5.582838769000091
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 16.16,
+          "median": 16.0,
+          "minimum": 15.36
+        },
+        "receiver_max_rss_kib": {
+          "mad": 360.0,
+          "maximum": 25280.0,
+          "median": 24764.0,
+          "minimum": 24344.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.010755,
+          "maximum": 0.58224,
+          "median": 0.498249,
+          "minimum": 0.484984
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.32,
+          "maximum": 13.76,
+          "median": 13.44,
+          "minimum": 12.8
+        },
+        "sender_max_rss_kib": {
+          "mad": 704.0,
+          "maximum": 32996.0,
+          "median": 30012.0,
+          "minimum": 26900.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.03162,
+          "maximum": 1.257556,
+          "median": 0.967468,
+          "minimum": 0.935848
+        },
+        "throughput_mib_s": {
+          "mad": 0.275395,
+          "maximum": 12.145452,
+          "median": 11.621296,
+          "minimum": 11.345901
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.48,
+          "maximum": 29.92,
+          "median": 29.12,
+          "minimum": 28.32
+        },
+        "wall_seconds": {
+          "mad": 0.133673,
+          "maximum": 5.640804,
+          "median": 5.507131,
+          "minimum": 5.269462
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -52.0,
+      "candidate_receiver_setup_delta_seconds": -0.049124,
+      "candidate_setup_delta_seconds": -0.055715,
+      "candidate_throughput_delta_percent": 0.23,
+      "candidate_wall_delta_seconds": -0.012654,
+      "direction": "oracle-to-wsl",
+      "series": "series1",
+      "size_mib": 64
+    },
+    {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.22,
+          "maximum": 27.38,
+          "median": 27.12,
+          "minimum": 26.9
+        },
+        "binary_hashes": [
+          "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+        ],
+        "build_id": "arm-baseline-series1-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 27.12,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 24.401979077121712,
+            "receiver_cpu_seconds": 6.68,
+            "receiver_cpu_seconds_per_gib": 13.36,
+            "receiver_max_rss_kib": 25264.0,
+            "receiver_setup_seconds": 0.523172867,
+            "run_index": 1,
+            "sender_cpu_seconds": 13.56,
+            "sender_cpu_seconds_per_gib": 27.12,
+            "sender_max_rss_kib": 27488.0,
+            "setup_seconds": 0.987911438,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 40.480000000000004,
+            "wall_seconds": 20.981904720999864
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 26.9,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 21.489355200284997,
+            "receiver_cpu_seconds": 6.8,
+            "receiver_cpu_seconds_per_gib": 13.6,
+            "receiver_max_rss_kib": 25144.0,
+            "receiver_setup_seconds": 0.581938068,
+            "run_index": 2,
+            "sender_cpu_seconds": 13.45,
+            "sender_cpu_seconds_per_gib": 26.9,
+            "sender_max_rss_kib": 27940.0,
+            "setup_seconds": 1.049966385,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 40.5,
+            "wall_seconds": 23.825749782999992
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 27.38,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 25.398178983703605,
+            "receiver_cpu_seconds": 6.970000000000001,
+            "receiver_cpu_seconds_per_gib": 13.940000000000001,
+            "receiver_max_rss_kib": 25044.0,
+            "receiver_setup_seconds": 0.5253670309999999,
+            "run_index": 3,
+            "sender_cpu_seconds": 13.69,
+            "sender_cpu_seconds_per_gib": 27.38,
+            "sender_max_rss_kib": 30336.0,
+            "setup_seconds": 0.960958364,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 41.32,
+            "wall_seconds": 20.15892557999996
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 27.12,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 25.323250275851873,
+            "receiver_cpu_seconds": 6.73,
+            "receiver_cpu_seconds_per_gib": 13.46,
+            "receiver_max_rss_kib": 25476.0,
+            "receiver_setup_seconds": 0.446517599,
+            "run_index": 4,
+            "sender_cpu_seconds": 13.56,
+            "sender_cpu_seconds_per_gib": 27.12,
+            "sender_max_rss_kib": 28344.0,
+            "setup_seconds": 0.890907505,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 40.58,
+            "wall_seconds": 20.218573620000143
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 27.380000000000003,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 25.30919628311006,
+            "receiver_cpu_seconds": 6.73,
+            "receiver_cpu_seconds_per_gib": 13.46,
+            "receiver_max_rss_kib": 24992.0,
+            "receiver_setup_seconds": 0.46462205900000003,
+            "run_index": 5,
+            "sender_cpu_seconds": 13.690000000000001,
+            "sender_cpu_seconds_per_gib": 27.380000000000003,
+            "sender_max_rss_kib": 29068.0,
+            "setup_seconds": 0.905622641,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 40.84,
+            "wall_seconds": 20.22980083099992
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.1,
+          "maximum": 13.94,
+          "median": 13.46,
+          "minimum": 13.36
+        },
+        "receiver_max_rss_kib": {
+          "mad": 120.0,
+          "maximum": 25476.0,
+          "median": 25144.0,
+          "minimum": 24992.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.058551,
+          "maximum": 0.581938,
+          "median": 0.523173,
+          "minimum": 0.446518
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.22,
+          "maximum": 27.38,
+          "median": 27.12,
+          "minimum": 26.9
+        },
+        "sender_max_rss_kib": {
+          "mad": 724.0,
+          "maximum": 30336.0,
+          "median": 28344.0,
+          "minimum": 27488.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.055336,
+          "maximum": 1.049966,
+          "median": 0.960958,
+          "minimum": 0.890908
+        },
+        "throughput_mib_s": {
+          "mad": 0.088983,
+          "maximum": 25.398179,
+          "median": 25.309196,
+          "minimum": 21.489355
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.1,
+          "maximum": 41.32,
+          "median": 40.58,
+          "minimum": 40.48
+        },
+        "wall_seconds": {
+          "mad": 0.070875,
+          "maximum": 23.82575,
+          "median": 20.229801,
+          "minimum": 20.158926
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.18,
+          "maximum": 12.56,
+          "median": 12.32,
+          "minimum": 12.1
+        },
+        "binary_hashes": [
+          "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+        ],
+        "build_id": "arm-candidate-series1-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 12.5,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 25.340457193910556,
+            "receiver_cpu_seconds": 6.75,
+            "receiver_cpu_seconds_per_gib": 13.5,
+            "receiver_max_rss_kib": 25556.0,
+            "receiver_setup_seconds": 0.49218104300000004,
+            "run_index": 1,
+            "sender_cpu_seconds": 6.25,
+            "sender_cpu_seconds_per_gib": 12.5,
+            "sender_max_rss_kib": 29972.0,
+            "setup_seconds": 0.9524980319999999,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 26.0,
+            "wall_seconds": 20.204844611999988
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 12.559999999999999,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 22.948951170025815,
+            "receiver_cpu_seconds": 6.58,
+            "receiver_cpu_seconds_per_gib": 13.16,
+            "receiver_max_rss_kib": 25212.0,
+            "receiver_setup_seconds": 0.5599383,
+            "run_index": 2,
+            "sender_cpu_seconds": 6.279999999999999,
+            "sender_cpu_seconds_per_gib": 12.559999999999999,
+            "sender_max_rss_kib": 32336.0,
+            "setup_seconds": 1.021817601,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 25.72,
+            "wall_seconds": 22.31038779100004
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 12.3,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 25.145052339490693,
+            "receiver_cpu_seconds": 6.59,
+            "receiver_cpu_seconds_per_gib": 13.18,
+            "receiver_max_rss_kib": 24792.0,
+            "receiver_setup_seconds": 0.48574224299999996,
+            "run_index": 3,
+            "sender_cpu_seconds": 6.15,
+            "sender_cpu_seconds_per_gib": 12.3,
+            "sender_max_rss_kib": 32160.0,
+            "setup_seconds": 0.972067276,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 25.48,
+            "wall_seconds": 20.361858590999873
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 12.32,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 25.41030001508476,
+            "receiver_cpu_seconds": 6.76,
+            "receiver_cpu_seconds_per_gib": 13.52,
+            "receiver_max_rss_kib": 25400.0,
+            "receiver_setup_seconds": 0.451450823,
+            "run_index": 4,
+            "sender_cpu_seconds": 6.16,
+            "sender_cpu_seconds_per_gib": 12.32,
+            "sender_max_rss_kib": 27880.0,
+            "setup_seconds": 0.9046601160000001,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 25.84,
+            "wall_seconds": 20.14930951999986
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 12.100000000000001,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 24.99819080354477,
+            "receiver_cpu_seconds": 6.79,
+            "receiver_cpu_seconds_per_gib": 13.58,
+            "receiver_max_rss_kib": 24864.0,
+            "receiver_setup_seconds": 0.670612397,
+            "run_index": 5,
+            "sender_cpu_seconds": 6.050000000000001,
+            "sender_cpu_seconds_per_gib": 12.100000000000001,
+            "sender_max_rss_kib": 29504.0,
+            "setup_seconds": 1.098223101,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 25.68,
+            "wall_seconds": 20.481482200999835
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.08,
+          "maximum": 13.58,
+          "median": 13.5,
+          "minimum": 13.16
+        },
+        "receiver_max_rss_kib": {
+          "mad": 344.0,
+          "maximum": 25556.0,
+          "median": 25212.0,
+          "minimum": 24792.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.04073,
+          "maximum": 0.670612,
+          "median": 0.492181,
+          "minimum": 0.451451
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.18,
+          "maximum": 12.56,
+          "median": 12.32,
+          "minimum": 12.1
+        },
+        "sender_max_rss_kib": {
+          "mad": 2092.0,
+          "maximum": 32336.0,
+          "median": 29972.0,
+          "minimum": 27880.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.04975,
+          "maximum": 1.098223,
+          "median": 0.972067,
+          "minimum": 0.90466
+        },
+        "throughput_mib_s": {
+          "mad": 0.195405,
+          "maximum": 25.4103,
+          "median": 25.145052,
+          "minimum": 22.948951
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.12,
+          "maximum": 26.0,
+          "median": 25.72,
+          "minimum": 25.48
+        },
+        "wall_seconds": {
+          "mad": 0.157014,
+          "maximum": 22.310388,
+          "median": 20.361859,
+          "minimum": 20.14931
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -54.572,
+      "candidate_receiver_setup_delta_seconds": -0.030992,
+      "candidate_setup_delta_seconds": 0.011109,
+      "candidate_throughput_delta_percent": -0.649,
+      "candidate_wall_delta_seconds": 0.132058,
+      "direction": "oracle-to-wsl",
+      "series": "series1",
+      "size_mib": 512
+    },
+    {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.64,
+          "maximum": 68.0,
+          "median": 65.6,
+          "minimum": 64.96
+        },
+        "binary_hashes": [
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+          "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+        ],
+        "build_id": "arm-baseline-series2-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 68.0,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 4.078624474504919,
+            "receiver_cpu_seconds": 4.25,
+            "receiver_cpu_seconds_per_gib": 68.0,
+            "receiver_max_rss_kib": 31444.0,
+            "receiver_setup_seconds": 0.416322229,
+            "run_index": 1,
+            "sender_cpu_seconds": 1.25,
+            "sender_cpu_seconds_per_gib": 20.0,
+            "sender_max_rss_kib": 24940.0,
+            "setup_seconds": 1.1737589540000002,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 88.0,
+            "wall_seconds": 15.691564742000082
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 67.67999999999999,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 4.327264005807357,
+            "receiver_cpu_seconds": 4.2299999999999995,
+            "receiver_cpu_seconds_per_gib": 67.67999999999999,
+            "receiver_max_rss_kib": 30204.0,
+            "receiver_setup_seconds": 0.392098349,
+            "run_index": 2,
+            "sender_cpu_seconds": 1.19,
+            "sender_cpu_seconds_per_gib": 19.04,
+            "sender_max_rss_kib": 25460.0,
+            "setup_seconds": 1.124092986,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 86.72,
+            "wall_seconds": 14.789945774999978
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 65.6,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 4.835635606709141,
+            "receiver_cpu_seconds": 4.1,
+            "receiver_cpu_seconds_per_gib": 65.6,
+            "receiver_max_rss_kib": 28332.0,
+            "receiver_setup_seconds": 0.451291901,
+            "run_index": 3,
+            "sender_cpu_seconds": 1.15,
+            "sender_cpu_seconds_per_gib": 18.4,
+            "sender_max_rss_kib": 24940.0,
+            "setup_seconds": 1.1840596939999999,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 84.0,
+            "wall_seconds": 13.235075014999893
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 64.96000000000001,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 4.8172984868750675,
+            "receiver_cpu_seconds": 4.0600000000000005,
+            "receiver_cpu_seconds_per_gib": 64.96000000000001,
+            "receiver_max_rss_kib": 32572.0,
+            "receiver_setup_seconds": 0.49367162,
+            "run_index": 4,
+            "sender_cpu_seconds": 1.11,
+            "sender_cpu_seconds_per_gib": 17.76,
+            "sender_max_rss_kib": 25284.0,
+            "setup_seconds": 1.24080314,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 82.72000000000001,
+            "wall_seconds": 13.285454529000162
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 65.6,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 4.853808442337742,
+            "receiver_cpu_seconds": 4.1,
+            "receiver_cpu_seconds_per_gib": 65.6,
+            "receiver_max_rss_kib": 31360.0,
+            "receiver_setup_seconds": 0.40740837,
+            "run_index": 5,
+            "sender_cpu_seconds": 1.13,
+            "sender_cpu_seconds_per_gib": 18.08,
+            "sender_max_rss_kib": 24704.0,
+            "setup_seconds": 1.1461520760000001,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 83.67999999999999,
+            "wall_seconds": 13.185522412000182
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.64,
+          "maximum": 68.0,
+          "median": 65.6,
+          "minimum": 64.96
+        },
+        "receiver_max_rss_kib": {
+          "mad": 1156.0,
+          "maximum": 32572.0,
+          "median": 31360.0,
+          "minimum": 28332.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.024224,
+          "maximum": 0.493672,
+          "median": 0.416322,
+          "minimum": 0.392098
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.64,
+          "maximum": 20.0,
+          "median": 18.4,
+          "minimum": 17.76
+        },
+        "sender_max_rss_kib": {
+          "mad": 236.0,
+          "maximum": 25460.0,
+          "median": 24940.0,
+          "minimum": 24704.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.027607,
+          "maximum": 1.240803,
+          "median": 1.173759,
+          "minimum": 1.124093
+        },
+        "throughput_mib_s": {
+          "mad": 0.03651,
+          "maximum": 4.853808,
+          "median": 4.817298,
+          "minimum": 4.078624
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 1.28,
+          "maximum": 88.0,
+          "median": 84.0,
+          "minimum": 82.72
+        },
+        "wall_seconds": {
+          "mad": 0.099932,
+          "maximum": 15.691565,
+          "median": 13.285455,
+          "minimum": 13.185522
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 1.76,
+          "maximum": 52.8,
+          "median": 50.56,
+          "minimum": 48.8
+        },
+        "binary_hashes": [
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+          "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+        ],
+        "build_id": "arm-candidate-series2-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 50.56,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 4.854069343105626,
+            "receiver_cpu_seconds": 3.16,
+            "receiver_cpu_seconds_per_gib": 50.56,
+            "receiver_max_rss_kib": 31056.0,
+            "receiver_setup_seconds": 0.39641881700000003,
+            "run_index": 1,
+            "sender_cpu_seconds": 1.13,
+            "sender_cpu_seconds_per_gib": 18.08,
+            "sender_max_rss_kib": 25192.0,
+            "setup_seconds": 1.130017378,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 68.64,
+            "wall_seconds": 13.184813705000124
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 52.800000000000004,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 4.693197367557157,
+            "receiver_cpu_seconds": 3.3000000000000003,
+            "receiver_cpu_seconds_per_gib": 52.800000000000004,
+            "receiver_max_rss_kib": 30872.0,
+            "receiver_setup_seconds": 0.41094067300000003,
+            "run_index": 2,
+            "sender_cpu_seconds": 1.17,
+            "sender_cpu_seconds_per_gib": 18.72,
+            "sender_max_rss_kib": 24980.0,
+            "setup_seconds": 1.135437016,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 71.52000000000001,
+            "wall_seconds": 13.636758693000047
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 52.31999999999999,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 4.853948906777288,
+            "receiver_cpu_seconds": 3.2699999999999996,
+            "receiver_cpu_seconds_per_gib": 52.31999999999999,
+            "receiver_max_rss_kib": 31652.0,
+            "receiver_setup_seconds": 0.399365397,
+            "run_index": 3,
+            "sender_cpu_seconds": 1.1400000000000001,
+            "sender_cpu_seconds_per_gib": 18.240000000000002,
+            "sender_max_rss_kib": 25220.0,
+            "setup_seconds": 1.134506357,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 70.56,
+            "wall_seconds": 13.185140846999957
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 50.56,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 4.799467039343057,
+            "receiver_cpu_seconds": 3.16,
+            "receiver_cpu_seconds_per_gib": 50.56,
+            "receiver_max_rss_kib": 29136.0,
+            "receiver_setup_seconds": 0.5040800480000001,
+            "run_index": 4,
+            "sender_cpu_seconds": 1.18,
+            "sender_cpu_seconds_per_gib": 18.88,
+            "sender_max_rss_kib": 25004.0,
+            "setup_seconds": 1.239449571,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 69.44,
+            "wall_seconds": 13.334813943999961
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 48.8,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 4.835415887898699,
+            "receiver_cpu_seconds": 3.05,
+            "receiver_cpu_seconds_per_gib": 48.8,
+            "receiver_max_rss_kib": 30524.0,
+            "receiver_setup_seconds": 0.400879247,
+            "run_index": 5,
+            "sender_cpu_seconds": 1.1099999999999999,
+            "sender_cpu_seconds_per_gib": 17.759999999999998,
+            "sender_max_rss_kib": 24868.0,
+            "setup_seconds": 1.133381979,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 66.56,
+            "wall_seconds": 13.235676409999996
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 1.76,
+          "maximum": 52.8,
+          "median": 50.56,
+          "minimum": 48.8
+        },
+        "receiver_max_rss_kib": {
+          "mad": 348.0,
+          "maximum": 31652.0,
+          "median": 30872.0,
+          "minimum": 29136.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.00446,
+          "maximum": 0.50408,
+          "median": 0.400879,
+          "minimum": 0.396419
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.48,
+          "maximum": 18.88,
+          "median": 18.24,
+          "minimum": 17.76
+        },
+        "sender_max_rss_kib": {
+          "mad": 136.0,
+          "maximum": 25220.0,
+          "median": 25004.0,
+          "minimum": 24868.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.001124,
+          "maximum": 1.23945,
+          "median": 1.134506,
+          "minimum": 1.130017
+        },
+        "throughput_mib_s": {
+          "mad": 0.018653,
+          "maximum": 4.854069,
+          "median": 4.835416,
+          "minimum": 4.693197
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 1.12,
+          "maximum": 71.52,
+          "median": 69.44,
+          "minimum": 66.56
+        },
+        "wall_seconds": {
+          "mad": 0.050863,
+          "maximum": 13.636759,
+          "median": 13.235676,
+          "minimum": 13.184814
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -22.927,
+      "candidate_receiver_setup_delta_seconds": -0.015443,
+      "candidate_setup_delta_seconds": -0.039253,
+      "candidate_throughput_delta_percent": 0.376,
+      "candidate_wall_delta_seconds": -0.049779,
+      "direction": "wsl-to-oracle",
+      "series": "series2",
+      "size_mib": 64
+    },
+    {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.62,
+          "maximum": 63.94,
+          "median": 63.18,
+          "minimum": 62.02
+        },
+        "binary_hashes": [
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+          "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+        ],
+        "build_id": "arm-baseline-series2-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 62.019999999999996,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 5.612221154335499,
+            "receiver_cpu_seconds": 31.009999999999998,
+            "receiver_cpu_seconds_per_gib": 62.019999999999996,
+            "receiver_max_rss_kib": 31572.0,
+            "receiver_setup_seconds": 0.39466956599999997,
+            "run_index": 1,
+            "sender_cpu_seconds": 8.35,
+            "sender_cpu_seconds_per_gib": 16.7,
+            "sender_max_rss_kib": 24856.0,
+            "setup_seconds": 1.1701655260000001,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 78.72,
+            "wall_seconds": 91.22947687200008
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 62.68,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 5.696662963936677,
+            "receiver_cpu_seconds": 31.34,
+            "receiver_cpu_seconds_per_gib": 62.68,
+            "receiver_max_rss_kib": 29976.0,
+            "receiver_setup_seconds": 0.40136885,
+            "run_index": 2,
+            "sender_cpu_seconds": 8.51,
+            "sender_cpu_seconds_per_gib": 17.02,
+            "sender_max_rss_kib": 25744.0,
+            "setup_seconds": 1.187846516,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 79.7,
+            "wall_seconds": 89.87717954200025
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 63.94,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 5.4442417172971505,
+            "receiver_cpu_seconds": 31.97,
+            "receiver_cpu_seconds_per_gib": 63.94,
+            "receiver_max_rss_kib": 29332.0,
+            "receiver_setup_seconds": 0.499830981,
+            "run_index": 3,
+            "sender_cpu_seconds": 8.17,
+            "sender_cpu_seconds_per_gib": 16.34,
+            "sender_max_rss_kib": 25744.0,
+            "setup_seconds": 1.282190294,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 80.28,
+            "wall_seconds": 94.04431812299981
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 63.8,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 5.639768993048012,
+            "receiver_cpu_seconds": 31.9,
+            "receiver_cpu_seconds_per_gib": 63.8,
+            "receiver_max_rss_kib": 31304.0,
+            "receiver_setup_seconds": 0.398085428,
+            "run_index": 4,
+            "sender_cpu_seconds": 8.31,
+            "sender_cpu_seconds_per_gib": 16.62,
+            "sender_max_rss_kib": 24884.0,
+            "setup_seconds": 1.139283114,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 80.42,
+            "wall_seconds": 90.78386023100029
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 63.18,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+            ],
+            "rate_mib_s": 5.668153753499764,
+            "receiver_cpu_seconds": 31.59,
+            "receiver_cpu_seconds_per_gib": 63.18,
+            "receiver_max_rss_kib": 28388.0,
+            "receiver_setup_seconds": 0.401341331,
+            "run_index": 5,
+            "sender_cpu_seconds": 8.07,
+            "sender_cpu_seconds_per_gib": 16.14,
+            "sender_max_rss_kib": 25384.0,
+            "setup_seconds": 1.194586253,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 79.32,
+            "wall_seconds": 90.32923633799965
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.62,
+          "maximum": 63.94,
+          "median": 63.18,
+          "minimum": 62.02
+        },
+        "receiver_max_rss_kib": {
+          "mad": 1328.0,
+          "maximum": 31572.0,
+          "median": 29976.0,
+          "minimum": 28388.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.003256,
+          "maximum": 0.499831,
+          "median": 0.401341,
+          "minimum": 0.39467
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.28,
+          "maximum": 17.02,
+          "median": 16.62,
+          "minimum": 16.14
+        },
+        "sender_max_rss_kib": {
+          "mad": 360.0,
+          "maximum": 25744.0,
+          "median": 25384.0,
+          "minimum": 24856.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.017681,
+          "maximum": 1.28219,
+          "median": 1.187847,
+          "minimum": 1.139283
+        },
+        "throughput_mib_s": {
+          "mad": 0.028385,
+          "maximum": 5.696663,
+          "median": 5.639769,
+          "minimum": 5.444242
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.58,
+          "maximum": 80.42,
+          "median": 79.7,
+          "minimum": 78.72
+        },
+        "wall_seconds": {
+          "mad": 0.454624,
+          "maximum": 94.044318,
+          "median": 90.78386,
+          "minimum": 89.87718
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.36,
+          "maximum": 49.68,
+          "median": 48.56,
+          "minimum": 47.28
+        },
+        "binary_hashes": [
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+          "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+        ],
+        "build_id": "arm-candidate-series2-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 47.28,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 5.731665009723899,
+            "receiver_cpu_seconds": 23.64,
+            "receiver_cpu_seconds_per_gib": 47.28,
+            "receiver_max_rss_kib": 28056.0,
+            "receiver_setup_seconds": 0.39793558900000003,
+            "run_index": 1,
+            "sender_cpu_seconds": 8.22,
+            "sender_cpu_seconds_per_gib": 16.44,
+            "sender_max_rss_kib": 25392.0,
+            "setup_seconds": 1.1391075769999999,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 63.72,
+            "wall_seconds": 89.32831893199977
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 48.56,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 5.6554016420290045,
+            "receiver_cpu_seconds": 24.28,
+            "receiver_cpu_seconds_per_gib": 48.56,
+            "receiver_max_rss_kib": 30068.0,
+            "receiver_setup_seconds": 0.405682839,
+            "run_index": 2,
+            "sender_cpu_seconds": 8.23,
+            "sender_cpu_seconds_per_gib": 16.46,
+            "sender_max_rss_kib": 25408.0,
+            "setup_seconds": 1.144841628,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 65.02000000000001,
+            "wall_seconds": 90.53291568099985
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 49.68,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 4.788197243500762,
+            "receiver_cpu_seconds": 24.84,
+            "receiver_cpu_seconds_per_gib": 49.68,
+            "receiver_max_rss_kib": 30796.0,
+            "receiver_setup_seconds": 0.398172709,
+            "run_index": 3,
+            "sender_cpu_seconds": 8.22,
+            "sender_cpu_seconds_per_gib": 16.44,
+            "sender_max_rss_kib": 27496.0,
+            "setup_seconds": 1.1310559850000002,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 66.12,
+            "wall_seconds": 106.92959666499974
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 48.2,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 5.677868116844464,
+            "receiver_cpu_seconds": 24.1,
+            "receiver_cpu_seconds_per_gib": 48.2,
+            "receiver_max_rss_kib": 29844.0,
+            "receiver_setup_seconds": 0.500493424,
+            "run_index": 4,
+            "sender_cpu_seconds": 8.08,
+            "sender_cpu_seconds_per_gib": 16.16,
+            "sender_max_rss_kib": 26152.0,
+            "setup_seconds": 1.226697459,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 64.36,
+            "wall_seconds": 90.17469047600025
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 48.88,
+            "binary_hashes": [
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+            ],
+            "rate_mib_s": 5.6962207845984,
+            "receiver_cpu_seconds": 24.44,
+            "receiver_cpu_seconds_per_gib": 48.88,
+            "receiver_max_rss_kib": 30384.0,
+            "receiver_setup_seconds": 0.40072332699999996,
+            "run_index": 5,
+            "sender_cpu_seconds": 7.9,
+            "sender_cpu_seconds_per_gib": 15.8,
+            "sender_max_rss_kib": 25460.0,
+            "setup_seconds": 1.168773203,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 64.68,
+            "wall_seconds": 89.88415641899974
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.36,
+          "maximum": 49.68,
+          "median": 48.56,
+          "minimum": 47.28
+        },
+        "receiver_max_rss_kib": {
+          "mad": 316.0,
+          "maximum": 30796.0,
+          "median": 30068.0,
+          "minimum": 28056.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.002788,
+          "maximum": 0.500493,
+          "median": 0.400723,
+          "minimum": 0.397936
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.02,
+          "maximum": 16.46,
+          "median": 16.44,
+          "minimum": 15.8
+        },
+        "sender_max_rss_kib": {
+          "mad": 68.0,
+          "maximum": 27496.0,
+          "median": 25460.0,
+          "minimum": 25392.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.013786,
+          "maximum": 1.226697,
+          "median": 1.144842,
+          "minimum": 1.131056
+        },
+        "throughput_mib_s": {
+          "mad": 0.022466,
+          "maximum": 5.731665,
+          "median": 5.677868,
+          "minimum": 4.788197
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.34,
+          "maximum": 66.12,
+          "median": 64.68,
+          "minimum": 63.72
+        },
+        "wall_seconds": {
+          "mad": 0.358225,
+          "maximum": 106.929597,
+          "median": 90.17469,
+          "minimum": 89.328319
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -23.14,
+      "candidate_receiver_setup_delta_seconds": -0.000618,
+      "candidate_setup_delta_seconds": -0.043005,
+      "candidate_throughput_delta_percent": 0.676,
+      "candidate_wall_delta_seconds": -0.60917,
+      "direction": "wsl-to-oracle",
+      "series": "series2",
+      "size_mib": 512
+    },
+    {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.0,
+          "maximum": 29.44,
+          "median": 28.48,
+          "minimum": 27.52
+        },
+        "binary_hashes": [
+          "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+        ],
+        "build_id": "arm-baseline-series2-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 28.48,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 12.422704614403255,
+            "receiver_cpu_seconds": 1.0,
+            "receiver_cpu_seconds_per_gib": 16.0,
+            "receiver_max_rss_kib": 25124.0,
+            "receiver_setup_seconds": 0.5381088359999999,
+            "run_index": 1,
+            "sender_cpu_seconds": 1.78,
+            "sender_cpu_seconds_per_gib": 28.48,
+            "sender_max_rss_kib": 28180.0,
+            "setup_seconds": 0.9640704840000001,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 44.480000000000004,
+            "wall_seconds": 5.151857182999947
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 29.439999999999998,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 12.20091471908599,
+            "receiver_cpu_seconds": 1.02,
+            "receiver_cpu_seconds_per_gib": 16.32,
+            "receiver_max_rss_kib": 25204.0,
+            "receiver_setup_seconds": 0.5244395270000001,
+            "run_index": 2,
+            "sender_cpu_seconds": 1.8399999999999999,
+            "sender_cpu_seconds_per_gib": 29.439999999999998,
+            "sender_max_rss_kib": 26972.0,
+            "setup_seconds": 0.941055654,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 45.76,
+            "wall_seconds": 5.245508346999941
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 27.520000000000003,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 12.567962691789255,
+            "receiver_cpu_seconds": 0.96,
+            "receiver_cpu_seconds_per_gib": 15.36,
+            "receiver_max_rss_kib": 24696.0,
+            "receiver_setup_seconds": 0.551090443,
+            "run_index": 3,
+            "sender_cpu_seconds": 1.7200000000000002,
+            "sender_cpu_seconds_per_gib": 27.520000000000003,
+            "sender_max_rss_kib": 28272.0,
+            "setup_seconds": 0.97546496,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 42.88,
+            "wall_seconds": 5.092313015999935
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 28.48,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 12.881975097785853,
+            "receiver_cpu_seconds": 0.98,
+            "receiver_cpu_seconds_per_gib": 15.68,
+            "receiver_max_rss_kib": 24756.0,
+            "receiver_setup_seconds": 0.435829678,
+            "run_index": 4,
+            "sender_cpu_seconds": 1.78,
+            "sender_cpu_seconds_per_gib": 28.48,
+            "sender_max_rss_kib": 27804.0,
+            "setup_seconds": 0.8250371280000001,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 44.16,
+            "wall_seconds": 4.968182248000176
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 28.48,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 12.906742841832909,
+            "receiver_cpu_seconds": 0.99,
+            "receiver_cpu_seconds_per_gib": 15.84,
+            "receiver_max_rss_kib": 24472.0,
+            "receiver_setup_seconds": 0.435768269,
+            "run_index": 5,
+            "sender_cpu_seconds": 1.78,
+            "sender_cpu_seconds_per_gib": 28.48,
+            "sender_max_rss_kib": 27816.0,
+            "setup_seconds": 0.847990758,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 44.32,
+            "wall_seconds": 4.958648419999918
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 16.32,
+          "median": 15.84,
+          "minimum": 15.36
+        },
+        "receiver_max_rss_kib": {
+          "mad": 284.0,
+          "maximum": 25204.0,
+          "median": 24756.0,
+          "minimum": 24472.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.026651,
+          "maximum": 0.55109,
+          "median": 0.52444,
+          "minimum": 0.435768
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.0,
+          "maximum": 29.44,
+          "median": 28.48,
+          "minimum": 27.52
+        },
+        "sender_max_rss_kib": {
+          "mad": 364.0,
+          "maximum": 28272.0,
+          "median": 27816.0,
+          "minimum": 26972.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.034409,
+          "maximum": 0.975465,
+          "median": 0.941056,
+          "minimum": 0.825037
+        },
+        "throughput_mib_s": {
+          "mad": 0.314012,
+          "maximum": 12.906743,
+          "median": 12.567963,
+          "minimum": 12.200915
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 45.76,
+          "median": 44.32,
+          "minimum": 42.88
+        },
+        "wall_seconds": {
+          "mad": 0.124131,
+          "maximum": 5.245508,
+          "median": 5.092313,
+          "minimum": 4.958648
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.32,
+          "maximum": 15.36,
+          "median": 14.08,
+          "minimum": 13.76
+        },
+        "binary_hashes": [
+          "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+        ],
+        "build_id": "arm-candidate-series2-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 15.36,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 12.23648271073491,
+            "receiver_cpu_seconds": 1.0499999999999998,
+            "receiver_cpu_seconds_per_gib": 16.799999999999997,
+            "receiver_max_rss_kib": 24920.0,
+            "receiver_setup_seconds": 0.5223489830000001,
+            "run_index": 1,
+            "sender_cpu_seconds": 0.96,
+            "sender_cpu_seconds_per_gib": 15.36,
+            "sender_max_rss_kib": 31712.0,
+            "setup_seconds": 0.941564296,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 32.16,
+            "wall_seconds": 5.230261138999822
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 13.760000000000002,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 12.111607912046457,
+            "receiver_cpu_seconds": 1.0,
+            "receiver_cpu_seconds_per_gib": 16.0,
+            "receiver_max_rss_kib": 24252.0,
+            "receiver_setup_seconds": 0.553243856,
+            "run_index": 2,
+            "sender_cpu_seconds": 0.8600000000000001,
+            "sender_cpu_seconds_per_gib": 13.760000000000002,
+            "sender_max_rss_kib": 31824.0,
+            "setup_seconds": 0.9807641949999999,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 29.76,
+            "wall_seconds": 5.284186911000006
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 13.76,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 12.68475844186942,
+            "receiver_cpu_seconds": 0.99,
+            "receiver_cpu_seconds_per_gib": 15.84,
+            "receiver_max_rss_kib": 25004.0,
+            "receiver_setup_seconds": 0.481331294,
+            "run_index": 3,
+            "sender_cpu_seconds": 0.86,
+            "sender_cpu_seconds_per_gib": 13.76,
+            "sender_max_rss_kib": 26940.0,
+            "setup_seconds": 0.9132392300000001,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 29.6,
+            "wall_seconds": 5.045425208000097
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 14.08,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 10.235472511509593,
+            "receiver_cpu_seconds": 0.97,
+            "receiver_cpu_seconds_per_gib": 15.52,
+            "receiver_max_rss_kib": 24576.0,
+            "receiver_setup_seconds": 0.441737751,
+            "run_index": 4,
+            "sender_cpu_seconds": 0.88,
+            "sender_cpu_seconds_per_gib": 14.08,
+            "sender_max_rss_kib": 29316.0,
+            "setup_seconds": 1.1611802649999998,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 29.6,
+            "wall_seconds": 6.252764581999827
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 14.24,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 12.51881959039211,
+            "receiver_cpu_seconds": 1.0,
+            "receiver_cpu_seconds_per_gib": 16.0,
+            "receiver_max_rss_kib": 24664.0,
+            "receiver_setup_seconds": 0.492077685,
+            "run_index": 5,
+            "sender_cpu_seconds": 0.89,
+            "sender_cpu_seconds_per_gib": 14.24,
+            "sender_max_rss_kib": 27052.0,
+            "setup_seconds": 0.942828825,
+            "size_gib": 0.0625,
+            "size_mib": 64,
+            "source_sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+            "total_cpu_seconds_per_gib": 30.240000000000002,
+            "wall_seconds": 5.112303083999905
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 16.8,
+          "median": 16.0,
+          "minimum": 15.52
+        },
+        "receiver_max_rss_kib": {
+          "mad": 256.0,
+          "maximum": 25004.0,
+          "median": 24664.0,
+          "minimum": 24252.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.030271,
+          "maximum": 0.553244,
+          "median": 0.492078,
+          "minimum": 0.441738
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.32,
+          "maximum": 15.36,
+          "median": 14.08,
+          "minimum": 13.76
+        },
+        "sender_max_rss_kib": {
+          "mad": 2376.0,
+          "maximum": 31824.0,
+          "median": 29316.0,
+          "minimum": 26940.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.02959,
+          "maximum": 1.16118,
+          "median": 0.942829,
+          "minimum": 0.913239
+        },
+        "throughput_mib_s": {
+          "mad": 0.282337,
+          "maximum": 12.684758,
+          "median": 12.236483,
+          "minimum": 10.235473
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 32.16,
+          "median": 29.76,
+          "minimum": 29.6
+        },
+        "wall_seconds": {
+          "mad": 0.117958,
+          "maximum": 6.252765,
+          "median": 5.230261,
+          "minimum": 5.045425
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -50.562,
+      "candidate_receiver_setup_delta_seconds": -0.032362,
+      "candidate_setup_delta_seconds": 0.001773,
+      "candidate_throughput_delta_percent": -2.637,
+      "candidate_wall_delta_seconds": 0.137948,
+      "direction": "oracle-to-wsl",
+      "series": "series2",
+      "size_mib": 64
+    },
+    {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.12,
+          "maximum": 28.3,
+          "median": 27.88,
+          "minimum": 27.7
+        },
+        "binary_hashes": [
+          "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+        ],
+        "build_id": "arm-baseline-series2-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 27.82,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 21.706826050908955,
+            "receiver_cpu_seconds": 7.109999999999999,
+            "receiver_cpu_seconds_per_gib": 14.219999999999999,
+            "receiver_max_rss_kib": 25424.0,
+            "receiver_setup_seconds": 0.448862503,
+            "run_index": 1,
+            "sender_cpu_seconds": 13.91,
+            "sender_cpu_seconds_per_gib": 27.82,
+            "sender_max_rss_kib": 28516.0,
+            "setup_seconds": 0.867234205,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 42.04,
+            "wall_seconds": 23.587050396000222
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 27.7,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 17.85315680987068,
+            "receiver_cpu_seconds": 6.880000000000001,
+            "receiver_cpu_seconds_per_gib": 13.760000000000002,
+            "receiver_max_rss_kib": 25036.0,
+            "receiver_setup_seconds": 0.44738649,
+            "run_index": 2,
+            "sender_cpu_seconds": 13.85,
+            "sender_cpu_seconds_per_gib": 27.7,
+            "sender_max_rss_kib": 30140.0,
+            "setup_seconds": 0.866576882,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 41.46,
+            "wall_seconds": 28.678401553999947
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 27.88,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 25.27523321181612,
+            "receiver_cpu_seconds": 7.08,
+            "receiver_cpu_seconds_per_gib": 14.16,
+            "receiver_max_rss_kib": 24924.0,
+            "receiver_setup_seconds": 0.459520292,
+            "run_index": 3,
+            "sender_cpu_seconds": 13.94,
+            "sender_cpu_seconds_per_gib": 27.88,
+            "sender_max_rss_kib": 29632.0,
+            "setup_seconds": 0.870206905,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 42.04,
+            "wall_seconds": 20.25698420699996
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 28.3,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 25.206225116018487,
+            "receiver_cpu_seconds": 7.26,
+            "receiver_cpu_seconds_per_gib": 14.52,
+            "receiver_max_rss_kib": 24888.0,
+            "receiver_setup_seconds": 0.45942162,
+            "run_index": 4,
+            "sender_cpu_seconds": 14.15,
+            "sender_cpu_seconds_per_gib": 28.3,
+            "sender_max_rss_kib": 27540.0,
+            "setup_seconds": 0.901470313,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 42.82,
+            "wall_seconds": 20.312442567000062
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 28.0,
+            "binary_hashes": [
+              "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 23.726163324886677,
+            "receiver_cpu_seconds": 7.109999999999999,
+            "receiver_cpu_seconds_per_gib": 14.219999999999999,
+            "receiver_max_rss_kib": 25436.0,
+            "receiver_setup_seconds": 0.43054310700000004,
+            "run_index": 5,
+            "sender_cpu_seconds": 14.0,
+            "sender_cpu_seconds_per_gib": 28.0,
+            "sender_max_rss_kib": 30380.0,
+            "setup_seconds": 0.840699272,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 42.22,
+            "wall_seconds": 21.579553044000022
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.06,
+          "maximum": 14.52,
+          "median": 14.22,
+          "minimum": 13.76
+        },
+        "receiver_max_rss_kib": {
+          "mad": 148.0,
+          "maximum": 25436.0,
+          "median": 25036.0,
+          "minimum": 24888.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.010559,
+          "maximum": 0.45952,
+          "median": 0.448863,
+          "minimum": 0.430543
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.12,
+          "maximum": 28.3,
+          "median": 27.88,
+          "minimum": 27.7
+        },
+        "sender_max_rss_kib": {
+          "mad": 748.0,
+          "maximum": 30380.0,
+          "median": 29632.0,
+          "minimum": 27540.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.002973,
+          "maximum": 0.90147,
+          "median": 0.867234,
+          "minimum": 0.840699
+        },
+        "throughput_mib_s": {
+          "mad": 1.54907,
+          "maximum": 25.275233,
+          "median": 23.726163,
+          "minimum": 17.853157
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.18,
+          "maximum": 42.82,
+          "median": 42.04,
+          "minimum": 41.46
+        },
+        "wall_seconds": {
+          "mad": 1.322569,
+          "maximum": 28.678402,
+          "median": 21.579553,
+          "minimum": 20.256984
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.2,
+          "maximum": 13.56,
+          "median": 13.04,
+          "minimum": 12.62
+        },
+        "binary_hashes": [
+          "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+          "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+        ],
+        "build_id": "arm-candidate-series2-20261002",
+        "n": 5,
+        "pairs": [
+          {
+            "arm_target_cpu_seconds_per_gib": 13.04,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 21.667076362586197,
+            "receiver_cpu_seconds": 7.4399999999999995,
+            "receiver_cpu_seconds_per_gib": 14.879999999999999,
+            "receiver_max_rss_kib": 25124.0,
+            "receiver_setup_seconds": 0.538512738,
+            "run_index": 1,
+            "sender_cpu_seconds": 6.52,
+            "sender_cpu_seconds_per_gib": 13.04,
+            "sender_max_rss_kib": 32252.0,
+            "setup_seconds": 0.9563669929999999,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 27.919999999999998,
+            "wall_seconds": 23.630322404000026
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 12.620000000000001,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 23.63248650648875,
+            "receiver_cpu_seconds": 7.08,
+            "receiver_cpu_seconds_per_gib": 14.16,
+            "receiver_max_rss_kib": 24928.0,
+            "receiver_setup_seconds": 0.55792524,
+            "run_index": 2,
+            "sender_cpu_seconds": 6.3100000000000005,
+            "sender_cpu_seconds_per_gib": 12.620000000000001,
+            "sender_max_rss_kib": 27916.0,
+            "setup_seconds": 1.020708059,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 26.78,
+            "wall_seconds": 21.665092238999932
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 12.84,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 25.397079932004317,
+            "receiver_cpu_seconds": 7.109999999999999,
+            "receiver_cpu_seconds_per_gib": 14.219999999999999,
+            "receiver_max_rss_kib": 25524.0,
+            "receiver_setup_seconds": 0.527231518,
+            "run_index": 3,
+            "sender_cpu_seconds": 6.42,
+            "sender_cpu_seconds_per_gib": 12.84,
+            "sender_max_rss_kib": 28140.0,
+            "setup_seconds": 0.979282906,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 27.06,
+            "wall_seconds": 20.159797951999963
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 13.559999999999999,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 19.358099206328017,
+            "receiver_cpu_seconds": 7.15,
+            "receiver_cpu_seconds_per_gib": 14.3,
+            "receiver_max_rss_kib": 24788.0,
+            "receiver_setup_seconds": 0.545295871,
+            "run_index": 4,
+            "sender_cpu_seconds": 6.779999999999999,
+            "sender_cpu_seconds_per_gib": 13.559999999999999,
+            "sender_max_rss_kib": 28380.0,
+            "setup_seconds": 0.983983256,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 27.86,
+            "wall_seconds": 26.448877781999954
+          },
+          {
+            "arm_target_cpu_seconds_per_gib": 13.059999999999999,
+            "binary_hashes": [
+              "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624",
+              "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+            ],
+            "rate_mib_s": 24.43516314945999,
+            "receiver_cpu_seconds": 7.08,
+            "receiver_cpu_seconds_per_gib": 14.16,
+            "receiver_max_rss_kib": 26048.0,
+            "receiver_setup_seconds": 0.491059694,
+            "run_index": 5,
+            "sender_cpu_seconds": 6.529999999999999,
+            "sender_cpu_seconds_per_gib": 13.059999999999999,
+            "sender_max_rss_kib": 27044.0,
+            "setup_seconds": 0.9692552,
+            "size_gib": 0.5,
+            "size_mib": 512,
+            "source_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+            "total_cpu_seconds_per_gib": 27.22,
+            "wall_seconds": 20.953410331999976
+          }
+        ],
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.06,
+          "maximum": 14.88,
+          "median": 14.22,
+          "minimum": 14.16
+        },
+        "receiver_max_rss_kib": {
+          "mad": 336.0,
+          "maximum": 26048.0,
+          "median": 25124.0,
+          "minimum": 24788.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.011281,
+          "maximum": 0.557925,
+          "median": 0.538513,
+          "minimum": 0.49106
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.2,
+          "maximum": 13.56,
+          "median": 13.04,
+          "minimum": 12.62
+        },
+        "sender_max_rss_kib": {
+          "mad": 240.0,
+          "maximum": 32252.0,
+          "median": 28140.0,
+          "minimum": 27044.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.010028,
+          "maximum": 1.020708,
+          "median": 0.979283,
+          "minimum": 0.956367
+        },
+        "throughput_mib_s": {
+          "mad": 1.764593,
+          "maximum": 25.39708,
+          "median": 23.632487,
+          "minimum": 19.358099
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.44,
+          "maximum": 27.92,
+          "median": 27.22,
+          "minimum": 26.78
+        },
+        "wall_seconds": {
+          "mad": 1.505294,
+          "maximum": 26.448878,
+          "median": 21.665092,
+          "minimum": 20.159798
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -53.228,
+      "candidate_receiver_setup_delta_seconds": 0.08965,
+      "candidate_setup_delta_seconds": 0.112049,
+      "candidate_throughput_delta_percent": -0.395,
+      "candidate_wall_delta_seconds": 0.085539,
+      "direction": "oracle-to-wsl",
+      "series": "series2",
+      "size_mib": 512
+    }
+  ],
+  "cpu_improvement_at_least_10_percent_confirmed_both_series": true,
+  "cpu_target_cases": [
+    "wsl-to-oracle-512mib",
+    "oracle-to-wsl-512mib"
+  ],
+  "expected_measured_pairs_per_variant_case_series": 5,
+  "pooled_across_series_by_direction_and_size": {
+    "oracle-to-wsl-512mib": {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.38,
+          "maximum": 28.3,
+          "median": 27.54,
+          "minimum": 26.9
+        },
+        "n_pairs": 10,
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.37,
+          "maximum": 14.52,
+          "median": 13.85,
+          "minimum": 13.36
+        },
+        "receiver_max_rss_kib": {
+          "mad": 170.0,
+          "maximum": 25476.0,
+          "median": 25094.0,
+          "minimum": 24888.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.012519,
+          "maximum": 0.581938,
+          "median": 0.459471,
+          "minimum": 0.430543
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.38,
+          "maximum": 28.3,
+          "median": 27.54,
+          "minimum": 26.9
+        },
+        "sender_max_rss_kib": {
+          "mad": 1052.0,
+          "maximum": 30380.0,
+          "median": 28792.0,
+          "minimum": 27488.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.029283,
+          "maximum": 1.049966,
+          "median": 0.896189,
+          "minimum": 0.840699
+        },
+        "throughput_mib_s": {
+          "mad": 0.556613,
+          "maximum": 25.398179,
+          "median": 24.804102,
+          "minimum": 17.853157
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.73,
+          "maximum": 42.82,
+          "median": 41.39,
+          "minimum": 40.48
+        },
+        "wall_seconds": {
+          "mad": 0.458424,
+          "maximum": 28.678402,
+          "median": 20.647174,
+          "minimum": 20.158926
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.28,
+          "maximum": 13.56,
+          "median": 12.59,
+          "minimum": 12.1
+        },
+        "n_pairs": 10,
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.36,
+          "maximum": 14.88,
+          "median": 13.87,
+          "minimum": 13.16
+        },
+        "receiver_max_rss_kib": {
+          "mad": 330.0,
+          "maximum": 26048.0,
+          "median": 25168.0,
+          "minimum": 24788.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.033879,
+          "maximum": 0.670612,
+          "median": 0.532872,
+          "minimum": 0.451451
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.28,
+          "maximum": 13.56,
+          "median": 12.59,
+          "minimum": 12.1
+        },
+        "sender_max_rss_kib": {
+          "mad": 1046.0,
+          "maximum": 32336.0,
+          "median": 28942.0,
+          "minimum": 27044.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.021243,
+          "maximum": 1.098223,
+          "median": 0.975675,
+          "minimum": 0.90466
+        },
+        "throughput_mib_s": {
+          "mad": 0.687013,
+          "maximum": 25.4103,
+          "median": 24.716677,
+          "minimum": 19.358099
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.69,
+          "maximum": 27.92,
+          "median": 26.39,
+          "minimum": 25.48
+        },
+        "wall_seconds": {
+          "mad": 0.562893,
+          "maximum": 26.448878,
+          "median": 20.717446,
+          "minimum": 20.14931
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -54.285
+    },
+    "oracle-to-wsl-64mib": {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.24,
+          "maximum": 29.44,
+          "median": 28.24,
+          "minimum": 27.52
+        },
+        "n_pairs": 10,
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 16.32,
+          "median": 15.84,
+          "minimum": 15.36
+        },
+        "receiver_max_rss_kib": {
+          "mad": 216.0,
+          "maximum": 25208.0,
+          "median": 24742.0,
+          "minimum": 24472.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.030719,
+          "maximum": 1.329101,
+          "median": 0.538947,
+          "minimum": 0.435768
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.24,
+          "maximum": 29.44,
+          "median": 28.24,
+          "minimum": 27.52
+        },
+        "sender_max_rss_kib": {
+          "mad": 842.0,
+          "maximum": 30316.0,
+          "median": 27998.0,
+          "minimum": 26972.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.050888,
+          "maximum": 1.777556,
+          "median": 0.969768,
+          "minimum": 0.825037
+        },
+        "throughput_mib_s": {
+          "mad": 0.486654,
+          "maximum": 12.906743,
+          "median": 12.180614,
+          "minimum": 10.439175
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.24,
+          "maximum": 45.76,
+          "median": 44.16,
+          "minimum": 42.88
+        },
+        "wall_seconds": {
+          "mad": 0.213736,
+          "maximum": 6.130752,
+          "median": 5.254265,
+          "minimum": 4.958648
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.32,
+          "maximum": 15.36,
+          "median": 13.76,
+          "minimum": 12.8
+        },
+        "n_pairs": 10,
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.16,
+          "maximum": 16.8,
+          "median": 16.0,
+          "minimum": 15.36
+        },
+        "receiver_max_rss_kib": {
+          "mad": 214.0,
+          "maximum": 25280.0,
+          "median": 24750.0,
+          "minimum": 24252.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.012006,
+          "maximum": 0.58224,
+          "median": 0.495163,
+          "minimum": 0.441738
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.32,
+          "maximum": 15.36,
+          "median": 13.76,
+          "minimum": 12.8
+        },
+        "sender_max_rss_kib": {
+          "mad": 2104.0,
+          "maximum": 32996.0,
+          "median": 29664.0,
+          "minimum": 26900.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.022458,
+          "maximum": 1.257556,
+          "median": 0.956222,
+          "minimum": 0.913239
+        },
+        "throughput_mib_s": {
+          "mad": 0.448762,
+          "maximum": 12.684758,
+          "median": 12.0449,
+          "minimum": 10.235473
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.4,
+          "maximum": 32.16,
+          "median": 29.6,
+          "minimum": 28.32
+        },
+        "wall_seconds": {
+          "mad": 0.197414,
+          "maximum": 6.252765,
+          "median": 5.313615,
+          "minimum": 5.045425
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -51.275
+    },
+    "wsl-to-oracle-512mib": {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.54,
+          "maximum": 65.52,
+          "median": 63.92,
+          "minimum": 62.02
+        },
+        "n_pairs": 10,
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.54,
+          "maximum": 65.52,
+          "median": 63.92,
+          "minimum": 62.02
+        },
+        "receiver_max_rss_kib": {
+          "mad": 798.0,
+          "maximum": 33416.0,
+          "median": 30960.0,
+          "minimum": 28388.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.00566,
+          "maximum": 0.513116,
+          "median": 0.402037,
+          "minimum": 0.39467
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.29,
+          "maximum": 18.0,
+          "median": 16.8,
+          "minimum": 16.14
+        },
+        "sender_max_rss_kib": {
+          "mad": 420.0,
+          "maximum": 26184.0,
+          "median": 25290.0,
+          "minimum": 24840.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.050387,
+          "maximum": 1.323974,
+          "median": 1.191216,
+          "minimum": 1.139283
+        },
+        "throughput_mib_s": {
+          "mad": 0.110358,
+          "maximum": 5.696663,
+          "median": 5.550059,
+          "minimum": 5.155447
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 0.84,
+          "maximum": 83.52,
+          "median": 80.6,
+          "minimum": 78.72
+        },
+        "wall_seconds": {
+          "mad": 1.857541,
+          "maximum": 99.312435,
+          "median": 92.262838,
+          "minimum": 89.87718
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.44,
+          "maximum": 51.32,
+          "median": 48.8,
+          "minimum": 47.28
+        },
+        "n_pairs": 10,
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.44,
+          "maximum": 51.32,
+          "median": 48.8,
+          "minimum": 47.28
+        },
+        "receiver_max_rss_kib": {
+          "mad": 626.0,
+          "maximum": 31344.0,
+          "median": 29964.0,
+          "minimum": 28056.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.003384,
+          "maximum": 0.500493,
+          "median": 0.402167,
+          "minimum": 0.397936
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.27,
+          "maximum": 18.02,
+          "median": 16.45,
+          "minimum": 15.8
+        },
+        "sender_max_rss_kib": {
+          "mad": 154.0,
+          "maximum": 27496.0,
+          "median": 25434.0,
+          "minimum": 25216.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.010493,
+          "maximum": 1.281321,
+          "median": 1.145171,
+          "minimum": 1.130133
+        },
+        "throughput_mib_s": {
+          "mad": 0.027304,
+          "maximum": 5.731665,
+          "median": 5.700977,
+          "minimum": 4.788197
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 1.02,
+          "maximum": 68.18,
+          "median": 65.54,
+          "minimum": 63.72
+        },
+        "wall_seconds": {
+          "mad": 0.428113,
+          "maximum": 106.929597,
+          "median": 89.809237,
+          "minimum": 89.328319
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -23.655
+    },
+    "wsl-to-oracle-64mib": {
+      "baseline": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 1.12,
+          "maximum": 68.48,
+          "median": 66.32,
+          "minimum": 64.96
+        },
+        "n_pairs": 10,
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 1.12,
+          "maximum": 68.48,
+          "median": 66.32,
+          "minimum": 64.96
+        },
+        "receiver_max_rss_kib": {
+          "mad": 1006.0,
+          "maximum": 32788.0,
+          "median": 30586.0,
+          "minimum": 28112.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.019377,
+          "maximum": 0.493672,
+          "median": 0.412631,
+          "minimum": 0.392098
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.64,
+          "maximum": 20.16,
+          "median": 18.72,
+          "minimum": 17.76
+        },
+        "sender_max_rss_kib": {
+          "mad": 314.0,
+          "maximum": 25460.0,
+          "median": 24692.0,
+          "minimum": 23912.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.045881,
+          "maximum": 1.334857,
+          "median": 1.178909,
+          "minimum": 1.124093
+        },
+        "throughput_mib_s": {
+          "mad": 0.089462,
+          "maximum": 4.853808,
+          "median": 4.75526,
+          "minimum": 4.078624
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 1.68,
+          "maximum": 88.32,
+          "median": 85.36,
+          "minimum": 82.72
+        },
+        "wall_seconds": {
+          "mad": 0.250774,
+          "maximum": 15.691565,
+          "median": 13.461073,
+          "minimum": 13.185522
+        }
+      },
+      "candidate": {
+        "arm_target_cpu_seconds_per_gib": {
+          "mad": 0.96,
+          "maximum": 52.8,
+          "median": 51.12,
+          "minimum": 48.64
+        },
+        "n_pairs": 10,
+        "receiver_cpu_seconds_per_gib": {
+          "mad": 0.96,
+          "maximum": 52.8,
+          "median": 51.12,
+          "minimum": 48.64
+        },
+        "receiver_max_rss_kib": {
+          "mad": 450.0,
+          "maximum": 32880.0,
+          "median": 31112.0,
+          "minimum": 29136.0
+        },
+        "receiver_setup_handshake_seconds": {
+          "mad": 0.012413,
+          "maximum": 0.50408,
+          "median": 0.410305,
+          "minimum": 0.396419
+        },
+        "sender_cpu_seconds_per_gib": {
+          "mad": 0.48,
+          "maximum": 20.16,
+          "median": 18.64,
+          "minimum": 17.76
+        },
+        "sender_max_rss_kib": {
+          "mad": 224.0,
+          "maximum": 25220.0,
+          "median": 24924.0,
+          "minimum": 24052.0
+        },
+        "setup_handshake_seconds": {
+          "mad": 0.048531,
+          "maximum": 1.562277,
+          "median": 1.183503,
+          "minimum": 1.130017
+        },
+        "throughput_mib_s": {
+          "mad": 0.073086,
+          "maximum": 4.854069,
+          "median": 4.780923,
+          "minimum": 4.064914
+        },
+        "total_cpu_seconds_per_gib": {
+          "mad": 1.28,
+          "maximum": 72.96,
+          "median": 70.0,
+          "minimum": 66.56
+        },
+        "wall_seconds": {
+          "mad": 0.20176,
+          "maximum": 15.744492,
+          "median": 13.386737,
+          "minimum": 13.184814
+        }
+      },
+      "candidate_arm_cpu_per_gib_delta_percent": -22.919
+    }
+  },
+  "result_root": "/home/wasilij/rustytransfer-bench/results/arm-comparison-20261002",
+  "series_cpu_gate": {
+    "series1": {
+      "oracle-to-wsl-512mib": true,
+      "wsl-to-oracle-512mib": true
+    },
+    "series2": {
+      "oracle-to-wsl-512mib": true,
+      "wsl-to-oracle-512mib": true
+    }
+  },
+  "standard_profile_only": true,
+  "strict_direct_route_and_sha256_gate": "passed",
+  "unresolved_throughput_regressions_over_3_percent": [
+    {
+      "direction": "wsl-to-oracle",
+      "series": "series1",
+      "size_mib": 64,
+      "status": "unresolved regression over 3%",
+      "throughput_delta_percent": -3.217
+    }
+  ]
+}

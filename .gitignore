@@ -34,7 +34,8 @@ rustytransfer
 /tmp/
 /docs/*
 !/docs/direct-transfer-desktop-plan.md
+!/docs/direct-transfer-efficiency-report.md
 **/.amo-upload-uuid
 
 # Preserve benchmark measurements in Git; keep per-run diagnostic logs local.
-/benchmarks/results/*/logs/
+/benchmarks/results/**/logs/

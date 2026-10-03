@@ -1,0 +1,442 @@
+{
+  "croc_comparison_manifest": {
+    "direction": "oracle-to-wsl",
+    "candidate_paths": {
+      "rustytransfer": "Iroh direct route, verified by both endpoints",
+      "croc": "direct TCP to Oracle sender endpoint-local Croc listeners"
+    },
+    "croc_mode": "global --local; send --transport auto; Tailcat/external relay disabled",
+    "croc_version": "11.5.4",
+    "rustytransfer_manifest": "/home/wasilij/rustytransfer-bench/final-build-20261003.json",
+    "croc_manifest": "/home/wasilij/rustytransfer-bench/tools/croc-11.5.4/manifest.json",
+    "runs_per_size_candidate": 5,
+    "warmups_per_size_candidate": 1
+  },
+  "croc_comparison": {
+    "64_mib": {
+      "variants": {
+        "iroh": {
+          "effective_mib_per_second": {
+            "median": 12.475333594981631,
+            "mad": 0.21596456061607228,
+            "min": 11.386538171343526,
+            "max": 12.73011368974728,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 5.130123335999997,
+            "mad": 0.08729799099998559,
+            "min": 5.027449208999997,
+            "max": 5.6206723270000225,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 0.8999999999999999,
+            "mad": 0.029999999999999916,
+            "min": 0.87,
+            "max": 0.94,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 0.98,
+            "mad": 0.010000000000000009,
+            "min": 0.97,
+            "max": 1.05,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 28784,
+            "mad": 260,
+            "min": 28524,
+            "max": 29412,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 24900,
+            "mad": 48,
+            "min": 24716,
+            "max": 25132,
+            "count": 5
+          }
+        },
+        "croc": {
+          "effective_mib_per_second": {
+            "median": 19.277286498959587,
+            "mad": 0.4660531641470804,
+            "min": 15.097427972447568,
+            "max": 19.743339663106667,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 3.3199693329999604,
+            "mad": 0.07836983199996439,
+            "min": 3.241599500999996,
+            "max": 4.239132659999996,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 0.33,
+            "mad": 0.0,
+            "min": 0.33,
+            "max": 0.36,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 0.74,
+            "mad": 0.020000000000000018,
+            "min": 0.71,
+            "max": 0.76,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 24332,
+            "mad": 76,
+            "min": 24200,
+            "max": 24524,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 25676,
+            "mad": 180,
+            "min": 25472,
+            "max": 27140,
+            "count": 5
+          }
+        }
+      },
+      "paired_deltas": [
+        {
+          "run_index": 1,
+          "throughput_delta_percent_croc_vs_rusty": 60.00340755852069,
+          "wall_delta_seconds_croc_minus_rusty": -1.9450701600000002
+        },
+        {
+          "run_index": 2,
+          "throughput_delta_percent_croc_vs_rusty": 18.95889441214176,
+          "wall_delta_seconds_croc_minus_rusty": -0.8036926850000157
+        },
+        {
+          "run_index": 3,
+          "throughput_delta_percent_croc_vs_rusty": 62.8803805197917,
+          "wall_delta_seconds_croc_minus_rusty": -2.1698746870000036
+        },
+        {
+          "run_index": 4,
+          "throughput_delta_percent_croc_vs_rusty": 51.45095681837044,
+          "wall_delta_seconds_croc_minus_rusty": -1.7079262990000075
+        },
+        {
+          "run_index": 5,
+          "throughput_delta_percent_croc_vs_rusty": 54.52321456729727,
+          "wall_delta_seconds_croc_minus_rusty": -1.8101540030000365
+        }
+      ]
+    },
+    "512_mib": {
+      "variants": {
+        "iroh": {
+          "effective_mib_per_second": {
+            "median": 23.02322610353432,
+            "mad": 0.2541895458659411,
+            "min": 22.76903655766838,
+            "max": 25.528028555942345,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 22.238412536,
+            "mad": 0.2482657520000089,
+            "min": 20.056386213999986,
+            "max": 22.486678288000007,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 6.45,
+            "mad": 0.03000000000000025,
+            "min": 6.42,
+            "max": 6.5,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 6.89,
+            "mad": 0.040000000000000036,
+            "min": 6.529999999999999,
+            "max": 7.09,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 30356,
+            "mad": 924,
+            "min": 27496,
+            "max": 32504,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 24972,
+            "mad": 144,
+            "min": 24692,
+            "max": 25704,
+            "count": 5
+          }
+        },
+        "croc": {
+          "effective_mib_per_second": {
+            "median": 28.868925366921715,
+            "mad": 0.023205623172291467,
+            "min": 27.676400849738677,
+            "max": 28.90544017203395,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 17.735332835999998,
+            "mad": 0.014267609000000903,
+            "min": 17.712928671999975,
+            "max": 18.499515265000014,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 1.7599999999999998,
+            "mad": 0.009999999999999787,
+            "min": 1.75,
+            "max": 1.7799999999999998,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 6.01,
+            "mad": 0.09000000000000075,
+            "min": 5.5600000000000005,
+            "max": 6.71,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 24568,
+            "mad": 76,
+            "min": 24456,
+            "max": 25176,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 26020,
+            "mad": 280,
+            "min": 25536,
+            "max": 26424,
+            "count": 5
+          }
+        }
+      },
+      "paired_deltas": [
+        {
+          "run_index": 1,
+          "throughput_delta_percent_croc_vs_rusty": 25.59535098312462,
+          "wall_delta_seconds_croc_minus_rusty": -4.5430725319999965
+        },
+        {
+          "run_index": 2,
+          "throughput_delta_percent_croc_vs_rusty": 26.81302060933357,
+          "wall_delta_seconds_croc_minus_rusty": -4.754525722000039
+        },
+        {
+          "run_index": 3,
+          "throughput_delta_percent_croc_vs_rusty": 20.210785079724538,
+          "wall_delta_seconds_croc_minus_rusty": -3.738897270999985
+        },
+        {
+          "run_index": 4,
+          "throughput_delta_percent_croc_vs_rusty": 14.604804950388584,
+          "wall_delta_seconds_croc_minus_rusty": -2.59021076800002
+        },
+        {
+          "run_index": 5,
+          "throughput_delta_percent_croc_vs_rusty": 13.230209331246678,
+          "wall_delta_seconds_croc_minus_rusty": -2.34345754200001
+        }
+      ]
+    }
+  },
+  "croc_run_order": {
+    "transfers": 24,
+    "alternating_measured_pairs_per_size": 5
+  },
+  "firewall_lease": {
+    "tag": "rt-croc-8b15a0d40cb0",
+    "cidr": "46.5.248.165/32",
+    "exact_input_chain_restored": true,
+    "before_sha256": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+    "after_sha256": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+    "temporary_tcp_ports": [
+      9009,
+      9010,
+      9011,
+      9012,
+      9013
+    ],
+    "source_restriction": "single-client IPv4 /32",
+    "maximum_lease_seconds": 1200
+  },
+  "startup_diagnostics": [
+    {
+      "root": "/home/wasilij/rustytransfer-bench/results/startup-arm-20261003",
+      "groups": [
+        {
+          "direction": "wsl-to-oracle",
+          "size_bytes": 4096,
+          "build_id": "arm-baseline-startup-20261003",
+          "accepted_endpoint_pairs": 11,
+          "measured_transfer_pairs": 10,
+          "warmup_transfer_pairs": 1,
+          "strict_direct_pairs": 11,
+          "wall_seconds": {
+            "median": 3.060575284999995,
+            "mad": 0.0007359774999944335,
+            "min": 3.0597590839999924,
+            "max": 3.211370549999998,
+            "count": 10
+          },
+          "setup_seconds": {
+            "median": 1.180734459,
+            "mad": 0.044165680500000026,
+            "min": 1.119500551,
+            "max": 1.230648065,
+            "count": 10
+          }
+        },
+        {
+          "direction": "wsl-to-oracle",
+          "size_bytes": 4096,
+          "build_id": "arm-candidate-startup-20261003",
+          "accepted_endpoint_pairs": 11,
+          "measured_transfer_pairs": 10,
+          "warmup_transfer_pairs": 1,
+          "strict_direct_pairs": 11,
+          "wall_seconds": {
+            "median": 3.060425765500007,
+            "mad": 0.0006353760000123998,
+            "min": 3.059591471999994,
+            "max": 3.2106036099999926,
+            "count": 10
+          },
+          "setup_seconds": {
+            "median": 1.2150380799999998,
+            "mad": 0.04475540450000004,
+            "min": 1.1340642829999998,
+            "max": 2.132124336,
+            "count": 10
+          }
+        }
+      ],
+      "rejected_unverified_diagnostics": [
+        {
+          "origin": "baseline/oracle-to-wsl/startup.jsonl",
+          "line": 1,
+          "reason": "strict direct-route evidence absent"
+        },
+        {
+          "origin": "baseline/oracle-to-wsl/startup.jsonl",
+          "line": 2,
+          "reason": "strict direct-route evidence absent"
+        }
+      ],
+      "raw_endpoint_rows": 46,
+      "endpoint_pairs": 23
+    },
+    {
+      "root": "/home/wasilij/rustytransfer-bench/results/startup-reverse64k-20261003",
+      "groups": [
+        {
+          "direction": "oracle-to-wsl",
+          "size_bytes": 65536,
+          "build_id": "arm-baseline-startup64k",
+          "accepted_endpoint_pairs": 11,
+          "measured_transfer_pairs": 10,
+          "warmup_transfer_pairs": 1,
+          "strict_direct_pairs": 11,
+          "wall_seconds": {
+            "median": 3.9311203189999944,
+            "mad": 0.02917805550000452,
+            "min": 3.8541007050000076,
+            "max": 4.272188693999993,
+            "count": 10
+          },
+          "setup_seconds": {
+            "median": 0.8832158555,
+            "mad": 0.01563930300000005,
+            "min": 0.8589026750000001,
+            "max": 0.947050057,
+            "count": 10
+          }
+        },
+        {
+          "direction": "oracle-to-wsl",
+          "size_bytes": 65536,
+          "build_id": "arm-candidate-startup64k",
+          "accepted_endpoint_pairs": 11,
+          "measured_transfer_pairs": 10,
+          "warmup_transfer_pairs": 1,
+          "strict_direct_pairs": 11,
+          "wall_seconds": {
+            "median": 3.9345510400000023,
+            "mad": 0.03311957799999732,
+            "min": 3.852411570000015,
+            "max": 4.021032848999994,
+            "count": 10
+          },
+          "setup_seconds": {
+            "median": 0.9416993419999999,
+            "mad": 0.03516527200000008,
+            "min": 0.845794708,
+            "max": 0.98532763,
+            "count": 10
+          }
+        }
+      ],
+      "rejected_unverified_diagnostics": [],
+      "raw_endpoint_rows": 44,
+      "endpoint_pairs": 22
+    }
+  ],
+  "resume_diagnostics": {
+    "endpoint_rows": 2,
+    "suffix_bytes_transferred": 380370944,
+    "full_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+    "prefix_bytes": 156499968,
+    "prefix_sha256": "6074713606c1ad11b67e0681de86dee16a1b23abc433679ba8007cf9bb51b9ce",
+    "total_size_bytes": 536870912,
+    "resume_audit": {
+      "interruption": {
+        "diagnostics": "/home/wasilij/rustytransfer-bench/results/resume-final-20261003/logs/rustytransfer-oracle-to-wsl-512mib-1",
+        "local_receiver_process_group_reaped": true,
+        "local_receiver_wrapper_exit_code": 130,
+        "matching_source_prefix_sha256": "6074713606c1ad11b67e0681de86dee16a1b23abc433679ba8007cf9bb51b9ce",
+        "partial_bytes": 156499968,
+        "partial_sha256": "6074713606c1ad11b67e0681de86dee16a1b23abc433679ba8007cf9bb51b9ce",
+        "remote_trial_directory_preserved": "/home/ubuntu/rustytransfer-bench/resume512-5a23f4aa2ab6/rustytransfer-oracle-to-wsl-512mib-1",
+        "run_index": 1,
+        "scope": "SIGINT stops the receiver process group; a fresh invite resumes its verified source prefix",
+        "scoped_remote_sender_group_terminated": true,
+        "threshold_bytes": 134217728
+      },
+      "resume": {
+        "direct_route_verified_both_endpoints": true,
+        "endpoint_bytes_transferred": [
+          380370944,
+          380370944
+        ],
+        "expected_suffix_bytes": 380370944,
+        "full_file_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+        "path": "direct",
+        "run_index": 2
+      }
+    }
+  },
+  "resume_audit_manifest": "/home/wasilij/rustytransfer-bench/results/resume-final-20261003/resume-audit.json",
+  "arm_artifact": {
+    "manifest_sha256": "432c5f7c45bac62e2dc3aeeb4f82be73e8e8517284e3a5a9e8d461418cbf4e1c",
+    "audit_sha256": "1de3263ef849d168c82b0796d64e9b673f5f869306af13edab3c37a5dcf8c4a7",
+    "README_preserved": true,
+    "unresolved_guardrail_raw_flags_preserved": true
+  },
+  "final_build_manifests": {
+    "rustytransfer_sha256": "a636dbd2506c84d747b2037400fbabe235f35dfb29281c5d662f5e479b44b05d",
+    "croc_sha256": "0204e0efbf5e81f9598beddacbd3f5ba2dbb9d0d353f402ace2590683d035b78"
+  },
+  "claims_limit": "This report summarizes these matched trials; it makes no claim about WAN speed causes or unmeasured workloads."
+}

@@ -1,0 +1,40 @@
+{
+  "decision": "accept ARM CPU efficiency improvement",
+  "candidate": "Linux/macOS AArch64 runtime AES/POLYVAL dispatch cfgs",
+  "cpu_gate": "At least 10% lower Oracle CPU/GiB for 512 MiB in each direction, confirmed in both reversed-order series",
+  "cpu_gate_passed": true,
+  "throughput_claim": "No general WAN speed improvement claimed",
+  "explicit_throughput_guardrail_exception": {
+    "case": "series1 WSL-to-Oracle 64 MiB",
+    "candidate_rate_delta_percent": -3.217,
+    "second_series_delta_percent": 0.376,
+    "pooled_ten_trials_per_variant_delta_percent": 0.540,
+    "justification": "The first-series >3% guardrail crossing remains in the raw audit. An additional five trials per variant in reversed order did not reproduce it; the pooled median slightly improved. This supports accepting the repeatable CPU benefit, while retaining the observed regression and making no claim about its cause."
+  },
+  "startup": {
+    "runs_per_variant_direction": 10,
+    "forward_size_bytes": 4096,
+    "forward_baseline_median_wall_seconds": 3.060575285,
+    "forward_candidate_median_wall_seconds": 3.060425766,
+    "reverse_size_bytes": 65536,
+    "reverse_baseline_median_wall_seconds": 3.931120319,
+    "reverse_candidate_median_wall_seconds": 3.934551040,
+    "result": "No meaningful median or observed maximum latency regression",
+    "excluded_diagnostic": "The first reverse 4 KiB warmup lacked receiver STREAM-frame delta evidence and was excluded; route checks were not weakened."
+  },
+  "resume": {
+    "size_bytes": 536870912,
+    "verified_prefix_bytes": 156499968,
+    "suffix_bytes_transferred_per_endpoint": 380370944,
+    "full_hash_matched": true,
+    "direct_route_verified_both_endpoints": true,
+    "timing_use": "Correctness only; full-size-over-wall throughput is not scored for a resumed suffix"
+  },
+  "limits": [
+    "A/B numeric results use frozen Rust source 8f7d8e8; current d654b0b builds are separately validated",
+    "Oracle Linux AArch64 and WSL x86_64 WAN pair only",
+    "No physical LAN, native Windows, macOS performance, or physical ARM software-fallback measurement",
+    "Peak RSS remains around 30 MiB, with overlapping and direction-dependent variation",
+    "Upstream runtime feature detection retains software fallback; no global CPU target features enabled"
+  ]
+}

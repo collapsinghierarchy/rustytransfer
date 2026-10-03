@@ -1,6 +1,6 @@
 # Direct transfer optimization and desktop implementation plan
 
-Status: in progress; verified direct five-run Oracle baseline and payload profiling complete; ARM crypto candidate under evaluation.
+Status: efficiency milestone complete on 2026-10-03; desktop and pairing work stopped at the user's request. See the [efficiency report](direct-transfer-efficiency-report.md).
 Prepared: 2026-09-29 against repository commit `4ba7b01`.
 
 ## Objectives and release boundary
@@ -199,7 +199,8 @@ Completion means a reproducible current baseline, profiles identifying the
 limiting costs, accepted or rejected experiments with evidence, and a rerun of
 the final candidate on the agreed matrix. It does not require an unsupported claim
 that the transport is universally optimal. If the remaining limit is network or
-storage capacity, document that result and proceed to desktop functionality.
+storage capacity, document that result. The user's 2026-10-03 instruction is to
+stop after efficiency work; desktop functionality requires a later continuation.
 
 ### 1C. Regression coverage
 
@@ -543,4 +544,22 @@ or platform testing are named limitations, never reported as passed checks.
   primitives; the `rt1:` format, case acceptance, frontend interfaces, and their
   existing reconnect-error handling are preserved. Root/native/Firefox tests,
   formatting, wasm check, and exact workspace Clippy/SARIF gates passed with
-  the three existing findings. Cancellable session orchestration is next.
+  the three existing findings. Cancellable session orchestration remains unfinished.
+- 2026-10-03: User narrowed the current execution to efficiency and asked to stop
+  when that work is complete. Preserved unfinished shared-driver, desktop, and
+  device drafts in the separate `feature/desktop-draft` worktree at
+  `../rustytransfer-desktop-draft`; those drafts are unvalidated and are not part
+  of the current workspace or a release. Resumed the interrupted ARM comparison
+  with frozen, reverified binaries and inputs, fresh scoped run directories, and
+  extra unscored warm-ups. The incomplete trial and its diagnostics remain
+  excluded from accepted measurements. No pending AMO artifact was replaced.
+- 2026-10-03: Accepted the Linux/macOS AArch64 runtime AES/POLYVAL Cargo cfgs
+  after two reversed-order direct A/B series: 512 MiB Oracle CPU/GiB fell 54.3%
+  sending and 23.7% receiving. The first forward 64 MiB series' -3.217% rate
+  crossing remains visible with its measured, non-reproducing exception. Startup
+  and real suffix-only 512 MiB resume checks passed. The final direct Oracle-to-WSL
+  Croc 11.5.4 comparison measured 12.48/19.28 MiB/s at 64 MiB and 23.02/28.87
+  MiB/s at 512 MiB (Rustytransfer/Croc). All hashes and direct-route checks passed;
+  the temporary client-only instance firewall rule was restored exactly.
+  See the [final report](direct-transfer-efficiency-report.md) and its raw evidence.
+  No further desktop/device implementation is part of this execution.

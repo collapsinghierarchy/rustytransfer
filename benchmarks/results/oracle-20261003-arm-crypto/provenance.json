@@ -1,0 +1,36 @@
+{
+  "audit_script_sha256": "de513eee2838cdd5f033ce01110bafd336faa80beff3190b2d20e5d057bf8a99",
+  "collector_script_sha256": "fbbc1d898f4f3f5d2bd66076e64ff5de75d5df80c903633449dba8ea7aa529f5",
+  "frozen_binary_provenance": {
+    "ordering": "warmups baseline/candidate, then alternating paired trials; second series reverses first order",
+    "profile_mode": "standard",
+    "remote_binaries": {
+      "baseline": {
+        "path": "/home/ubuntu/rustytransfer-bench/bin/rustytransfer-profile-20261002",
+        "sha256": "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+      },
+      "candidate": {
+        "path": "/home/ubuntu/rustytransfer-bench/bin/rustytransfer-arm-20261002",
+        "sha256": "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+      }
+    },
+    "runs_per_series_variant_case": 5,
+    "series": 2,
+    "source_hashes": {
+      "512": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+      "64": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf"
+    },
+    "x86_binary_sha256": "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e"
+  },
+  "job_script_sha256": "2a2257eba9be77da423809e49f33aa013432f509654edf67ef7eee1766c15e3a",
+  "source_archive_filename": "profile-source-20261002.tar.gz",
+  "source_archive_sha256": "04f2756a5b2e554ee0f3ca0ae615014ec41c20ee207d1a82747c2f408f1ef01a",
+  "source_commit": "8f7d8e8",
+  "transfer_and_endpoint_row_counts": {
+    "measured": 160,
+    "measured_transfers": 80,
+    "total_endpoint_rows": 196,
+    "warmup": 36,
+    "warmup_transfers": 18
+  }
+}

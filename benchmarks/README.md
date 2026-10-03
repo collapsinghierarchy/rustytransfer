@@ -1,5 +1,9 @@
 # Performance measurements
 
+The [2026-10-03 efficiency report](../docs/direct-transfer-efficiency-report.md)
+records the accepted ARM CPU improvement, verified direct A/B measurements,
+startup/resume validation, and a final direct-only Croc 11.5.4 comparison.
+
 Each CLI endpoint can append one JSON object to the file named by
 `RUSTYTRANSFER_METRICS_JSONL`. The record uses
 [`performance-v1.schema.json`](performance-v1.schema.json), schema version 1.

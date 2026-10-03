@@ -1,0 +1,13 @@
+{
+  "actual_croc_log_pairs_reverified": 12,
+  "local": {
+    "active_benchmark_endpoints": [],
+    "croc_tcp_listen_ports": []
+  },
+  "oracle": {
+    "active_benchmark_endpoints": [],
+    "croc_tcp_listen_ports": []
+  },
+  "oracle_input_chain_sha256": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+  "original_input_chain_restored": true
+}

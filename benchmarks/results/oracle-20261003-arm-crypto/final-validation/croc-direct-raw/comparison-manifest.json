@@ -1,0 +1,13 @@
+{
+  "direction": "oracle-to-wsl",
+  "candidate_paths": {
+    "rustytransfer": "Iroh direct route, verified by both endpoints",
+    "croc": "direct TCP to Oracle sender endpoint-local Croc listeners"
+  },
+  "croc_mode": "global --local; send --transport auto; Tailcat/external relay disabled",
+  "croc_version": "11.5.4",
+  "rustytransfer_manifest": "/home/wasilij/rustytransfer-bench/final-build-20261003.json",
+  "croc_manifest": "/home/wasilij/rustytransfer-bench/tools/croc-11.5.4/manifest.json",
+  "runs_per_size_candidate": 5,
+  "warmups_per_size_candidate": 1
+}

@@ -1,0 +1,21 @@
+{
+  "source_hashes": {
+    "64": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf",
+    "512": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de"
+  },
+  "x86_binary_sha256": "56eeb3f97b0d8e69afc066de58edad15dfdfaca387770cd0644e36460b06d50e",
+  "profile_mode": "standard",
+  "runs_per_series_variant_case": 5,
+  "series": 2,
+  "ordering": "warmups baseline/candidate, then alternating paired trials; second series reverses first order",
+  "remote_binaries": {
+    "baseline": {
+      "path": "/home/ubuntu/rustytransfer-bench/bin/rustytransfer-profile-20261002",
+      "sha256": "f9c9e93debb8e985da9f0549bee5adb9d15858c19d66b303daf311a706c6985e"
+    },
+    "candidate": {
+      "path": "/home/ubuntu/rustytransfer-bench/bin/rustytransfer-arm-20261002",
+      "sha256": "642d498768684e7f5a7d470eb43ac0f6acdb45f2c89cf1374036c62ff165f624"
+    }
+  }
+}

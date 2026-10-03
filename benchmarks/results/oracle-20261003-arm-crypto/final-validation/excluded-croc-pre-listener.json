@@ -1,0 +1,24 @@
+{
+  "excluded": true,
+  "reason": "The first Croc warmup placed send --transport before the send subcommand; Croc exited before opening listeners.",
+  "original_result_directory": "/home/wasilij/rustytransfer-bench/results/croc-direct-final-20261003",
+  "redacted_sender_log_sha256": "26a3d798ffb1cada5d565cc618743c972ad506b6a679c6c84c0378344edcc743",
+  "firewall_lease_audit": {
+    "tag": "rt-croc-219782d7b9d4",
+    "cidr": "46.5.248.165/32",
+    "exact_input_chain_restored": true,
+    "before_sha256": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+    "after_sha256": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5",
+    "temporary_tcp_ports": [
+      9009,
+      9010,
+      9011,
+      9012,
+      9013
+    ],
+    "source_restriction": "single-client IPv4 /32",
+    "maximum_lease_seconds": 1200
+  },
+  "measured_croc_transfers": 0,
+  "correction": "Keep --local global and place --transport auto after send. Restart the complete matched comparison in a fresh result directory."
+}

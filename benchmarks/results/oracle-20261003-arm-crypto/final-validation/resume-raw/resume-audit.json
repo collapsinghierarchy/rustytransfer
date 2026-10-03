@@ -1,0 +1,26 @@
+{
+  "interruption": {
+    "diagnostics": "/home/wasilij/rustytransfer-bench/results/resume-final-20261003/logs/rustytransfer-oracle-to-wsl-512mib-1",
+    "local_receiver_process_group_reaped": true,
+    "local_receiver_wrapper_exit_code": 130,
+    "matching_source_prefix_sha256": "6074713606c1ad11b67e0681de86dee16a1b23abc433679ba8007cf9bb51b9ce",
+    "partial_bytes": 156499968,
+    "partial_sha256": "6074713606c1ad11b67e0681de86dee16a1b23abc433679ba8007cf9bb51b9ce",
+    "remote_trial_directory_preserved": "/home/ubuntu/rustytransfer-bench/resume512-5a23f4aa2ab6/rustytransfer-oracle-to-wsl-512mib-1",
+    "run_index": 1,
+    "scope": "SIGINT stops the receiver process group; a fresh invite resumes its verified source prefix",
+    "scoped_remote_sender_group_terminated": true,
+    "threshold_bytes": 134217728
+  },
+  "resume": {
+    "direct_route_verified_both_endpoints": true,
+    "endpoint_bytes_transferred": [
+      380370944,
+      380370944
+    ],
+    "expected_suffix_bytes": 380370944,
+    "full_file_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+    "path": "direct",
+    "run_index": 2
+  }
+}

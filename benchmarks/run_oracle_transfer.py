@@ -417,15 +417,22 @@ def remote_process_command(
 
 
 def remote_sender_command(args, run_dir, source_path, metrics_path, time_path, log_path, pid_path):
-    command = [args.remote_rusty, "--transport", "iroh", "send"]
-    if args.rusty_auth == "invite":
-        command.append("--direct")
-    command.extend(["--file", source_path])
-    if args.rusty_auth == "pake":
-        command.extend(["--password", "ABCDE"])
+    command = rusty_sender_argv(args, args.remote_rusty, source_path)
     return remote_process_command(
         args, run_dir, command, metrics_path, time_path, log_path, pid_path
     )
+
+
+def rusty_sender_argv(args, executable, source_path):
+    command = [str(executable), "--transport", "iroh", "send"]
+    if args.rusty_auth == "invite":
+        command.append("--direct")
+    if getattr(args, "chunk_size", None) is not None:
+        command.extend(["--chunk-size", str(args.chunk_size)])
+    command.extend(["--file", source_path])
+    if args.rusty_auth == "pake":
+        command.extend(["--password", "ABCDE"])
+    return command
 
 
 def remote_receiver_command(
@@ -628,20 +635,7 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
     )
     sender_env[path_env] = "1"
     sender_env["RUSTYTRANSFER_BENCH_PATH_EVIDENCE"] = "1"
-    sender_command = [
-        str(args.rusty_sender),
-        "--transport",
-        "iroh",
-        "send",
-    ]
-    if args.rusty_auth == "invite":
-        sender_command.append("--direct")
-    sender_command.extend([
-        "--file",
-        str(source),
-    ])
-    if args.rusty_auth == "pake":
-        sender_command.extend(["--password", "ABCDE"])
+    sender_command = rusty_sender_argv(args, args.rusty_sender, str(source))
 
     started = time.monotonic()
     sender, sender_output = time_command(
@@ -1584,6 +1578,11 @@ def build_parser():
     parser.add_argument("--storage-class", required=True, help="input and destination storage description")
     parser.add_argument("--runs", type=int, default=5)
     parser.add_argument(
+        "--chunk-size",
+        type=int,
+        help="sender payload chunk size in bytes (1 through 1048576); receiver negotiates it",
+    )
+    parser.add_argument(
         "--direction",
         choices=("wsl-to-oracle", "oracle-to-wsl"),
         default="wsl-to-oracle",
@@ -1607,6 +1606,9 @@ def build_parser():
 def validate_local_args(parser, args):
     if args.runs < 1:
         parser.error("--runs must be positive")
+    chunk_size = getattr(args, "chunk_size", None)
+    if chunk_size is not None and not 1 <= chunk_size <= 1_048_576:
+        parser.error("--chunk-size must be between 1 and 1048576 bytes")
     if not args.build_id.strip():
         parser.error("--build-id cannot be empty")
     if not args.storage_class.strip():

@@ -20,6 +20,51 @@ pub struct PathEvidence {
     pub lagged: bool,
     pub missing_path_stats: bool,
     pub relay_selected: bool,
+    /// Iroh connection and send-stall diagnostics, collected only in profile mode.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub connection_stats: Option<IrohConnectionEvidence>,
+}
+
+#[derive(Debug, Clone, serde::Serialize, PartialEq, Eq)]
+pub struct IrohConnectionEvidence {
+    pub sample_interval_ms: u64,
+    pub sampling_mode: &'static str,
+    pub samples: u64,
+    pub selected_path_start: Option<String>,
+    pub selected_path_end: Option<String>,
+    pub selected_path_differs_at_end: bool,
+    pub rtt_start_us: Option<u64>,
+    pub rtt_end_us: Option<u64>,
+    pub rtt_min_us: Option<u64>,
+    pub rtt_max_us: Option<u64>,
+    pub congestion_window_start_bytes: Option<u64>,
+    pub congestion_window_end_bytes: Option<u64>,
+    pub congestion_window_min_bytes: Option<u64>,
+    pub congestion_window_max_bytes: Option<u64>,
+    pub congestion_events_start: Option<u64>,
+    pub congestion_events_end: Option<u64>,
+    pub congestion_events_delta: Option<u64>,
+    pub lost_packets_start: u64,
+    pub lost_packets_end: u64,
+    pub lost_packets_delta: u64,
+    pub lost_bytes_start: u64,
+    pub lost_bytes_end: u64,
+    pub lost_bytes_delta: u64,
+    pub udp_tx_datagrams_delta: u64,
+    pub udp_tx_bytes_delta: u64,
+    pub udp_rx_datagrams_delta: u64,
+    pub udp_rx_bytes_delta: u64,
+    pub data_blocked_frames_delta: u64,
+    pub stream_data_blocked_frames_delta: u64,
+    pub data_blocked_frames_rx_delta: u64,
+    pub stream_data_blocked_frames_rx_delta: u64,
+    pub send_wait_calls: u64,
+    pub send_stalls_over_1ms: u64,
+    pub send_stalls_over_10ms: u64,
+    pub send_wait_max_us: u64,
+    /// Iroh 1.2.0 does not expose these as public connection counters.
+    pub unavailable_counters: Vec<&'static str>,
+    pub counter_limitations: Vec<&'static str>,
 }
 
 #[cfg(feature = "iroh")]

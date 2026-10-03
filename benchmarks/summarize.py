@@ -20,6 +20,76 @@ PROFILE_TIME_FIELDS = (
     "decrypt_seconds",
     "destination_write_seconds",
 )
+PROFILE_SUBSTAGE_FIELDS = (
+    "sender_allocation_copy_seconds",
+    "sender_encrypt_seconds",
+)
+CONNECTION_SUMMARY_FIELDS = (
+    "samples",
+    "rtt_min_us",
+    "rtt_max_us",
+    "congestion_window_min_bytes",
+    "congestion_window_max_bytes",
+    "congestion_events_delta",
+    "lost_packets_delta",
+    "lost_bytes_delta",
+    "udp_tx_bytes_delta",
+    "udp_rx_bytes_delta",
+    "data_blocked_frames_delta",
+    "stream_data_blocked_frames_delta",
+    "data_blocked_frames_rx_delta",
+    "stream_data_blocked_frames_rx_delta",
+    "send_wait_calls",
+    "send_stalls_over_1ms",
+    "send_stalls_over_10ms",
+    "send_wait_max_us",
+)
+CONNECTION_NUMERIC_FIELDS = (
+    "sample_interval_ms",
+    "samples",
+    "rtt_start_us",
+    "rtt_end_us",
+    "rtt_min_us",
+    "rtt_max_us",
+    "congestion_window_start_bytes",
+    "congestion_window_end_bytes",
+    "congestion_window_min_bytes",
+    "congestion_window_max_bytes",
+    "congestion_events_start",
+    "congestion_events_end",
+    "congestion_events_delta",
+    "lost_packets_start",
+    "lost_packets_end",
+    "lost_packets_delta",
+    "lost_bytes_start",
+    "lost_bytes_end",
+    "lost_bytes_delta",
+    "udp_tx_datagrams_delta",
+    "udp_tx_bytes_delta",
+    "udp_rx_datagrams_delta",
+    "udp_rx_bytes_delta",
+    "data_blocked_frames_delta",
+    "stream_data_blocked_frames_delta",
+    "data_blocked_frames_rx_delta",
+    "stream_data_blocked_frames_rx_delta",
+    "send_wait_calls",
+    "send_stalls_over_1ms",
+    "send_stalls_over_10ms",
+    "send_wait_max_us",
+)
+CONNECTION_NULLABLE_NUMERIC_FIELDS = {
+    "rtt_start_us",
+    "rtt_end_us",
+    "rtt_min_us",
+    "rtt_max_us",
+    "congestion_window_start_bytes",
+    "congestion_window_end_bytes",
+    "congestion_window_min_bytes",
+    "congestion_window_max_bytes",
+    "congestion_events_start",
+    "congestion_events_end",
+    "congestion_events_delta",
+}
 GROUP_FIELDS = (
     "transport",
     "build_id",
@@ -98,6 +168,23 @@ def payload_profile_rejection_reason(profile, bytes_transferred, payload_seconds
             or value < 0
         ):
             return "payload profile is missing or invalid"
+    present_substages = [field in profile for field in PROFILE_SUBSTAGE_FIELDS]
+    if any(present_substages) and not all(present_substages):
+        return "payload profile sender substages are incomplete"
+    if all(present_substages):
+        substage_sum = 0.0
+        for field in PROFILE_SUBSTAGE_FIELDS:
+            value = profile[field]
+            if (
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not math.isfinite(value)
+                or value < 0
+            ):
+                return "payload profile is missing or invalid"
+            substage_sum += value
+        if substage_sum > profile["allocation_copy_encrypt_seconds"] + 1e-6:
+            return "payload profile sender substages exceed allocation/encrypt duration"
     for field in ("chunk_count", "payload_bytes"):
         value = profile.get(field)
         if not isinstance(value, int) or isinstance(value, bool) or value < 0:
@@ -112,6 +199,32 @@ def payload_profile_rejection_reason(profile, bytes_transferred, payload_seconds
         return "payload profile stage duration is invalid"
     if stage_sum > payload_seconds + 1e-6:
         return "payload profile stage durations exceed payload duration"
+    return None
+
+
+def connection_profile_rejection_reason(path_evidence):
+    if path_evidence is None:
+        return None
+    if not isinstance(path_evidence, dict):
+        return "path evidence is invalid"
+    connection = path_evidence.get("connection_stats")
+    if connection is None:
+        return None
+    if not isinstance(connection, dict):
+        return "connection profile is invalid"
+    for field in CONNECTION_NUMERIC_FIELDS:
+        if field not in connection:
+            continue
+        value = connection[field]
+        if value is None and field in CONNECTION_NULLABLE_NUMERIC_FIELDS:
+            continue
+        if (
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(value)
+            or value < 0
+        ):
+            return "connection profile contains an invalid counter"
     return None
 
 
@@ -145,6 +258,9 @@ def rejection_reason(record):
         )
         if profile_error is not None:
             return profile_error
+        connection_error = connection_profile_rejection_reason(record.get("path_evidence"))
+        if connection_error is not None:
+            return connection_error
     if record.get("source_staging", "per-trial") not in ("per-trial", "pre-staged"):
         return "source staging mode is invalid"
     if record.get("path") not in ("direct", "relay"):
@@ -229,11 +345,33 @@ def summarize_records(records):
             values = [record[field] for record in group_records if record.get(field) is not None]
             resource_summaries[field] = describe(values) if values else None
         profile_summary = None
+        connection_summary = None
         if dimensions["profile_mode"] == "payload-profile":
             profile_summary = {
                 field: describe([record["payload_profile"][field] for record in group_records])
                 for field in (*PROFILE_TIME_FIELDS, "chunk_count", "payload_bytes")
             }
+            for field in PROFILE_SUBSTAGE_FIELDS:
+                profile_summary[field] = (
+                    describe([record["payload_profile"][field] for record in group_records])
+                    if all(field in record["payload_profile"] for record in group_records)
+                    else None
+                )
+            connection_rows = [
+                (record.get("path_evidence") or {}).get("connection_stats")
+                for record in group_records
+            ]
+            if any(isinstance(value, dict) for value in connection_rows):
+                connection_summary = {}
+                for field in CONNECTION_SUMMARY_FIELDS:
+                    values = [
+                        value[field]
+                        for value in connection_rows
+                        if isinstance(value, dict)
+                        and isinstance(value.get(field), (int, float))
+                        and not isinstance(value.get(field), bool)
+                    ]
+                    connection_summary[field] = describe(values) if values else None
         rows.append(
             {
                 **dimensions,
@@ -244,6 +382,7 @@ def summarize_records(records):
                 "payload_seconds": phase_summaries["payload_seconds"],
                 "shutdown_seconds": phase_summaries["shutdown_seconds"],
                 "payload_profile": profile_summary,
+                "connection_stats": connection_summary,
                 "sender_cpu_seconds": resource_summaries["sender_cpu_seconds"],
                 "receiver_cpu_seconds": resource_summaries["receiver_cpu_seconds"],
                 "sender_max_rss_kib": resource_summaries["sender_max_rss_kib"],

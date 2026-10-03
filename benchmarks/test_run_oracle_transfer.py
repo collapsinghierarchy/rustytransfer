@@ -259,7 +259,7 @@ class OracleRunnerArgumentTests(unittest.TestCase):
                 runner.append_and_validate_rust_rows(output, rows, "relay", "relay")
             self.assertEqual(len(output.read_text(encoding="utf-8").splitlines()), 2)
 
-    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake", profile=False, remote_inputs=None, with_croc=False, croc_version="11.5.3"):
+    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake", profile=False, remote_inputs=None, with_croc=False, croc_version="11.5.3", chunk_size=None):
         root = Path(temp_dir)
         paths = [root / name for name in ("key", "rusty", "64.bin", "512.bin", "croc")]
         for path in paths:
@@ -287,6 +287,8 @@ class OracleRunnerArgumentTests(unittest.TestCase):
             argv.extend(["--croc", str(paths[4]), "--remote-croc", "/opt/croc"])
         if profile:
             argv.append("--payload-profile")
+        if chunk_size is not None:
+            argv.extend(["--chunk-size", str(chunk_size)])
         if remote_inputs is not None:
             argv.extend(["--remote-input-64", remote_inputs[0], "--remote-input-512", remote_inputs[1]])
         parser = runner.build_parser()
@@ -326,6 +328,29 @@ class OracleRunnerArgumentTests(unittest.TestCase):
             )
             self.assertIn("env -u RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE", command)
             self.assertIn("RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE=1", command)
+
+    def test_chunk_size_is_validated_and_added_to_sender_only(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(temp_dir, rusty_only=True, chunk_size=262144)
+            runner.validate_local_args(parser, args)
+            self.assertEqual(args.chunk_size, 262144)
+            local_command = runner.rusty_sender_argv(args, args.rusty_sender, "source.bin")
+            remote_command = runner.rusty_sender_argv(args, args.remote_rusty, "/tmp/source.bin")
+            self.assertIn("--chunk-size", local_command)
+            self.assertIn("262144", local_command)
+            self.assertIn("--chunk-size", remote_command)
+            self.assertIn("262144", remote_command)
+            self.assertNotIn("--chunk-size", runner.remote_receiver_command(
+                SimpleNamespace(rusty_auth="pake", remote_rusty="/opt/rustytransfer", rusty_path="direct"),
+                "/tmp/run", "/tmp/out", "code", "/tmp/m", "/tmp/t", "/tmp/l", "/tmp/p",
+            ))
+
+            args.chunk_size = 1_048_577
+            with self.assertRaises(SystemExit):
+                runner.validate_local_args(parser, args)
+
+            args.chunk_size = None
+            self.assertNotIn("--chunk-size", runner.rusty_sender_argv(args, args.rusty_sender, "source.bin"))
 
     def test_comparison_requires_both_croc_paths(self):
         with tempfile.TemporaryDirectory() as temp_dir:

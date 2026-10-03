@@ -10,6 +10,7 @@ use std::{
     fs::{self, OpenOptions},
     io::Write,
     path::{Path, PathBuf},
+    time::Instant,
 };
 use tokio::io::AsyncWriteExt;
 use tokio::sync::oneshot;
@@ -19,7 +20,7 @@ use tokio::time::{Duration, timeout};
 use crate::transport::errors::TransportError;
 use crate::transport::frames::Frame;
 use crate::transport::websocket::{WsRead, WsRoomTransport, wait_for_room_full};
-use crate::transport::{PathEvidence, PathObservation};
+use crate::transport::{IrohConnectionEvidence, PathEvidence, PathObservation};
 
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(90);
 const ENDPOINT_READY_TIMEOUT: Duration = Duration::from_secs(10);
@@ -28,6 +29,7 @@ const MAX_MESSAGE_BYTES: usize = 1024 * 1024 + 16; // Max plaintext chunk plus A
 const IROH_ALPN: &[u8] = b"rustytransfer/2";
 const DIRECT_ALPN: &[u8] = b"rustytransfer/direct/2";
 pub const IROH_PROBE_ALPN: &[u8] = b"rustytransfer/probe/1";
+const CONNECTION_SAMPLE_INTERVAL: Duration = Duration::from_millis(250);
 
 /// Return the per-user key path used by direct transfers.
 pub fn default_identity_path() -> Result<PathBuf> {
@@ -99,6 +101,205 @@ pub struct IrohState {
     send: SendStream,
     recv: RecvStream,
     path_evidence: Option<PathEvidenceSession>,
+    connection_profile: Option<Box<IrohConnectionProfile>>,
+}
+
+#[derive(Clone, Default)]
+struct ConnectionSample {
+    path_id: Option<String>,
+    rtt_us: Option<u64>,
+    congestion_window_bytes: Option<u64>,
+    congestion_events: Option<u64>,
+    lost_packets: u64,
+    lost_bytes: u64,
+    udp_tx_datagrams: u64,
+    udp_tx_bytes: u64,
+    udp_rx_datagrams: u64,
+    udp_rx_bytes: u64,
+    data_blocked_frames: u64,
+    stream_data_blocked_frames: u64,
+    data_blocked_frames_rx: u64,
+    stream_data_blocked_frames_rx: u64,
+}
+
+struct IrohConnectionProfile {
+    started: ConnectionSample,
+    ended: Option<ConnectionSample>,
+    last_sample: Instant,
+    samples: u64,
+    rtt_min_us: Option<u64>,
+    rtt_max_us: Option<u64>,
+    congestion_window_min_bytes: Option<u64>,
+    congestion_window_max_bytes: Option<u64>,
+    send_wait_calls: u64,
+    send_stalls_over_1ms: u64,
+    send_stalls_over_10ms: u64,
+    send_wait_max_us: u64,
+}
+
+impl IrohConnectionProfile {
+    fn new(connection: &Connection) -> Self {
+        let started = connection_sample(connection);
+        let mut profile = Self {
+            started: started.clone(),
+            ended: None,
+            last_sample: Instant::now(),
+            samples: 0,
+            rtt_min_us: None,
+            rtt_max_us: None,
+            congestion_window_min_bytes: None,
+            congestion_window_max_bytes: None,
+            send_wait_calls: 0,
+            send_stalls_over_1ms: 0,
+            send_stalls_over_10ms: 0,
+            send_wait_max_us: 0,
+        };
+        profile.record_sample(started.clone());
+        profile
+    }
+
+    fn sample_if_due(&mut self, connection: &Connection) {
+        if self.ended.is_none() && self.last_sample.elapsed() >= CONNECTION_SAMPLE_INTERVAL {
+            self.last_sample = Instant::now();
+            self.record_sample(connection_sample(connection));
+        }
+    }
+
+    fn record_sample(&mut self, sample: ConnectionSample) {
+        self.samples = self.samples.saturating_add(1);
+        if let Some(rtt) = sample.rtt_us {
+            self.rtt_min_us = Some(self.rtt_min_us.map_or(rtt, |value| value.min(rtt)));
+            self.rtt_max_us = Some(self.rtt_max_us.map_or(rtt, |value| value.max(rtt)));
+        }
+        if let Some(window) = sample.congestion_window_bytes {
+            self.congestion_window_min_bytes = Some(
+                self.congestion_window_min_bytes
+                    .map_or(window, |value| value.min(window)),
+            );
+            self.congestion_window_max_bytes = Some(
+                self.congestion_window_max_bytes
+                    .map_or(window, |value| value.max(window)),
+            );
+        }
+    }
+
+    fn record_send_wait(&mut self, duration: Duration) {
+        if self.ended.is_some() {
+            return;
+        }
+        let micros = u64::try_from(duration.as_micros()).unwrap_or(u64::MAX);
+        self.send_wait_calls = self.send_wait_calls.saturating_add(1);
+        self.send_wait_max_us = self.send_wait_max_us.max(micros);
+        if duration > Duration::from_millis(1) {
+            self.send_stalls_over_1ms = self.send_stalls_over_1ms.saturating_add(1);
+        }
+        if duration > Duration::from_millis(10) {
+            self.send_stalls_over_10ms = self.send_stalls_over_10ms.saturating_add(1);
+        }
+    }
+
+    fn finish(&mut self, connection: &Connection) {
+        self.finish_with_sample(connection_sample(connection));
+    }
+
+    fn finish_with_sample(&mut self, ended: ConnectionSample) {
+        self.record_sample(ended.clone());
+        self.ended = Some(ended);
+    }
+
+    fn into_evidence(self) -> IrohConnectionEvidence {
+        let ended = self.ended.unwrap_or_default();
+        let selected_path_differs_at_end = self.started.path_id != ended.path_id;
+        IrohConnectionEvidence {
+            sample_interval_ms: u64::try_from(CONNECTION_SAMPLE_INTERVAL.as_millis())
+                .unwrap_or(u64::MAX),
+            sampling_mode: "start/end plus message-boundary samples at least 250ms apart",
+            samples: self.samples,
+            selected_path_start: self.started.path_id,
+            selected_path_end: ended.path_id.clone(),
+            selected_path_differs_at_end,
+            rtt_start_us: self.started.rtt_us,
+            rtt_end_us: ended.rtt_us,
+            rtt_min_us: self.rtt_min_us,
+            rtt_max_us: self.rtt_max_us,
+            congestion_window_start_bytes: self.started.congestion_window_bytes,
+            congestion_window_end_bytes: ended.congestion_window_bytes,
+            congestion_window_min_bytes: self.congestion_window_min_bytes,
+            congestion_window_max_bytes: self.congestion_window_max_bytes,
+            congestion_events_start: self.started.congestion_events,
+            congestion_events_end: ended.congestion_events,
+            congestion_events_delta: if selected_path_differs_at_end {
+                None
+            } else {
+                self.started
+                    .congestion_events
+                    .zip(ended.congestion_events)
+                    .map(|(start, end)| end.saturating_sub(start))
+            },
+            lost_packets_start: self.started.lost_packets,
+            lost_packets_end: ended.lost_packets,
+            lost_packets_delta: ended.lost_packets.saturating_sub(self.started.lost_packets),
+            lost_bytes_start: self.started.lost_bytes,
+            lost_bytes_end: ended.lost_bytes,
+            lost_bytes_delta: ended.lost_bytes.saturating_sub(self.started.lost_bytes),
+            udp_tx_datagrams_delta: ended
+                .udp_tx_datagrams
+                .saturating_sub(self.started.udp_tx_datagrams),
+            udp_tx_bytes_delta: ended.udp_tx_bytes.saturating_sub(self.started.udp_tx_bytes),
+            udp_rx_datagrams_delta: ended
+                .udp_rx_datagrams
+                .saturating_sub(self.started.udp_rx_datagrams),
+            udp_rx_bytes_delta: ended.udp_rx_bytes.saturating_sub(self.started.udp_rx_bytes),
+            data_blocked_frames_delta: ended
+                .data_blocked_frames
+                .saturating_sub(self.started.data_blocked_frames),
+            stream_data_blocked_frames_delta: ended
+                .stream_data_blocked_frames
+                .saturating_sub(self.started.stream_data_blocked_frames),
+            data_blocked_frames_rx_delta: ended
+                .data_blocked_frames_rx
+                .saturating_sub(self.started.data_blocked_frames_rx),
+            stream_data_blocked_frames_rx_delta: ended
+                .stream_data_blocked_frames_rx
+                .saturating_sub(self.started.stream_data_blocked_frames_rx),
+            send_wait_calls: self.send_wait_calls,
+            send_stalls_over_1ms: self.send_stalls_over_1ms,
+            send_stalls_over_10ms: self.send_stalls_over_10ms,
+            send_wait_max_us: self.send_wait_max_us,
+            unavailable_counters: vec![
+                "bytes_in_flight",
+                "congestion_blocked_duration",
+                "stream_flow_control_credit_bytes",
+                "retransmission_duration",
+            ],
+            counter_limitations: vec![
+                "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked",
+            ],
+        }
+    }
+}
+
+fn connection_sample(connection: &Connection) -> ConnectionSample {
+    let stats = connection.stats();
+    let paths = connection.paths();
+    let selected = paths.iter().find(iroh::endpoint::Path::is_selected);
+    let path_stats = selected.as_ref().map(iroh::endpoint::Path::stats);
+    ConnectionSample {
+        path_id: selected.as_ref().map(|path| path.id().to_string()),
+        rtt_us: path_stats.and_then(|stats| u64::try_from(stats.rtt.as_micros()).ok()),
+        congestion_window_bytes: path_stats.map(|stats| stats.cwnd),
+        congestion_events: path_stats.map(|stats| stats.congestion_events),
+        lost_packets: stats.lost_packets,
+        lost_bytes: stats.lost_bytes,
+        udp_tx_datagrams: stats.udp_tx.datagrams,
+        udp_tx_bytes: stats.udp_tx.bytes,
+        udp_rx_datagrams: stats.udp_rx.datagrams,
+        udp_rx_bytes: stats.udp_rx.bytes,
+        data_blocked_frames: stats.frame_tx.data_blocked,
+        stream_data_blocked_frames: stats.frame_tx.stream_data_blocked,
+        data_blocked_frames_rx: stats.frame_rx.data_blocked,
+        stream_data_blocked_frames_rx: stats.frame_rx.stream_data_blocked,
+    }
 }
 
 struct PathSample {
@@ -149,6 +350,7 @@ impl IrohState {
             send,
             recv,
             path_evidence: None,
+            connection_profile: None,
         }
     }
 
@@ -203,9 +405,15 @@ impl IrohState {
             stop: Some(stop),
             task: Some(task),
         });
+        self.connection_profile = std::env::var("RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE")
+            .is_ok_and(|value| value == "1")
+            .then(|| Box::new(IrohConnectionProfile::new(&self.connection)));
     }
 
     pub fn end_payload_observation(&mut self) {
+        if let Some(profile) = self.connection_profile.as_mut() {
+            profile.finish(&self.connection);
+        }
         if let Some(session) = self.path_evidence.as_mut() {
             session.ending = snapshot_paths(&self.connection);
             if let Some(stop) = session.stop.take() {
@@ -218,11 +426,12 @@ impl IrohState {
         let mut session = self.path_evidence.take()?;
         let task = session.task.take()?;
         let summary = task.await.ok()?;
-        Some(classify_path_evidence(
-            &session.baseline,
-            &session.ending,
-            &summary,
-        ))
+        let mut evidence = classify_path_evidence(&session.baseline, &session.ending, &summary);
+        evidence.connection_stats = self
+            .connection_profile
+            .take()
+            .map(|profile| (*profile).into_evidence());
+        Some(evidence)
     }
 
     /// Sends one length-prefixed message over the QUIC stream.
@@ -238,10 +447,24 @@ impl IrohState {
             MAX_MESSAGE_BYTES
         );
 
-        let length = u32::try_from(data.len()).context("message length exceeds u32")?;
-        self.send.write_all(&length.to_be_bytes()).await?;
-        self.send.write_all(&data).await?;
-        self.send.flush().await?;
+        let started = self
+            .connection_profile
+            .as_ref()
+            .filter(|profile| profile.ended.is_none())
+            .map(|_| Instant::now());
+        let result = async {
+            let length = u32::try_from(data.len()).context("message length exceeds u32")?;
+            self.send.write_all(&length.to_be_bytes()).await?;
+            self.send.write_all(&data).await?;
+            self.send.flush().await?;
+            Result::<()>::Ok(())
+        }
+        .await;
+        if let (Some(profile), Some(started)) = (&mut self.connection_profile, started) {
+            profile.record_send_wait(started.elapsed());
+            profile.sample_if_due(&self.connection);
+        }
+        result?;
         Ok(())
     }
 
@@ -352,6 +575,9 @@ impl IrohState {
 
         let mut data = vec![0u8; length];
         self.recv.read_exact(&mut data).await?;
+        if let Some(profile) = self.connection_profile.as_mut() {
+            profile.sample_if_due(&self.connection);
+        }
         Ok(data)
     }
 }
@@ -468,6 +694,7 @@ fn classify_path_evidence(
         lagged: events.lagged,
         missing_path_stats,
         relay_selected,
+        connection_stats: None,
     }
 }
 
@@ -699,7 +926,11 @@ pub fn state(
 
 #[cfg(test)]
 mod path_evidence_tests {
-    use super::{PathEventSummary, PathKind, PathSample, classify_path_evidence};
+    use super::{
+        ConnectionSample, IrohConnectionProfile, PathEventSummary, PathKind, PathSample,
+        classify_path_evidence,
+    };
+    use std::time::{Duration, Instant};
 
     fn sample(id: &str, kind: PathKind, tx: u64, rx: u64) -> PathSample {
         PathSample {
@@ -788,5 +1019,76 @@ mod path_evidence_tests {
         );
         assert!(evidence.missing_path_stats);
         assert_eq!(evidence.classification, "unverified");
+    }
+
+    #[test]
+    fn connection_profile_reports_counter_deltas_and_send_stall_buckets() {
+        let started = ConnectionSample {
+            path_id: Some("path-1".to_owned()),
+            rtt_us: Some(20_000),
+            congestion_window_bytes: Some(120_000),
+            congestion_events: Some(2),
+            lost_packets: 5,
+            lost_bytes: 6_000,
+            udp_tx_datagrams: 10,
+            udp_tx_bytes: 15_000,
+            udp_rx_datagrams: 9,
+            udp_rx_bytes: 14_000,
+            data_blocked_frames: 3,
+            stream_data_blocked_frames: 4,
+            data_blocked_frames_rx: 0,
+            stream_data_blocked_frames_rx: 0,
+        };
+        let mut profile = IrohConnectionProfile {
+            started: started.clone(),
+            ended: None,
+            last_sample: Instant::now(),
+            samples: 0,
+            rtt_min_us: None,
+            rtt_max_us: None,
+            congestion_window_min_bytes: None,
+            congestion_window_max_bytes: None,
+            send_wait_calls: 0,
+            send_stalls_over_1ms: 0,
+            send_stalls_over_10ms: 0,
+            send_wait_max_us: 0,
+        };
+        profile.record_sample(started);
+        profile.record_send_wait(Duration::from_micros(1_001));
+        profile.record_send_wait(Duration::from_micros(10_001));
+        profile.finish_with_sample(ConnectionSample {
+            path_id: Some("path-1".to_owned()),
+            rtt_us: Some(30_000),
+            congestion_window_bytes: Some(90_000),
+            congestion_events: Some(3),
+            lost_packets: 8,
+            lost_bytes: 9_000,
+            udp_tx_datagrams: 20,
+            udp_tx_bytes: 30_000,
+            udp_rx_datagrams: 18,
+            udp_rx_bytes: 28_000,
+            data_blocked_frames: 5,
+            stream_data_blocked_frames: 9,
+            data_blocked_frames_rx: 1,
+            stream_data_blocked_frames_rx: 2,
+        });
+        profile.record_send_wait(Duration::from_secs(1));
+
+        let evidence = profile.into_evidence();
+        assert_eq!(evidence.lost_packets_delta, 3);
+        assert_eq!(evidence.lost_bytes_delta, 3_000);
+        assert_eq!(evidence.congestion_events_delta, Some(1));
+        assert_eq!(evidence.data_blocked_frames_delta, 2);
+        assert_eq!(evidence.stream_data_blocked_frames_delta, 5);
+        assert_eq!(evidence.data_blocked_frames_rx_delta, 1);
+        assert_eq!(evidence.stream_data_blocked_frames_rx_delta, 2);
+        assert_eq!(evidence.udp_tx_datagrams_delta, 10);
+        assert_eq!(evidence.udp_rx_bytes_delta, 14_000);
+        assert_eq!(evidence.rtt_min_us, Some(20_000));
+        assert_eq!(evidence.congestion_window_min_bytes, Some(90_000));
+        assert_eq!(evidence.send_wait_calls, 2);
+        assert_eq!(evidence.send_stalls_over_1ms, 2);
+        assert_eq!(evidence.send_stalls_over_10ms, 1);
+        assert_eq!(evidence.send_wait_max_us, 10_001);
     }
 }

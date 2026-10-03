@@ -14,6 +14,10 @@ pub(crate) fn payload_profile_enabled_from_env() -> bool {
 pub struct PayloadProfile {
     pub source_read_seconds: f64,
     pub allocation_copy_encrypt_seconds: f64,
+    /// Sender-side substage; overlaps `allocation_copy_encrypt_seconds`.
+    pub sender_allocation_copy_seconds: f64,
+    /// Sender-side substage; overlaps `allocation_copy_encrypt_seconds`.
+    pub sender_encrypt_seconds: f64,
     pub send_wait_seconds: f64,
     pub receive_wait_seconds: f64,
     pub decrypt_seconds: f64,
@@ -52,6 +56,14 @@ impl PayloadProfile {
             PayloadStage::DestinationWrite => &mut self.destination_write_seconds,
         };
         *total += seconds;
+    }
+
+    pub(crate) fn record_sender_allocation_copy(&mut self, started: Instant) {
+        self.sender_allocation_copy_seconds += started.elapsed().as_secs_f64();
+    }
+
+    pub(crate) fn record_sender_encrypt(&mut self, started: Instant) {
+        self.sender_encrypt_seconds += started.elapsed().as_secs_f64();
     }
 }
 

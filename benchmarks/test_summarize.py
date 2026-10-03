@@ -42,6 +42,71 @@ def record(**updates):
 
 
 class SummarizeTests(unittest.TestCase):
+    def test_profile_summary_accepts_overlapping_sender_substages_and_connection_counters(self):
+        row = record(
+            profile_mode="payload-profile",
+            payload_profile={
+                "source_read_seconds": 0.1,
+                "allocation_copy_encrypt_seconds": 0.3,
+                "sender_allocation_copy_seconds": 0.1,
+                "sender_encrypt_seconds": 0.2,
+                "send_wait_seconds": 0.2,
+                "receive_wait_seconds": 0.0,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "chunk_count": 1,
+                "payload_bytes": 1024,
+            },
+            path_evidence={
+                "connection_stats": {
+                    "samples": 4,
+                    "rtt_min_us": 20_000,
+                    "lost_packets_delta": 2,
+                    "send_stalls_over_10ms": 1,
+                }
+            },
+            bytes_transferred=1024,
+        )
+        summary = summarize.summarize_records([row])
+        group = summary["groups"][0]
+        self.assertEqual(group["payload_profile"]["sender_encrypt_seconds"]["median"], 0.2)
+        self.assertEqual(group["connection_stats"]["rtt_min_us"]["median"], 20_000)
+        self.assertEqual(group["connection_stats"]["lost_packets_delta"]["median"], 2)
+
+        row["path_evidence"]["connection_stats"]["lost_packets_delta"] = -1
+        summary = summarize.summarize_records([row])
+        self.assertEqual(summary["groups"], [])
+        self.assertIn("invalid counter", summary["rejected_rows"][0]["reason"])
+
+        row["path_evidence"]["connection_stats"]["lost_packets_delta"] = 0
+        row["payload_profile"]["sender_encrypt_seconds"] = 0.4
+        summary = summarize.summarize_records([row])
+        self.assertEqual(summary["groups"], [])
+        self.assertIn("sender substages exceed", summary["rejected_rows"][0]["reason"])
+
+    def test_sender_substages_remain_optional_for_old_profiles_but_validate_when_present(self):
+        profile = {
+            "source_read_seconds": 0.1,
+            "allocation_copy_encrypt_seconds": 0.2,
+            "send_wait_seconds": 0.1,
+            "receive_wait_seconds": 0.0,
+            "decrypt_seconds": 0.0,
+            "destination_write_seconds": 0.0,
+            "chunk_count": 1,
+            "payload_bytes": 1024,
+        }
+        self.assertIsNone(summarize.payload_profile_rejection_reason(profile, 1024, 1.0))
+        profile["sender_encrypt_seconds"] = 0.1
+        self.assertIn(
+            "sender substages are incomplete",
+            summarize.payload_profile_rejection_reason(profile, 1024, 1.0),
+        )
+        profile["sender_allocation_copy_seconds"] = -0.1
+        self.assertIn(
+            "missing or invalid",
+            summarize.payload_profile_rejection_reason(profile, 1024, 1.0),
+        )
+
     def test_profile_mode_separates_diagnostic_rows_and_legacy_defaults_to_standard(self):
         rows = [
             record(),

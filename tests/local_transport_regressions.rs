@@ -1158,6 +1158,7 @@ mod local_baseline_tests {
             lagged: false,
             missing_path_stats: false,
             relay_selected: false,
+            connection_stats: None,
         };
         assert!(verified_direct_evidence(Some(&evidence())));
 

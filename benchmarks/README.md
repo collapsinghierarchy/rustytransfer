@@ -58,6 +58,31 @@ Only test-owned received outputs are removed between trials. The
 [Oracle stage diagnostics](results/oracle-20261002-payload-profile/README.md)
 record the current profiling evidence.
 
+The Oracle runner accepts `--chunk-size BYTES` (1 through 1048576). It passes
+the setting to the sender in either direction; the receiver uses the
+authenticated chunk-size negotiation. Omit it to retain the CLI default.
+
+With both `RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE=1` and
+`RUSTYTRANSFER_BENCH_PATH_EVIDENCE=1`, Iroh records connection diagnostics in
+`path_evidence.connection_stats`: start/end and sampled RTT/congestion windows,
+congestion/loss and UDP counter deltas, flow-control frame counters, and send
+wait counts/maxima with 1/10 ms stall buckets. Samples occur after message
+operations, at least 250 ms apart, plus payload boundaries. They can miss the
+state during a long blocked operation; they are not a periodic trace. Collection
+stops before FIN/FIN_ACK. Connection loss/UDP counters cover all paths; the
+congestion-event delta requires the same selected path at both boundaries.
+The existing path-event observer remains the strict route verifier.
+
+Iroh 1.2.0 does not expose bytes in flight, blocked duration, or stream credit
+through these APIs. Its pinned noq implementation does not emit TX
+DATA_BLOCKED/STREAM_DATA_BLOCKED frames, so zero counters cannot establish that
+flow control was unblocked. UDP datagrams are not an exact lost-packet denominator.
+Unavailable counters and counter limitations are recorded explicitly. Sender
+profiles also separate `sender_allocation_copy_seconds` and
+`sender_encrypt_seconds`; these are substages of the legacy
+`allocation_copy_encrypt_seconds`, so do not add them to that aggregate again.
+Older v1 records remain valid. Performance comparisons keep profiling disabled.
+
 For Croc 11.5.3, `run_croc_baseline.py` starts a temporary local relay and
 separate sender and receiver processes. It records the selected auto path from
 Croc's debug output, uses `--transport relay` for the forced-relay mode, and

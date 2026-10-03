@@ -277,6 +277,7 @@ where
         })?;
     buffer.resize(config.chunk_size, 0);
     if let (Some(profile), Some(started)) = (&mut payload_profile, allocation_started) {
+        profile.record_sender_allocation_copy(started);
         profile.record_stage(PayloadStage::AllocationCopyEncrypt, started);
     }
     let remaining_len = sender.remaining_len();
@@ -315,6 +316,9 @@ where
         let crypto_started = payload_profile
             .as_ref()
             .map(crate::PayloadProfile::start_stage);
+        let allocation_copy_started = payload_profile
+            .as_ref()
+            .map(crate::PayloadProfile::start_stage);
         let capacity = bytes_read.checked_add(GCM_TAG_LEN).ok_or_else(|| {
             context.error(TransferErrorKind::Internal(
                 "plaintext chunk capacity overflow",
@@ -330,6 +334,12 @@ where
             context.error(TransferErrorKind::Internal("source read exceeded buffer"))
         })?;
         plaintext.extend_from_slice(bytes);
+        if let (Some(profile), Some(started)) = (&mut payload_profile, allocation_copy_started) {
+            profile.record_sender_allocation_copy(started);
+        }
+        let encrypt_started = payload_profile
+            .as_ref()
+            .map(crate::PayloadProfile::start_stage);
         let ciphertext = required_output(
             "sender ciphertext block",
             sender
@@ -339,6 +349,9 @@ where
         .map_err(|_source| {
             context.error(TransferErrorKind::Internal("sender ciphertext missing"))
         })?;
+        if let (Some(profile), Some(started)) = (&mut payload_profile, encrypt_started) {
+            profile.record_sender_encrypt(started);
+        }
         if let (Some(profile), Some(started)) = (&mut payload_profile, crypto_started) {
             profile.record_stage(PayloadStage::AllocationCopyEncrypt, started);
         }

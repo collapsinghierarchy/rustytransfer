@@ -391,6 +391,11 @@ mod tests {
                     + profile_data.decrypt_seconds
                     + profile_data.destination_write_seconds;
                 assert!(stage_sum <= metrics.payload_seconds + 1e-6);
+                assert!(
+                    profile_data.sender_allocation_copy_seconds
+                        + profile_data.sender_encrypt_seconds
+                        <= profile_data.allocation_copy_encrypt_seconds + 1e-6
+                );
             }
         }
         Ok(())

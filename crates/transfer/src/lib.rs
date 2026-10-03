@@ -109,12 +109,56 @@ mod tests {
     use std::{
         io::Cursor,
         path::{Path, PathBuf},
+        pin::Pin,
         sync::atomic::{AtomicU64, Ordering},
+        task::{Context, Poll},
     };
+    use tokio::io::ReadBuf;
     use tokio::sync::{mpsc, watch};
 
     const TEST_TIMEOUT: Duration = Duration::from_secs(15);
     static NEXT_OUTPUT: AtomicU64 = AtomicU64::new(0);
+
+    struct ShortReadCursor {
+        inner: Cursor<Vec<u8>>,
+        max_read: usize,
+    }
+
+    impl AsyncRead for ShortReadCursor {
+        fn poll_read(
+            self: Pin<&mut Self>,
+            context: &mut Context<'_>,
+            buffer: &mut ReadBuf<'_>,
+        ) -> Poll<io::Result<()>> {
+            let this = self.get_mut();
+            let limit = buffer.remaining().min(this.max_read);
+            let (result, filled) = {
+                let mut limited = ReadBuf::new(buffer.initialize_unfilled_to(limit));
+                let result = Pin::new(&mut this.inner).poll_read(context, &mut limited);
+                (result, limited.filled().len())
+            };
+            match result {
+                Poll::Ready(Ok(())) => {
+                    buffer.advance(filled);
+                    Poll::Ready(Ok(()))
+                }
+                other => other,
+            }
+        }
+    }
+
+    impl tokio::io::AsyncSeek for ShortReadCursor {
+        fn start_seek(mut self: Pin<&mut Self>, position: std::io::SeekFrom) -> io::Result<()> {
+            Pin::new(&mut self.inner).start_seek(position)
+        }
+
+        fn poll_complete(
+            mut self: Pin<&mut Self>,
+            context: &mut Context<'_>,
+        ) -> Poll<io::Result<u64>> {
+            Pin::new(&mut self.inner).poll_complete(context)
+        }
+    }
 
     #[derive(Clone, Copy)]
     enum PayloadChange {
@@ -571,9 +615,10 @@ mod tests {
             )
             .await
         };
+        let receiver_output = output.clone();
         let receiver_future = async move {
             let mut receiver = receiver;
-            receive_file(&mut receiver, b"ABCDE", &output, |_, _| {}).await
+            receive_file(&mut receiver, b"ABCDE", &receiver_output, |_, _| {}).await
         };
         let (sender_result, receiver_result) = timeout(TEST_TIMEOUT, async {
             tokio::join!(sender_future, receiver_future)
@@ -613,9 +658,10 @@ mod tests {
             )
             .await
         };
+        let receiver_output = output.clone();
         let receiver_future = async move {
             let mut receiver = receiver;
-            receive_file(&mut receiver, b"ABCDE", &output, |_, _| {}).await
+            receive_file(&mut receiver, b"ABCDE", &receiver_output, |_, _| {}).await
         };
         let (sender_result, receiver_result) = timeout(TEST_TIMEOUT, async {
             tokio::join!(sender_future, receiver_future)
@@ -634,6 +680,93 @@ mod tests {
             receiver_result.is_err(),
             "receiver accepted a truncated file"
         );
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn short_source_reads_are_sent_as_bounded_chunks() -> Result<()> {
+        let data = vec![19_u8; 9_017];
+        let file_len = u64::try_from(data.len()).context("test input length exceeds u64")?;
+        let output = output_path();
+        let (sender, receiver) =
+            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
+        let sender_future = async move {
+            let mut sender = sender;
+            send_file(
+                &mut sender,
+                ShortReadCursor {
+                    inner: Cursor::new(data.clone()),
+                    max_read: 137,
+                },
+                file_len,
+                b"ABCDE",
+                TransferConfig { chunk_size: 4096 },
+                |_, _| {},
+            )
+            .await
+        };
+        let receiver_output = output.clone();
+        let receiver_future = async move {
+            let mut receiver = receiver;
+            receive_file(&mut receiver, b"ABCDE", &receiver_output, |_, _| {}).await
+        };
+        let (sender_metrics, receiver_metrics) = timeout(TEST_TIMEOUT, async {
+            tokio::join!(sender_future, receiver_future)
+        })
+        .await
+        .context("short-read transfer timed out")?;
+        let sender_metrics = sender_metrics?;
+        let receiver_metrics = receiver_metrics?;
+        ensure!(sender_metrics.bytes_transferred == file_len);
+        ensure!(receiver_metrics.bytes_transferred == file_len);
+        ensure!(tokio::fs::read(&output).await? == vec![19_u8; 9_017]);
+        tokio::fs::remove_file(&output).await?;
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn source_longer_than_advertised_length_is_rejected_after_probe() -> Result<()> {
+        let (sender, receiver) =
+            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
+        let output = output_path();
+        let part = partial_path(&output)?;
+        let sender_future = async move {
+            let mut sender = sender;
+            send_file(
+                &mut sender,
+                Cursor::new(vec![1_u8; 9]),
+                8,
+                b"ABCDE",
+                TransferConfig { chunk_size: 4 },
+                |_, _| {},
+            )
+            .await
+        };
+        let receiver_future = async move {
+            let mut receiver = receiver;
+            receive_file(&mut receiver, b"ABCDE", &output, |_, _| {}).await
+        };
+        let (sender_result, receiver_result) = timeout(TEST_TIMEOUT, async {
+            tokio::join!(sender_future, receiver_future)
+        })
+        .await
+        .context("overlong-source transfer timed out")?;
+        let sender_error = match sender_result {
+            Ok(_) => return Err(anyhow!("sender accepted an overlong source")),
+            Err(error) => error,
+        };
+        ensure!(
+            format!("{sender_error:#}")
+                .contains("source is longer than the advertised file length"),
+            "sender returned an unexpected overlong-source error: {sender_error:#}"
+        );
+        ensure!(
+            receiver_result.is_err(),
+            "receiver accepted an incomplete file"
+        );
+        if tokio::fs::try_exists(&part).await? {
+            tokio::fs::remove_file(&part).await?;
+        }
         Ok(())
     }
 
@@ -693,88 +826,90 @@ mod tests {
 
     #[tokio::test]
     async fn interrupted_transfer_resumes_saved_prefix_on_next_invocation() -> Result<()> {
-        const CHUNK: usize = 16;
-        let data: Vec<u8> = (0..96)
-            .map(|index| u8::try_from(index % 251))
-            .collect::<std::result::Result<_, _>>()
-            .context("test byte pattern exceeds u8")?;
-        let file_len = u64::try_from(data.len()).context("test input length exceeds u64")?;
-        let first_chunk = u64::try_from(CHUNK).context("test chunk length exceeds u64")?;
-        let output = output_path();
-        let part = partial_path(&output)?;
-        let (sender, receiver) =
-            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
-        let sender_data = data.clone();
-        let sender_future = async move {
-            let mut sender = sender;
-            sender.send_fault = SendFault::FailOnMessage(4);
-            send_file(
-                &mut sender,
-                Cursor::new(sender_data.clone()),
-                file_len,
-                b"ABCDE",
-                TransferConfig { chunk_size: CHUNK },
-                |_, _| {},
-            )
+        for chunk_size in [16, 256 * 1024, 512 * 1024, 1024 * 1024] {
+            let data_len = chunk_size * 2 + 137;
+            let data: Vec<u8> = (0..data_len)
+                .map(|index| u8::try_from(index % 251))
+                .collect::<std::result::Result<_, _>>()
+                .context("test byte pattern exceeds u8")?;
+            let file_len = u64::try_from(data.len()).context("test input length exceeds u64")?;
+            let first_chunk = u64::try_from(chunk_size).context("test chunk length exceeds u64")?;
+            let output = output_path();
+            let part = partial_path(&output)?;
+            let (sender, receiver) =
+                MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
+            let sender_data = data.clone();
+            let sender_future = async move {
+                let mut sender = sender;
+                sender.send_fault = SendFault::FailOnMessage(4);
+                send_file(
+                    &mut sender,
+                    Cursor::new(sender_data.clone()),
+                    file_len,
+                    b"ABCDE",
+                    TransferConfig { chunk_size },
+                    |_, _| {},
+                )
+                .await
+            };
+            let receiver_output = output.clone();
+            let receiver_future = async move {
+                let mut receiver = receiver;
+                receive_file(&mut receiver, b"ABCDE", &receiver_output, |_, _| {}).await
+            };
+            let (sender_result, receiver_result) = timeout(TEST_TIMEOUT, async {
+                tokio::join!(sender_future, receiver_future)
+            })
             .await
-        };
-        let receiver_output = output.clone();
-        let receiver_future = async move {
-            let mut receiver = receiver;
-            receive_file(&mut receiver, b"ABCDE", &receiver_output, |_, _| {}).await
-        };
-        let (sender_result, receiver_result) = timeout(TEST_TIMEOUT, async {
-            tokio::join!(sender_future, receiver_future)
-        })
-        .await
-        .context("interrupted transfer timed out")?;
-        ensure!(
-            sender_result.is_err(),
-            "injected connection error was ignored"
-        );
-        ensure!(
-            receiver_result.is_err(),
-            "receiver accepted an incomplete file"
-        );
-        let partial = tokio::fs::read(&part).await?;
-        ensure!(
-            partial == data[..CHUNK],
-            "partial file does not contain one chunk"
-        );
+            .context("interrupted transfer timed out")?;
+            ensure!(
+                sender_result.is_err(),
+                "injected connection error was ignored"
+            );
+            ensure!(
+                receiver_result.is_err(),
+                "receiver accepted an incomplete file"
+            );
+            let partial = tokio::fs::read(&part).await?;
+            ensure!(
+                partial == data[..chunk_size],
+                "partial file does not contain one chunk"
+            );
 
-        let (sender, receiver) =
-            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
-        let sender_data = data.clone();
-        let sender_future = async move {
-            let mut sender = sender;
-            send_file(
-                &mut sender,
-                Cursor::new(sender_data.clone()),
-                file_len,
-                b"ABCDE",
-                TransferConfig { chunk_size: CHUNK },
-                |_, _| {},
-            )
+            let (sender, receiver) =
+                MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
+            let sender_data = data.clone();
+            let sender_future = async move {
+                let mut sender = sender;
+                send_file(
+                    &mut sender,
+                    Cursor::new(sender_data.clone()),
+                    file_len,
+                    b"ABCDE",
+                    TransferConfig { chunk_size },
+                    |_, _| {},
+                )
+                .await
+            };
+            let receiver_output = output.clone();
+            let receiver_future = async move {
+                let mut receiver = receiver;
+                receive_file(&mut receiver, b"ABCDE", &receiver_output, |_, _| {}).await
+            };
+            let (sender_metrics, receiver_metrics) = timeout(TEST_TIMEOUT, async {
+                tokio::join!(sender_future, receiver_future)
+            })
             .await
-        };
-        let receiver_output = output.clone();
-        let receiver_future = async move {
-            let mut receiver = receiver;
-            receive_file(&mut receiver, b"ABCDE", &receiver_output, |_, _| {}).await
-        };
-        let (sender_metrics, receiver_metrics) = timeout(TEST_TIMEOUT, async {
-            tokio::join!(sender_future, receiver_future)
-        })
-        .await
-        .context("resumed transfer timed out")?;
-        let sender_metrics = sender_metrics?;
-        let receiver_metrics = receiver_metrics?;
-        ensure!(sender_metrics.bytes_transferred == file_len - first_chunk);
-        ensure!(receiver_metrics.bytes_transferred == sender_metrics.bytes_transferred);
-        ensure!(receiver_metrics.file_size == file_len);
-        ensure!(tokio::fs::read(&output).await? == data);
-        ensure!(!tokio::fs::try_exists(&part).await?);
-        tokio::fs::remove_file(&output).await?;
+            .context("resumed transfer timed out")?;
+            let sender_metrics = sender_metrics?;
+            let receiver_metrics = receiver_metrics?;
+            ensure!(sender_metrics.bytes_transferred == file_len - first_chunk);
+            ensure!(receiver_metrics.bytes_transferred == sender_metrics.bytes_transferred);
+            ensure!(receiver_metrics.file_size == file_len);
+            ensure!(tokio::fs::read(&output).await? == data);
+            ensure!(!tokio::fs::try_exists(&part).await?);
+            tokio::fs::remove_file(&output).await?;
+        }
         Ok(())
     }
 

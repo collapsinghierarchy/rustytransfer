@@ -10,7 +10,7 @@ To use the Firefox add-on, install the native host from this extracted directory
 
 The installer copies the bundled host binary and registers it for your Firefox
 profile. Rust and Cargo are not needed for the release package. Install the
-Firefox add-on from its addons.mozilla.org listing after it is approved.
+Firefox add-on from https://addons.mozilla.org/firefox/addon/rustytransfer/.
 
 Source and further instructions:
 https://github.com/collapsinghierarchy/rustytransfer

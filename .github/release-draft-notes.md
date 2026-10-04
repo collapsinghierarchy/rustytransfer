@@ -8,5 +8,6 @@ Extract the archive for your platform. Run the CLI directly or copy it to your
 `PATH`. Run the included `install-firefox-host` script to register the native
 host before installing the Firefox add-on.
 
-The Firefox add-on is being submitted for Mozilla's review and signing. Add its
-AMO installation link here before publishing this draft release.
+Install the signed Firefox add-on from
+https://addons.mozilla.org/firefox/addon/rustytransfer/ or download the signed
+XPI attached to this release.

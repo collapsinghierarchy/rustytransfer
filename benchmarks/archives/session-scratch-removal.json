@@ -1,0 +1,20 @@
+﻿[
+    {
+        "path":  "tmp/archive_cleanup.py",
+        "bytes":  3906,
+        "sha256":  "6eb2f4e97b9dbf7254ad49c505e6c228fb6753b5dfc9e43c69bb88859b220774",
+        "replacement":  "Verified archive indexes, inventory audit, removal manifest and local performance evidence"
+    },
+    {
+        "path":  "tmp/index_archives.py",
+        "bytes":  2034,
+        "sha256":  "4a221be209914d1a1001061303d1d0ef4ac25660c583f187be876eee4f2cf56e",
+        "replacement":  "Verified archive indexes, inventory audit, removal manifest and local performance evidence"
+    },
+    {
+        "path":  "tmp/retain_performance_evidence.py",
+        "bytes":  5220,
+        "sha256":  "72ec838c87959ee95ed9e9aee4a464be5bc4f4b9c1d25e7fca91ec0b8b7e7b78",
+        "replacement":  "Verified archive indexes, inventory audit, removal manifest and local performance evidence"
+    }
+]

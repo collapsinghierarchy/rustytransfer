@@ -176,6 +176,23 @@ class PerformanceTests(unittest.TestCase):
                     redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 p.main()
 
+    def test_source_check_accepts_crlf_noise_and_rejects_actual_edits(self):
+        with tempfile.TemporaryDirectory() as root:
+            directory = Path(root)
+            p.run(["git", "init", "-q"], cwd=directory)
+            p.run(["git", "config", "core.autocrlf", "false"], cwd=directory)
+            (directory / "src").mkdir()
+            source = directory / "src/test.rs"
+            source.write_bytes(b"fn transfer() {}\n")
+            p.run(["git", "add", "src/test.rs"], cwd=directory)
+            p.run(["git", "-c", "user.name=Benchmark", "-c", "user.email=benchmark@example.invalid",
+                   "commit", "-qm", "fixture"], cwd=directory)
+            source.write_bytes(b"fn transfer() {}\r\n")
+            p.check_source_clean(directory)
+            source.write_bytes(b"fn different_transfer() {}\r\n")
+            with self.assertRaises(RuntimeError):
+                p.check_source_clean(directory)
+
 
 if __name__ == "__main__":
     unittest.main()

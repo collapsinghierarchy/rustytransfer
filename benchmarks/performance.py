@@ -63,6 +63,12 @@ def resolve(ref):
     return ref
 
 
+def check_source_clean(cwd=ROOT):
+    # Inspect content: --quiet can stop at Windows/WSL stat or CRLF differences.
+    run(["git", "diff", "--exit-code", "--ignore-cr-at-eol", "--no-ext-diff", "HEAD", "--",
+         "Cargo.toml", "Cargo.lock", ".cargo", "src", "crates", HARNESS], cwd=cwd)
+
+
 def trial_environment():
     # Eliminate inherited profiling/tuning and Rust build overrides for both arms.
     return {k: v for k, v in os.environ.items()
@@ -233,8 +239,7 @@ def main():
     baseline = resolve(args.baseline_ref)
     candidate = resolve(args.candidate_ref or run(["git", "rev-parse", "HEAD"]).strip())
     if not args.candidate_ref:
-        run(["git", "diff", "--quiet", "HEAD", "--", "Cargo.toml", "Cargo.lock",
-             ".cargo", "src", "crates", HARNESS])
+        check_source_clean()
     if baseline == candidate and not args.calibration:
         parser.error("candidate equals baseline; only explicit calibration permits A/A")
     if args.calibration and baseline != candidate:

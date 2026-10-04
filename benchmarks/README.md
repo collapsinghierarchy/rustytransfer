@@ -76,6 +76,10 @@ snapshots, generated fixtures and known received/partial outputs are removed,
 including on failure. Existing fixtures, release artifacts and caches are kept.
 
 Run focused tests with `python3 -m unittest discover -s benchmarks -p test_performance.py`.
+The [local validation record](results/local-20261004-performance/README.md) retains
+A/A, synthetic slowdown and fixed-baseline candidate cohorts: 72 verified
+transfers, including all warmups and valid slow samples. Hosted-runner calibration
+remains required before enabling performance gating.
 Historical reports and reproduction instructions are indexed in
 [`archives/README.md`](archives/README.md); the old guide and runners are frozen
 there. Historical Croc measurements remain evidence only. See the

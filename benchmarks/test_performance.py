@@ -112,6 +112,32 @@ class PerformanceTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 p.resolve(ref)
 
+    def test_failure_retains_report_and_cleans_only_owned_sources(self):
+        with tempfile.TemporaryDirectory() as root:
+            output = Path(root) / "run"
+            preserved = Path(root) / "user-fixture"
+            preserved.write_text("keep")
+
+            def failed_build(ref, label, directory, environment, config):
+                for name in ("sources", "fixtures"):
+                    (directory / name).mkdir()
+                    (directory / name / "owned").write_text("temporary")
+                raise RuntimeError("synthetic build failure")
+
+            args = ["performance.py", "--profile", "ci", "--baseline-ref", CONFIG["baseline_ref"],
+                    "--candidate-ref", "b" * 40, "--output", str(output)]
+            with patch.object(sys, "argv", args), patch.object(p, "resolve", side_effect=lambda x: x), \
+                    patch.object(p, "run", return_value="performance harness v1"), \
+                    patch.object(p, "build", side_effect=failed_build):
+                with self.assertRaisesRegex(RuntimeError, "synthetic build failure"):
+                    p.main()
+            report = json.loads((output / "report.json").read_text())
+            self.assertEqual(report["status"], "invalid")
+            self.assertTrue((output / "summary.md").exists())
+            self.assertFalse((output / "sources").exists())
+            self.assertFalse((output / "fixtures").exists())
+            self.assertEqual(preserved.read_text(), "keep")
+
 
 if __name__ == "__main__":
     unittest.main()

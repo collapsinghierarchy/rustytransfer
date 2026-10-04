@@ -1,0 +1,72 @@
+name: Rustytransfer performance (report only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      calibration:
+        description: 'Comparison mode (aa and slow use the fixed baseline on both arms)'
+        type: choice
+        options: [comparison, aa, slow]
+        default: comparison
+  schedule:
+    - cron: '23 4 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rustytransfer-performance-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  local-iroh:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read reviewed configuration
+        run: |
+          python3 - <<'PY'
+          import json, os
+          config = json.load(open('benchmarks/baseline.json'))
+          with open(os.environ['GITHUB_ENV'], 'a') as stream:
+              stream.write(f"PERFORMANCE_BASELINE={config['baseline_ref']}\n")
+              stream.write(f"PERFORMANCE_TOOLCHAIN={config['rust_toolchain']}\n")
+          PY
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ env.PERFORMANCE_TOOLCHAIN }}
+      - name: Test maintained runner
+        run: python3 -m unittest discover -s benchmarks -p test_performance.py
+      - name: Compare Rustytransfer revisions
+        env:
+          CALIBRATION: ${{ inputs.calibration || 'comparison' }}
+        shell: bash
+        run: |
+          args=()
+          if [[ "$CALIBRATION" != comparison ]]; then
+            args+=(--candidate-ref "$PERFORMANCE_BASELINE" --calibration "$CALIBRATION")
+          fi
+          python3 benchmarks/performance.py --profile ci \
+            --baseline-ref "$PERFORMANCE_BASELINE" \
+            --output target/performance/ci "${args[@]}"
+      - name: Retain performance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-${{ runner.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 30
+          if-no-files-found: warn
+          path: |
+            target/performance/ci/report.json
+            target/performance/ci/raw.jsonl
+            target/performance/ci/summary.md
+            target/performance/ci/build-*.log
+            target/performance/ci/trials/**/process.log
+            target/performance/ci/trials/**/pair.json
+            target/performance/ci/trials/**/endpoints.jsonl

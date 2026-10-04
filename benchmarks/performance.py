@@ -212,6 +212,9 @@ def main():
     config = json.loads((ROOT / "benchmarks/baseline.json").read_text())
     baseline = resolve(args.baseline_ref)
     candidate = resolve(args.candidate_ref or run(["git", "rev-parse", "HEAD"]).strip())
+    if not args.candidate_ref:
+        run(["git", "diff", "--quiet", "HEAD", "--", "Cargo.toml", "Cargo.lock",
+             ".cargo", "src", "crates", HARNESS])
     if baseline == candidate and not args.calibration:
         parser.error("candidate equals baseline; only explicit calibration permits A/A")
     if args.calibration and baseline != candidate:
@@ -224,6 +227,7 @@ def main():
     report = {"schema_version": 1, "scope": "local Iroh transfer-core; endpoints share one process",
               "gating": config["gating"], "configuration": config, "calibration": args.calibration,
               "runner_sha256": digest(Path(__file__)), "platform": platform.platform(),
+              "configuration_sha256": digest(ROOT / "benchmarks/baseline.json"),
               "architecture": platform.machine(), "runner_image": {k: os.getenv(k) for k in
                   ("ImageOS", "ImageVersion", "RUNNER_ARCH", "GITHUB_SHA", "GITHUB_HEAD_REF")},
               "candidate": candidate, "baseline": baseline, "trials": [], "status": "running",
@@ -238,8 +242,10 @@ def main():
         harnesses = [run(["git", "show", f"{ref}:{HARNESS}"]) for ref in (baseline, candidate)]
         if harnesses[0] != harnesses[1] or "performance harness v1" not in harnesses[0]:
             raise ValueError("incompatible committed harness; reviewed migration required")
-        report["builds"] = {label: build(ref, label, output, environment, config)
-                            for label, ref in (("baseline", baseline), ("candidate", candidate))}
+        report["builds"] = {}
+        for label, ref in (("baseline", baseline), ("candidate", candidate)):
+            report["builds"][label] = build(ref, label, output, environment, config)
+            write_json(output / "report.json", report)
         if len({b["harness_sha256"] for b in report["builds"].values()}) != 1:
             raise ValueError("harness binary sources differ")
         fixtures = output / "fixtures"

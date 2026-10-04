@@ -1,6 +1,6 @@
 {
-  "baseline_ref": null,
-  "baseline_status": "Set explicitly after the compatible harness commit; never auto-advance",
+  "baseline_ref": "47c338c19e9751ec0a47414f8d323e77fc974b08",
+  "baseline_status": "Initial compatible harness revision; production matches approved 372956e; fixed pending explicit review updates",
   "harness_version": 1,
   "rust_toolchain": "1.97.0",
   "sizes_mib": [64, 512],

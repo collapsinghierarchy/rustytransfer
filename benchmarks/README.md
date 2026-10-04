@@ -1,5 +1,15 @@
 # Performance measurements
 
+The [benchmark cleanup and CI baseline plan](CLEANUP_PLAN.md) proposes one
+maintained Rustytransfer regression runner, verified archives for historical
+helpers, and CI comparisons against an approved Rustytransfer revision. The
+planned baseline has no Croc comparison. Implementation is pending.
+
+The [final comparison without debug flags](results/oracle-20261004-no-debug/README.md)
+records the completed 1/2/4 GiB measurements, their configuration and audit.
+The phase-only policies below describe the earlier diagnostic cohorts; the
+final cohort reports full runtimes at the user's subsequent explicit request.
+
 The [efficiency report](../docs/direct-transfer-efficiency-report.md)
 records the accepted ARM CPU improvement, verified direct A/B measurements,
 startup/resume validation, and historical direct-only Croc 11.5.4 cohorts.

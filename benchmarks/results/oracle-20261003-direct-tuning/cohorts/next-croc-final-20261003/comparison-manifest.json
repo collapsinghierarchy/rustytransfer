@@ -1,0 +1,16 @@
+{
+  "direction": "oracle-to-wsl",
+  "runner_sha256": "5bd05420d6f40efc7e589499b669e5cc0c9e0c53a4de384a2e6f3367143c6a27",
+  "helper_sha256": "a957f848ff9e7022aa7f09f43baf88a71f6dd7c901ce63c043b8871d1cb0f405",
+  "firewall_helper_sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2",
+  "candidate_paths": {
+    "rustytransfer": "Iroh direct route, verified by both endpoints",
+    "croc": "direct TCP to Oracle sender endpoint-local Croc listeners"
+  },
+  "croc_mode": "global --local; send --transport auto; Tailcat/external relay disabled",
+  "croc_version": "11.5.4",
+  "rustytransfer_manifest": "/home/wasilij/rustytransfer-bench/build-receive-window-20261003/manifest.json",
+  "croc_manifest": "/home/wasilij/rustytransfer-bench/tools/croc-11.5.4/manifest.json",
+  "runs_per_size_candidate": 5,
+  "warmups_per_size_candidate": 1
+}

@@ -1,0 +1,130 @@
+{
+  "performance_defaults_changed": false,
+  "accepted_infrastructure_commits": {
+    "diagnostics": "f9412e8",
+    "chunk_correctness": "c78d5d6",
+    "bounded_opt_in_windows": "3356360",
+    "shared_key_example_and_runner": "37a2bad"
+  },
+  "gate": {
+    "throughput_percent": 5,
+    "cpu_per_gib_reduction_percent": 10,
+    "confirmation_series": 2,
+    "unexplained_guard_rate_regression_limit_percent": 3,
+    "variance_policy": "Increase samples or reject the claim when variance obscures a result."
+  },
+  "owned_chunk": {
+    "decision": "rejected",
+    "reason": "Rate gain did not confirm; sender CPU increased in both series. Runtime patch is unshipped."
+  },
+  "receive_window": {
+    "decision": "no-default-change",
+    "reason": "Gains were below threshold, with higher CPU and RSS."
+  },
+  "chunk_512k": {
+    "decision": "no-default-change",
+    "reason": "512MiB upload regressed 14.6% despite 64MiB upload improvement."
+  },
+  "chunk_1m": {
+    "decision": "no-default-change",
+    "target_median_gate_met": true,
+    "target": "64MiB WSL-to-Oracle",
+    "series_rate_changes_percent": [
+      6.487364473944313,
+      12.009653192576808
+    ],
+    "paired_rate_changes_percent": [
+      -0.6134343005337439,
+      13.531343147177521,
+      -2.190707417690174,
+      19.800556360097698,
+      -10.394120988838928,
+      37.650502070764304,
+      -8.041774372278631,
+      9.569286328175064,
+      4.500166126127958,
+      -6.5103260538373675
+    ],
+    "paired_wins": 5,
+    "paired_trials": 10,
+    "paired_change_median_percent": 1.943365912797107,
+    "reason": "Positive target medians are retained. Wide WAN ranges and only five of ten paired wins leave a robust general default benefit uncertain; RSS increased. Existing opt-in sizes remain available."
+  },
+  "pipeline": {
+    "decision": "not-implemented",
+    "reason": "Fresh elapsed profiles show small file/copy spans and dominant transport waits, without demonstrated application starvation."
+  },
+  "parallel": {
+    "decision": "reject-production-expansion",
+    "protocol": "shared-key-parallel/1",
+    "connections": 1,
+    "stream_counts": [
+      1,
+      4
+    ],
+    "payload_keys_per_file": 1,
+    "kem_sessions_per_file": 1,
+    "series": [
+      {
+        "series": 1,
+        "rate_change_percent": -0.6889033601073291,
+        "sender_cpu_per_gib_change_percent": 23.675496688741717,
+        "receiver_cpu_per_gib_change_percent": 44.97041420118342
+      }
+    ],
+    "reason": "Four streams failed the representative throughput and CPU gates. Keep the separately versioned fresh-transfer-only example as experimental evidence. One connection does not reproduce four independent TCP congestion budgets; multiple connections and experimental resume remain unimplemented."
+  },
+  "audited_valid_transfers_including_warmups": 260,
+  "audited_endpoint_rows": 520,
+  "audit_scopes": {
+    "old-profile": "complete-cohort",
+    "diagnostics": "complete-cohort",
+    "chunks-screen": "complete-cohort",
+    "chunks-remaining": "completed-groups-only",
+    "chunk-confirm-upload64": "complete-cohort",
+    "chunk-startup-retry": "completed-groups-only",
+    "chunk-startup64-upload": "complete-cohort",
+    "copy-screen": "complete-cohort",
+    "window-screen": "complete-cohort",
+    "profile-overhead": "complete-cohort",
+    "shared-key-streams": "complete-cohort",
+    "croc-final": "complete-cohort"
+  },
+  "excluded_records": [
+    "Two incomplete 4KiB-upload groups with receiver zero STREAM frames; retained and unscored.",
+    "Stale deterministic-mtime build detected by executable hashes before any transfer.",
+    "Unrun independent-session parallel draft discarded for violating the shared payload-key requirement.",
+    "Earlier local mixed-route smokes and failed cancellation-smoke setup retained; final corrected v3 smokes pass."
+  ],
+  "validation": {
+    "workspace_gates_passed": true,
+    "existing_clippy_findings": 3,
+    "benchmark_python_tests": 53,
+    "example_unit_tests": 13,
+    "example_clippy_new_findings": 0,
+    "final_local_strict_one_and_four_stream_smokes_passed": true,
+    "truncation_and_sigterm_cleanup_passed": true,
+    "final_cleanup": {
+      "local": {
+        "active_benchmark_endpoints": [],
+        "croc_tcp_listen_ports": [],
+        "active_firewall_leases": []
+      },
+      "oracle": {
+        "active_benchmark_endpoints": [],
+        "croc_tcp_listen_ports": [],
+        "active_firewall_leases": []
+      },
+      "original_input_chain_restored": true,
+      "oracle_input_chain_sha256": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5"
+    }
+  },
+  "limitations": [
+    "Warm-cache sequential WAN cohorts on this endpoint pair; network variation is substantial.",
+    "Elapsed profiles do not provide sampled CPU attribution; Oracle perf permission is unavailable.",
+    "CPU is per-process user plus system time, not whole-host energy or all network background work.",
+    "No native Windows/macOS or physical LAN performance measurement.",
+    "4KiB upload startup could not be scored under unchanged strict route proof; 64KiB guard used instead.",
+    "Experimental parallel resume and multiple-connection behavior remain unimplemented; production resume remains unchanged."
+  ]
+}

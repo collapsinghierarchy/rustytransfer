@@ -1,0 +1,239 @@
+{
+  "frozen_at_utc": "2026-10-03T19:22:38.233272+00:00",
+  "source_commit": "37a2bad844766c4750c1806b53b074fe33bfd5ec",
+  "artifact_kind": "example:shared_key_parallel",
+  "source_dirty": true,
+  "source_archive_sha256": "82c2b07fb35c3f5a4ac8cf41bb764997bae000f886c36aac07da74f8b3cba035",
+  "source_files_sha256": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256": "55de0537df5a56418c6ebd23b53510b1edd61065072c2ac88b3e98fac6ae6689"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "ae933e1a4427eb39f2736bb7db43f8e2dc216278cb49ee2cebf29ac2f70eb651"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "bd88689c2750e3b31f109766237fce2988137c8f87bdba00d35fbf7f1c590d61"
+    },
+    {
+      "path": "crates/crypto/Cargo.toml",
+      "sha256": "f9509d055ddb00c74fa6efb3d1daee98db0e4648b23cc97778ad53598ac6c580"
+    },
+    {
+      "path": "crates/crypto/src/dem.rs",
+      "sha256": "27e48a4f9eebee05f25760e22da8cedac8a75db3ecdcc3d2026406dbd7a90a26"
+    },
+    {
+      "path": "crates/crypto/src/error.rs",
+      "sha256": "610b98bcc0964c6f77ca8daf900fb657e171df771f1417147645ee93838ff835"
+    },
+    {
+      "path": "crates/crypto/src/kem.rs",
+      "sha256": "92804cf698e258d1d959e5bdb63f9c3b9d8090d792c0b0086eb986b17f986fd7"
+    },
+    {
+      "path": "crates/crypto/src/lib.rs",
+      "sha256": "59d16ea07b6350af1b30122180717c6b6c0c4bf12f34dc05596bd49be2d05e96"
+    },
+    {
+      "path": "crates/crypto/src/mac.rs",
+      "sha256": "77b905a69ca790d040e9f38e1d15c172c94d44f136cb9dcaddec1e96d97e0164"
+    },
+    {
+      "path": "crates/crypto/src/pake.rs",
+      "sha256": "2fae6de68a26ea1af7f0f267ee1f6cedbe658431eaab7a52bcf82ae864697e42"
+    },
+    {
+      "path": "crates/firefox-host/Cargo.toml",
+      "sha256": "71aa67efc0bb6049ab0b9c031dde76d36f088a18adedbea28973b039287ad1e2"
+    },
+    {
+      "path": "crates/firefox-host/src/main.rs",
+      "sha256": "139a57ba1dff910fe7c9f4875b7816573213258672e787fe7c2d1da41543b2bd"
+    },
+    {
+      "path": "crates/firefox-host/src/messaging.rs",
+      "sha256": "5f0ea5ff796bb924d09fb90627c8eec4f90f89f4d427f4665ec7d491714be5d2"
+    },
+    {
+      "path": "crates/native/Cargo.toml",
+      "sha256": "9e26799a0ce9c975c804955e7f389264712deff3fbfacb1d60eef22f2311df69"
+    },
+    {
+      "path": "crates/native/src/backend_config.rs",
+      "sha256": "3a3c6b7a86499e8082a5f29a6540a8ccae5dc5da78bd95ad3ae9a12543f8114f"
+    },
+    {
+      "path": "crates/native/src/bin/iroh_probe.rs",
+      "sha256": "b7b84712ff96739a83fc9d6d576e01a2ca6bddadc28468fcdcab2c4b2e387377"
+    },
+    {
+      "path": "crates/native/src/direct.rs",
+      "sha256": "fb3e989c7c3d807b0b589ef1b815904a5baf0e1fdd118179cbd253492b8a29bb"
+    },
+    {
+      "path": "crates/native/src/lib.rs",
+      "sha256": "1432e066e67bb9edfebc86000bd07f0c6c36f11249885b2d948817dc92bd0738"
+    },
+    {
+      "path": "crates/native/src/rendezvous.rs",
+      "sha256": "33f387be7ec1ba50043f6c640598f916bcb7eb3ca8970126d6d9c7552d1a64ae"
+    },
+    {
+      "path": "crates/native/src/rendezvous/error.rs",
+      "sha256": "885378848529f74ae77ab6cabce4db0a16377d4bf1e1c4decbf1fccd8f3d8bf4"
+    },
+    {
+      "path": "crates/native/src/signaling/frames.rs",
+      "sha256": "eef16fc86c5cea8af58d494637f6705c8187507f4b90ba3b032d63c7c4a98059"
+    },
+    {
+      "path": "crates/native/src/signaling/mod.rs",
+      "sha256": "1f258a7d161820434bc21271ff81e0f5a27005de3911231896074e0bf2954276"
+    },
+    {
+      "path": "crates/native/src/signaling/websocket.rs",
+      "sha256": "f6e0d3eadfdf53af10be0a23ebb44b8fb5ba5d4a9de0bb42af02d9a1c5a722af"
+    },
+    {
+      "path": "crates/native/src/transport/adapter.rs",
+      "sha256": "b22d124511ea8e8cd8a71b3a149031f1ead968dcc20b41816c96040dca6457df"
+    },
+    {
+      "path": "crates/native/src/transport/errors.rs",
+      "sha256": "2d08f4633e1a493de2956e806654eaba29429df66625c3ec5ecb3142f0b0dbda"
+    },
+    {
+      "path": "crates/native/src/transport/iroh.rs",
+      "sha256": "9d149c241ff63a1579edecb613123b80a07bdd883d0d6738dea5d302f4e69209"
+    },
+    {
+      "path": "crates/native/src/transport/mod.rs",
+      "sha256": "319c2873135f6015959b9eb2610ce79f4369994bd1200cb5009a704c78c13bc1"
+    },
+    {
+      "path": "crates/native/src/transport/webrtc.rs",
+      "sha256": "ec466b0bd8969978add76eda88e17715cb4f88d0f7dd0952a84bdcddcaf49950"
+    },
+    {
+      "path": "crates/protocol/Cargo.toml",
+      "sha256": "9488c2f86c2abc0d9eacf8031260780c8e9c6f69fada9a18ee8c3f34cccbd79b"
+    },
+    {
+      "path": "crates/protocol/src/fsm.rs",
+      "sha256": "45b75852239dc9106a084cb1eac086caafabcb49026ea5561f39943fd710054c"
+    },
+    {
+      "path": "crates/protocol/src/lib.rs",
+      "sha256": "f1bdc8a6ddf2e19fce8240990d01e278d474a134cba4236f5a259f81a98df3e0"
+    },
+    {
+      "path": "crates/protocol/src/receiver.rs",
+      "sha256": "62cbdcd1f6e7ab666daf75bbc273176fba422803bc22ced652ccd0fa7f564dab"
+    },
+    {
+      "path": "crates/protocol/src/sender.rs",
+      "sha256": "b0d186a839fbdf5542b43419690dd93b7651540020d5cb85e554e3f00301d3d4"
+    },
+    {
+      "path": "crates/protocol/src/share_code.rs",
+      "sha256": "22296143ae9787ba6af6688113ddb910cdda9143396249fa166eee428aaa0293"
+    },
+    {
+      "path": "crates/transfer/Cargo.toml",
+      "sha256": "7f03bb69d9e2d7c6c4cb66381983b14276da4a53f0ac61f64896dc406d0ebb4e"
+    },
+    {
+      "path": "crates/transfer/src/config.rs",
+      "sha256": "58fd6bf40822187b4ef40864fa3fe7aa2821ee217f430c6b9ccb4ddefbaa9835"
+    },
+    {
+      "path": "crates/transfer/src/error.rs",
+      "sha256": "eb9b287857efacd0071115bdf1a1a14c2d50b62230fc1b32b2f2e4e9b2424712"
+    },
+    {
+      "path": "crates/transfer/src/lib.rs",
+      "sha256": "c5be1a246ac0308c4464a28b34198eb13d70df63f271c06e712828d3c0a91174"
+    },
+    {
+      "path": "crates/transfer/src/metrics.rs",
+      "sha256": "3dd709d7d02cf9df54a1ebbf405ceb9bbbb7a8e9dc72b666a38d4f0e1ce4e9c1"
+    },
+    {
+      "path": "crates/transfer/src/output.rs",
+      "sha256": "132843b48c6e9a4f489f4abb3472ddb8bf35b73532f6631a2994bb9f9651bf52"
+    },
+    {
+      "path": "crates/transfer/src/session/mod.rs",
+      "sha256": "627fc59b10faf7c27be70a9dd564676d1c42bc144c54e413caf71134b320c263"
+    },
+    {
+      "path": "crates/transfer/src/session/receiver.rs",
+      "sha256": "26d1da2641064c308323ae11684f4041ae9e046c55d9cbd04f176ac37e23ed1a"
+    },
+    {
+      "path": "crates/transfer/src/session/sender.rs",
+      "sha256": "9e721f73317d3313b408f9e1e92dbe2d0ead33b19d68ff872ab76e1d2cb8651e"
+    },
+    {
+      "path": "crates/transfer/src/transport_api.rs",
+      "sha256": "7245f1d3f0056d1133529dca30ed7402ffc85bdf9ad3fd036023c0fd5d50630b"
+    },
+    {
+      "path": "crates/wasm/Cargo.toml",
+      "sha256": "ccb8117f401155e954f9339bf8c6e1a81baa154b84e8196aedae14b945baaa82"
+    },
+    {
+      "path": "crates/wasm/src/lib.rs",
+      "sha256": "057aa41cfedb00eafdd705d3766ae776bcb2dbd0e954dc3c71c6a1f5b7b2445b"
+    },
+    {
+      "path": "examples/shared_key_parallel.rs",
+      "sha256": "26ced5cce0c5e91cbe9eca17b483b1b029379dd26518a5e0970fe671e5afd716"
+    },
+    {
+      "path": "src/bin/rustytransferCLI.rs",
+      "sha256": "3ff1235e93f4ecc63aa6b2843fa237c130aa07980eec3ba7a417ddc745be3a43"
+    },
+    {
+      "path": "src/cli/args.rs",
+      "sha256": "91f7c0f6c34262291fd811dd78763267d58498dceb19fc1a5ac4fa5e61a6118e"
+    },
+    {
+      "path": "src/cli/commands.rs",
+      "sha256": "a5d2b08c88b8d5ca9fcf205da1cd9a0004159409df10f01548cfba8284e21c05"
+    },
+    {
+      "path": "src/cli/contacts.rs",
+      "sha256": "6abce25197852d27139f41e48b25b32319960ae66acde0b19d913f4380af8a78"
+    },
+    {
+      "path": "src/cli/metrics.rs",
+      "sha256": "17e48b2b27f11591b18d22cd38295fc414a9014c1d63f982f7da10e0a76d3fc2"
+    },
+    {
+      "path": "src/cli/mod.rs",
+      "sha256": "f88341be417ed74125285137c1bda750cf174ac1e39cecba748613b7fae1c1c5"
+    },
+    {
+      "path": "src/cli/ui/graphics.rs",
+      "sha256": "e8e46cba75176a397203513bc7794718a3d2cb5008933af0a5fd7c2e692fc076"
+    },
+    {
+      "path": "src/cli/ui/mod.rs",
+      "sha256": "ef747faf0b790110a80112e260024f690b5183fcc73263141b1afe90bbc1b4ae"
+    },
+    {
+      "path": "src/lib.rs",
+      "sha256": "f6ec3c8e17d5039ae066b059293ec803dfd5006998e883fca003fb4f2a60d677"
+    }
+  ],
+  "x86_binary": "/home/wasilij/rustytransfer-bench/build-shared-key-streams-20261003/rustytransfer-x86",
+  "x86_binary_sha256": "84156e02f8a523b1af51c26f00c8da24b2d0ea21869d0aedcc81d849b6f2bd5e",
+  "arm_binary": "/home/ubuntu/rustytransfer-bench/build-shared-key-streams-20261003/rustytransfer-arm",
+  "arm_binary_sha256": "c724b8a63c5dd8dc6cb629cfee82f30e92bb2acbe2a0a6c1e4617773c197c23f",
+  "rustc_x86": "rustc 1.97.0 (2d8144b78 2026-07-07)\nbinary: rustc\ncommit-hash: 2d8144b7880597b6e6d3dfd63a9a9efae3f533d3\ncommit-date: 2026-07-07\nhost: x86_64-unknown-linux-gnu\nrelease: 1.97.0\nLLVM version: 22.1.6\n",
+  "rustc_arm": "rustc 1.97.0 (2d8144b78 2026-07-07)\nbinary: rustc\ncommit-hash: 2d8144b7880597b6e6d3dfd63a9a9efae3f533d3\ncommit-date: 2026-07-07\nhost: aarch64-unknown-linux-gnu\nrelease: 1.97.0\nLLVM version: 22.1.6"
+}

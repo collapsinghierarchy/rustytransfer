@@ -1,0 +1,54 @@
+[
+  {
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "returncode": 0,
+    "stdout": "/home/wasilij/rustytransfer-bench/checks-window-20261003/00.log",
+    "stderr": "/home/wasilij/rustytransfer-bench/checks-window-20261003/00.stderr.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked"
+    ],
+    "returncode": 0,
+    "stdout": "/home/wasilij/rustytransfer-bench/checks-window-20261003/01.log",
+    "stderr": "/home/wasilij/rustytransfer-bench/checks-window-20261003/01.stderr.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "check",
+      "-p",
+      "rustytransfer-wasm",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--locked"
+    ],
+    "returncode": 0,
+    "stdout": "/home/wasilij/rustytransfer-bench/checks-window-20261003/02.log",
+    "stderr": "/home/wasilij/rustytransfer-bench/checks-window-20261003/02.stderr.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "benchmarks",
+      "-p",
+      "test_*.py"
+    ],
+    "returncode": 1,
+    "stdout": "/home/wasilij/rustytransfer-bench/checks-window-20261003/03.log",
+    "stderr": "/home/wasilij/rustytransfer-bench/checks-window-20261003/03.stderr.log"
+  }
+]

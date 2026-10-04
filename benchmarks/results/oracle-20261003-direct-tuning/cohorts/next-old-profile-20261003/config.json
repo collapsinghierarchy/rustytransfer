@@ -1,0 +1,37 @@
+{
+  "output_root": "/home/wasilij/rustytransfer-bench/results/next-old-profile-20261003",
+  "variants": {
+    "baseline-profile": {
+      "source_commit": "d654b0b033a6f37254c20b0171e50673cb01e632",
+      "additional_source": ".cargo/config.toml",
+      "source_archive_sha256": "5ba71c3f9e1a547cd93b778de481ed676b8e081064bec5140318206f729d33eb",
+      "config_sha256": "55de0537df5a56418c6ebd23b53510b1edd61065072c2ac88b3e98fac6ae6689",
+      "x86_binary": "/home/wasilij/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "x86_binary_sha256": "82706fdf82347088504aaf07888ba6fd788a81de394cdafc121d48df0858f25d",
+      "arm_binary": "/home/ubuntu/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "arm_binary_sha256": "e76bd6cca10ca91bc7d46c35429abf08d7664b4538a1f3cb733a7690e28f1078",
+      "profile": true,
+      "build_id": "arm-current-baseline-profile"
+    }
+  },
+  "groups": [
+    {
+      "name": "refresh-oracle-to-wsl",
+      "direction": "oracle-to-wsl",
+      "size_mib": 512,
+      "variants": [
+        "baseline-profile"
+      ],
+      "runs": 1
+    },
+    {
+      "name": "refresh-wsl-to-oracle",
+      "direction": "wsl-to-oracle",
+      "size_mib": 512,
+      "variants": [
+        "baseline-profile"
+      ],
+      "runs": 1
+    }
+  ]
+}

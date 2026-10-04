@@ -1,0 +1,187 @@
+{
+  "started_at_utc": "2026-10-03T18:38:16.306827+00:00",
+  "runner_sha256": "5bd05420d6f40efc7e589499b669e5cc0c9e0c53a4de384a2e6f3367143c6a27",
+  "helper_sha256": "59aef640f475fd22a0e1ff62accd92a6d0327d84f15774884ccaabfa7625ce13",
+  "schedule": [
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-1024k",
+      "run_index": 0,
+      "warmup": true,
+      "status": "valid",
+      "rate": 3.9395879342916467,
+      "sender_cpu": 1.24,
+      "receiver_cpu": 3.34
+    },
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-256k",
+      "run_index": 0,
+      "warmup": true,
+      "status": "valid",
+      "rate": 4.078294960079887,
+      "sender_cpu": 1.21,
+      "receiver_cpu": 3.27
+    },
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-256k",
+      "run_index": 1,
+      "warmup": false,
+      "status": "valid",
+      "rate": 3.3236941211354867,
+      "sender_cpu": 1.24,
+      "receiver_cpu": 3.21
+    },
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-1024k",
+      "run_index": 1,
+      "warmup": false,
+      "status": "valid",
+      "rate": 4.575081645039474,
+      "sender_cpu": 1.1600000000000001,
+      "receiver_cpu": 3.1799999999999997
+    },
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-1024k",
+      "run_index": 2,
+      "warmup": false,
+      "status": "valid",
+      "rate": 3.1131976245866277,
+      "sender_cpu": 1.46,
+      "receiver_cpu": 3.33
+    },
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-256k",
+      "run_index": 2,
+      "warmup": false,
+      "status": "valid",
+      "rate": 3.3854476892474263,
+      "sender_cpu": 1.3,
+      "receiver_cpu": 3.3899999999999997
+    },
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-256k",
+      "run_index": 3,
+      "warmup": false,
+      "status": "valid",
+      "rate": 4.282399972631023,
+      "sender_cpu": 1.23,
+      "receiver_cpu": 3.3200000000000003
+    },
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-1024k",
+      "run_index": 3,
+      "warmup": false,
+      "status": "valid",
+      "rate": 4.692195087729776,
+      "sender_cpu": 1.13,
+      "receiver_cpu": 3.04
+    },
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-1024k",
+      "run_index": 4,
+      "warmup": false,
+      "status": "valid",
+      "rate": 4.0785202580401725,
+      "sender_cpu": 1.17,
+      "receiver_cpu": 3.3600000000000003
+    },
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-256k",
+      "run_index": 4,
+      "warmup": false,
+      "status": "valid",
+      "rate": 3.902883994574271,
+      "sender_cpu": 1.33,
+      "receiver_cpu": 3.4299999999999997
+    },
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-256k",
+      "run_index": 5,
+      "warmup": false,
+      "status": "valid",
+      "rate": 4.676031739450371,
+      "sender_cpu": 1.27,
+      "receiver_cpu": 3.1
+    },
+    {
+      "group": "s2-wsl-to-oracle-64-confirm",
+      "direction": "wsl-to-oracle",
+      "size_mib": 64,
+      "variant": "chunk-1024k",
+      "run_index": 5,
+      "warmup": false,
+      "status": "valid",
+      "rate": 4.371606826831229,
+      "sender_cpu": 1.17,
+      "receiver_cpu": 3.26
+    }
+  ],
+  "fixtures": {
+    "64": {
+      "path": "/home/wasilij/rustytransfer-bench/input-64.bin",
+      "size_bytes": 67108864,
+      "sha256": "b657d87cf92612db23f505549e6c37206c46160c77ed3f40dcc153b6625883bf"
+    }
+  },
+  "variants": {
+    "chunk-256k": {
+      "source_commit": "d654b0b033a6f37254c20b0171e50673cb01e632",
+      "additional_source": ".cargo/config.toml",
+      "source_archive_sha256": "5ba71c3f9e1a547cd93b778de481ed676b8e081064bec5140318206f729d33eb",
+      "config_sha256": "55de0537df5a56418c6ebd23b53510b1edd61065072c2ac88b3e98fac6ae6689",
+      "x86_binary": "/home/wasilij/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "x86_binary_sha256": "82706fdf82347088504aaf07888ba6fd788a81de394cdafc121d48df0858f25d",
+      "arm_binary": "/home/ubuntu/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "arm_binary_sha256": "e76bd6cca10ca91bc7d46c35429abf08d7664b4538a1f3cb733a7690e28f1078",
+      "chunk_size": 262144,
+      "build_id": "arm-current-baseline-chunk-sweep"
+    },
+    "chunk-1024k": {
+      "source_commit": "d654b0b033a6f37254c20b0171e50673cb01e632",
+      "additional_source": ".cargo/config.toml",
+      "source_archive_sha256": "5ba71c3f9e1a547cd93b778de481ed676b8e081064bec5140318206f729d33eb",
+      "config_sha256": "55de0537df5a56418c6ebd23b53510b1edd61065072c2ac88b3e98fac6ae6689",
+      "x86_binary": "/home/wasilij/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "x86_binary_sha256": "82706fdf82347088504aaf07888ba6fd788a81de394cdafc121d48df0858f25d",
+      "arm_binary": "/home/ubuntu/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "arm_binary_sha256": "e76bd6cca10ca91bc7d46c35429abf08d7664b4538a1f3cb733a7690e28f1078",
+      "chunk_size": 1048576,
+      "build_id": "arm-current-baseline-chunk-sweep"
+    }
+  },
+  "status": "completed",
+  "limits": "Warm-cache native ext4 Oracle/WSL WAN measurements. All full hashes outside timers. No simultaneous builds or other jobs.",
+  "finished_at_utc": "2026-10-03T18:42:43.302985+00:00"
+}

@@ -1,0 +1,305 @@
+test_binary_hashes_follow_sender_and_receiver_roles_in_both_directions (test_run_oracle_transfer.OracleRunnerArgumentTests.test_binary_hashes_follow_sender_and_receiver_roles_in_both_directions) ... ok
+test_chunk_size_is_validated_and_added_to_sender_only (test_run_oracle_transfer.OracleRunnerArgumentTests.test_chunk_size_is_validated_and_added_to_sender_only) ... usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: --chunk-size must be between 1 and 1048576 bytes
+ok
+test_comparison_requires_both_croc_paths (test_run_oracle_transfer.OracleRunnerArgumentTests.test_comparison_requires_both_croc_paths) ... usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: --croc is required unless --rusty-only is set
+ok
+test_croc_phase_markers_remain_required_for_forward_measurements (test_run_oracle_transfer.OracleRunnerArgumentTests.test_croc_phase_markers_remain_required_for_forward_measurements) ... ok
+test_exact_oracle_data_ports_and_ssh_peer_are_verified (test_run_oracle_transfer.OracleRunnerArgumentTests.test_exact_oracle_data_ports_and_ssh_peer_are_verified) ... ok
+test_experimental_endpoint_metrics_must_match_requested_crypto_mode (test_run_oracle_transfer.OracleRunnerArgumentTests.test_experimental_endpoint_metrics_must_match_requested_crypto_mode) ... ok
+test_experimental_stream_flag_is_sender_only_and_requires_invite_rust_only (test_run_oracle_transfer.OracleRunnerArgumentTests.test_experimental_stream_flag_is_sender_only_and_requires_invite_rust_only) ... usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: --experimental-streams requires --rusty-only --rusty-auth invite and the shared-key benchmark example binary
+usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: argument --experimental-streams: invalid choice: '0' (choose from 1, 4)
+usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: argument --experimental-streams: invalid choice: '2' (choose from 1, 4)
+usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: argument --experimental-streams: invalid choice: '5' (choose from 1, 4)
+ok
+test_local_destination_verification_checks_size_and_full_hash (test_run_oracle_transfer.OracleRunnerArgumentTests.test_local_destination_verification_checks_size_and_full_hash) ... ok
+test_payload_profile_missing_endpoint_is_retained_then_rejected (test_run_oracle_transfer.OracleRunnerArgumentTests.test_payload_profile_missing_endpoint_is_retained_then_rejected) ... ok
+test_pre_staged_inputs_require_a_pair_and_reverse_direction (test_run_oracle_transfer.OracleRunnerArgumentTests.test_pre_staged_inputs_require_a_pair_and_reverse_direction) ... usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: pre-staged remote inputs are only valid for --direction oracle-to-wsl
+usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: --remote-input-64 and --remote-input-512 must be provided together
+ok
+test_pre_staged_source_is_verified_without_scp_or_cleanup (test_run_oracle_transfer.OracleRunnerArgumentTests.test_pre_staged_source_is_verified_without_scp_or_cleanup) ... ok
+test_pre_staged_source_must_match_expected_size_and_hash (test_run_oracle_transfer.OracleRunnerArgumentTests.test_pre_staged_source_must_match_expected_size_and_hash) ... ok
+test_profile_flag_is_opt_in_and_clears_inherited_environment (test_run_oracle_transfer.OracleRunnerArgumentTests.test_profile_flag_is_opt_in_and_clears_inherited_environment) ... ok
+test_remote_cleanup_checks_trial_cwd_and_process_group (test_run_oracle_transfer.OracleRunnerArgumentTests.test_remote_cleanup_checks_trial_cwd_and_process_group) ... ok
+test_remote_log_scrubber_removes_invites_even_without_a_parsed_value (test_run_oracle_transfer.OracleRunnerArgumentTests.test_remote_log_scrubber_removes_invites_even_without_a_parsed_value) ... ok
+test_remote_sender_command_uses_invite_mode_and_scoped_session (test_run_oracle_transfer.OracleRunnerArgumentTests.test_remote_sender_command_uses_invite_mode_and_scoped_session) ... ok
+test_remote_sender_forces_only_local_auto_and_clears_relay_environment (test_run_oracle_transfer.OracleRunnerArgumentTests.test_remote_sender_forces_only_local_auto_and_clears_relay_environment) ... ok
+test_reverse_croc_comparison_is_available_for_direct_path (test_run_oracle_transfer.OracleRunnerArgumentTests.test_reverse_croc_comparison_is_available_for_direct_path) ... ok
+test_reverse_croc_comparison_rejects_rusty_relay_path (test_run_oracle_transfer.OracleRunnerArgumentTests.test_reverse_croc_comparison_rejects_rusty_relay_path) ... usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: Oracle-to-WSL Croc comparisons require --rusty-path direct
+ok
+test_reverse_croc_direct_comparison_rejects_ipv6_host (test_run_oracle_transfer.OracleRunnerArgumentTests.test_reverse_croc_direct_comparison_rejects_ipv6_host) ... usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: Oracle-to-WSL Croc direct comparison currently supports IPv4 only
+ok
+test_reverse_croc_provenance_swaps_sender_and_receiver_hashes (test_run_oracle_transfer.OracleRunnerArgumentTests.test_reverse_croc_provenance_swaps_sender_and_receiver_hashes) ... ok
+test_reverse_croc_requires_the_source_audited_version (test_run_oracle_transfer.OracleRunnerArgumentTests.test_reverse_croc_requires_the_source_audited_version) ... usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: Oracle-to-WSL direct Croc comparison requires the source-audited --croc-version 11.5.4
+ok
+test_reverse_croc_rows_map_remote_sender_resources_and_route_evidence (test_run_oracle_transfer.OracleRunnerArgumentTests.test_reverse_croc_rows_map_remote_sender_resources_and_route_evidence) ... ok
+test_reverse_direction_dispatches_to_remote_sender_runner (test_run_oracle_transfer.OracleRunnerArgumentTests.test_reverse_direction_dispatches_to_remote_sender_runner) ... ok
+test_reverse_direction_is_available_only_for_rusty_only (test_run_oracle_transfer.OracleRunnerArgumentTests.test_reverse_direction_is_available_only_for_rusty_only) ... ok
+test_route_evidence_rejects_missing_or_alternate_channel (test_run_oracle_transfer.OracleRunnerArgumentTests.test_route_evidence_rejects_missing_or_alternate_channel) ... ok
+test_route_evidence_rejects_peer_outside_ssh_connection (test_run_oracle_transfer.OracleRunnerArgumentTests.test_route_evidence_rejects_peer_outside_ssh_connection) ... ok
+test_rust_rows_are_saved_before_path_or_evidence_failure (test_run_oracle_transfer.OracleRunnerArgumentTests.test_rust_rows_are_saved_before_path_or_evidence_failure) ... ok
+test_rusty_only_does_not_require_croc_paths_or_files (test_run_oracle_transfer.OracleRunnerArgumentTests.test_rusty_only_does_not_require_croc_paths_or_files) ... ok
+test_source_staging_provenance_uses_the_actual_fixture_size (test_run_oracle_transfer.OracleRunnerArgumentTests.test_source_staging_provenance_uses_the_actual_fixture_size) ... ok
+test_stream_window_flag_is_bounded_and_configures_both_process_environments (test_run_oracle_transfer.OracleRunnerArgumentTests.test_stream_window_flag_is_bounded_and_configures_both_process_environments) ... usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: --stream-window-bytes must be between 1250000 and 5000000 bytes
+usage: python3 -m unittest [-h] --host HOST [--user USER] [--ssh SSH]
+                           [--scp SCP] --ssh-key SSH_KEY [--croc CROC]
+                           [--remote-croc REMOTE_CROC]
+                           [--croc-version CROC_VERSION]
+                           --rusty-sender RUSTY_SENDER
+                           --remote-rusty REMOTE_RUSTY --input-64 INPUT_64
+                           --input-512 INPUT_512 --output-dir OUTPUT_DIR
+                           --remote-root REMOTE_ROOT
+                           [--remote-input-64 REMOTE_INPUT_64]
+                           [--remote-input-512 REMOTE_INPUT_512]
+                           --build-id BUILD_ID --storage-class STORAGE_CLASS
+                           [--runs RUNS] [--chunk-size CHUNK_SIZE]
+                           [--stream-window-bytes STREAM_WINDOW_BYTES]
+                           [--direction {wsl-to-oracle,oracle-to-wsl}]
+                           [--rusty-path {direct,relay}]
+                           [--rusty-auth {pake,invite}] [--payload-profile]
+                           [--experimental-streams {1,4}] [--rusty-only]
+                           [--timeout TIMEOUT]
+python3 -m unittest: error: --stream-window-bytes must be between 1250000 and 5000000 bytes
+ok
+test_child_survives_launcher_exit_without_holding_ssh_pipe (test_run_oracle_transfer.RemoteProcessLifecycleTests.test_child_survives_launcher_exit_without_holding_ssh_pipe) ... ok
+test_resource_values_are_assigned_by_endpoint_role (test_run_oracle_transfer.ResourceMappingTests.test_resource_values_are_assigned_by_endpoint_role) ... ok
+test_direct_invite_parser_captures_full_authorization (test_run_oracle_transfer.RustRowsTests.test_direct_invite_parser_captures_full_authorization) ... ok
+test_direct_only_sweep_stops_after_retaining_unverified_endpoint_rows (test_run_oracle_transfer.RustRowsTests.test_direct_only_sweep_stops_after_retaining_unverified_endpoint_rows) ... ok
+test_full_invite_is_redacted_from_log (test_run_oracle_transfer.RustRowsTests.test_full_invite_is_redacted_from_log) ... ok
+test_invite_is_scrubbed_when_parser_did_not_capture_it (test_run_oracle_transfer.RustRowsTests.test_invite_is_scrubbed_when_parser_did_not_capture_it) ... ok
+test_reverse_rows_label_direction_and_use_sender_receiver_resources (test_run_oracle_transfer.RustRowsTests.test_reverse_rows_label_direction_and_use_sender_receiver_resources) ... ok
+test_rows_keep_endpoint_metrics_and_add_pairing_provenance (test_run_oracle_transfer.RustRowsTests.test_rows_keep_endpoint_metrics_and_add_pairing_provenance) ... ok
+test_rows_reject_endpoint_metric_disagreement (test_run_oracle_transfer.RustRowsTests.test_rows_reject_endpoint_metric_disagreement) ... ok
+test_groups_keep_build_direction_pairing_host_and_storage_separate (test_summarize.SummarizeTests.test_groups_keep_build_direction_pairing_host_and_storage_separate) ... ok
+test_historical_v1_rows_remain_as_unknown_provenance (test_summarize.SummarizeTests.test_historical_v1_rows_remain_as_unknown_provenance) ... ok
+test_invalid_payload_profile_is_rejected_from_success_summary (test_summarize.SummarizeTests.test_invalid_payload_profile_is_rejected_from_success_summary) ... ok
+test_invalid_wall_and_missing_binary_hashes_are_rejected (test_summarize.SummarizeTests.test_invalid_wall_and_missing_binary_hashes_are_rejected) ... ok
+test_iroh_direct_rows_without_both_endpoint_evidence_are_rejected (test_summarize.SummarizeTests.test_iroh_direct_rows_without_both_endpoint_evidence_are_rejected) ... ok
+test_legacy_rows_group_within_but_not_across_input_files (test_summarize.SummarizeTests.test_legacy_rows_group_within_but_not_across_input_files) ... ok
+test_missing_null_or_mismatched_payload_hashes_are_rejected (test_summarize.SummarizeTests.test_missing_null_or_mismatched_payload_hashes_are_rejected) ... ok
+test_profile_mode_separates_diagnostic_rows_and_legacy_defaults_to_standard (test_summarize.SummarizeTests.test_profile_mode_separates_diagnostic_rows_and_legacy_defaults_to_standard) ... ok
+test_profile_summary_accepts_overlapping_sender_substages_and_connection_counters (test_summarize.SummarizeTests.test_profile_summary_accepts_overlapping_sender_substages_and_connection_counters) ... ok
+test_sender_substages_remain_optional_for_old_profiles_but_validate_when_present (test_summarize.SummarizeTests.test_sender_substages_remain_optional_for_old_profiles_but_validate_when_present) ... ok
+test_shared_key_stream_experiments_group_apart_from_production_and_each_other (test_summarize.SummarizeTests.test_shared_key_stream_experiments_group_apart_from_production_and_each_other) ... ok
+test_source_staging_separates_pre_staged_rows_and_legacy_defaults (test_summarize.SummarizeTests.test_source_staging_separates_pre_staged_rows_and_legacy_defaults) ... ok
+test_stream_window_separates_default_and_benchmark_window_rows (test_summarize.SummarizeTests.test_stream_window_separates_default_and_benchmark_window_rows) ... ok
+
+----------------------------------------------------------------------
+Ran 53 tests in 2.529s
+
+OK

@@ -1,0 +1,4 @@
+{
+  "diagnostics_v2": "Unscored intermediate build. Scored refreshed diagnostics use v3; the original stale-build recovery note points to this intermediate step.",
+  "initial_diagnostics_checks": "Incomplete initial gate run: eight successful commands are recorded, without a completed cargo-deny/SARIF gate record. Superseded by the complete passing diagnostics-v3 and final shared-key checks."
+}

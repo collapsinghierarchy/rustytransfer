@@ -574,3 +574,16 @@ or platform testing are named limitations, never reported as passed checks.
   restoration, and the 2 GiB job cleaned up normally. The report explains the
   CPU optimization, transport hypotheses, and future minimal-change experiments;
   no additional optimization or desktop/device implementation was started.
+- 2026-10-04: Completed the requested efficiency continuation: refreshed opt-in
+  stage/QUIC diagnostics, bounded receive-window screens, all three supported
+  chunk sizes, an owned-chunk candidate, and a versioned shared-key parallel
+  example. No additional production performance default passed acceptance.
+  Four streams on one connection had similar rates and higher CPU/RSS; one
+  KEM exchange supplies one payload key shared across all streams. The example
+  has no resume implementation and does not change production framing or resume.
+  Positive 1 MiB upload medians remain recorded with WAN variance and RSS
+  limitations; the CLI default stays 256 KiB. See the
+  [continuation evidence](../benchmarks/results/oracle-20261003-direct-tuning/README.md)
+  and [efficiency report](direct-transfer-efficiency-report.md) for the fresh
+  Croc comparison, checks, exclusions and cleanup. Desktop/device work remains
+  stopped and pending extension/release artifacts remain intact.

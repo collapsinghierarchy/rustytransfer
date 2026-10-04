@@ -1,0 +1,2089 @@
+{
+  "audit_scope": "complete-cohort",
+  "unaudited_groups": [],
+  "canonical_endpoint_rows": 48,
+  "accepted_transfers": 24,
+  "all_routes_verified_both": true,
+  "full_hashes_verified": true,
+  "all_valid_slow_samples_retained": true,
+  "config_sha256": "19266e8b8e1e8b5d18ebce5957900e151b504f2347718499e26f97d81934169b",
+  "manifest_sha256": "8757b80b4aeea1143238740c6e66a6aec978917555c81f9db32f4997c551ba42",
+  "groups": [
+    {
+      "name": "s1-profile-overhead-64",
+      "direction": "oracle-to-wsl",
+      "size_mib": 64,
+      "series": 1,
+      "variants": {
+        "standard": {
+          "effective_mib_per_second": {
+            "median": 11.561543264681516,
+            "min": 10.723327589401851,
+            "max": 11.67936348733284,
+            "mad": 0.11782022265132319,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 5.53559317600002,
+            "min": 5.479750679000006,
+            "max": 5.968296638000027,
+            "mad": 0.055842497000014646,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 0.87,
+            "min": 0.8300000000000001,
+            "max": 0.8999999999999999,
+            "mad": 0.020000000000000018,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 1.03,
+            "min": 1.02,
+            "max": 1.05,
+            "mad": 0.010000000000000009,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 31356,
+            "min": 29384,
+            "max": 32124,
+            "mad": 768,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 24792,
+            "min": 24312,
+            "max": 24940,
+            "mad": 88,
+            "count": 5
+          },
+          "handshake_seconds": {
+            "median": 0.952925557,
+            "min": 0.895946979,
+            "max": 1.021464409,
+            "mad": 0.03746116799999999,
+            "count": 5
+          },
+          "payload_seconds": {
+            "median": 2.127002418,
+            "min": 2.104377388,
+            "max": 2.387138062,
+            "mad": 0.016132507000000018,
+            "count": 5
+          },
+          "shutdown_seconds": {
+            "median": 0.664314204,
+            "min": 0.625489946,
+            "max": 0.717950759,
+            "mad": 0.038824258,
+            "count": 5
+          },
+          "sender_cpu_seconds_per_gib": {
+            "median": 13.92,
+            "min": 13.280000000000001,
+            "max": 14.399999999999999,
+            "mad": 0.3200000000000003,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 16.48,
+            "min": 16.32,
+            "max": 16.8,
+            "mad": 0.16000000000000014,
+            "count": 5
+          },
+          "endpoint_profiles": [],
+          "redacted_logs": [
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-1/receiver.log",
+              "sha256": "53989aa992e107f259097a7580eb55778c241cdad5fb2d5a641dcf70e23aa897"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-1/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-2/receiver.log",
+              "sha256": "944e6ef51840747a8e646f2cebaf2632d88587a0eae442b489ea82c7aceeb8ed"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-2/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-3/receiver.log",
+              "sha256": "3566fbac2cda963cbf9d9da76631a2bb366bee8a1b527a6caf9b808cddbfb7bc"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-3/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-4/receiver.log",
+              "sha256": "df2bdd6e616e02bdfaa8956c9aef80efbc6949391060eba64b847f5864427a92"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-4/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-5/receiver.log",
+              "sha256": "757607a46f702bd93f7e1281174a24b46c3589996c54eb75453e4892a1449d12"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-5/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-warmup/receiver.log",
+              "sha256": "55f06ad91594e5462fe52543c092bf7c959ed4aeed66b55de2652ce96a8b2875"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-warmup/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            }
+          ]
+        },
+        "profile": {
+          "effective_mib_per_second": {
+            "median": 10.892714299862273,
+            "min": 10.7500137123983,
+            "max": 11.869988944370185,
+            "mad": 0.14270058746397396,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 5.875486883999997,
+            "min": 5.391748914000004,
+            "max": 5.953480778000028,
+            "mad": 0.07799389400003065,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 0.8799999999999999,
+            "min": 0.8400000000000001,
+            "max": 0.89,
+            "mad": 0.01000000000000012,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 1.02,
+            "min": 1.02,
+            "max": 1.04,
+            "mad": 0.0,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 29928,
+            "min": 27812,
+            "max": 31872,
+            "mad": 396,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 24524,
+            "min": 24256,
+            "max": 24804,
+            "mad": 232,
+            "count": 5
+          },
+          "handshake_seconds": {
+            "median": 1.013511517,
+            "min": 0.8846380229999999,
+            "max": 1.2189289600000002,
+            "mad": 0.06620951799999997,
+            "count": 5
+          },
+          "payload_seconds": {
+            "median": 2.123594316,
+            "min": 2.101274608,
+            "max": 2.255764752,
+            "mad": 0.022319707999999938,
+            "count": 5
+          },
+          "shutdown_seconds": {
+            "median": 0.693028873,
+            "min": 0.61102833,
+            "max": 1.08616792,
+            "mad": 0.02640077400000007,
+            "count": 5
+          },
+          "sender_cpu_seconds_per_gib": {
+            "median": 14.079999999999998,
+            "min": 13.440000000000001,
+            "max": 14.24,
+            "mad": 0.16000000000000192,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 16.32,
+            "min": 16.32,
+            "max": 16.64,
+            "mad": 0.0,
+            "count": 5
+          },
+          "endpoint_profiles": [
+            {
+              "run_index": 0,
+              "warmup": true,
+              "role": "sender",
+              "payload_seconds": 2.243187468,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.13582270899999996,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 2.065166636,
+                "sender_allocation_copy_seconds": 0.0030794179999999987,
+                "sender_encrypt_seconds": 0.13270161099999997,
+                "source_read_seconds": 0.041764882000000024
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 4739382,
+                "congestion_window_max_bytes": 4739382,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 37465,
+                "rtt_max_us": 37465,
+                "rtt_min_us": 18111,
+                "rtt_start_us": 18111,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 70,
+                "send_stalls_over_1ms": 246,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 81221,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 291556,
+                "udp_rx_datagrams_delta": 8043,
+                "udp_tx_bytes_delta": 68603407,
+                "udp_tx_datagrams_delta": 47602,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 0,
+              "warmup": true,
+              "role": "receiver",
+              "payload_seconds": 2.244175948,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.04124041399999999,
+                "destination_write_seconds": 0.010863094,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.191394384999998,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 3,
+                "lost_packets_end": 3,
+                "lost_packets_start": 0,
+                "rtt_end_us": 30630,
+                "rtt_max_us": 42197,
+                "rtt_min_us": 18811,
+                "rtt_start_us": 18811,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68682740,
+                "udp_rx_datagrams_delta": 47653,
+                "udp_tx_bytes_delta": 296055,
+                "udp_tx_datagrams_delta": 8166,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 1,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 2.160670881,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.13667097499999992,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 1.9747133439999998,
+                "sender_allocation_copy_seconds": 0.0033837399999999984,
+                "sender_encrypt_seconds": 0.133246274,
+                "source_read_seconds": 0.048712556000000004
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 5813555,
+                "congestion_window_max_bytes": 5813555,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 35878,
+                "rtt_max_us": 36246,
+                "rtt_min_us": 23451,
+                "rtt_start_us": 23451,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 42,
+                "send_stalls_over_1ms": 246,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 89365,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 298639,
+                "udp_rx_datagrams_delta": 8237,
+                "udp_tx_bytes_delta": 68571103,
+                "udp_tx_datagrams_delta": 47567,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 1,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 2.174298091,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.040570646,
+                "destination_write_seconds": 0.010538933999999998,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.122466072000001,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 31731,
+                "rtt_max_us": 31880,
+                "rtt_min_us": 24920,
+                "rtt_start_us": 24920,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68689750,
+                "udp_rx_datagrams_delta": 47646,
+                "udp_tx_bytes_delta": 304548,
+                "udp_tx_datagrams_delta": 8398,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 2,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 2.255764752,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.13230579000000003,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 2.0701411149999998,
+                "sender_allocation_copy_seconds": 0.0029091449999999993,
+                "sender_encrypt_seconds": 0.129353085,
+                "source_read_seconds": 0.052961564000000017
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 5843067,
+                "congestion_window_max_bytes": 5843067,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 34585,
+                "rtt_max_us": 42062,
+                "rtt_min_us": 23179,
+                "rtt_start_us": 23179,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 62,
+                "send_stalls_over_1ms": 246,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 87614,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 289464,
+                "udp_rx_datagrams_delta": 7991,
+                "udp_tx_bytes_delta": 68579296,
+                "udp_tx_datagrams_delta": 47569,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 2,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 2.280398769,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.04423705299999997,
+                "destination_write_seconds": 0.010663021999999996,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.224859432999999,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 1,
+                "lost_packets_end": 1,
+                "lost_packets_start": 0,
+                "rtt_end_us": 27679,
+                "rtt_max_us": 40735,
+                "rtt_min_us": 23650,
+                "rtt_start_us": 23650,
+                "sample_interval_ms": 250,
+                "samples": 11,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68689499,
+                "udp_rx_datagrams_delta": 47644,
+                "udp_tx_bytes_delta": 295159,
+                "udp_tx_datagrams_delta": 8146,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 3,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 2.123594316,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.14749014099999996,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 1.9274570869999992,
+                "sender_allocation_copy_seconds": 0.003154661999999999,
+                "sender_encrypt_seconds": 0.14429387900000012,
+                "source_read_seconds": 0.047887004000000004
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 6921833,
+                "congestion_window_max_bytes": 6921833,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 36148,
+                "rtt_max_us": 36148,
+                "rtt_min_us": 17061,
+                "rtt_start_us": 17061,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 48,
+                "send_stalls_over_1ms": 252,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 80359,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 289529,
+                "udp_rx_datagrams_delta": 7983,
+                "udp_tx_bytes_delta": 68605929,
+                "udp_tx_datagrams_delta": 47561,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 3,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 2.148152495,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.04403670299999995,
+                "destination_write_seconds": 0.009990342,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.0935933800000006,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 29567,
+                "rtt_max_us": 32629,
+                "rtt_min_us": 17067,
+                "rtt_start_us": 17067,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68681695,
+                "udp_rx_datagrams_delta": 47612,
+                "udp_tx_bytes_delta": 294542,
+                "udp_tx_datagrams_delta": 8112,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 4,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 2.101274608,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.14615106099999997,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 1.9133218389999997,
+                "sender_allocation_copy_seconds": 0.0030516579999999996,
+                "sender_encrypt_seconds": 0.1430200420000001,
+                "source_read_seconds": 0.041365947
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 7493355,
+                "congestion_window_max_bytes": 7493355,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 32378,
+                "rtt_max_us": 36839,
+                "rtt_min_us": 13713,
+                "rtt_start_us": 13713,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 49,
+                "send_stalls_over_1ms": 252,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 64098,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 302331,
+                "udp_rx_datagrams_delta": 8304,
+                "udp_tx_bytes_delta": 68614486,
+                "udp_tx_datagrams_delta": 47580,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 4,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 2.126860844,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.041874426999999985,
+                "destination_write_seconds": 0.010943947999999993,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.0731959820000005,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 29678,
+                "rtt_max_us": 33059,
+                "rtt_min_us": 14776,
+                "rtt_start_us": 14776,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68690297,
+                "udp_rx_datagrams_delta": 47631,
+                "udp_tx_bytes_delta": 307896,
+                "udp_tx_datagrams_delta": 8455,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 5,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 2.104100546,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.14209586500000015,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 1.9190624739999989,
+                "sender_allocation_copy_seconds": 0.0032114639999999994,
+                "sender_encrypt_seconds": 0.13884036000000008,
+                "source_read_seconds": 0.042588883999999994
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 6103565,
+                "congestion_window_max_bytes": 6103565,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 32375,
+                "rtt_max_us": 36430,
+                "rtt_min_us": 19353,
+                "rtt_start_us": 19353,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 53,
+                "send_stalls_over_1ms": 250,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 65406,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 289753,
+                "udp_rx_datagrams_delta": 7887,
+                "udp_tx_bytes_delta": 68539149,
+                "udp_tx_datagrams_delta": 47512,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 5,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 2.128153748,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.04751062800000005,
+                "destination_write_seconds": 0.011841945999999997,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.068021416000001,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 2,
+                "lost_packets_end": 2,
+                "lost_packets_start": 0,
+                "rtt_end_us": 28837,
+                "rtt_max_us": 32659,
+                "rtt_min_us": 19258,
+                "rtt_start_us": 19258,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68692415,
+                "udp_rx_datagrams_delta": 47615,
+                "udp_tx_bytes_delta": 293461,
+                "udp_tx_datagrams_delta": 8027,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            }
+          ],
+          "redacted_logs": [
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-1/receiver.log",
+              "sha256": "f8efed7010542ff8460f99e5675fcd9e56699716322e66197c37db2f4515966e"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-1/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-2/receiver.log",
+              "sha256": "98f08d64bcce9b0e2401606eae0b1d36e24e87b9f79373b8811982d19b0e9d15"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-2/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-3/receiver.log",
+              "sha256": "a8bdccdb2fbcb2fb6126522f38a898609f988e671ab007479440ed7ce01f1720"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-3/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-4/receiver.log",
+              "sha256": "cd7b4406f77c1c56a8b70a5105cebc347ecf4acb97125030b27c8bcb7f1624d0"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-4/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-5/receiver.log",
+              "sha256": "6fd278c378bd1339d7a883ceea83e46bad9b3e12dcede7a93d18bdb5c0cbf940"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-5/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-warmup/receiver.log",
+              "sha256": "1ebd94d238f6b267cd6c0c81b017c7a584c17b3000b17e816671a82540fded57"
+            },
+            {
+              "path": "00-s1-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-warmup/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            }
+          ]
+        }
+      },
+      "actual_source_staging": "pre-staged"
+    },
+    {
+      "name": "s2-profile-overhead-64",
+      "direction": "oracle-to-wsl",
+      "size_mib": 64,
+      "series": 2,
+      "variants": {
+        "standard": {
+          "effective_mib_per_second": {
+            "median": 11.740187629187593,
+            "min": 11.464592545750381,
+            "max": 12.3063612516594,
+            "mad": 0.27559508343721184,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 5.451360916999988,
+            "min": 5.20056243199997,
+            "max": 5.582405108999978,
+            "mad": 0.1310441919999903,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 0.87,
+            "min": 0.87,
+            "max": 0.89,
+            "mad": 0.0,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 0.99,
+            "min": 0.97,
+            "max": 1.04,
+            "mad": 0.020000000000000018,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 28932,
+            "min": 27676,
+            "max": 29904,
+            "mad": 812,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 24764,
+            "min": 24172,
+            "max": 25144,
+            "mad": 184,
+            "count": 5
+          },
+          "handshake_seconds": {
+            "median": 0.966791849,
+            "min": 0.8700651660000001,
+            "max": 1.010185576,
+            "mad": 0.04339372699999999,
+            "count": 5
+          },
+          "payload_seconds": {
+            "median": 2.113829171,
+            "min": 2.101108446,
+            "max": 2.130046238,
+            "mad": 0.003079940999999753,
+            "count": 5
+          },
+          "shutdown_seconds": {
+            "median": 0.565425108,
+            "min": 0.44651492,
+            "max": 0.708789498,
+            "mad": 0.11891018800000003,
+            "count": 5
+          },
+          "sender_cpu_seconds_per_gib": {
+            "median": 13.92,
+            "min": 13.92,
+            "max": 14.24,
+            "mad": 0.0,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 15.84,
+            "min": 15.52,
+            "max": 16.64,
+            "mad": 0.3200000000000003,
+            "count": 5
+          },
+          "endpoint_profiles": [],
+          "redacted_logs": [
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-1/receiver.log",
+              "sha256": "932cc5d7d552aa2c2d678f592ef901dcce3a182dd448265f10f6ceea5e369a6b"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-1/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-2/receiver.log",
+              "sha256": "edfff8e0e5d576b10d600bfb05dcb356e4444aeba977ddb871352144bb638fcd"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-2/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-3/receiver.log",
+              "sha256": "7f3443ad88ba230163deec98b97fbebd51b9edce77b9277751afc9fd083803e5"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-3/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-4/receiver.log",
+              "sha256": "d6771577d16105b7dfd773a4458751973fe8e276ad0cf1f7a18cd093f9902473"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-4/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-5/receiver.log",
+              "sha256": "17d9bbb13e796fa5492feebdab3270f8138fabfe454d92a3121ec8356ec68ffc"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-5/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-warmup/receiver.log",
+              "sha256": "8f346da7223ec2d1d5b5718fe9e0129ba024f906722ed6d2881bf2f3be22fd51"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/standard/logs/rustytransfer-oracle-to-wsl-64mib-warmup/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            }
+          ]
+        },
+        "profile": {
+          "effective_mib_per_second": {
+            "median": 11.82019448164906,
+            "min": 11.434664939056557,
+            "max": 12.054369646125595,
+            "mad": 0.23417516447653597,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 5.414462520000029,
+            "min": 5.309278036000023,
+            "max": 5.597015770999974,
+            "mad": 0.1051844840000058,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 0.87,
+            "min": 0.85,
+            "max": 0.9299999999999999,
+            "mad": 0.020000000000000018,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 1.0,
+            "min": 0.97,
+            "max": 1.03,
+            "mad": 0.020000000000000018,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 29200,
+            "min": 27732,
+            "max": 31816,
+            "mad": 1468,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 24568,
+            "min": 23772,
+            "max": 24836,
+            "mad": 268,
+            "count": 5
+          },
+          "handshake_seconds": {
+            "median": 0.965401598,
+            "min": 0.8946897699999999,
+            "max": 1.102667509,
+            "mad": 0.0613211669999999,
+            "count": 5
+          },
+          "payload_seconds": {
+            "median": 2.097973305,
+            "min": 2.086208987,
+            "max": 2.193858381,
+            "mad": 0.011764317999999996,
+            "count": 5
+          },
+          "shutdown_seconds": {
+            "median": 0.53716472,
+            "min": 0.395391021,
+            "max": 0.710093267,
+            "mad": 0.14177369900000003,
+            "count": 5
+          },
+          "sender_cpu_seconds_per_gib": {
+            "median": 13.92,
+            "min": 13.6,
+            "max": 14.879999999999999,
+            "mad": 0.3200000000000003,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 16.0,
+            "min": 15.52,
+            "max": 16.48,
+            "mad": 0.3200000000000003,
+            "count": 5
+          },
+          "endpoint_profiles": [
+            {
+              "run_index": 0,
+              "warmup": true,
+              "role": "sender",
+              "payload_seconds": 2.128215986,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.14641341900000007,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 1.939578276999999,
+                "sender_allocation_copy_seconds": 0.0033498999999999985,
+                "sender_encrypt_seconds": 0.1430231579999999,
+                "source_read_seconds": 0.041856125999999994
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 8164842,
+                "congestion_window_max_bytes": 8164842,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 33017,
+                "rtt_max_us": 38238,
+                "rtt_min_us": 18135,
+                "rtt_start_us": 18135,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 47,
+                "send_stalls_over_1ms": 251,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 86443,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 306850,
+                "udp_rx_datagrams_delta": 8356,
+                "udp_tx_bytes_delta": 68692018,
+                "udp_tx_datagrams_delta": 47621,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 0,
+              "warmup": true,
+              "role": "receiver",
+              "payload_seconds": 2.154105995,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.04190896699999999,
+                "destination_write_seconds": 0.010086234000000003,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.101611859000001,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 29882,
+                "rtt_max_us": 32769,
+                "rtt_min_us": 18374,
+                "rtt_start_us": 18374,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68682190,
+                "udp_rx_datagrams_delta": 47611,
+                "udp_tx_bytes_delta": 311021,
+                "udp_tx_datagrams_delta": 8507,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 1,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 2.086208987,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.1423002949999999,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 1.9045900969999996,
+                "sender_allocation_copy_seconds": 0.0038539430000000007,
+                "sender_encrypt_seconds": 0.13840371199999993,
+                "source_read_seconds": 0.03887319100000001
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 8914654,
+                "congestion_window_max_bytes": 8914654,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 32518,
+                "rtt_max_us": 36975,
+                "rtt_min_us": 14976,
+                "rtt_start_us": 14976,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 50,
+                "send_stalls_over_1ms": 252,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 50961,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 318855,
+                "udp_rx_datagrams_delta": 8641,
+                "udp_tx_bytes_delta": 68625743,
+                "udp_tx_datagrams_delta": 47551,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 1,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 2.113396982,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.04075317899999997,
+                "destination_write_seconds": 0.009542130000000003,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.0626757779999996,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 29717,
+                "rtt_max_us": 33125,
+                "rtt_min_us": 15745,
+                "rtt_start_us": 15745,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68685136,
+                "udp_rx_datagrams_delta": 47588,
+                "udp_tx_bytes_delta": 323242,
+                "udp_tx_datagrams_delta": 8797,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 2,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 2.097973305,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.1717147880000001,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 1.868779425000001,
+                "sender_allocation_copy_seconds": 0.006500968,
+                "sender_encrypt_seconds": 0.165174939,
+                "source_read_seconds": 0.05633528700000002
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 10537708,
+                "congestion_window_max_bytes": 10537708,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 33252,
+                "rtt_max_us": 38253,
+                "rtt_min_us": 13108,
+                "rtt_start_us": 13108,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 48,
+                "send_stalls_over_1ms": 249,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 55727,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 305543,
+                "udp_rx_datagrams_delta": 8402,
+                "udp_tx_bytes_delta": 68690706,
+                "udp_tx_datagrams_delta": 47622,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 2,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 2.123209081,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.040733699000000005,
+                "destination_write_seconds": 0.010392562000000004,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.0716647970000004,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 29471,
+                "rtt_max_us": 32841,
+                "rtt_min_us": 14151,
+                "rtt_start_us": 14151,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68679020,
+                "udp_rx_datagrams_delta": 47612,
+                "udp_tx_bytes_delta": 311257,
+                "udp_tx_datagrams_delta": 8557,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 3,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 2.193858381,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.13996024899999995,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 2.0086650009999993,
+                "sender_allocation_copy_seconds": 0.0029753389999999987,
+                "sender_encrypt_seconds": 0.13694191000000006,
+                "source_read_seconds": 0.044906768000000014
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 7317091,
+                "congestion_window_max_bytes": 7317091,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 32741,
+                "rtt_max_us": 36440,
+                "rtt_min_us": 24427,
+                "rtt_start_us": 24427,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 55,
+                "send_stalls_over_1ms": 251,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 137665,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 308301,
+                "udp_rx_datagrams_delta": 8427,
+                "udp_tx_bytes_delta": 68690793,
+                "udp_tx_datagrams_delta": 47626,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 3,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 2.221789309,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.04607143800000001,
+                "destination_write_seconds": 0.010512707999999997,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.1647704980000007,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 29404,
+                "rtt_max_us": 32769,
+                "rtt_min_us": 22045,
+                "rtt_start_us": 22045,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68689509,
+                "udp_rx_datagrams_delta": 47623,
+                "udp_tx_bytes_delta": 312698,
+                "udp_tx_datagrams_delta": 8585,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 4,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 2.091601384,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.14568648800000006,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 1.9086477720000004,
+                "sender_allocation_copy_seconds": 0.003951224999999996,
+                "sender_encrypt_seconds": 0.14169166300000005,
+                "source_read_seconds": 0.03689704000000005
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 7445259,
+                "congestion_window_max_bytes": 7445259,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 35296,
+                "rtt_max_us": 37844,
+                "rtt_min_us": 13470,
+                "rtt_start_us": 13470,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 48,
+                "send_stalls_over_1ms": 252,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 57122,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 304110,
+                "udp_rx_datagrams_delta": 8349,
+                "udp_tx_bytes_delta": 68560006,
+                "udp_tx_datagrams_delta": 47509,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 4,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 2.121203982,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.04229703099999998,
+                "destination_write_seconds": 0.010258210999999998,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.0682248240000005,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 1,
+                "lost_packets_end": 1,
+                "lost_packets_start": 0,
+                "rtt_end_us": 30171,
+                "rtt_max_us": 32820,
+                "rtt_min_us": 15580,
+                "rtt_start_us": 15580,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68689047,
+                "udp_rx_datagrams_delta": 47596,
+                "udp_tx_bytes_delta": 309847,
+                "udp_tx_datagrams_delta": 8505,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 5,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 2.110664829,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.14097669700000004,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 1.9307065170000002,
+                "sender_allocation_copy_seconds": 0.0031586289999999987,
+                "sender_encrypt_seconds": 0.13777730700000004,
+                "source_read_seconds": 0.03853149
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 7720247,
+                "congestion_window_max_bytes": 7720247,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 0,
+                "lost_packets_start": 0,
+                "rtt_end_us": 37597,
+                "rtt_max_us": 37597,
+                "rtt_min_us": 15275,
+                "rtt_start_us": 15275,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 56,
+                "send_stalls_over_1ms": 251,
+                "send_wait_calls": 256,
+                "send_wait_max_us": 66237,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 308036,
+                "udp_rx_datagrams_delta": 8469,
+                "udp_tx_bytes_delta": 68611651,
+                "udp_tx_datagrams_delta": 47574,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            },
+            {
+              "run_index": 5,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 2.135109088,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 256,
+                "decrypt_seconds": 0.03988117800000003,
+                "destination_write_seconds": 0.009535340999999998,
+                "payload_bytes": 67108864,
+                "receive_wait_seconds": 2.0852165809999996,
+                "send_wait_seconds": 0.0,
+                "sender_allocation_copy_seconds": 0.0,
+                "sender_encrypt_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "connection_stats": {
+                "congestion_events_delta": 0,
+                "congestion_events_end": 0,
+                "congestion_events_start": 0,
+                "congestion_window_end_bytes": 12000,
+                "congestion_window_max_bytes": 12000,
+                "congestion_window_min_bytes": 12000,
+                "congestion_window_start_bytes": 12000,
+                "counter_limitations": [
+                  "noq 1.3.0 does not emit TX DATA_BLOCKED or STREAM_DATA_BLOCKED frames; zero TX deltas do not prove flow control was unblocked"
+                ],
+                "data_blocked_frames_delta": 0,
+                "data_blocked_frames_rx_delta": 0,
+                "lost_bytes_delta": 0,
+                "lost_bytes_end": 0,
+                "lost_bytes_start": 0,
+                "lost_packets_delta": 0,
+                "lost_packets_end": 1,
+                "lost_packets_start": 1,
+                "rtt_end_us": 29589,
+                "rtt_max_us": 32474,
+                "rtt_min_us": 18764,
+                "rtt_start_us": 18764,
+                "sample_interval_ms": 250,
+                "samples": 10,
+                "sampling_mode": "start/end plus message-boundary samples at least 250ms apart",
+                "selected_path_differs_at_end": false,
+                "selected_path_end": "1",
+                "selected_path_start": "1",
+                "send_stalls_over_10ms": 0,
+                "send_stalls_over_1ms": 0,
+                "send_wait_calls": 0,
+                "send_wait_max_us": 0,
+                "stream_data_blocked_frames_delta": 0,
+                "stream_data_blocked_frames_rx_delta": 0,
+                "udp_rx_bytes_delta": 68689630,
+                "udp_rx_datagrams_delta": 47626,
+                "udp_tx_bytes_delta": 313665,
+                "udp_tx_datagrams_delta": 8622,
+                "unavailable_counters": [
+                  "bytes_in_flight",
+                  "congestion_blocked_duration",
+                  "stream_flow_control_credit_bytes",
+                  "retransmission_duration"
+                ]
+              }
+            }
+          ],
+          "redacted_logs": [
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-1/receiver.log",
+              "sha256": "d64a3fc2e43c0a63b12e5ab8674c3785d9ce70670ca5297fb310e4b014699f16"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-1/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-2/receiver.log",
+              "sha256": "cf31016454f619afac7465315bb2c5eb4133346f08d1a6588fb5a60d5a624f64"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-2/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-3/receiver.log",
+              "sha256": "bff697a520e42a075e2fdfe87bded445adf537afd32d17a69a6aa2de2140aca3"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-3/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-4/receiver.log",
+              "sha256": "c59d66b9c252ecf7f58ce0a859fd90ffc0f51bd8d3d1b8b0f69d504c8863305b"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-4/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-5/receiver.log",
+              "sha256": "6c29922147b3588c07e96d6a033e103b135aa0c2f0e80df325e6f72bba1e5f6a"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-5/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-warmup/receiver.log",
+              "sha256": "bd68826674226932abda9bee433ae9237d829131cd4becd67b6efd89934c9af4"
+            },
+            {
+              "path": "01-s2-profile-overhead-64/profile/logs/rustytransfer-oracle-to-wsl-64mib-warmup/sender.log",
+              "sha256": "04bc711106f5501ea4075d67009076f469442089c5edfaacc08d0dfcee33b46f"
+            }
+          ]
+        }
+      },
+      "actual_source_staging": "pre-staged"
+    }
+  ]
+}

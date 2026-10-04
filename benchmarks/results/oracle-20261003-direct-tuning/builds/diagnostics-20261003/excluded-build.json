@@ -1,0 +1,5 @@
+{
+  "excluded": true,
+  "reason": "Epoch archive extraction mtimes allowed Cargo shared target to reuse baseline binaries. Both executable hashes equal frozen baseline despite changed Rust sources. No transfer scored with these binaries.",
+  "recovery": "Source bytes remain immutable in archive; updated builder touches extracted source files before incremental compilation. Replacement tag diagnostics-v2-20261003."
+}

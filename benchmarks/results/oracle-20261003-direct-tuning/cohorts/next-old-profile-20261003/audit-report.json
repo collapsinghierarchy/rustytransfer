@@ -1,0 +1,361 @@
+{
+  "canonical_endpoint_rows": 8,
+  "accepted_transfers": 4,
+  "all_routes_verified_both": true,
+  "full_hashes_verified": true,
+  "all_valid_slow_samples_retained": true,
+  "config_sha256": "fcb3a288aa93c1c346a34321c82faefb7aefd17d2071e5a0e19b8d3dd1b82d37",
+  "manifest_sha256": "90ca3fc157a66d08e4949e80ef019eea94410a558600a0f02c18090123230f47",
+  "groups": [
+    {
+      "name": "refresh-oracle-to-wsl",
+      "direction": "oracle-to-wsl",
+      "size_mib": 512,
+      "series": 1,
+      "variants": {
+        "baseline-profile": {
+          "effective_mib_per_second": {
+            "median": 25.21451716975359,
+            "min": 25.21451716975359,
+            "max": 25.21451716975359,
+            "mad": 0.0,
+            "count": 1
+          },
+          "wall_seconds": {
+            "median": 20.305762611,
+            "min": 20.305762611,
+            "max": 20.305762611,
+            "mad": 0.0,
+            "count": 1
+          },
+          "sender_cpu_seconds": {
+            "median": 6.699999999999999,
+            "min": 6.699999999999999,
+            "max": 6.699999999999999,
+            "mad": 0.0,
+            "count": 1
+          },
+          "receiver_cpu_seconds": {
+            "median": 6.93,
+            "min": 6.93,
+            "max": 6.93,
+            "mad": 0.0,
+            "count": 1
+          },
+          "sender_max_rss_kib": {
+            "median": 34300,
+            "min": 34300,
+            "max": 34300,
+            "mad": 0,
+            "count": 1
+          },
+          "receiver_max_rss_kib": {
+            "median": 24592,
+            "min": 24592,
+            "max": 24592,
+            "mad": 0,
+            "count": 1
+          },
+          "handshake_seconds": {
+            "median": 0.896491759,
+            "min": 0.896491759,
+            "max": 0.896491759,
+            "mad": 0.0,
+            "count": 1
+          },
+          "payload_seconds": {
+            "median": 16.573081141,
+            "min": 16.573081141,
+            "max": 16.573081141,
+            "mad": 0.0,
+            "count": 1
+          },
+          "shutdown_seconds": {
+            "median": 1.106228104,
+            "min": 1.106228104,
+            "max": 1.106228104,
+            "mad": 0.0,
+            "count": 1
+          },
+          "sender_cpu_seconds_per_gib": {
+            "median": 13.399999999999999,
+            "min": 13.399999999999999,
+            "max": 13.399999999999999,
+            "mad": 0.0,
+            "count": 1
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 13.86,
+            "min": 13.86,
+            "max": 13.86,
+            "mad": 0.0,
+            "count": 1
+          },
+          "endpoint_profiles": [
+            {
+              "run_index": 0,
+              "warmup": true,
+              "role": "sender",
+              "payload_seconds": 16.587004833,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 1.1472471719999993,
+                "chunk_count": 2048,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 536870912,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 15.138409707999996,
+                "source_read_seconds": 0.2977605310000003
+              },
+              "transport_diagnostics": null
+            },
+            {
+              "run_index": 0,
+              "warmup": true,
+              "role": "receiver",
+              "payload_seconds": 16.607096461,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 2048,
+                "decrypt_seconds": 0.32214843299999985,
+                "destination_write_seconds": 0.07476251300000022,
+                "payload_bytes": 536870912,
+                "receive_wait_seconds": 16.207265241,
+                "send_wait_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "transport_diagnostics": null
+            },
+            {
+              "run_index": 1,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 16.573081141,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 1.1468139429999988,
+                "chunk_count": 2048,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 536870912,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 15.150997848000014,
+                "source_read_seconds": 0.27171372100000035
+              },
+              "transport_diagnostics": null
+            },
+            {
+              "run_index": 1,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 16.600975517,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 2048,
+                "decrypt_seconds": 0.34130172799999986,
+                "destination_write_seconds": 0.078692267,
+                "payload_bytes": 536870912,
+                "receive_wait_seconds": 16.177185543999997,
+                "send_wait_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "transport_diagnostics": null
+            }
+          ],
+          "redacted_logs": [
+            {
+              "path": "00-refresh-oracle-to-wsl/baseline-profile/logs/rustytransfer-oracle-to-wsl-512mib-1/receiver.log",
+              "sha256": "c608ad0ae946b136a3dc25b4939b693468cc5ff1d9b792ea55ddfe324da7898e"
+            },
+            {
+              "path": "00-refresh-oracle-to-wsl/baseline-profile/logs/rustytransfer-oracle-to-wsl-512mib-1/sender.log",
+              "sha256": "b3f69cee3438920b8431a37429f4d226a71df1012429434382ad4fd52cb80ff7"
+            },
+            {
+              "path": "00-refresh-oracle-to-wsl/baseline-profile/logs/rustytransfer-oracle-to-wsl-512mib-warmup/receiver.log",
+              "sha256": "68c42580c868f8274c19160cb9916319d9bf6696d80082e8751a201f0dd7af83"
+            },
+            {
+              "path": "00-refresh-oracle-to-wsl/baseline-profile/logs/rustytransfer-oracle-to-wsl-512mib-warmup/sender.log",
+              "sha256": "b3f69cee3438920b8431a37429f4d226a71df1012429434382ad4fd52cb80ff7"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "refresh-wsl-to-oracle",
+      "direction": "wsl-to-oracle",
+      "size_mib": 512,
+      "series": 1,
+      "variants": {
+        "baseline-profile": {
+          "effective_mib_per_second": {
+            "median": 4.034218362119568,
+            "min": 4.034218362119568,
+            "max": 4.034218362119568,
+            "mad": 0.0,
+            "count": 1
+          },
+          "wall_seconds": {
+            "median": 126.91430013000002,
+            "min": 126.91430013000002,
+            "max": 126.91430013000002,
+            "mad": 0.0,
+            "count": 1
+          },
+          "sender_cpu_seconds": {
+            "median": 9.36,
+            "min": 9.36,
+            "max": 9.36,
+            "mad": 0.0,
+            "count": 1
+          },
+          "receiver_cpu_seconds": {
+            "median": 27.21,
+            "min": 27.21,
+            "max": 27.21,
+            "mad": 0.0,
+            "count": 1
+          },
+          "sender_max_rss_kib": {
+            "median": 25092,
+            "min": 25092,
+            "max": 25092,
+            "mad": 0,
+            "count": 1
+          },
+          "receiver_max_rss_kib": {
+            "median": 33488,
+            "min": 33488,
+            "max": 33488,
+            "mad": 0,
+            "count": 1
+          },
+          "handshake_seconds": {
+            "median": 1.2609359,
+            "min": 1.2609359,
+            "max": 1.2609359,
+            "mad": 0.0,
+            "count": 1
+          },
+          "payload_seconds": {
+            "median": 122.839351453,
+            "min": 122.839351453,
+            "max": 122.839351453,
+            "mad": 0.0,
+            "count": 1
+          },
+          "shutdown_seconds": {
+            "median": 1.146709223,
+            "min": 1.146709223,
+            "max": 1.146709223,
+            "mad": 0.0,
+            "count": 1
+          },
+          "sender_cpu_seconds_per_gib": {
+            "median": 18.72,
+            "min": 18.72,
+            "max": 18.72,
+            "mad": 0.0,
+            "count": 1
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 54.42,
+            "min": 54.42,
+            "max": 54.42,
+            "mad": 0.0,
+            "count": 1
+          },
+          "endpoint_profiles": [
+            {
+              "run_index": 0,
+              "warmup": true,
+              "role": "sender",
+              "payload_seconds": 100.968260166,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.4123836039999997,
+                "chunk_count": 2048,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 536870912,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 100.11944355099996,
+                "source_read_seconds": 0.4305419249999996
+              },
+              "transport_diagnostics": null
+            },
+            {
+              "run_index": 0,
+              "warmup": true,
+              "role": "receiver",
+              "payload_seconds": 101.140157564,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 2048,
+                "decrypt_seconds": 1.1809317120000007,
+                "destination_write_seconds": 0.2070105780000003,
+                "payload_bytes": 536870912,
+                "receive_wait_seconds": 99.74424954399989,
+                "send_wait_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "transport_diagnostics": null
+            },
+            {
+              "run_index": 1,
+              "warmup": false,
+              "role": "sender",
+              "payload_seconds": 122.839351453,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.41384699100000083,
+                "chunk_count": 2048,
+                "decrypt_seconds": 0.0,
+                "destination_write_seconds": 0.0,
+                "payload_bytes": 536870912,
+                "receive_wait_seconds": 0.0,
+                "send_wait_seconds": 122.14701227200018,
+                "source_read_seconds": 0.27210033899999964
+              },
+              "transport_diagnostics": null
+            },
+            {
+              "run_index": 1,
+              "warmup": false,
+              "role": "receiver",
+              "payload_seconds": 122.993071198,
+              "payload_profile": {
+                "allocation_copy_encrypt_seconds": 0.0,
+                "chunk_count": 2048,
+                "decrypt_seconds": 1.1545182630000008,
+                "destination_write_seconds": 0.24344529199999945,
+                "payload_bytes": 536870912,
+                "receive_wait_seconds": 121.58762238799989,
+                "send_wait_seconds": 0.0,
+                "source_read_seconds": 0.0
+              },
+              "transport_diagnostics": null
+            }
+          ],
+          "redacted_logs": [
+            {
+              "path": "01-refresh-wsl-to-oracle/baseline-profile/logs/rustytransfer-wsl-to-oracle-512mib-1/receiver.log",
+              "sha256": "18a0549df31a1162fd9a77646f26f027946f33f51e82708ffbdbab80acdf3c5b"
+            },
+            {
+              "path": "01-refresh-wsl-to-oracle/baseline-profile/logs/rustytransfer-wsl-to-oracle-512mib-1/sender.log",
+              "sha256": "d8c85ab1ecc4c422255d5dc72a5c0b09527c849f47fc41e5411cc16662778125"
+            },
+            {
+              "path": "01-refresh-wsl-to-oracle/baseline-profile/logs/rustytransfer-wsl-to-oracle-512mib-warmup/receiver.log",
+              "sha256": "2827971f47042c6fcce8d2792b2f2de9649f6abe44bbe91368f7197e474216e0"
+            },
+            {
+              "path": "01-refresh-wsl-to-oracle/baseline-profile/logs/rustytransfer-wsl-to-oracle-512mib-warmup/sender.log",
+              "sha256": "d8c85ab1ecc4c422255d5dc72a5c0b09527c849f47fc41e5411cc16662778125"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

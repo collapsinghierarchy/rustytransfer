@@ -1,0 +1,79 @@
+{
+  "started_at_utc": "2026-10-03T16:15:33.532200+00:00",
+  "runner_sha256": "564025e8aca6962b1b2a144d7659bf6bf727d2a9911c8fa707bcac47cb93e104",
+  "helper_sha256": "ef42f0ab09d7adaa905271931d6864fcba84629c5c03f27cf6920a602581ea0f",
+  "schedule": [
+    {
+      "group": "refresh-oracle-to-wsl",
+      "direction": "oracle-to-wsl",
+      "size_mib": 512,
+      "variant": "baseline-profile",
+      "run_index": 0,
+      "warmup": true,
+      "status": "valid",
+      "rate": 23.29086182146651,
+      "sender_cpu": 6.62,
+      "receiver_cpu": 7.23
+    },
+    {
+      "group": "refresh-oracle-to-wsl",
+      "direction": "oracle-to-wsl",
+      "size_mib": 512,
+      "variant": "baseline-profile",
+      "run_index": 1,
+      "warmup": false,
+      "status": "valid",
+      "rate": 25.21451716975359,
+      "sender_cpu": 6.699999999999999,
+      "receiver_cpu": 6.93
+    },
+    {
+      "group": "refresh-wsl-to-oracle",
+      "direction": "wsl-to-oracle",
+      "size_mib": 512,
+      "variant": "baseline-profile",
+      "run_index": 0,
+      "warmup": true,
+      "status": "valid",
+      "rate": 4.86186871384769,
+      "sender_cpu": 9.0,
+      "receiver_cpu": 26.259999999999998
+    },
+    {
+      "group": "refresh-wsl-to-oracle",
+      "direction": "wsl-to-oracle",
+      "size_mib": 512,
+      "variant": "baseline-profile",
+      "run_index": 1,
+      "warmup": false,
+      "status": "valid",
+      "rate": 4.034218362119568,
+      "sender_cpu": 9.36,
+      "receiver_cpu": 27.21
+    }
+  ],
+  "fixtures": {
+    "512": {
+      "path": "/home/wasilij/rustytransfer-bench/input-512.bin",
+      "size_bytes": 536870912,
+      "sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de"
+    }
+  },
+  "variants": {
+    "baseline-profile": {
+      "source_commit": "d654b0b033a6f37254c20b0171e50673cb01e632",
+      "additional_source": ".cargo/config.toml",
+      "source_archive_sha256": "5ba71c3f9e1a547cd93b778de481ed676b8e081064bec5140318206f729d33eb",
+      "config_sha256": "55de0537df5a56418c6ebd23b53510b1edd61065072c2ac88b3e98fac6ae6689",
+      "x86_binary": "/home/wasilij/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "x86_binary_sha256": "82706fdf82347088504aaf07888ba6fd788a81de394cdafc121d48df0858f25d",
+      "arm_binary": "/home/ubuntu/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "arm_binary_sha256": "e76bd6cca10ca91bc7d46c35429abf08d7664b4538a1f3cb733a7690e28f1078",
+      "profile": true,
+      "build_id": "arm-current-baseline-profile"
+    }
+  },
+  "status": "completed",
+  "limits": "Warm-cache native ext4 Oracle/WSL WAN measurements. All full hashes outside timers. No simultaneous builds or other jobs.",
+  "finished_at_utc": "2026-10-03T16:20:48.926809+00:00"
+}

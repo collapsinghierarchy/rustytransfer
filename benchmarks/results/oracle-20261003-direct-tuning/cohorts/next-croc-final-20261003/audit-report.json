@@ -1,0 +1,328 @@
+{
+  "canonical_endpoint_rows": 48,
+  "accepted_transfers": 24,
+  "all_routes_verified_both": true,
+  "full_hashes_verified": true,
+  "all_valid_slow_samples_retained": true,
+  "firewall_restored_exactly": true,
+  "comparisons": [
+    {
+      "size_mib": 64,
+      "size_bytes": 67108864,
+      "variants": {
+        "iroh": {
+          "effective_mib_per_second": {
+            "median": 11.377817621378052,
+            "mad": 0.24238149803787046,
+            "min": 10.364612957190383,
+            "max": 11.622798163563514,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 5.624980301999997,
+            "mad": 0.11856101299999011,
+            "min": 5.506419289000007,
+            "max": 6.174856723000005,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 0.88,
+            "mad": 0.020000000000000018,
+            "min": 0.86,
+            "max": 0.9099999999999999,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 1.0699999999999998,
+            "mad": 0.019999999999999796,
+            "min": 1.05,
+            "max": 1.1099999999999999,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 29928,
+            "mad": 1460,
+            "min": 27784,
+            "max": 34032,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 24376,
+            "mad": 212,
+            "min": 24112,
+            "max": 24640,
+            "count": 5
+          },
+          "setup_seconds": {
+            "median": 0.930124232,
+            "mad": 0.036075676000000056,
+            "min": 0.8533345680000001,
+            "max": 1.5465166030000002,
+            "count": 5
+          },
+          "sender_cpu_seconds_per_gib": {
+            "median": 14.08,
+            "mad": 0.3200000000000003,
+            "min": 13.76,
+            "max": 14.559999999999999,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 17.119999999999997,
+            "mad": 0.31999999999999673,
+            "min": 16.8,
+            "max": 17.759999999999998,
+            "count": 5
+          }
+        },
+        "croc": {
+          "effective_mib_per_second": {
+            "median": 19.6747927438273,
+            "mad": 0.2659163245312932,
+            "min": 18.567887533529955,
+            "max": 19.940709068358593,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 3.2528932239999904,
+            "mad": 0.043378467999986015,
+            "min": 3.2095147560000044,
+            "max": 3.4468110540000083,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 0.33,
+            "mad": 0.010000000000000009,
+            "min": 0.32,
+            "max": 0.35,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 0.76,
+            "mad": 0.010000000000000009,
+            "min": 0.74,
+            "max": 0.8,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 23900,
+            "mad": 136,
+            "min": 23664,
+            "max": 24036,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 25796,
+            "mad": 64,
+            "min": 25732,
+            "max": 26756,
+            "count": 5
+          },
+          "setup_seconds": null,
+          "sender_cpu_seconds_per_gib": {
+            "median": 5.28,
+            "mad": 0.16000000000000014,
+            "min": 5.12,
+            "max": 5.6,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 12.16,
+            "mad": 0.16000000000000014,
+            "min": 11.84,
+            "max": 12.8,
+            "count": 5
+          }
+        }
+      },
+      "paired_deltas": [
+        {
+          "run_index": 1,
+          "throughput_delta_percent_croc_vs_rusty": 66.74593907113481,
+          "wall_delta_seconds_croc_minus_rusty": -2.300606405999986
+        },
+        {
+          "run_index": 2,
+          "throughput_delta_percent_croc_vs_rusty": 64.63390920865157,
+          "wall_delta_seconds_croc_minus_rusty": -2.1638936349999938
+        },
+        {
+          "run_index": 3,
+          "throughput_delta_percent_croc_vs_rusty": 75.25952455848406,
+          "wall_delta_seconds_croc_minus_rusty": -2.415465545999993
+        },
+        {
+          "run_index": 4,
+          "throughput_delta_percent_croc_vs_rusty": 89.82660351227143,
+          "wall_delta_seconds_croc_minus_rusty": -2.9219634990000145
+        },
+        {
+          "run_index": 5,
+          "throughput_delta_percent_croc_vs_rusty": 69.6525111545134,
+          "wall_delta_seconds_croc_minus_rusty": -2.260714730000018
+        }
+      ],
+      "croc_rate_advantage_percent": 72.92237754681412
+    },
+    {
+      "size_mib": 512,
+      "size_bytes": 536870912,
+      "variants": {
+        "iroh": {
+          "effective_mib_per_second": {
+            "median": 23.957708764658893,
+            "mad": 0.05314527437897709,
+            "min": 21.410729430442007,
+            "max": 24.01085403903787,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 21.370991902000014,
+            "mad": 0.047302242000057504,
+            "min": 21.323689659999957,
+            "max": 23.913244136000003,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 7.5,
+            "mad": 0.14000000000000057,
+            "min": 7.359999999999999,
+            "max": 7.92,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 7.6899999999999995,
+            "mad": 0.1999999999999993,
+            "min": 7.4,
+            "max": 8.16,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 29512,
+            "mad": 196,
+            "min": 29004,
+            "max": 31844,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 24892,
+            "mad": 116,
+            "min": 24776,
+            "max": 25384,
+            "count": 5
+          },
+          "setup_seconds": {
+            "median": 0.935156545,
+            "mad": 0.02554904899999999,
+            "min": 0.8694971539999999,
+            "max": 0.960705594,
+            "count": 5
+          },
+          "sender_cpu_seconds_per_gib": {
+            "median": 15.0,
+            "mad": 0.28000000000000114,
+            "min": 14.719999999999999,
+            "max": 15.84,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 15.379999999999999,
+            "mad": 0.3999999999999986,
+            "min": 14.8,
+            "max": 16.32,
+            "count": 5
+          }
+        },
+        "croc": {
+          "effective_mib_per_second": {
+            "median": 27.520690059355516,
+            "mad": 0.8976782724340673,
+            "min": 26.62301178692145,
+            "max": 28.91609032948568,
+            "count": 5
+          },
+          "wall_seconds": {
+            "median": 18.60418466599998,
+            "mad": 0.627298387000053,
+            "min": 17.706404778999968,
+            "max": 19.231483053000034,
+            "count": 5
+          },
+          "sender_cpu_seconds": {
+            "median": 1.9100000000000001,
+            "mad": 0.03999999999999959,
+            "min": 1.77,
+            "max": 1.9499999999999997,
+            "count": 5
+          },
+          "receiver_cpu_seconds": {
+            "median": 6.25,
+            "mad": 0.17999999999999972,
+            "min": 5.68,
+            "max": 6.63,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 24564,
+            "mad": 116,
+            "min": 24372,
+            "max": 24932,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 26308,
+            "mad": 256,
+            "min": 26052,
+            "max": 27204,
+            "count": 5
+          },
+          "setup_seconds": null,
+          "sender_cpu_seconds_per_gib": {
+            "median": 3.8200000000000003,
+            "mad": 0.07999999999999918,
+            "min": 3.54,
+            "max": 3.8999999999999995,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 12.5,
+            "mad": 0.35999999999999943,
+            "min": 11.36,
+            "max": 13.26,
+            "count": 5
+          }
+        }
+      },
+      "paired_deltas": [
+        {
+          "run_index": 1,
+          "throughput_delta_percent_croc_vs_rusty": 28.53691019151501,
+          "wall_delta_seconds_croc_minus_rusty": -5.309059470000022
+        },
+        {
+          "run_index": 2,
+          "throughput_delta_percent_croc_vs_rusty": 11.047794931595178,
+          "wall_delta_seconds_croc_minus_rusty": -2.1246548099999245
+        },
+        {
+          "run_index": 3,
+          "throughput_delta_percent_croc_vs_rusty": 18.714074890861255,
+          "wall_delta_seconds_croc_minus_rusty": -3.36146430499997
+        },
+        {
+          "run_index": 4,
+          "throughput_delta_percent_croc_vs_rusty": 12.072156997438555,
+          "wall_delta_seconds_croc_minus_rusty": -2.302034477999996
+        },
+        {
+          "run_index": 5,
+          "throughput_delta_percent_croc_vs_rusty": 29.62543833981137,
+          "wall_delta_seconds_croc_minus_rusty": -5.245600030000048
+        }
+      ],
+      "croc_rate_advantage_percent": 14.871961796081855
+    }
+  ],
+  "rusty_manifest_sha256": "f6ac8159d12dda8c654704cd47bcf2c724e92f89d587646f7056ac69b4a532bd",
+  "croc_manifest_sha256": "0204e0efbf5e81f9598beddacbd3f5ba2dbb9d0d353f402ace2590683d035b78"
+}

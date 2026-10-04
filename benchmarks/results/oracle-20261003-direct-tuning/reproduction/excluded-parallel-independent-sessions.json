@@ -1,0 +1,11 @@
+{
+  "status": "excluded-unrun",
+  "reason": "User requires one shared symmetric payload key across streams. The discarded draft launched independent production transfers, each with a separate KEM-derived payload key. It was never executed and contributes no performance measurements.",
+  "user_steering_date": "2026-10-03",
+  "superseded_design": "One authenticated KEM session, one shared AES payload key, disjoint global chunk-index nonces and authenticated stream/range offsets in a separately versioned experimental example.",
+  "excluded_helpers": [
+    "run-parallel-independent-unrun.py",
+    "run-independent-parallel-matrix-unrun.py",
+    "audit-independent-parallel-unrun.py"
+  ]
+}

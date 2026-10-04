@@ -1,0 +1,33 @@
+warning: used `expect()` on a `Result` value
+  --> crates/crypto/src/mac.rs:34:13
+   |
+34 |             HmacSha3_256::new_from_slice(&self.key).expect("HMAC accepts keys of any size");
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: if this value is an `Err`, it will panic
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#expect_used
+   = note: requested on the command line with `-W clippy::expect-used`
+
+warning: used `expect()` on a `Result` value
+  --> crates/crypto/src/mac.rs:53:13
+   |
+53 |             HmacSha3_256::new_from_slice(&self.key).expect("HMAC accepts keys of any size");
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: if this value is an `Err`, it will panic
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#expect_used
+
+warning: `rustytransfer-crypto` (lib) generated 2 warnings
+warning: using a potentially dangerous silent `as` conversion
+  --> src/cli/metrics.rs:30:23
+   |
+30 |     let payload_mib = size_bytes as f64 / (1024.0 * 1024.0);
+   |                       ^^^^^^^^^^^^^^^^^
+   |
+   = help: consider using a safe wrapper for this conversion
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#as_conversions
+   = note: requested on the command line with `-W clippy::as-conversions`
+
+warning: `rustytransfer` (lib) generated 1 warning
+    Checking rustytransfer v0.1.0 (/mnt/c/Users/wasil/Documents/GitHub/rustytransfer)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.08s

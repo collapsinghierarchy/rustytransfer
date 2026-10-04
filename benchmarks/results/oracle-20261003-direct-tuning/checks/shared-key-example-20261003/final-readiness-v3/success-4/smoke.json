@@ -1,0 +1,35 @@
+{
+  "streams": 4,
+  "bytes": 8388608,
+  "sha256": "7d1b13a4916e71272f69ff915c094ec266476b8c37a0b653644bd9227308e71e",
+  "sender_status": 0,
+  "receiver_status": 0,
+  "sender_path": "direct",
+  "receiver_path": "direct",
+  "strict_direct_evidence": {
+    "sender": true,
+    "receiver": true
+  },
+  "sender_path_evidence": {
+    "classification": "direct",
+    "verified": true,
+    "direct_stream_tx": 2988,
+    "direct_stream_rx": 0,
+    "relay_stream_tx": 0,
+    "relay_stream_rx": 0,
+    "lagged": false,
+    "missing_path_stats": false,
+    "relay_selected": false
+  },
+  "receiver_path_evidence": {
+    "classification": "direct",
+    "verified": true,
+    "direct_stream_tx": 1,
+    "direct_stream_rx": 5917,
+    "relay_stream_tx": 0,
+    "relay_stream_rx": 0,
+    "lagged": false,
+    "missing_path_stats": false,
+    "relay_selected": false
+  }
+}

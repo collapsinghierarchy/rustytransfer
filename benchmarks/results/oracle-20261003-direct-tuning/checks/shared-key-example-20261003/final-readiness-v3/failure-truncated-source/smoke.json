@@ -1,0 +1,7 @@
+{
+  "failure_mode": "source truncated after receiver claimed partial, causing bounded sender reads to fail",
+  "sender_status": 1,
+  "receiver_status": 1,
+  "part_removed": true,
+  "output_absent": true
+}

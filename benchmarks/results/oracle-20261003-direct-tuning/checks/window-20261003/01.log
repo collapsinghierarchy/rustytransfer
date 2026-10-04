@@ -1,0 +1,150 @@
+
+running 1 test
+test cli::tests::defaults_to_transport_tuned_chunk_sizes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 10 tests
+test encrypted_webrtc_transfer_channel_stays_ordered ... ok
+test local_chunk_size_performance_sweep ... ignored, manual Phase 2 512 MiB block-size sweep
+test local_full_file_performance_baseline ... ignored, manual local full-file performance baseline
+test local_baseline_tests::direct_evidence_requires_verified_direct_classification ... ok
+test local_baseline_tests::transport_filter_defaults_to_both_and_can_select_iroh ... ok
+test local_transfer_resource_probe ... ignored, manual 512 MiB process CPU and RSS probe
+test iroh_offer_frame_roundtrips_with_the_signaling_wire_name ... ok
+test local_baseline_tests::stale_output_cleanup_removes_only_the_known_output ... ok
+test local_iroh_fin_ack_closes_after_streams_are_drained ... ok
+test local_webrtc_fin_ack_closes_after_peer_close_signal ... ok
+
+test result: ok. 7 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 1.64s
+
+
+running 1 test
+test pake_mac_kem_dem_roundtrip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+
+running 1 test
+test webrtc_datachannel_multiple_messages_roundtrip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 14 tests
+test dem::tests::dem_nonce_is_12_bytes ... ok
+test dem::tests::dem_roundtrip_recovers_plaintext ... ok
+test dem::tests::dem_stream_in_place_roundtrip_and_tamper_check ... ok
+test dem::tests::dem_tampered_ciphertext_fails ... ok
+test dem::tests::dem_wrong_key_fails ... ok
+test kem::tests::encapsulate_fails_without_keypair ... ok
+test mac::tests::tag_is_deterministic_for_same_key_and_msg ... ok
+test mac::tests::tag_then_verify_succeeds ... ok
+test mac::tests::tampered_message_fails ... ok
+test mac::tests::wrong_key_fails ... ok
+test kem::tests::generate_keypair_sets_keys ... ok
+test kem::tests::decapsulate_fails_without_keypair ... ok
+test kem::tests::kem_roundtrip_shared_secret_matches ... ok
+test pake::tests::same_password_same_key ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+
+running 5 tests
+test messaging::tests::native_frame_round_trips_with_native_endian_prefix ... ok
+test messaging::tests::request_decode_preserves_id_for_invalid_commands ... ok
+test messaging::tests::status_event_omits_empty_optional_fields ... ok
+test messaging::tests::reader_rejects_oversized_and_truncated_frames ... ok
+test tests::cancel_acknowledgement_waits_for_the_active_worker ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 14 tests
+test direct::tests::invite_parser_rejects_malformed_inputs ... ok
+test rendezvous::rendezvous_tests::request_rendezvous_code_from_whitenoise ... ignored, requires a live rendezvous backend
+test direct::tests::invite_roundtrips_with_the_existing_wire_format ... ok
+test direct::tests::retry_policy_respects_completion_and_error_classification ... ok
+test direct::tests::retry_backoff_is_bounded_by_the_four_attempt_policy ... ok
+test transport::iroh::path_evidence_tests::benchmark_stream_window_parser_enforces_the_experiment_bounds ... ok
+test signaling::websocket::tests::ws_url_formats_expected_query ... ok
+test transport::iroh::path_evidence_tests::closed_path_final_stats_are_counted_but_post_end_snapshot_wins ... ok
+test transport::iroh::path_evidence_tests::connection_profile_reports_counter_deltas_and_send_stall_buckets ... ok
+test transport::iroh::path_evidence_tests::lagged_or_missing_events_are_unverified_and_relay_selection_is_conservative ... ok
+test transport::iroh::path_evidence_tests::stream_deltas_verify_direct_payload_route ... ok
+test signaling::websocket::tests::remote_backend_relays_offer_a_to_b ... ok
+test signaling::websocket::tests::remote_backend_relays_offer_and_answer_bidirectionally ... ok
+test signaling::websocket::tests::remote_backend_allows_multiple_frames_in_same_room ... ok
+
+test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 14 tests
+test tests::direct_transfer_rejects_wrong_token_before_creating_output ... ok
+test tests::failed_authentication_preserves_existing_partial_file ... ok
+test tests::peer_aborts_are_reported ... ok
+test tests::early_source_eof_is_reported ... ok
+test tests::wrong_password_returns_an_error ... ok
+test tests::direct_transfer_reuses_kem_payload_and_commit_flow ... ok
+test tests::source_longer_than_advertised_length_is_rejected_after_probe ... ok
+test tests::short_source_reads_are_sent_as_bounded_chunks ... ok
+test tests::corrupted_prefix_resets_and_full_part_sends_zero_suffix ... ok
+test tests::corrupted_and_truncated_ciphertext_are_rejected ... ok
+test tests::bounded_slow_receiver_and_delayed_fin_ack_complete ... ok
+test tests::payload_profile_is_opt_in_and_counts_payload_chunks ... ok
+test tests::memory_transfer_covers_empty_and_chunk_boundaries ... ok
+test tests::interrupted_transfer_resumes_saved_prefix_on_next_invocation ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.97s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

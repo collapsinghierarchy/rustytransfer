@@ -1,0 +1,77 @@
+{
+  "audit_scope": "completed-groups-only",
+  "unaudited_groups": [
+    {
+      "name": "startup-wsl-to-oracle-retry",
+      "retained_schedule": [
+        {
+          "group": "startup-wsl-to-oracle-retry",
+          "direction": "wsl-to-oracle",
+          "size_mib": 0.00390625,
+          "variant": "chunk-256k",
+          "run_index": 0,
+          "warmup": true,
+          "status": "valid",
+          "rate": 0.0009614011729776553,
+          "sender_cpu": 0.2,
+          "receiver_cpu": 0.060000000000000005
+        },
+        {
+          "group": "startup-wsl-to-oracle-retry",
+          "direction": "wsl-to-oracle",
+          "size_mib": 0.00390625,
+          "variant": "chunk-512k",
+          "run_index": 0,
+          "warmup": true,
+          "status": "valid",
+          "rate": 0.001128486861430262,
+          "sender_cpu": 0.13999999999999999,
+          "receiver_cpu": 0.08
+        },
+        {
+          "group": "startup-wsl-to-oracle-retry",
+          "direction": "wsl-to-oracle",
+          "size_mib": 0.00390625,
+          "variant": "chunk-1024k",
+          "run_index": 0,
+          "warmup": true,
+          "status": "valid",
+          "rate": 0.0010815257891454494,
+          "sender_cpu": 0.15,
+          "receiver_cpu": 0.07
+        },
+        {
+          "group": "startup-wsl-to-oracle-retry",
+          "direction": "wsl-to-oracle",
+          "size_mib": 0.00390625,
+          "variant": "chunk-512k",
+          "run_index": 1,
+          "warmup": false,
+          "status": "valid",
+          "rate": 0.001128640172557886,
+          "sender_cpu": 0.15,
+          "receiver_cpu": 0.060000000000000005
+        },
+        {
+          "group": "startup-wsl-to-oracle-retry",
+          "direction": "wsl-to-oracle",
+          "size_mib": 0.00390625,
+          "variant": "chunk-256k",
+          "run_index": 1,
+          "warmup": false,
+          "status": "excluded",
+          "reason": "RuntimeError: direct-only sweep stopped: payload STREAM-frame evidence was not verified as direct by both endpoints; diagnostic rows were retained"
+        }
+      ],
+      "reason": "Incomplete group retained as diagnostics; no scored summary or route acceptance for this group."
+    }
+  ],
+  "canonical_endpoint_rows": 0,
+  "accepted_transfers": 0,
+  "all_routes_verified_both": true,
+  "full_hashes_verified": true,
+  "all_valid_slow_samples_retained": true,
+  "config_sha256": "3e422203c93bb2dfa67d378b4b83709326d6e28f5920f3a86ca64ab681614c94",
+  "manifest_sha256": "5bbf6ce6a47cae9c8e7758b77bf8c63a59b1fef2d041859abbfad9a4c00d2ac7",
+  "groups": []
+}

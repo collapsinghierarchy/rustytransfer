@@ -1,0 +1,113 @@
+{
+  "started_at_utc": "2026-10-03T18:45:37.952143+00:00",
+  "runner_sha256": "5bd05420d6f40efc7e589499b669e5cc0c9e0c53a4de384a2e6f3367143c6a27",
+  "helper_sha256": "59aef640f475fd22a0e1ff62accd92a6d0327d84f15774884ccaabfa7625ce13",
+  "schedule": [
+    {
+      "group": "startup-wsl-to-oracle-retry",
+      "direction": "wsl-to-oracle",
+      "size_mib": 0.00390625,
+      "variant": "chunk-256k",
+      "run_index": 0,
+      "warmup": true,
+      "status": "valid",
+      "rate": 0.0009614011729776553,
+      "sender_cpu": 0.2,
+      "receiver_cpu": 0.060000000000000005
+    },
+    {
+      "group": "startup-wsl-to-oracle-retry",
+      "direction": "wsl-to-oracle",
+      "size_mib": 0.00390625,
+      "variant": "chunk-512k",
+      "run_index": 0,
+      "warmup": true,
+      "status": "valid",
+      "rate": 0.001128486861430262,
+      "sender_cpu": 0.13999999999999999,
+      "receiver_cpu": 0.08
+    },
+    {
+      "group": "startup-wsl-to-oracle-retry",
+      "direction": "wsl-to-oracle",
+      "size_mib": 0.00390625,
+      "variant": "chunk-1024k",
+      "run_index": 0,
+      "warmup": true,
+      "status": "valid",
+      "rate": 0.0010815257891454494,
+      "sender_cpu": 0.15,
+      "receiver_cpu": 0.07
+    },
+    {
+      "group": "startup-wsl-to-oracle-retry",
+      "direction": "wsl-to-oracle",
+      "size_mib": 0.00390625,
+      "variant": "chunk-512k",
+      "run_index": 1,
+      "warmup": false,
+      "status": "valid",
+      "rate": 0.001128640172557886,
+      "sender_cpu": 0.15,
+      "receiver_cpu": 0.060000000000000005
+    },
+    {
+      "group": "startup-wsl-to-oracle-retry",
+      "direction": "wsl-to-oracle",
+      "size_mib": 0.00390625,
+      "variant": "chunk-256k",
+      "run_index": 1,
+      "warmup": false,
+      "status": "excluded",
+      "reason": "RuntimeError: direct-only sweep stopped: payload STREAM-frame evidence was not verified as direct by both endpoints; diagnostic rows were retained"
+    }
+  ],
+  "fixtures": {
+    "0.00390625": {
+      "path": "/home/wasilij/rustytransfer-bench/results/next-chunk-startup-retry-20261003/input-0.00390625.bin",
+      "size_bytes": 4096,
+      "sha256": "e0b2ddc85ece5f42630a826fc567a016a848d439a10599ce5d4ac976a049b71e"
+    }
+  },
+  "variants": {
+    "chunk-256k": {
+      "source_commit": "d654b0b033a6f37254c20b0171e50673cb01e632",
+      "additional_source": ".cargo/config.toml",
+      "source_archive_sha256": "5ba71c3f9e1a547cd93b778de481ed676b8e081064bec5140318206f729d33eb",
+      "config_sha256": "55de0537df5a56418c6ebd23b53510b1edd61065072c2ac88b3e98fac6ae6689",
+      "x86_binary": "/home/wasilij/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "x86_binary_sha256": "82706fdf82347088504aaf07888ba6fd788a81de394cdafc121d48df0858f25d",
+      "arm_binary": "/home/ubuntu/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "arm_binary_sha256": "e76bd6cca10ca91bc7d46c35429abf08d7664b4538a1f3cb733a7690e28f1078",
+      "chunk_size": 262144,
+      "build_id": "arm-current-baseline-chunk-sweep"
+    },
+    "chunk-512k": {
+      "source_commit": "d654b0b033a6f37254c20b0171e50673cb01e632",
+      "additional_source": ".cargo/config.toml",
+      "source_archive_sha256": "5ba71c3f9e1a547cd93b778de481ed676b8e081064bec5140318206f729d33eb",
+      "config_sha256": "55de0537df5a56418c6ebd23b53510b1edd61065072c2ac88b3e98fac6ae6689",
+      "x86_binary": "/home/wasilij/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "x86_binary_sha256": "82706fdf82347088504aaf07888ba6fd788a81de394cdafc121d48df0858f25d",
+      "arm_binary": "/home/ubuntu/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "arm_binary_sha256": "e76bd6cca10ca91bc7d46c35429abf08d7664b4538a1f3cb733a7690e28f1078",
+      "chunk_size": 524288,
+      "build_id": "arm-current-baseline-chunk-sweep"
+    },
+    "chunk-1024k": {
+      "source_commit": "d654b0b033a6f37254c20b0171e50673cb01e632",
+      "additional_source": ".cargo/config.toml",
+      "source_archive_sha256": "5ba71c3f9e1a547cd93b778de481ed676b8e081064bec5140318206f729d33eb",
+      "config_sha256": "55de0537df5a56418c6ebd23b53510b1edd61065072c2ac88b3e98fac6ae6689",
+      "x86_binary": "/home/wasilij/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "x86_binary_sha256": "82706fdf82347088504aaf07888ba6fd788a81de394cdafc121d48df0858f25d",
+      "arm_binary": "/home/ubuntu/rustytransfer-bench/bin/rustytransfer-final-20261003",
+      "arm_binary_sha256": "e76bd6cca10ca91bc7d46c35429abf08d7664b4538a1f3cb733a7690e28f1078",
+      "chunk_size": 1048576,
+      "build_id": "arm-current-baseline-chunk-sweep"
+    }
+  },
+  "status": "failed-with-diagnostics-retained",
+  "limits": "Warm-cache native ext4 Oracle/WSL WAN measurements. All full hashes outside timers. No simultaneous builds or other jobs.",
+  "finished_at_utc": "2026-10-03T18:46:26.660671+00:00"
+}

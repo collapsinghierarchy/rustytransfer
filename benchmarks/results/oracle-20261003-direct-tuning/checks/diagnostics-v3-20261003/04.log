@@ -1,0 +1,36 @@
+  [PASS] `-> impl Trait` is a return type, not an impl block
+  [PASS] `x: impl Into<T>` is a parameter type, not an impl block
+  [PASS] a real impl block at file scope is still an item
+  [PASS] sibling `impl From<X> for Y` blocks keep their generic arguments
+  [PASS] the generic PARAMETER list after `impl` is dropped, arguments are kept
+  [PASS] LATENT 3: a `where`-prefixed path truncates the impl label
+  [PASS] LATENT 2: a const generic parameter overwrites the item it parameterises
+  [PASS] LATENT 4: a raw identifier's keyword half reads as the keyword
+  [PASS] an impl nested inside a fn body nests in the chain
+  [PASS] `const fn` is a fn, and its header starts at `const`
+  [PASS] `pub async unsafe fn` keeps every modifier inside the header
+  [PASS] bodiless items (`pub struct MacKey;`, `const MAX: u32 = 8;`) are items
+  [PASS] a raw string r#"..."# cannot open an item or a brace
+  [PASS] a byte string and a nested block comment cannot open an item or a brace
+  [PASS] `'static` is a lifetime and `'x'` is a char - neither is code to scan
+  [PASS] a `//` inside br#".."# is literal text, not a comment
+  [PASS] a `/*` and a `{` inside br#".."# open neither a comment nor a block
+  [PASS] a trailing backslash in br"C:\" does not escape the closing quote
+  [PASS] br".." and br#".."# are single literal tokens, emitted verbatim
+  [PASS] `b'x'` is one byte-char literal, not `b` followed by a char
+  [PASS] an escaped quote inside a char literal closes nothing
+  [PASS] a doc comment above an item is part of that item's header
+  [PASS] a doc finding's context is invariant to edits in the function body
+  [PASS] sibling doc findings stay distinct from each other
+  [PASS] header attachment stops at a trailing comment, a blank line and `//!`
+  [PASS] normalize_tokens 1/9: whitespace BETWEEN tokens is not identity
+  [PASS] normalize_tokens 2/9: a rustfmt reflow with a trailing comma is not identity
+  [PASS] normalize_tokens 3/9: whitespace INSIDE a string literal IS identity
+  [PASS] normalize_tokens 4/9: raw and byte strings are emitted verbatim
+  [PASS] normalize_tokens 5/9: adjacent words keep a separator, punctuation does not
+  [PASS] normalize_tokens 6/9: comments drop with a mask, tokenize without one
+  [PASS] normalize_tokens 7/9: out-of-range bounds are clamped, not indexed
+  [PASS] LATENT 1: a one-element tuple normalizes like its parenthesised form
+  [PASS] normalize_tokens 9/9: what the unconditional comma drop buys
+
+34/34 scanner cases passed

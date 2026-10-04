@@ -1,12 +1,24 @@
 # Performance measurements
 
-The [2026-10-03 efficiency report](../docs/direct-transfer-efficiency-report.md)
+The [efficiency report](../docs/direct-transfer-efficiency-report.md)
 records the accepted ARM CPU improvement, verified direct A/B measurements,
 startup/resume validation, and a final direct-only Croc 11.5.4 comparison.
 The report also includes the requested 1/2 GiB followups and a fresh 512 MiB
 control: Croc's median rate advantage was 14.2%, 6.2%, and 6.1% respectively
 at 512 MiB, 1 GiB, and 2 GiB. These sequential WAN cohorts show a gap near 6%
 at the two larger sizes; they do not establish payload size as its sole cause.
+
+The [direct tuning continuation](results/oracle-20261003-direct-tuning/README.md)
+records refreshed QUIC/stage diagnostics, bounded receive-window and chunk
+sweeps, two owned-chunk series, profiling overhead, the shared-key parallel
+screen, and a fresh direct Croc comparison. No further production performance
+default changed: the copy candidate failed confirmation, window gains were
+below threshold, and four streams added CPU without a rate gain. A 1 MiB
+chunk improved 64 MiB upload medians in two series, but wide variation and
+higher RSS leave a general default benefit uncertain. Production stays at
+256 KiB. The versioned parallel example uses one KEM exchange and one symmetric
+payload key across streams; it is fresh-transfer only and does not implement
+resume. Raw valid slow samples and excluded diagnostics remain visible.
 
 Each CLI endpoint can append one JSON object to the file named by
 `RUSTYTRANSFER_METRICS_JSONL`. The record uses

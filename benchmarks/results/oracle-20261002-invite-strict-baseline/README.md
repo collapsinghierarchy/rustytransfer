@@ -81,6 +81,10 @@ The fresh sweeps completed with both scoped remote run directories removed.
 
 ## Reproduce the summary
 
+The command below uses the frozen historical summarizer. Restore it from the
+[retired tools archive](../../archives/README.md) into a separate checkout
+before reproducing this historical summary.
+
 ```sh
 python3 benchmarks/summarize.py \
   benchmarks/results/oracle-20261002-invite-strict-baseline/wsl-to-oracle-64.jsonl \

@@ -112,6 +112,14 @@ class PerformanceTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 p.resolve(ref)
 
+    def test_cleanup_removes_failed_transfer_partial_and_preserves_other_files(self):
+        with tempfile.TemporaryDirectory() as root:
+            directory = Path(root)
+            for name in ("received.bin", ".received.bin.rustytransfer.part", "process.log", "source.bin"):
+                (directory / name).write_text("keep or remove")
+            p.cleanup_received(directory)
+            self.assertEqual({path.name for path in directory.iterdir()}, {"process.log", "source.bin"})
+
     def test_failure_retains_report_and_cleans_only_owned_sources(self):
         with tempfile.TemporaryDirectory() as root:
             output = Path(root) / "run"

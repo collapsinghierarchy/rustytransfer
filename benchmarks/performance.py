@@ -91,6 +91,12 @@ def positive(value):
     return type(value) in (int, float) and math.isfinite(value) and value > 0
 
 
+def cleanup_received(trial):
+    # Production ResumeOutput's same-directory partial name; only runner-owned paths.
+    for name in ("received.bin", ".received.bin.rustytransfer.part"):
+        (trial / name).unlink(missing_ok=True)
+
+
 def validate(pair, rows, expected, version):
     if pair.get("harness_version") != version or not positive(pair.get("elapsed_seconds")):
         raise ValueError("incompatible harness or invalid elapsed timing")
@@ -210,6 +216,10 @@ def main():
     parser.add_argument("--output", type=Path, help="fresh output directory; builds retained, owned sources/fixtures/received files removed")
     args = parser.parse_args()
     config = json.loads((ROOT / "benchmarks/baseline.json").read_text())
+    if (config["gating"] != "report-only" or config["warmups"] != 1
+            or config["measured_pairs"] != 5 or config["sizes_mib"] != [64, 512]
+            or config["harness_version"] != 1):
+        parser.error("unsupported profile/harness/gating policy; reviewed implementation migration required")
     baseline = resolve(args.baseline_ref)
     candidate = resolve(args.candidate_ref or run(["git", "rev-parse", "HEAD"]).strip())
     if not args.candidate_ref:
@@ -288,8 +298,7 @@ def main():
                         write_json(output / "report.json", report)
                     finally:
                         # Only this run's known output; never source fixtures or user caches.
-                        for path in (trial / "received.bin", trial / "received.bin.part"):
-                            path.unlink(missing_ok=True)
+                        cleanup_received(trial)
         report["results"] = compare(report["trials"], config)
         report["status"] = "complete"
     except Exception as error:

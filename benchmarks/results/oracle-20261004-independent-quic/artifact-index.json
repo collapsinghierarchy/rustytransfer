@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "historical_inventory": "artifact-inventory.json",
+  "archive": "../../archives/oracle-20261004-independent-quic.tar.gz",
+  "archive_sha256": "0709243a2e4e955c696830082b36e20cbc3737774eacbb0450d31b45004d0196",
+  "extraction_map": "../../archives/index.json",
+  "members": [
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/artifact-inventory.json",
+      "bytes": 41850,
+      "sha256": "2ae22dfffc59820c79b329f52d2c94d571a586b1bc4a6279d845aa7a80bc4cd8"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-local-v1-20261004/root-independent-smoke.py",
+      "bytes": 7970,
+      "sha256": "5207215171c928fd5adbcd82859f8d70d1123dd3e51799ef70bb4aea67f4daa1"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/run-direct-matrix.py",
+      "bytes": 7484,
+      "sha256": "46702f6e36dc9d563bf1b18c610321e044919b48116aed64bc7c79f813e6dc44"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/run_oracle_transfer.py",
+      "bytes": 74852,
+      "sha256": "6b6face8dc586edd448abbd49e98b47cc1ccde3d13ca96461642c9b5826c0284"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/analyze-independent-connections.py",
+      "bytes": 2848,
+      "sha256": "9bc2513da0d21f3c4abd92c8c1770836ddcb9691c47904e52ec54ebee04a6f4b"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/audit-direct-matrix.py",
+      "bytes": 12531,
+      "sha256": "09f65684f2160ef6f86dbc4437c98cddbae3445f3b9cbfac82655aa5fd019e9e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/audit-independent-cleanup.py",
+      "bytes": 2755,
+      "sha256": "45d3ec0d99680eada939d0d335edf42f6f34c28a78e23f98fb5bd0e43f2ec606"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/audit-next-cleanup.py",
+      "bytes": 2687,
+      "sha256": "5c3fa3b3a2ef32f63cdcbf0bd158a858731e4a7e62c4cb29bd308189fc39b5f7"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/build-direct-candidate.py",
+      "bytes": 4667,
+      "sha256": "eb302200971cc4e0c48e94c67d088b1d1574c4c4dfee401127f714d08ca0d578"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/check-direct-workspace.py",
+      "bytes": 2922,
+      "sha256": "9c43dd33a937eaf5a6fca59b28183311f3473c262a9f92d6491c47c7b854d0df"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/check-staged-independent-evidence.py",
+      "bytes": 1574,
+      "sha256": "f35830f5a3698ca6a7b4a79df1f30322c15190fdaff1b151e54a1d54d0ac3d09"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/complete-independent-evidence.py",
+      "bytes": 6775,
+      "sha256": "98cdd7833f89801b53a577ca0ee0777e83aae30f55b453042b28793c637ff899"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/export-independent-evidence.py",
+      "bytes": 3414,
+      "sha256": "e6c8dce78f6d140606856ebed20318532e804a2f3ee06d4da3c2022702799f71"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/finalize-independent-inventory.py",
+      "bytes": 1453,
+      "sha256": "50c35cf223ee96d98b42cb8f8470886390cb91040e89942ca7c2e82a63605df1"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/prepare-independent-connections.py",
+      "bytes": 1853,
+      "sha256": "34e79fbcfe29a6e7cc5c07cada0a744fe8bedafdc125d3c02beaef55e265a331"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/retain-arm-build-logs.py",
+      "bytes": 845,
+      "sha256": "822c779acf7a972152ac3362db3550b66d6cadb107fecb295587b43691170b27"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/root-independent-smoke.py",
+      "bytes": 7970,
+      "sha256": "5207215171c928fd5adbcd82859f8d70d1123dd3e51799ef70bb4aea67f4daa1"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/run-direct-matrix.py",
+      "bytes": 7484,
+      "sha256": "46702f6e36dc9d563bf1b18c610321e044919b48116aed64bc7c79f813e6dc44"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/run-independent-gates.py",
+      "bytes": 2685,
+      "sha256": "8e8fe812b42d0c0a005b6b4e3f0fb073cb8d812daa8ea09330b07c3d3ae7281c"
+    }
+  ],
+  "note": "Original inventory retained unchanged. Python helper members now reside in this verified archive; other entries remain live."
+}

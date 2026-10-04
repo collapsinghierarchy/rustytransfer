@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "historical_inventory": null,
+  "archive": "../../archives/oracle-20261003-arm-crypto.tar.gz",
+  "archive_sha256": "62e3e2b8879f638f14488055082b3e7e79fafe7712b96a1642fa0c970e2761ae",
+  "extraction_map": "../../archives/index.json",
+  "members": [
+    {
+      "path": "benchmarks/results/oracle-20261003-arm-crypto/audit-arm-comparison.py",
+      "bytes": 20937,
+      "sha256": "de513eee2838cdd5f033ce01110bafd336faa80beff3190b2d20e5d057bf8a99"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261003-arm-crypto/run-arm-comparison.py",
+      "bytes": 4619,
+      "sha256": "2a2257eba9be77da423809e49f33aa013432f509654edf67ef7eee1766c15e3a"
+    }
+  ],
+  "note": "Original inventory retained unchanged. Python helper members now reside in this verified archive; other entries remain live."
+}

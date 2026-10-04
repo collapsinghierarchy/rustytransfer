@@ -1,6 +1,12 @@
 # Benchmark cleanup and CI baseline plan
 
-Status: proposed implementation plan, following the completed comparison in
+Status: implemented local runner, fixed compatible baseline, report-only CI and
+verified helper archives. Hosted-runner calibration and enabling regression
+gating remain deferred. See [supported command](README.md) and
+[archive recovery index](archives/README.md). The original approved plan follows,
+including historical inventory counts and proposed future stages.
+
+Plan context: following the completed comparison in
 `69fc4cce9a5d7ab8e160f6723ce792d2e35fabcf`. The CI baseline compares
 Rustytransfer with an approved Rustytransfer revision. No Croc comparison is
 included.

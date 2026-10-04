@@ -1,0 +1,1537 @@
+{
+  "schema_version": 1,
+  "root": "repository root",
+  "archives": [
+    {
+      "file": "local-agent-helpers.tar.gz",
+      "sha256": "0f44d39d84ea74152ffe34b74f97110c805f06430aed321022162192782cdbf2",
+      "extraction_verified": true,
+      "members": [
+        {
+          "path": "target/analyze-completion.py",
+          "bytes": 4585,
+          "sha256": "c294c79a96c398e809bc978f7196e49d1e8be691cb2ec41dc1e707b79bcac403"
+        },
+        {
+          "path": "target/analyze-independent-connections.py",
+          "bytes": 2848,
+          "sha256": "9bc2513da0d21f3c4abd92c8c1770836ddcb9691c47904e52ec54ebee04a6f4b"
+        },
+        {
+          "path": "target/audit-arm-comparison.py",
+          "bytes": 20937,
+          "sha256": "de513eee2838cdd5f033ce01110bafd336faa80beff3190b2d20e5d057bf8a99"
+        },
+        {
+          "path": "target/audit-benchmark-cleanup.py",
+          "bytes": 1626,
+          "sha256": "8fa30b5b675c83f2d45793619ab0eedc791f6726592a273851d516b0cb91f096"
+        },
+        {
+          "path": "target/audit-completion-croc.py",
+          "bytes": 7991,
+          "sha256": "10af1c080b9f05c4a4b478edb88ea973669bf918c0cd73bb7fed7a3084a37e9b"
+        },
+        {
+          "path": "target/audit-completion-source.py",
+          "bytes": 2890,
+          "sha256": "9f83046424c969ce8753d0707402d544b6aa90b766d5bcc4437a525c27c19d16"
+        },
+        {
+          "path": "target/audit-debug-large-warmup.py",
+          "bytes": 2772,
+          "sha256": "99df9f470a24a5ea95665345aabb0cb21f92dace07d95168cabec4755cd0bd83"
+        },
+        {
+          "path": "target/audit-direct-baseline.py",
+          "bytes": 2000,
+          "sha256": "ba359525ccbf1e1e9287b14f6ec1af9f7b6eb241086f72a59356acdd2e3f30f5"
+        },
+        {
+          "path": "target/audit-direct-matrix.py",
+          "bytes": 12531,
+          "sha256": "09f65684f2160ef6f86dbc4437c98cddbae3445f3b9cbfac82655aa5fd019e9e"
+        },
+        {
+          "path": "target/audit-final-direct.py",
+          "bytes": 4021,
+          "sha256": "32b57822d66905e4ae9279e5b8ec45e28b3d5ebba977fc7188fe291930fda2cc"
+        },
+        {
+          "path": "target/audit-independent-cleanup.py",
+          "bytes": 2755,
+          "sha256": "45d3ec0d99680eada939d0d335edf42f6f34c28a78e23f98fb5bd0e43f2ec606"
+        },
+        {
+          "path": "target/audit-independent-parallel-unrun.py",
+          "bytes": 5844,
+          "sha256": "033201f8e49d5b8b7516ccb49ea770d60029aa9d41f06747893bef9d41e41fed"
+        },
+        {
+          "path": "target/audit-interrupted-completion.py",
+          "bytes": 4832,
+          "sha256": "994d2b80c217c952de402b675b244b7eb2f07e7aec54d8ce2878604ff657f258"
+        },
+        {
+          "path": "target/audit-large-phase-cohort.py",
+          "bytes": 8540,
+          "sha256": "0c682a309a8520bf1c31818694aebaa1f2234d92735e07e7ddd7c84da3ee89a6"
+        },
+        {
+          "path": "target/audit-local-overhead.py",
+          "bytes": 2075,
+          "sha256": "e624946fbddd8efd3a904ce079500005dac442372331ae36d6768f33c20d3a54"
+        },
+        {
+          "path": "target/audit-next-cleanup.py",
+          "bytes": 2687,
+          "sha256": "5c3fa3b3a2ef32f63cdcbf0bd158a858731e4a7e62c4cb29bd308189fc39b5f7"
+        },
+        {
+          "path": "target/audit-next-croc.py",
+          "bytes": 5081,
+          "sha256": "ea26045bc546b7e6e27883bb3ba75e10702307de1c11419b4ef1df97cd9caf24"
+        },
+        {
+          "path": "target/audit-no-debug-cohort.py",
+          "bytes": 6695,
+          "sha256": "a807d00c5bd4bf6023d5d60e6e9cfd1584d590e793f8764f21e170bb81b5c2aa"
+        },
+        {
+          "path": "target/audit-payload-profile.py",
+          "bytes": 1724,
+          "sha256": "ef03ef867a0f07b33e21fcb4e4e4dabe8c410749ee208dbce4050a7ab4a16358"
+        },
+        {
+          "path": "target/audit-pinned-arm.py",
+          "bytes": 502,
+          "sha256": "d9430122f340de07900b00ee9397ec43387739893b538c08d63cc1aaeabfb8c1"
+        },
+        {
+          "path": "target/audit-startup-final.py",
+          "bytes": 1364,
+          "sha256": "dcc0e1d59a563336f154edb44e159693285555a11d9e9e0ffefd92fc602065e4"
+        },
+        {
+          "path": "target/build-direct-candidate.py",
+          "bytes": 4667,
+          "sha256": "eb302200971cc4e0c48e94c67d088b1d1574c4c4dfee401127f714d08ca0d578"
+        },
+        {
+          "path": "target/build-final-efficiency.py",
+          "bytes": 3512,
+          "sha256": "23fc51a6d8a0150c4fe3117ea37bd0d5a2f0a6cd9cdb9e2e00fafa7442d6ff96"
+        },
+        {
+          "path": "target/check-direct-workspace.py",
+          "bytes": 2922,
+          "sha256": "9c43dd33a937eaf5a6fca59b28183311f3473c262a9f92d6491c47c7b854d0df"
+        },
+        {
+          "path": "target/check-efficiency-artifacts.py",
+          "bytes": 1242,
+          "sha256": "a89290005d3cd5c3ee5e001de39b8b23bdc2e2e68d07460ea15c173c2b49a0c9"
+        },
+        {
+          "path": "target/check-staged-completion-evidence.py",
+          "bytes": 1498,
+          "sha256": "35d095e2eef2870d368e55cc59b967490153cd9f691750aace14b9b15c67bee3"
+        },
+        {
+          "path": "target/check-staged-direct-evidence.py",
+          "bytes": 1624,
+          "sha256": "0949971f9dbaf4e3fa02ca2e5673c0e87232e38ca3c11a2be9e944ae713cf0f2"
+        },
+        {
+          "path": "target/check-staged-independent-evidence.py",
+          "bytes": 1574,
+          "sha256": "f35830f5a3698ca6a7b4a79df1f30322c15190fdaff1b151e54a1d54d0ac3d09"
+        },
+        {
+          "path": "target/check-staged-no-debug-evidence.py",
+          "bytes": 1280,
+          "sha256": "99fbceae3774c22216a20410b795392dafade6912763f700d91755d6f083a4c2"
+        },
+        {
+          "path": "target/clean-endpoint-observer.py",
+          "bytes": 10057,
+          "sha256": "771becac9d05a57167a94f3dc2c5e20974a36dc4cb1e2d5ed4c55d416df441c3"
+        },
+        {
+          "path": "target/cleanup-no-debug-smoke-artifacts.py",
+          "bytes": 3319,
+          "sha256": "d1e65b07755d53e0eed39b084f560c1039eb338936fd0a1d8e3c03cdf1cba0d3"
+        },
+        {
+          "path": "target/collect-arm-comparison.py",
+          "bytes": 11836,
+          "sha256": "fbbc1d898f4f3f5d2bd66076e64ff5de75d5df80c903633449dba8ea7aa529f5"
+        },
+        {
+          "path": "target/collect-croc-1g-final.py",
+          "bytes": 19059,
+          "sha256": "dd8f5003ee44aa51e48110221814685e5a1c6bd58b5b84151daac3fa449909cb"
+        },
+        {
+          "path": "target/collect-croc-2g-final.py",
+          "bytes": 9104,
+          "sha256": "c672e5aa632a11001b2d096e0f0a9b95dd639f656e605a20151406c5a4736efa"
+        },
+        {
+          "path": "target/collect-croc-512-control.py",
+          "bytes": 9020,
+          "sha256": "176f5de117c3a17afaa1d021f2663ebb64d6141c6fcfde4861c4cdcb1736cb70"
+        },
+        {
+          "path": "target/collect-oracle-final.py",
+          "bytes": 25193,
+          "sha256": "b202212505876a9cf2c33c13e6a5d4eb320a48b7cc01411cae1f954384dc683c"
+        },
+        {
+          "path": "target/complete-direct-evidence.py",
+          "bytes": 12957,
+          "sha256": "a8c9283574ffcecf966db65618efed3d309663f85764b381392ae50b9793a6ec"
+        },
+        {
+          "path": "target/complete-independent-evidence.py",
+          "bytes": 6775,
+          "sha256": "98cdd7833f89801b53a577ca0ee0777e83aae30f55b453042b28793c637ff899"
+        },
+        {
+          "path": "target/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "target/croc_measure.py",
+          "bytes": 8877,
+          "sha256": "0a8faed6062fb0386e6f01aa2674e78339a7e9013b8d3298f8949cf1494c6a2b",
+          "sanitization": {
+            "date": "2026-10-05",
+            "reason": "Retired benchmark relay password literal replaced by a fresh per-run random password",
+            "original_sha256": "9989c7b581c7d2089bdc1afd9b75c420dfb85320ce585760553001931e244a7d"
+          }
+        },
+        {
+          "path": "target/direct-next-preflight.py",
+          "bytes": 1213,
+          "sha256": "89110e092e8ca4b87d8d44a60693c0bf5c585d4f057a81175a62a581ab945abf"
+        },
+        {
+          "path": "target/exclude-stale-diagnostic-build.py",
+          "bytes": 597,
+          "sha256": "615f262617b636232ad1e552c5c9813f12679613fd684449c6848f2c111ffb6a"
+        },
+        {
+          "path": "target/export-completion-evidence.py",
+          "bytes": 4546,
+          "sha256": "5b5ac9814e00bc68a0ffc65eeec5a30183c89cf6196ffbae606eca12460ebd27"
+        },
+        {
+          "path": "target/export-direct-evidence.py",
+          "bytes": 3401,
+          "sha256": "e988973b60968ca12383721af30c98faa60f37f7aff4ce0ef638c84c955cc602"
+        },
+        {
+          "path": "target/export-independent-evidence.py",
+          "bytes": 3414,
+          "sha256": "e6c8dce78f6d140606856ebed20318532e804a2f3ee06d4da3c2022702799f71"
+        },
+        {
+          "path": "target/export-no-debug-evidence.py",
+          "bytes": 3900,
+          "sha256": "1858d6cad02e55670ff8d019a83e7d6721c038bd1e9e7a651db5a90ef9fa330d"
+        },
+        {
+          "path": "target/extract-clean-croc-progress.py",
+          "bytes": 2530,
+          "sha256": "b918705511be71ecd695594a09f7d7c867b24517b504acbd40e177203883d7bd"
+        },
+        {
+          "path": "target/extract-stock-croc-startup.py",
+          "bytes": 3239,
+          "sha256": "a047735b278d0db2bed6ae2ede8492595edd2a14252f9798aa9692176dcdb191"
+        },
+        {
+          "path": "target/final-efficiency-sarif.py",
+          "bytes": 700,
+          "sha256": "f512c0a8e59f71c72cb5c590b16b974348b92673bff8344af2ddbc3a18f23238"
+        },
+        {
+          "path": "target/final-review-no-debug.py",
+          "bytes": 2680,
+          "sha256": "8141b325f777059db198253971c953d240369db426114de48f4d9578ade200dd"
+        },
+        {
+          "path": "target/finalize-completion-inventory.py",
+          "bytes": 1451,
+          "sha256": "5e2ecba66bf5dbde2873ed20813a3b6bf416928854760c497787764936eca93a"
+        },
+        {
+          "path": "target/finalize-debug-cohort-stop.py",
+          "bytes": 1649,
+          "sha256": "1053976daddd4245c4af109d9a611ba64a965c768451370584f409f4be846f0c"
+        },
+        {
+          "path": "target/finalize-direct-inventory.py",
+          "bytes": 1484,
+          "sha256": "112e8de0ffa0664e5bb000351353bfb7dfb042206132bbe0c3c4f49d7f7b9ad8"
+        },
+        {
+          "path": "target/finalize-independent-inventory.py",
+          "bytes": 1453,
+          "sha256": "50c35cf223ee96d98b42cb8f8470886390cb91040e89942ca7c2e82a63605df1"
+        },
+        {
+          "path": "target/finalize-no-debug-inventory.py",
+          "bytes": 1034,
+          "sha256": "565fe7fc9f4776b5d991f391df6042c18e30cd23fc956e2525014c3782a74d28"
+        },
+        {
+          "path": "target/inspect-arm-64-repeat.py",
+          "bytes": 1435,
+          "sha256": "4f5fbb7d7dbc468179db1a85718581d1020ce32ed5869868fa16a161ff3fcc64"
+        },
+        {
+          "path": "target/inspect-arm-results.py",
+          "bytes": 966,
+          "sha256": "7758d9a30d2ccbc03b138f5981ab7f02fd1b24a1fdfb1e2ed5899ec867ba7fe1"
+        },
+        {
+          "path": "target/inspect-current-croc-startup.py",
+          "bytes": 1218,
+          "sha256": "6e87860f059c9b65373e8b3fd35e06a4bffd8a9242d1f0deedca255746af6814"
+        },
+        {
+          "path": "target/inspect-interrupted-comparison.py",
+          "bytes": 2533,
+          "sha256": "8d2d30fb7cd436b87602e77b5c34c27e32f680031afa156f8acb6d0e73e44e8e"
+        },
+        {
+          "path": "target/launch-completion-croc.py",
+          "bytes": 1545,
+          "sha256": "106926f8941c95cee8857b4af25c654ae45dfe35c93289caac662e4dfd4cabe3"
+        },
+        {
+          "path": "target/launch-croc-phase-clean-diagnostic.py",
+          "bytes": 8727,
+          "sha256": "6587b0c3d58962eec9d43d58596fc6e50106756dfcf237b89aab11ac0adeaf81"
+        },
+        {
+          "path": "target/launch-large-phase-cohort.py",
+          "bytes": 1028,
+          "sha256": "36f6bfbc6103ed896f8a3ef04d8109eb749a9a31f8ae892393688ee6b765c284"
+        },
+        {
+          "path": "target/launch-no-debug-cohort.py",
+          "bytes": 2864,
+          "sha256": "c494f7e6137416f13439bce8bdbc97524fe3061b4e248aa552c808c58753ad6b"
+        },
+        {
+          "path": "target/lifecycle-preflight.py",
+          "bytes": 1401,
+          "sha256": "ce2e039aa6358d69499fa7db19732b3ff3611494b164279ed162e70599fe50fc"
+        },
+        {
+          "path": "target/measure-metric-provenance.py",
+          "bytes": 1031,
+          "sha256": "72955e01442c62815f7229693a1b82bb52eb0ebdf7a73df4533da8251048a4c7"
+        },
+        {
+          "path": "target/oracle_measure.py",
+          "bytes": 9958,
+          "sha256": "e2e3b9bdc6cd1dc8069221fe4f4542b11d6d77e60168e521154ebcfb001e8db1"
+        },
+        {
+          "path": "target/p2-count-canonical.py",
+          "bytes": 1898,
+          "sha256": "ec2a3a2bd2ede842486dddd76cd98005e687737f8f77ff11adbf07dd3d38b766"
+        },
+        {
+          "path": "target/preflight-1g.py",
+          "bytes": 1846,
+          "sha256": "0079ca4e5e8729735d299d3f1fc9e50e1553f943b027489f64ebd7e95cd51b4d"
+        },
+        {
+          "path": "target/preflight-2g.py",
+          "bytes": 997,
+          "sha256": "60b8918849006eb36a743eac0e706130b42a8b50f71d6acf39c67605ee109638"
+        },
+        {
+          "path": "target/preflight-croc-direct.py",
+          "bytes": 1331,
+          "sha256": "5d3c54d1205bb1a282214a2e6eadd7ad8db42be2cb1a5225002ee9e25d779e03"
+        },
+        {
+          "path": "target/prepare-1g-fixtures.py",
+          "bytes": 4332,
+          "sha256": "d8e3ef321f82e799b002aa6fd88c4042b530348a2b7985018677aceca0194a71"
+        },
+        {
+          "path": "target/prepare-2g-fixtures.py",
+          "bytes": 4013,
+          "sha256": "2183a0aaf5917c5bbf6d9fa414732f3de9beace758881a59bb609273fa7a3de1"
+        },
+        {
+          "path": "target/prepare-4g-fixtures.py",
+          "bytes": 4013,
+          "sha256": "403a31b391c3b108ef7cea511953bd220ad4ef75d635bdcc07cf55e1894641f2"
+        },
+        {
+          "path": "target/prepare-clean-observer.py",
+          "bytes": 1515,
+          "sha256": "2903606477d0aee82074cc2899769d85d77e98416960108d4fd605ff1bec694a"
+        },
+        {
+          "path": "target/prepare-completion.py",
+          "bytes": 2847,
+          "sha256": "b4e61585cd04605140d8944f85e5ce56a9bc0df72927895b67246a4ca450d78c"
+        },
+        {
+          "path": "target/prepare-croc-1154.py",
+          "bytes": 3150,
+          "sha256": "632fb30793eef52309c8d83f3564b61b7da5524240f92a767d7a6d31ebf2bdbb"
+        },
+        {
+          "path": "target/prepare-direct-matrix.py",
+          "bytes": 5784,
+          "sha256": "5c6dc7f9f784dd191f7f6eb4234d23790a35de32cb52ae4bd0964da60236c00e"
+        },
+        {
+          "path": "target/prepare-independent-connections.py",
+          "bytes": 1853,
+          "sha256": "34e79fbcfe29a6e7cc5c07cada0a744fe8bedafdc125d3c02beaef55e265a331"
+        },
+        {
+          "path": "target/preserve-desktop-draft.py",
+          "bytes": 1535,
+          "sha256": "919d4122ca39ee5247a82d43d2aa34f7061dc7c163821beefc5dff0401fd419f"
+        },
+        {
+          "path": "target/progress-2g.py",
+          "bytes": 442,
+          "sha256": "f8e4770952e8e4e1a5ddfcc9cdad8389f4ba6ba8c074a4816d192eea84471d65"
+        },
+        {
+          "path": "target/record-excluded-croc.py",
+          "bytes": 1271,
+          "sha256": "75cc8a756259779643a013cc4883e4c3fd04e74a01000406cbdfa4b48857f840"
+        },
+        {
+          "path": "target/recover-completion-interruption.py",
+          "bytes": 3917,
+          "sha256": "a11ba556bdc14b20a3029c8465ef4d331428740023d1c9aa0b471afbbadd04d6"
+        },
+        {
+          "path": "target/recover-croc-512-lease.py",
+          "bytes": 7954,
+          "sha256": "cde5a9b2f80dd818398e459b717d77799f5c526ea931fa3e1e79d189931e1433"
+        },
+        {
+          "path": "target/refreeze-clean-observer.py",
+          "bytes": 1501,
+          "sha256": "3102d4a6bfef6e153a4e94f933264779161cb430202e8ec84f516b812a28d6bc"
+        },
+        {
+          "path": "target/resume-512-oracle-to-wsl.py",
+          "bytes": 17017,
+          "sha256": "07e224b28bc3a8656b13b76ebfa881037f278ceae03643ee8ce2b0bffe6f75d2"
+        },
+        {
+          "path": "target/resume-arm-comparison.py",
+          "bytes": 5958,
+          "sha256": "0056cae38e0709a521f6c82e3b18554755535ec73c818441f881bbc4e0cc7b14"
+        },
+        {
+          "path": "target/retain-2g-preflight.py",
+          "bytes": 556,
+          "sha256": "c87cc60c4c95f5115d0995ebd561dc5417d5488416be1ff466dd877409125895"
+        },
+        {
+          "path": "target/retain-arm-build-logs.py",
+          "bytes": 845,
+          "sha256": "822c779acf7a972152ac3362db3550b66d6cadb107fecb295587b43691170b27"
+        },
+        {
+          "path": "target/retain-direct-intermediate.py",
+          "bytes": 1550,
+          "sha256": "3626db65fc1a60ad0a5a68478d1e24dd018a379bcaf5c3650453c4cf816e1873"
+        },
+        {
+          "path": "target/root-independent-smoke.py",
+          "bytes": 7970,
+          "sha256": "5207215171c928fd5adbcd82859f8d70d1123dd3e51799ef70bb4aea67f4daa1"
+        },
+        {
+          "path": "target/run-arm-comparison.py",
+          "bytes": 4619,
+          "sha256": "2a2257eba9be77da423809e49f33aa013432f509654edf67ef7eee1766c15e3a"
+        },
+        {
+          "path": "target/run-completion-croc.py",
+          "bytes": 12475,
+          "sha256": "a44b8c5c48c1247073f7abe3b443dab30cb6a31482674cd2129ad00f626c74a8"
+        },
+        {
+          "path": "target/run-croc-1g-final.py",
+          "bytes": 8668,
+          "sha256": "ae2b3bffceae30f7d2578388613ea625403db6fdbde4444f93110ee2502be667"
+        },
+        {
+          "path": "target/run-croc-2g-final.py",
+          "bytes": 9733,
+          "sha256": "9af98156486ea0f5d07764de8e2ab4cd69f57743d833f2d184d17c6ca7918f5e"
+        },
+        {
+          "path": "target/run-croc-512-control.py",
+          "bytes": 8341,
+          "sha256": "d9934c1748e8f90c4c595ea492a4884431fedbd769b983dcd9242c73c49dce57"
+        },
+        {
+          "path": "target/run-croc-phase-clean-diagnostic.py",
+          "bytes": 31446,
+          "sha256": "21fecb60361431dc02b6b335540c4dddce87c975c8106f7368b15cb927d5f825"
+        },
+        {
+          "path": "target/run-croc-phase-diagnostics.py",
+          "bytes": 26889,
+          "sha256": "143fb4eabb91d685da24492d6e4ee6be0427807bc7a5999db998bfe464ca2b5b"
+        },
+        {
+          "path": "target/run-croc-reverse-final.py",
+          "bytes": 11709,
+          "sha256": "a957f848ff9e7022aa7f09f43baf88a71f6dd7c901ce63c043b8871d1cb0f405"
+        },
+        {
+          "path": "target/run-direct-matrix.py",
+          "bytes": 7759,
+          "sha256": "5490454102cd6b93ef290d3a50d4dddc6c33c96fcea9e094b5e3c5022a1c3cbd"
+        },
+        {
+          "path": "target/run-independent-gates.py",
+          "bytes": 2685,
+          "sha256": "8e8fe812b42d0c0a005b6b4e3f0fb073cb8d812daa8ea09330b07c3d3ae7281c"
+        },
+        {
+          "path": "target/run-independent-parallel-matrix-unrun.py",
+          "bytes": 4395,
+          "sha256": "a9b019e1edb5b289fc02cef7d1e04782b93b0f561bfb19c713e80cf6dffbf529"
+        },
+        {
+          "path": "target/run-large-phase-cohort.py",
+          "bytes": 6801,
+          "sha256": "7b77781718c864a5ea23fa6bf18872fc982aaa7e5b585c22751003abdc0851b1"
+        },
+        {
+          "path": "target/run-local-profile-overhead.py",
+          "bytes": 2036,
+          "sha256": "f46b27f3879d2e01047a486011431966d5ccc0b07e98c69d948f97a141463a50"
+        },
+        {
+          "path": "target/run-no-debug-cohort.py",
+          "bytes": 48017,
+          "sha256": "888d844a8db949604dd52aa91912d11e68a21fa5bf183dc146dd03bac576b47e"
+        },
+        {
+          "path": "target/run-parallel-independent-unrun.py",
+          "bytes": 38172,
+          "sha256": "9202f6bfdacd715a0fd61cedf6794ae19cd92b3fcc8e0ede78ed2f0bbfc63c9d"
+        },
+        {
+          "path": "target/run-startup-comparison.py",
+          "bytes": 8940,
+          "sha256": "abef7460fd3610f3d80c5edcdc2c4d66915c799613c9a9bc881e810002d25186"
+        },
+        {
+          "path": "target/save-large-overall-snapshot.py",
+          "bytes": 1672,
+          "sha256": "4af16fbb4cda007e7fa4e75973248804181ab5659e069cee4893d29d56188162"
+        },
+        {
+          "path": "target/shared-key-local-smoke.py",
+          "bytes": 13813,
+          "sha256": "7130cbb881e135dc2579ec95846e4a80de74ffb983f726e92e5809170de56a50"
+        },
+        {
+          "path": "target/show-completion.py",
+          "bytes": 912,
+          "sha256": "d7a9d55d3e6155a098f326a3502148b17929c92ef2c3f6956c1995e991180036"
+        },
+        {
+          "path": "target/smoke-croc-lease-2s.py",
+          "bytes": 4570,
+          "sha256": "79351c4041f88f010acdb35ad444ae9f501a39b757049e1145be2088c067e623"
+        },
+        {
+          "path": "target/status-completion.py",
+          "bytes": 1586,
+          "sha256": "d823850183e1b27fb0797438dae3ee1cf97ccac296cd41f37bf319c78cd7169a"
+        },
+        {
+          "path": "target/status-large-phase-cohort.py",
+          "bytes": 1867,
+          "sha256": "43f870ae12a8f4428ca6f97f8850e8d6cd76ee493ff5d1e2da409a1bad393d98"
+        },
+        {
+          "path": "target/status-no-debug-cohort.py",
+          "bytes": 1364,
+          "sha256": "f49fb66d48920a16ad1121b77a295f2c63ecb25982e46d4ef33d23ffa903a544"
+        },
+        {
+          "path": "target/stop-debug-cohort-at-boundary.py",
+          "bytes": 1778,
+          "sha256": "5310b8fbc14dfe2a89db4ef675b91de35f0563e9e83920ce87c3af8387f1d3db"
+        },
+        {
+          "path": "target/summarize-completion-phases.py",
+          "bytes": 2394,
+          "sha256": "7ee17f34513a9859b9817a33acc458408cb6db0bd5f25759227c3cce7491fc88"
+        },
+        {
+          "path": "target/test-clean-capture-live.py",
+          "bytes": 1757,
+          "sha256": "33f9da8f1cbf06ec0e13c0a03d76986ab6041d03931630a5c739c2d2bef6b86f"
+        },
+        {
+          "path": "target/test-clean-observer.py",
+          "bytes": 3449,
+          "sha256": "7c2272871f85d14e6e012a5afba326e1ad9545fc817d83afad0f8ed0ff05ec22"
+        },
+        {
+          "path": "target/write-2g-readme.py",
+          "bytes": 4277,
+          "sha256": "03810767b9c998cf3c6612c6e6eb51959393cbbab0dc1f919ba96f5668da03b3"
+        },
+        {
+          "path": "target/write-completion-report.py",
+          "bytes": 19924,
+          "sha256": "682582fb2c4ce911b13c1112020c710322f6e712177ed4e59e53a92a09983005"
+        },
+        {
+          "path": "target/write-no-debug-report.py",
+          "bytes": 10904,
+          "sha256": "2de175b93f996c0273cfe07765bb5c001c5e30c608e38573e424f245ab63fb32"
+        }
+      ],
+      "sanitization": {
+        "date": "2026-10-05",
+        "original_archive_sha256": "4baf7cd2e7b01d6ea48ef7093859836c0d0547b2fa6bcf69e5d02b710741e363",
+        "changed_member": "target/croc_measure.py",
+        "unchanged_members": 119
+      }
+    },
+    {
+      "file": "oracle-20261003-arm-crypto.tar.gz",
+      "sha256": "62e3e2b8879f638f14488055082b3e7e79fafe7712b96a1642fa0c970e2761ae",
+      "extraction_verified": true,
+      "members": [
+        {
+          "path": "benchmarks/results/oracle-20261003-arm-crypto/audit-arm-comparison.py",
+          "bytes": 20937,
+          "sha256": "de513eee2838cdd5f033ce01110bafd336faa80beff3190b2d20e5d057bf8a99"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-arm-crypto/run-arm-comparison.py",
+          "bytes": 4619,
+          "sha256": "2a2257eba9be77da423809e49f33aa013432f509654edf67ef7eee1766c15e3a"
+        }
+      ]
+    },
+    {
+      "file": "oracle-20261003-direct-tuning.tar.gz",
+      "sha256": "68f936ea4ed4e9aef69279c75eaf99a86c9360a6d36fd6e60321563a1f976889",
+      "extraction_verified": true,
+      "members": [
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/artifact-inventory.json",
+          "bytes": 381632,
+          "sha256": "b2a4e15429b15ba23e73e5def822055b79e3f36dad3dc5fd8b083a712174aadf"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/local-smoke-used.py",
+          "bytes": 13731,
+          "sha256": "fec60c26ca8c745b799d8d7f363b7161b40951cecd6f8771a9825b5a1845a335"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-chunk-confirm-upload64-20261003/run-direct-matrix.py",
+          "bytes": 7399,
+          "sha256": "59aef640f475fd22a0e1ff62accd92a6d0327d84f15774884ccaabfa7625ce13"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-chunk-confirm-upload64-20261003/run_oracle_transfer.py",
+          "bytes": 69290,
+          "sha256": "5bd05420d6f40efc7e589499b669e5cc0c9e0c53a4de384a2e6f3367143c6a27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-chunk-startup-retry-20261003/run-direct-matrix.py",
+          "bytes": 7399,
+          "sha256": "59aef640f475fd22a0e1ff62accd92a6d0327d84f15774884ccaabfa7625ce13"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-chunk-startup-retry-20261003/run_oracle_transfer.py",
+          "bytes": 69290,
+          "sha256": "5bd05420d6f40efc7e589499b669e5cc0c9e0c53a4de384a2e6f3367143c6a27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-chunk-startup64-upload-20261003/run-direct-matrix.py",
+          "bytes": 7399,
+          "sha256": "59aef640f475fd22a0e1ff62accd92a6d0327d84f15774884ccaabfa7625ce13"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-chunk-startup64-upload-20261003/run_oracle_transfer.py",
+          "bytes": 69290,
+          "sha256": "5bd05420d6f40efc7e589499b669e5cc0c9e0c53a4de384a2e6f3367143c6a27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-chunks-remaining-20261003/run-direct-matrix.py",
+          "bytes": 7322,
+          "sha256": "a1fac9549fec0b6a69730cfb752e31349b89462992c56ab6e525b5e658a78b8e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-chunks-remaining-20261003/run_oracle_transfer.py",
+          "bytes": 66876,
+          "sha256": "9592163b6debd8375f265a7f1fcc776a3bf71112f28f341c8f7a63938d685e34"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-chunks-screen-20261003/run-direct-matrix.py",
+          "bytes": 7247,
+          "sha256": "ef42f0ab09d7adaa905271931d6864fcba84629c5c03f27cf6920a602581ea0f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-chunks-screen-20261003/run_oracle_transfer.py",
+          "bytes": 65559,
+          "sha256": "712e6093503055a29edee17b614282b07edde5647c41c8a52d38cf201da585db"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-copy-screen-20261003/run-direct-matrix.py",
+          "bytes": 7322,
+          "sha256": "a1fac9549fec0b6a69730cfb752e31349b89462992c56ab6e525b5e658a78b8e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-copy-screen-20261003/run_oracle_transfer.py",
+          "bytes": 65601,
+          "sha256": "501e523141e299465f7df5419d9a181bdd09126465e28976d52a78f7eb70118f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-croc-final-20261003/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-croc-final-20261003/run-croc-reverse-final.py",
+          "bytes": 11709,
+          "sha256": "a957f848ff9e7022aa7f09f43baf88a71f6dd7c901ce63c043b8871d1cb0f405"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-croc-final-20261003/run_oracle_transfer.py",
+          "bytes": 69290,
+          "sha256": "5bd05420d6f40efc7e589499b669e5cc0c9e0c53a4de384a2e6f3367143c6a27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-diagnostics-20261003/run-direct-matrix.py",
+          "bytes": 7247,
+          "sha256": "ef42f0ab09d7adaa905271931d6864fcba84629c5c03f27cf6920a602581ea0f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-diagnostics-20261003/run_oracle_transfer.py",
+          "bytes": 65601,
+          "sha256": "501e523141e299465f7df5419d9a181bdd09126465e28976d52a78f7eb70118f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-old-profile-20261003/run-direct-matrix.py",
+          "bytes": 7247,
+          "sha256": "ef42f0ab09d7adaa905271931d6864fcba84629c5c03f27cf6920a602581ea0f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-old-profile-20261003/run_oracle_transfer.py",
+          "bytes": 65259,
+          "sha256": "564025e8aca6962b1b2a144d7659bf6bf727d2a9911c8fa707bcac47cb93e104"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-profile-overhead-20261003/run-direct-matrix.py",
+          "bytes": 7399,
+          "sha256": "59aef640f475fd22a0e1ff62accd92a6d0327d84f15774884ccaabfa7625ce13"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-profile-overhead-20261003/run_oracle_transfer.py",
+          "bytes": 69290,
+          "sha256": "5bd05420d6f40efc7e589499b669e5cc0c9e0c53a4de384a2e6f3367143c6a27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-shared-key-streams-20261003/run-direct-matrix.py",
+          "bytes": 7399,
+          "sha256": "59aef640f475fd22a0e1ff62accd92a6d0327d84f15774884ccaabfa7625ce13"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-shared-key-streams-20261003/run_oracle_transfer.py",
+          "bytes": 69290,
+          "sha256": "5bd05420d6f40efc7e589499b669e5cc0c9e0c53a4de384a2e6f3367143c6a27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-window-screen-20261003/run-direct-matrix.py",
+          "bytes": 7322,
+          "sha256": "a1fac9549fec0b6a69730cfb752e31349b89462992c56ab6e525b5e658a78b8e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-window-screen-20261003/run_oracle_transfer.py",
+          "bytes": 66876,
+          "sha256": "9592163b6debd8375f265a7f1fcc776a3bf71112f28f341c8f7a63938d685e34"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/audit-direct-matrix.py",
+          "bytes": 9675,
+          "sha256": "23864c7bba701ccb4e86be80ad94100ba0f3a55adac8c6a2110a9caa5496af06"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/audit-next-cleanup.py",
+          "bytes": 2687,
+          "sha256": "5c3fa3b3a2ef32f63cdcbf0bd158a858731e4a7e62c4cb29bd308189fc39b5f7"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/audit-next-croc.py",
+          "bytes": 5081,
+          "sha256": "ea26045bc546b7e6e27883bb3ba75e10702307de1c11419b4ef1df97cd9caf24"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/build-direct-candidate.py",
+          "bytes": 4667,
+          "sha256": "eb302200971cc4e0c48e94c67d088b1d1574c4c4dfee401127f714d08ca0d578"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/check-direct-workspace.py",
+          "bytes": 2922,
+          "sha256": "9c43dd33a937eaf5a6fca59b28183311f3473c262a9f92d6491c47c7b854d0df"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/collect-croc-1g-final.py",
+          "bytes": 19007,
+          "sha256": "f2912b7790f52684ff9425f49537dfe4a70be1c320ef9e4decd3a091ba554336"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/complete-direct-evidence.py",
+          "bytes": 12957,
+          "sha256": "a8c9283574ffcecf966db65618efed3d309663f85764b381392ae50b9793a6ec"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/export-direct-evidence.py",
+          "bytes": 3401,
+          "sha256": "e988973b60968ca12383721af30c98faa60f37f7aff4ce0ef638c84c955cc602"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/finalize-direct-inventory.py",
+          "bytes": 1484,
+          "sha256": "112e8de0ffa0664e5bb000351353bfb7dfb042206132bbe0c3c4f49d7f7b9ad8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/prepare-direct-matrix.py",
+          "bytes": 5784,
+          "sha256": "5c6dc7f9f784dd191f7f6eb4234d23790a35de32cb52ae4bd0964da60236c00e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/retain-arm-build-logs.py",
+          "bytes": 845,
+          "sha256": "822c779acf7a972152ac3362db3550b66d6cadb107fecb295587b43691170b27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/retain-direct-intermediate.py",
+          "bytes": 1550,
+          "sha256": "3626db65fc1a60ad0a5a68478d1e24dd018a379bcaf5c3650453c4cf816e1873"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/run-croc-reverse-final.py",
+          "bytes": 11709,
+          "sha256": "a957f848ff9e7022aa7f09f43baf88a71f6dd7c901ce63c043b8871d1cb0f405"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/run-direct-matrix.py",
+          "bytes": 7399,
+          "sha256": "59aef640f475fd22a0e1ff62accd92a6d0327d84f15774884ccaabfa7625ce13"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/reproduction/shared-key-local-smoke.py",
+          "bytes": 13813,
+          "sha256": "7130cbb881e135dc2579ec95846e4a80de74ffb983f726e92e5809170de56a50"
+        }
+      ]
+    },
+    {
+      "file": "oracle-20261004-completion.tar.gz",
+      "sha256": "3b3e0c09e0d39ee87fb8e627f98ccb85729045aa1a236f8eb72faf8a7e7c1ee6",
+      "extraction_verified": true,
+      "members": [
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/artifact-inventory.json",
+          "bytes": 89671,
+          "sha256": "5d2b3b5f6953188721f5e6f2a5966fb4964b1f5e04b83bbee0921b0346085ff1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-croc-retry-20261004/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-croc-retry-20261004/run-completion-croc.py",
+          "bytes": 12261,
+          "sha256": "66dc2ceae3f2a6ae7186192a0e94bfe3fff4ab32e073e52737d0c783a31df83e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-croc-retry-20261004/run_oracle_transfer.py",
+          "bytes": 83561,
+          "sha256": "0c601764e0d6a5a4508fd11b13d251b90fbad6af20a09758e4e46651ce3066b1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/run-direct-matrix.py",
+          "bytes": 7759,
+          "sha256": "5490454102cd6b93ef290d3a50d4dddc6c33c96fcea9e094b5e3c5022a1c3cbd"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/run_oracle_transfer.py",
+          "bytes": 83569,
+          "sha256": "a280f1583611e1f19b45d6c30eb3fd025c65bfd535d25e099fd4ae7ad9b2cfbe"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/run-direct-matrix.py",
+          "bytes": 7759,
+          "sha256": "5490454102cd6b93ef290d3a50d4dddc6c33c96fcea9e094b5e3c5022a1c3cbd"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/run_oracle_transfer.py",
+          "bytes": 83569,
+          "sha256": "a280f1583611e1f19b45d6c30eb3fd025c65bfd535d25e099fd4ae7ad9b2cfbe"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/run-completion-croc.py",
+          "bytes": 12261,
+          "sha256": "66dc2ceae3f2a6ae7186192a0e94bfe3fff4ab32e073e52737d0c783a31df83e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/run_oracle_transfer.py",
+          "bytes": 83561,
+          "sha256": "0c601764e0d6a5a4508fd11b13d251b90fbad6af20a09758e4e46651ce3066b1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/analyze-completion.py",
+          "bytes": 4585,
+          "sha256": "c294c79a96c398e809bc978f7196e49d1e8be691cb2ec41dc1e707b79bcac403"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/audit-completion-croc.py",
+          "bytes": 7991,
+          "sha256": "10af1c080b9f05c4a4b478edb88ea973669bf918c0cd73bb7fed7a3084a37e9b"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/audit-completion-source.py",
+          "bytes": 2890,
+          "sha256": "9f83046424c969ce8753d0707402d544b6aa90b766d5bcc4437a525c27c19d16"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/audit-direct-matrix.py",
+          "bytes": 12531,
+          "sha256": "09f65684f2160ef6f86dbc4437c98cddbae3445f3b9cbfac82655aa5fd019e9e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/audit-independent-cleanup.py",
+          "bytes": 2755,
+          "sha256": "45d3ec0d99680eada939d0d335edf42f6f34c28a78e23f98fb5bd0e43f2ec606"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/audit-interrupted-completion.py",
+          "bytes": 4832,
+          "sha256": "994d2b80c217c952de402b675b244b7eb2f07e7aec54d8ce2878604ff657f258"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/build-direct-candidate.py",
+          "bytes": 4667,
+          "sha256": "eb302200971cc4e0c48e94c67d088b1d1574c4c4dfee401127f714d08ca0d578"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/check-direct-workspace.py",
+          "bytes": 2922,
+          "sha256": "9c43dd33a937eaf5a6fca59b28183311f3473c262a9f92d6491c47c7b854d0df"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/check-staged-completion-evidence.py",
+          "bytes": 1498,
+          "sha256": "35d095e2eef2870d368e55cc59b967490153cd9f691750aace14b9b15c67bee3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/collect-croc-1g-final.py",
+          "bytes": 19059,
+          "sha256": "dd8f5003ee44aa51e48110221814685e5a1c6bd58b5b84151daac3fa449909cb"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/export-completion-evidence.py",
+          "bytes": 4546,
+          "sha256": "5b5ac9814e00bc68a0ffc65eeec5a30183c89cf6196ffbae606eca12460ebd27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/finalize-completion-inventory.py",
+          "bytes": 1451,
+          "sha256": "5e2ecba66bf5dbde2873ed20813a3b6bf416928854760c497787764936eca93a"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/launch-completion-croc.py",
+          "bytes": 1545,
+          "sha256": "106926f8941c95cee8857b4af25c654ae45dfe35c93289caac662e4dfd4cabe3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/measure-metric-provenance.py",
+          "bytes": 1031,
+          "sha256": "72955e01442c62815f7229693a1b82bb52eb0ebdf7a73df4533da8251048a4c7"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/prepare-completion.py",
+          "bytes": 2847,
+          "sha256": "b4e61585cd04605140d8944f85e5ce56a9bc0df72927895b67246a4ca450d78c"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/recover-completion-interruption.py",
+          "bytes": 3917,
+          "sha256": "a11ba556bdc14b20a3029c8465ef4d331428740023d1c9aa0b471afbbadd04d6"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/retain-arm-build-logs.py",
+          "bytes": 845,
+          "sha256": "822c779acf7a972152ac3362db3550b66d6cadb107fecb295587b43691170b27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/run-completion-croc.py",
+          "bytes": 12261,
+          "sha256": "66dc2ceae3f2a6ae7186192a0e94bfe3fff4ab32e073e52737d0c783a31df83e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/run-direct-matrix.py",
+          "bytes": 7759,
+          "sha256": "5490454102cd6b93ef290d3a50d4dddc6c33c96fcea9e094b5e3c5022a1c3cbd"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/run_croc_baseline.py",
+          "bytes": 15624,
+          "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/show-completion.py",
+          "bytes": 912,
+          "sha256": "d7a9d55d3e6155a098f326a3502148b17929c92ef2c3f6956c1995e991180036"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/status-completion.py",
+          "bytes": 1586,
+          "sha256": "d823850183e1b27fb0797438dae3ee1cf97ccac296cd41f37bf319c78cd7169a"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/summarize-completion-phases.py",
+          "bytes": 2394,
+          "sha256": "7ee17f34513a9859b9817a33acc458408cb6db0bd5f25759227c3cce7491fc88"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/summarize.py",
+          "bytes": 23033,
+          "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/reproduction/write-completion-report.py",
+          "bytes": 19924,
+          "sha256": "682582fb2c4ce911b13c1112020c710322f6e712177ed4e59e53a92a09983005"
+        }
+      ]
+    },
+    {
+      "file": "oracle-20261004-independent-quic.tar.gz",
+      "sha256": "0709243a2e4e955c696830082b36e20cbc3737774eacbb0450d31b45004d0196",
+      "extraction_verified": true,
+      "members": [
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/artifact-inventory.json",
+          "bytes": 41850,
+          "sha256": "2ae22dfffc59820c79b329f52d2c94d571a586b1bc4a6279d845aa7a80bc4cd8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-local-v1-20261004/root-independent-smoke.py",
+          "bytes": 7970,
+          "sha256": "5207215171c928fd5adbcd82859f8d70d1123dd3e51799ef70bb4aea67f4daa1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/run-direct-matrix.py",
+          "bytes": 7484,
+          "sha256": "46702f6e36dc9d563bf1b18c610321e044919b48116aed64bc7c79f813e6dc44"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/run_oracle_transfer.py",
+          "bytes": 74852,
+          "sha256": "6b6face8dc586edd448abbd49e98b47cc1ccde3d13ca96461642c9b5826c0284"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/analyze-independent-connections.py",
+          "bytes": 2848,
+          "sha256": "9bc2513da0d21f3c4abd92c8c1770836ddcb9691c47904e52ec54ebee04a6f4b"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/audit-direct-matrix.py",
+          "bytes": 12531,
+          "sha256": "09f65684f2160ef6f86dbc4437c98cddbae3445f3b9cbfac82655aa5fd019e9e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/audit-independent-cleanup.py",
+          "bytes": 2755,
+          "sha256": "45d3ec0d99680eada939d0d335edf42f6f34c28a78e23f98fb5bd0e43f2ec606"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/audit-next-cleanup.py",
+          "bytes": 2687,
+          "sha256": "5c3fa3b3a2ef32f63cdcbf0bd158a858731e4a7e62c4cb29bd308189fc39b5f7"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/build-direct-candidate.py",
+          "bytes": 4667,
+          "sha256": "eb302200971cc4e0c48e94c67d088b1d1574c4c4dfee401127f714d08ca0d578"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/check-direct-workspace.py",
+          "bytes": 2922,
+          "sha256": "9c43dd33a937eaf5a6fca59b28183311f3473c262a9f92d6491c47c7b854d0df"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/check-staged-independent-evidence.py",
+          "bytes": 1574,
+          "sha256": "f35830f5a3698ca6a7b4a79df1f30322c15190fdaff1b151e54a1d54d0ac3d09"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/complete-independent-evidence.py",
+          "bytes": 6775,
+          "sha256": "98cdd7833f89801b53a577ca0ee0777e83aae30f55b453042b28793c637ff899"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/export-independent-evidence.py",
+          "bytes": 3414,
+          "sha256": "e6c8dce78f6d140606856ebed20318532e804a2f3ee06d4da3c2022702799f71"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/finalize-independent-inventory.py",
+          "bytes": 1453,
+          "sha256": "50c35cf223ee96d98b42cb8f8470886390cb91040e89942ca7c2e82a63605df1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/prepare-independent-connections.py",
+          "bytes": 1853,
+          "sha256": "34e79fbcfe29a6e7cc5c07cada0a744fe8bedafdc125d3c02beaef55e265a331"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/retain-arm-build-logs.py",
+          "bytes": 845,
+          "sha256": "822c779acf7a972152ac3362db3550b66d6cadb107fecb295587b43691170b27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/root-independent-smoke.py",
+          "bytes": 7970,
+          "sha256": "5207215171c928fd5adbcd82859f8d70d1123dd3e51799ef70bb4aea67f4daa1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/run-direct-matrix.py",
+          "bytes": 7484,
+          "sha256": "46702f6e36dc9d563bf1b18c610321e044919b48116aed64bc7c79f813e6dc44"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/reproduction/run-independent-gates.py",
+          "bytes": 2685,
+          "sha256": "8e8fe812b42d0c0a005b6b4e3f0fb073cb8d812daa8ea09330b07c3d3ae7281c"
+        }
+      ]
+    },
+    {
+      "file": "oracle-20261004-no-debug.tar.gz",
+      "sha256": "03b06561a4efbc99c26012bc1009d03dd5c25b93436b5a3bca1b9889140b7478",
+      "extraction_verified": true,
+      "members": [
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/artifact-inventory.json",
+          "bytes": 140377,
+          "sha256": "660f112b6af46592e5d7c7672c943b471786fb55daabc512630e650650d4c97e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/prepared-croc-phases/launch-croc-phase-clean-diagnostic.py",
+          "bytes": 8727,
+          "sha256": "6587b0c3d58962eec9d43d58596fc6e50106756dfcf237b89aab11ac0adeaf81"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/prepared-croc-phases/run-croc-phase-clean-diagnostic.py",
+          "bytes": 31446,
+          "sha256": "21fecb60361431dc02b6b335540c4dddce87c975c8106f7368b15cb927d5f825"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/audit-debug-large-warmup.py",
+          "bytes": 2772,
+          "sha256": "99df9f470a24a5ea95665345aabb0cb21f92dace07d95168cabec4755cd0bd83"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/audit-large-phase-cohort.py",
+          "bytes": 8540,
+          "sha256": "0c682a309a8520bf1c31818694aebaa1f2234d92735e07e7ddd7c84da3ee89a6"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/audit-next-cleanup.py",
+          "bytes": 2687,
+          "sha256": "5c3fa3b3a2ef32f63cdcbf0bd158a858731e4a7e62c4cb29bd308189fc39b5f7"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/audit-no-debug-cohort.py",
+          "bytes": 6695,
+          "sha256": "a807d00c5bd4bf6023d5d60e6e9cfd1584d590e793f8764f21e170bb81b5c2aa"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/check-staged-no-debug-evidence.py",
+          "bytes": 1280,
+          "sha256": "99fbceae3774c22216a20410b795392dafade6912763f700d91755d6f083a4c2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/clean-endpoint-observer.py",
+          "bytes": 10057,
+          "sha256": "771becac9d05a57167a94f3dc2c5e20974a36dc4cb1e2d5ed4c55d416df441c3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/cleanup-no-debug-smoke-artifacts.py",
+          "bytes": 3319,
+          "sha256": "d1e65b07755d53e0eed39b084f560c1039eb338936fd0a1d8e3c03cdf1cba0d3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/export-no-debug-evidence.py",
+          "bytes": 3900,
+          "sha256": "1858d6cad02e55670ff8d019a83e7d6721c038bd1e9e7a651db5a90ef9fa330d"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/extract-clean-croc-progress.py",
+          "bytes": 2530,
+          "sha256": "b918705511be71ecd695594a09f7d7c867b24517b504acbd40e177203883d7bd"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/extract-stock-croc-startup.py",
+          "bytes": 3239,
+          "sha256": "a047735b278d0db2bed6ae2ede8492595edd2a14252f9798aa9692176dcdb191"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/finalize-debug-cohort-stop.py",
+          "bytes": 1649,
+          "sha256": "1053976daddd4245c4af109d9a611ba64a965c768451370584f409f4be846f0c"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/finalize-no-debug-inventory.py",
+          "bytes": 1034,
+          "sha256": "565fe7fc9f4776b5d991f391df6042c18e30cd23fc956e2525014c3782a74d28"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/clean-endpoint-observer.py",
+          "bytes": 10057,
+          "sha256": "771becac9d05a57167a94f3dc2c5e20974a36dc4cb1e2d5ed4c55d416df441c3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-final/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-final/run-no-debug-cohort.py",
+          "bytes": 48017,
+          "sha256": "888d844a8db949604dd52aa91912d11e68a21fa5bf183dc146dd03bac576b47e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-final/run_croc_baseline.py",
+          "bytes": 15624,
+          "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-final/run_oracle_transfer.py",
+          "bytes": 81322,
+          "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-final/summarize.py",
+          "bytes": 23033,
+          "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r2/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r2/run-no-debug-cohort.py",
+          "bytes": 46695,
+          "sha256": "998625f02f79e670122cae5e2edbbb8d6072493215cd7b80381bb7270184bcf7"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r2/run_croc_baseline.py",
+          "bytes": 15624,
+          "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r2/run_oracle_transfer.py",
+          "bytes": 81322,
+          "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r2/summarize.py",
+          "bytes": 23033,
+          "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r3/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r3/run-no-debug-cohort.py",
+          "bytes": 47428,
+          "sha256": "155a5399d5fa4ea38dddec844e12f81190f7644ae1078600441f07dbfcbe6c27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r3/run_croc_baseline.py",
+          "bytes": 15624,
+          "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r3/run_oracle_transfer.py",
+          "bytes": 81322,
+          "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r3/summarize.py",
+          "bytes": 23033,
+          "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r4/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r4/run-no-debug-cohort.py",
+          "bytes": 48017,
+          "sha256": "888d844a8db949604dd52aa91912d11e68a21fa5bf183dc146dd03bac576b47e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r4/run_croc_baseline.py",
+          "bytes": 15624,
+          "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r4/run_oracle_transfer.py",
+          "bytes": 81322,
+          "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r4/summarize.py",
+          "bytes": 23033,
+          "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r5/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r5/run-no-debug-cohort.py",
+          "bytes": 48017,
+          "sha256": "888d844a8db949604dd52aa91912d11e68a21fa5bf183dc146dd03bac576b47e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r5/run_croc_baseline.py",
+          "bytes": 15624,
+          "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r5/run_oracle_transfer.py",
+          "bytes": 81322,
+          "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r5/summarize.py",
+          "bytes": 23033,
+          "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke/run-no-debug-cohort.py",
+          "bytes": 46684,
+          "sha256": "3517505df4606ec15f5740d66946c29c55679c77ed5b4eef7b82e7bdabbb2259"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke/run_croc_baseline.py",
+          "bytes": 15624,
+          "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke/run_oracle_transfer.py",
+          "bytes": 81322,
+          "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke/summarize.py",
+          "bytes": 23033,
+          "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/previous-observer-v1/clean-endpoint-observer.py",
+          "bytes": 9771,
+          "sha256": "3973c3856f87ad7c3c69d1daeac31f2ad1667f14f8d7991dc6360de123b5a56d"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/launch-large-phase-cohort.py",
+          "bytes": 1028,
+          "sha256": "36f6bfbc6103ed896f8a3ef04d8109eb749a9a31f8ae892393688ee6b765c284"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/launch-no-debug-cohort.py",
+          "bytes": 2864,
+          "sha256": "c494f7e6137416f13439bce8bdbc97524fe3061b4e248aa552c808c58753ad6b"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/prepare-4g-fixtures.py",
+          "bytes": 4013,
+          "sha256": "403a31b391c3b108ef7cea511953bd220ad4ef75d635bdcc07cf55e1894641f2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/prepare-clean-observer.py",
+          "bytes": 1515,
+          "sha256": "2903606477d0aee82074cc2899769d85d77e98416960108d4fd605ff1bec694a"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/refreeze-clean-observer.py",
+          "bytes": 1501,
+          "sha256": "3102d4a6bfef6e153a4e94f933264779161cb430202e8ec84f516b812a28d6bc"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/run-large-phase-cohort.py",
+          "bytes": 6801,
+          "sha256": "7b77781718c864a5ea23fa6bf18872fc982aaa7e5b585c22751003abdc0851b1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/run-no-debug-cohort.py",
+          "bytes": 48017,
+          "sha256": "888d844a8db949604dd52aa91912d11e68a21fa5bf183dc146dd03bac576b47e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/status-no-debug-cohort.py",
+          "bytes": 1364,
+          "sha256": "f49fb66d48920a16ad1121b77a295f2c63ecb25982e46d4ef33d23ffa903a544"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/stop-debug-cohort-at-boundary.py",
+          "bytes": 1778,
+          "sha256": "5310b8fbc14dfe2a89db4ef675b91de35f0563e9e83920ce87c3af8387f1d3db"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/test-clean-capture-live.py",
+          "bytes": 1757,
+          "sha256": "33f9da8f1cbf06ec0e13c0a03d76986ab6041d03931630a5c739c2d2bef6b86f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/test-clean-observer.py",
+          "bytes": 3449,
+          "sha256": "7c2272871f85d14e6e012a5afba326e1ad9545fc817d83afad0f8ed0ff05ec22"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/write-no-debug-report.py",
+          "bytes": 10904,
+          "sha256": "2de175b93f996c0273cfe07765bb5c001c5e30c608e38573e424f245ab63fb32"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/croc_firewall_lease.py",
+          "bytes": 8569,
+          "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/run-completion-croc.py",
+          "bytes": 12475,
+          "sha256": "a44b8c5c48c1247073f7abe3b443dab30cb6a31482674cd2129ad00f626c74a8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/run-large-phase-cohort.py",
+          "bytes": 6801,
+          "sha256": "7b77781718c864a5ea23fa6bf18872fc982aaa7e5b585c22751003abdc0851b1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/run_croc_baseline.py",
+          "bytes": 15624,
+          "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/run_oracle_transfer.py",
+          "bytes": 81322,
+          "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/summarize.py",
+          "bytes": 23033,
+          "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+        }
+      ]
+    },
+    {
+      "file": "retired-active-tools.tar.gz",
+      "sha256": "d1b08d88377bbe43a60428f64e68eb20091053b55ff130c33cbbf09e103af20d",
+      "extraction_verified": true,
+      "members": [
+        {
+          "path": "benchmarks/README.md",
+          "bytes": 37265,
+          "sha256": "22997b904c904472117d65cdff76af47a88e8bf5f9424ad9f88f683b30840f72"
+        },
+        {
+          "path": "benchmarks/performance-v1.schema.json",
+          "bytes": 11561,
+          "sha256": "d85b7bcadeb9d17a2c173322bc1d752187cd22c6682a9f726a9880332b862c65"
+        },
+        {
+          "path": "benchmarks/run_croc_baseline.py",
+          "bytes": 15624,
+          "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+        },
+        {
+          "path": "benchmarks/run_oracle_transfer.py",
+          "bytes": 81322,
+          "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+        },
+        {
+          "path": "benchmarks/summarize.py",
+          "bytes": 23033,
+          "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+        },
+        {
+          "path": "benchmarks/test_completion_benchmark.py",
+          "bytes": 6345,
+          "sha256": "ba1bc6595075d4ee89a1d7150e8344a97a237f46371ad52e252e51f50cbcc215"
+        },
+        {
+          "path": "benchmarks/test_run_oracle_transfer.py",
+          "bytes": 48454,
+          "sha256": "dfa06ba4a852c1c721c0f717112e6d8673b6634c8800eadb11674bfb0ee94c7c"
+        },
+        {
+          "path": "benchmarks/test_summarize.py",
+          "bytes": 17289,
+          "sha256": "5dfcd3de5cfc687dc5cd9fec7be5e5ab71dfac74071da2e721f7ab7473ff4d9b"
+        }
+      ]
+    }
+  ],
+  "note": "Original artifact inventories are historical, unchanged hash claims. Use this extraction map for archived members."
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "campaign": "oracle-20261003-arm-crypto",
+    "checked_before_removal": 0,
+    "preexisting_missing": [],
+    "preexisting_byte_mismatches": []
+  },
+  {
+    "campaign": "oracle-20261003-direct-tuning",
+    "checked_before_removal": 1412,
+    "preexisting_missing": [],
+    "preexisting_byte_mismatches": []
+  },
+  {
+    "campaign": "oracle-20261004-completion",
+    "checked_before_removal": 362,
+    "preexisting_missing": [],
+    "preexisting_byte_mismatches": []
+  },
+  {
+    "campaign": "oracle-20261004-independent-quic",
+    "checked_before_removal": 164,
+    "preexisting_missing": [],
+    "preexisting_byte_mismatches": []
+  },
+  {
+    "campaign": "oracle-20261004-no-debug",
+    "checked_before_removal": 675,
+    "preexisting_missing": [],
+    "preexisting_byte_mismatches": []
+  }
+]

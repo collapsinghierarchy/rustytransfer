@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "historical_inventory": "artifact-inventory.json",
+  "archive": "../../archives/oracle-20261004-completion.tar.gz",
+  "archive_sha256": "3b3e0c09e0d39ee87fb8e627f98ccb85729045aa1a236f8eb72faf8a7e7c1ee6",
+  "extraction_map": "../../archives/index.json",
+  "members": [
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/artifact-inventory.json",
+      "bytes": 89671,
+      "sha256": "5d2b3b5f6953188721f5e6f2a5966fb4964b1f5e04b83bbee0921b0346085ff1"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-croc-retry-20261004/croc_firewall_lease.py",
+      "bytes": 8569,
+      "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-croc-retry-20261004/run-completion-croc.py",
+      "bytes": 12261,
+      "sha256": "66dc2ceae3f2a6ae7186192a0e94bfe3fff4ab32e073e52737d0c783a31df83e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-croc-retry-20261004/run_oracle_transfer.py",
+      "bytes": 83561,
+      "sha256": "0c601764e0d6a5a4508fd11b13d251b90fbad6af20a09758e4e46651ce3066b1"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/run-direct-matrix.py",
+      "bytes": 7759,
+      "sha256": "5490454102cd6b93ef290d3a50d4dddc6c33c96fcea9e094b5e3c5022a1c3cbd"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/run_oracle_transfer.py",
+      "bytes": 83569,
+      "sha256": "a280f1583611e1f19b45d6c30eb3fd025c65bfd535d25e099fd4ae7ad9b2cfbe"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/run-direct-matrix.py",
+      "bytes": 7759,
+      "sha256": "5490454102cd6b93ef290d3a50d4dddc6c33c96fcea9e094b5e3c5022a1c3cbd"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/run_oracle_transfer.py",
+      "bytes": 83569,
+      "sha256": "a280f1583611e1f19b45d6c30eb3fd025c65bfd535d25e099fd4ae7ad9b2cfbe"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/croc_firewall_lease.py",
+      "bytes": 8569,
+      "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/run-completion-croc.py",
+      "bytes": 12261,
+      "sha256": "66dc2ceae3f2a6ae7186192a0e94bfe3fff4ab32e073e52737d0c783a31df83e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/run_oracle_transfer.py",
+      "bytes": 83561,
+      "sha256": "0c601764e0d6a5a4508fd11b13d251b90fbad6af20a09758e4e46651ce3066b1"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/analyze-completion.py",
+      "bytes": 4585,
+      "sha256": "c294c79a96c398e809bc978f7196e49d1e8be691cb2ec41dc1e707b79bcac403"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/audit-completion-croc.py",
+      "bytes": 7991,
+      "sha256": "10af1c080b9f05c4a4b478edb88ea973669bf918c0cd73bb7fed7a3084a37e9b"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/audit-completion-source.py",
+      "bytes": 2890,
+      "sha256": "9f83046424c969ce8753d0707402d544b6aa90b766d5bcc4437a525c27c19d16"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/audit-direct-matrix.py",
+      "bytes": 12531,
+      "sha256": "09f65684f2160ef6f86dbc4437c98cddbae3445f3b9cbfac82655aa5fd019e9e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/audit-independent-cleanup.py",
+      "bytes": 2755,
+      "sha256": "45d3ec0d99680eada939d0d335edf42f6f34c28a78e23f98fb5bd0e43f2ec606"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/audit-interrupted-completion.py",
+      "bytes": 4832,
+      "sha256": "994d2b80c217c952de402b675b244b7eb2f07e7aec54d8ce2878604ff657f258"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/build-direct-candidate.py",
+      "bytes": 4667,
+      "sha256": "eb302200971cc4e0c48e94c67d088b1d1574c4c4dfee401127f714d08ca0d578"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/check-direct-workspace.py",
+      "bytes": 2922,
+      "sha256": "9c43dd33a937eaf5a6fca59b28183311f3473c262a9f92d6491c47c7b854d0df"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/check-staged-completion-evidence.py",
+      "bytes": 1498,
+      "sha256": "35d095e2eef2870d368e55cc59b967490153cd9f691750aace14b9b15c67bee3"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/collect-croc-1g-final.py",
+      "bytes": 19059,
+      "sha256": "dd8f5003ee44aa51e48110221814685e5a1c6bd58b5b84151daac3fa449909cb"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/croc_firewall_lease.py",
+      "bytes": 8569,
+      "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/export-completion-evidence.py",
+      "bytes": 4546,
+      "sha256": "5b5ac9814e00bc68a0ffc65eeec5a30183c89cf6196ffbae606eca12460ebd27"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/finalize-completion-inventory.py",
+      "bytes": 1451,
+      "sha256": "5e2ecba66bf5dbde2873ed20813a3b6bf416928854760c497787764936eca93a"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/launch-completion-croc.py",
+      "bytes": 1545,
+      "sha256": "106926f8941c95cee8857b4af25c654ae45dfe35c93289caac662e4dfd4cabe3"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/measure-metric-provenance.py",
+      "bytes": 1031,
+      "sha256": "72955e01442c62815f7229693a1b82bb52eb0ebdf7a73df4533da8251048a4c7"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/prepare-completion.py",
+      "bytes": 2847,
+      "sha256": "b4e61585cd04605140d8944f85e5ce56a9bc0df72927895b67246a4ca450d78c"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/recover-completion-interruption.py",
+      "bytes": 3917,
+      "sha256": "a11ba556bdc14b20a3029c8465ef4d331428740023d1c9aa0b471afbbadd04d6"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/retain-arm-build-logs.py",
+      "bytes": 845,
+      "sha256": "822c779acf7a972152ac3362db3550b66d6cadb107fecb295587b43691170b27"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/run-completion-croc.py",
+      "bytes": 12261,
+      "sha256": "66dc2ceae3f2a6ae7186192a0e94bfe3fff4ab32e073e52737d0c783a31df83e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/run-direct-matrix.py",
+      "bytes": 7759,
+      "sha256": "5490454102cd6b93ef290d3a50d4dddc6c33c96fcea9e094b5e3c5022a1c3cbd"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/run_croc_baseline.py",
+      "bytes": 15624,
+      "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/show-completion.py",
+      "bytes": 912,
+      "sha256": "d7a9d55d3e6155a098f326a3502148b17929c92ef2c3f6956c1995e991180036"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/status-completion.py",
+      "bytes": 1586,
+      "sha256": "d823850183e1b27fb0797438dae3ee1cf97ccac296cd41f37bf319c78cd7169a"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/summarize-completion-phases.py",
+      "bytes": 2394,
+      "sha256": "7ee17f34513a9859b9817a33acc458408cb6db0bd5f25759227c3cce7491fc88"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/summarize.py",
+      "bytes": 23033,
+      "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-completion/reproduction/write-completion-report.py",
+      "bytes": 19924,
+      "sha256": "682582fb2c4ce911b13c1112020c710322f6e712177ed4e59e53a92a09983005"
+    }
+  ],
+  "note": "Original inventory retained unchanged. Python helper members now reside in this verified archive; other entries remain live."
+}

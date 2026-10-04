@@ -56,15 +56,17 @@ crate, event bus, plugin system, or application framework is not needed initiall
 ### 1A. Establish a reproducible current baseline
 
 Existing results are historical evidence, not a baseline for the current commit.
-The [matched Oracle direct measurements](../benchmarks/README.md#oracle-validation-2026-09-21)
+The [matched Oracle direct measurements](../benchmarks/archives/README.md)
 reported 27.175 MiB/s for 512 MiB, 13.49 sender CPU seconds, 7.82 receiver CPU
 seconds, and about 37.6 MiB sender peak RSS. They used three measured runs and
-different earlier code. The [read-ahead experiment](../benchmarks/README.md#phase-4-status-2026-09-21)
+different earlier code. The [read-ahead experiment](../benchmarks/archives/README.md)
 failed its WAN performance gate. Do not restore a pipeline or add parallel QUIC
 streams without a new profile and a specific hypothesis.
 
-Start with [`run_oracle_transfer.py`](../benchmarks/run_oracle_transfer.py),
-[`summarize.py`](../benchmarks/summarize.py), and
+The historical `run_oracle_transfer.py` and `summarize.py` referenced by this
+plan are now in the [verified reproduction archives](../benchmarks/archives/README.md).
+The maintained local CI baseline uses [`performance.py`](../benchmarks/performance.py).
+For historical two-host reproduction, restore the archived runners and use
 [`performance-v1.schema.json`](../benchmarks/performance-v1.schema.json). Make only
 the runner changes needed to measure the requested path correctly:
 

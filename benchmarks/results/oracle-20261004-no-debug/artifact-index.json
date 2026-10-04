@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "historical_inventory": "artifact-inventory.json",
+  "archive": "../../archives/oracle-20261004-no-debug.tar.gz",
+  "archive_sha256": "03b06561a4efbc99c26012bc1009d03dd5c25b93436b5a3bca1b9889140b7478",
+  "extraction_map": "../../archives/index.json",
+  "members": [
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/artifact-inventory.json",
+      "bytes": 140377,
+      "sha256": "660f112b6af46592e5d7c7672c943b471786fb55daabc512630e650650d4c97e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/prepared-croc-phases/launch-croc-phase-clean-diagnostic.py",
+      "bytes": 8727,
+      "sha256": "6587b0c3d58962eec9d43d58596fc6e50106756dfcf237b89aab11ac0adeaf81"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/prepared-croc-phases/run-croc-phase-clean-diagnostic.py",
+      "bytes": 31446,
+      "sha256": "21fecb60361431dc02b6b335540c4dddce87c975c8106f7368b15cb927d5f825"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/audit-debug-large-warmup.py",
+      "bytes": 2772,
+      "sha256": "99df9f470a24a5ea95665345aabb0cb21f92dace07d95168cabec4755cd0bd83"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/audit-large-phase-cohort.py",
+      "bytes": 8540,
+      "sha256": "0c682a309a8520bf1c31818694aebaa1f2234d92735e07e7ddd7c84da3ee89a6"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/audit-next-cleanup.py",
+      "bytes": 2687,
+      "sha256": "5c3fa3b3a2ef32f63cdcbf0bd158a858731e4a7e62c4cb29bd308189fc39b5f7"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/audit-no-debug-cohort.py",
+      "bytes": 6695,
+      "sha256": "a807d00c5bd4bf6023d5d60e6e9cfd1584d590e793f8764f21e170bb81b5c2aa"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/check-staged-no-debug-evidence.py",
+      "bytes": 1280,
+      "sha256": "99fbceae3774c22216a20410b795392dafade6912763f700d91755d6f083a4c2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/clean-endpoint-observer.py",
+      "bytes": 10057,
+      "sha256": "771becac9d05a57167a94f3dc2c5e20974a36dc4cb1e2d5ed4c55d416df441c3"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/cleanup-no-debug-smoke-artifacts.py",
+      "bytes": 3319,
+      "sha256": "d1e65b07755d53e0eed39b084f560c1039eb338936fd0a1d8e3c03cdf1cba0d3"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/export-no-debug-evidence.py",
+      "bytes": 3900,
+      "sha256": "1858d6cad02e55670ff8d019a83e7d6721c038bd1e9e7a651db5a90ef9fa330d"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/extract-clean-croc-progress.py",
+      "bytes": 2530,
+      "sha256": "b918705511be71ecd695594a09f7d7c867b24517b504acbd40e177203883d7bd"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/extract-stock-croc-startup.py",
+      "bytes": 3239,
+      "sha256": "a047735b278d0db2bed6ae2ede8492595edd2a14252f9798aa9692176dcdb191"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/finalize-debug-cohort-stop.py",
+      "bytes": 1649,
+      "sha256": "1053976daddd4245c4af109d9a611ba64a965c768451370584f409f4be846f0c"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/finalize-no-debug-inventory.py",
+      "bytes": 1034,
+      "sha256": "565fe7fc9f4776b5d991f391df6042c18e30cd23fc956e2525014c3782a74d28"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/clean-endpoint-observer.py",
+      "bytes": 10057,
+      "sha256": "771becac9d05a57167a94f3dc2c5e20974a36dc4cb1e2d5ed4c55d416df441c3"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-final/croc_firewall_lease.py",
+      "bytes": 8569,
+      "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-final/run-no-debug-cohort.py",
+      "bytes": 48017,
+      "sha256": "888d844a8db949604dd52aa91912d11e68a21fa5bf183dc146dd03bac576b47e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-final/run_croc_baseline.py",
+      "bytes": 15624,
+      "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-final/run_oracle_transfer.py",
+      "bytes": 81322,
+      "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-final/summarize.py",
+      "bytes": 23033,
+      "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r2/croc_firewall_lease.py",
+      "bytes": 8569,
+      "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r2/run-no-debug-cohort.py",
+      "bytes": 46695,
+      "sha256": "998625f02f79e670122cae5e2edbbb8d6072493215cd7b80381bb7270184bcf7"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r2/run_croc_baseline.py",
+      "bytes": 15624,
+      "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r2/run_oracle_transfer.py",
+      "bytes": 81322,
+      "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r2/summarize.py",
+      "bytes": 23033,
+      "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r3/croc_firewall_lease.py",
+      "bytes": 8569,
+      "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r3/run-no-debug-cohort.py",
+      "bytes": 47428,
+      "sha256": "155a5399d5fa4ea38dddec844e12f81190f7644ae1078600441f07dbfcbe6c27"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r3/run_croc_baseline.py",
+      "bytes": 15624,
+      "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r3/run_oracle_transfer.py",
+      "bytes": 81322,
+      "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r3/summarize.py",
+      "bytes": 23033,
+      "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r4/croc_firewall_lease.py",
+      "bytes": 8569,
+      "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r4/run-no-debug-cohort.py",
+      "bytes": 48017,
+      "sha256": "888d844a8db949604dd52aa91912d11e68a21fa5bf183dc146dd03bac576b47e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r4/run_croc_baseline.py",
+      "bytes": 15624,
+      "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r4/run_oracle_transfer.py",
+      "bytes": 81322,
+      "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r4/summarize.py",
+      "bytes": 23033,
+      "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r5/croc_firewall_lease.py",
+      "bytes": 8569,
+      "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r5/run-no-debug-cohort.py",
+      "bytes": 48017,
+      "sha256": "888d844a8db949604dd52aa91912d11e68a21fa5bf183dc146dd03bac576b47e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r5/run_croc_baseline.py",
+      "bytes": 15624,
+      "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r5/run_oracle_transfer.py",
+      "bytes": 81322,
+      "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke-r5/summarize.py",
+      "bytes": 23033,
+      "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke/croc_firewall_lease.py",
+      "bytes": 8569,
+      "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke/run-no-debug-cohort.py",
+      "bytes": 46684,
+      "sha256": "3517505df4606ec15f5740d66946c29c55679c77ed5b4eef7b82e7bdabbb2259"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke/run_croc_baseline.py",
+      "bytes": 15624,
+      "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke/run_oracle_transfer.py",
+      "bytes": 81322,
+      "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/harness-smoke/summarize.py",
+      "bytes": 23033,
+      "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/frozen-tools/previous-observer-v1/clean-endpoint-observer.py",
+      "bytes": 9771,
+      "sha256": "3973c3856f87ad7c3c69d1daeac31f2ad1667f14f8d7991dc6360de123b5a56d"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/launch-large-phase-cohort.py",
+      "bytes": 1028,
+      "sha256": "36f6bfbc6103ed896f8a3ef04d8109eb749a9a31f8ae892393688ee6b765c284"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/launch-no-debug-cohort.py",
+      "bytes": 2864,
+      "sha256": "c494f7e6137416f13439bce8bdbc97524fe3061b4e248aa552c808c58753ad6b"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/prepare-4g-fixtures.py",
+      "bytes": 4013,
+      "sha256": "403a31b391c3b108ef7cea511953bd220ad4ef75d635bdcc07cf55e1894641f2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/prepare-clean-observer.py",
+      "bytes": 1515,
+      "sha256": "2903606477d0aee82074cc2899769d85d77e98416960108d4fd605ff1bec694a"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/refreeze-clean-observer.py",
+      "bytes": 1501,
+      "sha256": "3102d4a6bfef6e153a4e94f933264779161cb430202e8ec84f516b812a28d6bc"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/run-large-phase-cohort.py",
+      "bytes": 6801,
+      "sha256": "7b77781718c864a5ea23fa6bf18872fc982aaa7e5b585c22751003abdc0851b1"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/run-no-debug-cohort.py",
+      "bytes": 48017,
+      "sha256": "888d844a8db949604dd52aa91912d11e68a21fa5bf183dc146dd03bac576b47e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/status-no-debug-cohort.py",
+      "bytes": 1364,
+      "sha256": "f49fb66d48920a16ad1121b77a295f2c63ecb25982e46d4ef33d23ffa903a544"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/stop-debug-cohort-at-boundary.py",
+      "bytes": 1778,
+      "sha256": "5310b8fbc14dfe2a89db4ef675b91de35f0563e9e83920ce87c3af8387f1d3db"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/test-clean-capture-live.py",
+      "bytes": 1757,
+      "sha256": "33f9da8f1cbf06ec0e13c0a03d76986ab6041d03931630a5c739c2d2bef6b86f"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/test-clean-observer.py",
+      "bytes": 3449,
+      "sha256": "7c2272871f85d14e6e012a5afba326e1ad9545fc817d83afad0f8ed0ff05ec22"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/reproduction/write-no-debug-report.py",
+      "bytes": 10904,
+      "sha256": "2de175b93f996c0273cfe07765bb5c001c5e30c608e38573e424f245ab63fb32"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/croc_firewall_lease.py",
+      "bytes": 8569,
+      "sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/run-completion-croc.py",
+      "bytes": 12475,
+      "sha256": "a44b8c5c48c1247073f7abe3b443dab30cb6a31482674cd2129ad00f626c74a8"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/run-large-phase-cohort.py",
+      "bytes": 6801,
+      "sha256": "7b77781718c864a5ea23fa6bf18872fc982aaa7e5b585c22751003abdc0851b1"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/run_croc_baseline.py",
+      "bytes": 15624,
+      "sha256": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/run_oracle_transfer.py",
+      "bytes": 81322,
+      "sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e"
+    },
+    {
+      "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/summarize.py",
+      "bytes": 23033,
+      "sha256": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2"
+    }
+  ],
+  "note": "Original inventory retained unchanged. Python helper members now reside in this verified archive; other entries remain live."
+}

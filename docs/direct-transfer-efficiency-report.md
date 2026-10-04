@@ -1,5 +1,12 @@
 # Direct transfer efficiency report - updated 2026-10-04
 
+The maintained [local performance baseline](../benchmarks/README.md) now compares
+Rustytransfer against a fixed compatible Rustytransfer revision. CI is manual/
+scheduled and report-only; the 10% threshold remains provisional. Local endpoint
+phases and elapsed transfer-pair timings have a different scope from these WAN
+measurements. Historical Croc evidence remains below; its frozen collectors and
+local helpers are recoverable through the [verified archive index](../benchmarks/archives/README.md).
+
 The ARM efficiency milestone is complete. A small Cargo configuration enables the
 pinned AES/POLYVAL crates' runtime ARM acceleration on Linux/macOS AArch64, with
 software fallback. Encryption, nonce rules, payload framing, and chunk sizes are

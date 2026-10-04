@@ -1,0 +1,662 @@
+[
+  {
+    "size_mib": 64,
+    "run_index": 0,
+    "warmup": true,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "62b72fb4cc058297768285faea99eaec6e7ebd19eef831684c374cd583c68959",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 11:56:06 starting TCP server on :9009",
+          "[info]\t2026/10/04 11:56:06 starting TCP server on :9010",
+          "[info]\t2026/10/04 11:56:06 starting TCP server on :9011",
+          "[info]\t2026/10/04 11:56:06 starting TCP server on :9012",
+          "[info]\t2026/10/04 11:56:06 starting TCP server on :9013",
+          "[debug]\t11:56:06 tcp.go:245: client 127.0.0.1:43584 connected",
+          "[debug]\t11:56:06 tcp.go:245: client 127.0.0.1:51632 connected",
+          "[debug]\t11:56:06 tcp.go:245: client 127.0.0.1:37950 connected",
+          "[debug]\t11:56:06 tcp.go:245: client 127.0.0.1:45374 connected",
+          "[debug]\t11:56:06 tcp.go:245: client 127.0.0.1:37028 connected",
+          "[debug]\t11:56:07 tcp.go:245: client 46.5.248.165:57561 connected",
+          "[debug]\t11:56:07 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t11:56:07 tcp.go:245: client 127.0.0.1:37038 connected",
+          "[debug]\t11:56:07 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t11:56:07 tcp.go:245: client 127.0.0.1:51640 connected",
+          "[debug]\t11:56:07 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t11:56:07 tcp.go:245: client 127.0.0.1:37960 connected",
+          "[debug]\t11:56:07 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t11:56:07 tcp.go:245: client 127.0.0.1:45376 connected",
+          "[debug]\t11:56:07 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t11:56:07 tcp.go:245: client 127.0.0.1:43590 connected",
+          "[debug]\t11:56:07 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t11:56:07 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t11:56:07 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t11:56:07 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t11:56:07 tcp.go:245: client 46.5.248.165:57563 connected",
+          "[debug]\t11:56:07 tcp.go:245: client 46.5.248.165:57567 connected",
+          "[debug]\t11:56:07 tcp.go:245: client 46.5.248.165:57565 connected",
+          "[debug]\t11:56:07 tcp.go:245: client 46.5.248.165:57569 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "b64cf313aace501ce86183eb49202668192c1f1523ff766d43d115f5742ce7d5",
+        "tcp_route_lines": [
+          "[debug]\t13:56:06 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t13:56:06 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t13:56:06 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t13:56:06 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t13:56:06 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t13:56:06 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t13:56:06 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t13:56:06 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t13:56:06 croc.go:2849: connected to 141.147.1.21:9013"
+        ]
+      }
+    }
+  },
+  {
+    "size_mib": 64,
+    "run_index": 1,
+    "warmup": false,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "a76196cb5bf8ea68df844333f70e349ddbd1f34244b7dbd73b2f5ecf83b07711",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 11:56:31 starting TCP server on :9009",
+          "[info]\t2026/10/04 11:56:31 starting TCP server on :9010",
+          "[info]\t2026/10/04 11:56:31 starting TCP server on :9011",
+          "[info]\t2026/10/04 11:56:31 starting TCP server on :9012",
+          "[info]\t2026/10/04 11:56:31 starting TCP server on :9013",
+          "[debug]\t11:56:31 tcp.go:245: client 127.0.0.1:55996 connected",
+          "[debug]\t11:56:31 tcp.go:245: client 127.0.0.1:54596 connected",
+          "[debug]\t11:56:31 tcp.go:245: client 127.0.0.1:47044 connected",
+          "[debug]\t11:56:31 tcp.go:245: client 127.0.0.1:54270 connected",
+          "[debug]\t11:56:31 tcp.go:245: client 127.0.0.1:56624 connected",
+          "[debug]\t11:56:32 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t11:56:32 tcp.go:245: client 127.0.0.1:56632 connected",
+          "[debug]\t11:56:33 tcp.go:245: client 46.5.248.165:62708 connected",
+          "[debug]\t11:56:33 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t11:56:33 tcp.go:245: client 127.0.0.1:54598 connected",
+          "[debug]\t11:56:33 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t11:56:33 tcp.go:245: client 127.0.0.1:47052 connected",
+          "[debug]\t11:56:33 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t11:56:33 tcp.go:245: client 127.0.0.1:54280 connected",
+          "[debug]\t11:56:33 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t11:56:33 tcp.go:245: client 127.0.0.1:56006 connected",
+          "[debug]\t11:56:33 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t11:56:33 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t11:56:33 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t11:56:33 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t11:56:33 tcp.go:245: client 46.5.248.165:62738 connected",
+          "[debug]\t11:56:33 tcp.go:245: client 46.5.248.165:62704 connected",
+          "[debug]\t11:56:33 tcp.go:245: client 46.5.248.165:62750 connected",
+          "[debug]\t11:56:33 tcp.go:245: client 46.5.248.165:62744 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "4ad3d6b920267c5ec564cae4f650ebcbf705ae54d15c2ebc404bfe77d22d1383",
+        "tcp_route_lines": [
+          "[debug]\t13:56:32 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t13:56:33 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t13:56:33 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t13:56:33 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t13:56:33 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t13:56:33 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t13:56:33 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t13:56:33 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t13:56:33 croc.go:2849: connected to 141.147.1.21:9010"
+        ]
+      }
+    }
+  },
+  {
+    "size_mib": 64,
+    "run_index": 2,
+    "warmup": false,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "aa053fbb62d1705c16cc078879d626af33c42f7e2003027645fa3c0f1cb78103",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 11:56:45 starting TCP server on :9009",
+          "[info]\t2026/10/04 11:56:45 starting TCP server on :9010",
+          "[info]\t2026/10/04 11:56:45 starting TCP server on :9011",
+          "[info]\t2026/10/04 11:56:45 starting TCP server on :9012",
+          "[info]\t2026/10/04 11:56:45 starting TCP server on :9013",
+          "[debug]\t11:56:45 tcp.go:245: client 127.0.0.1:32876 connected",
+          "[debug]\t11:56:45 tcp.go:245: client 127.0.0.1:53726 connected",
+          "[debug]\t11:56:45 tcp.go:245: client 127.0.0.1:58070 connected",
+          "[debug]\t11:56:45 tcp.go:245: client 127.0.0.1:47210 connected",
+          "[debug]\t11:56:45 tcp.go:245: client 127.0.0.1:52696 connected",
+          "[debug]\t11:56:45 tcp.go:245: client 46.5.248.165:62748 connected",
+          "[debug]\t11:56:45 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t11:56:45 tcp.go:245: client 127.0.0.1:52708 connected",
+          "[debug]\t11:56:45 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t11:56:45 tcp.go:245: client 127.0.0.1:53730 connected",
+          "[debug]\t11:56:45 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t11:56:45 tcp.go:245: client 127.0.0.1:58084 connected",
+          "[debug]\t11:56:45 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t11:56:45 tcp.go:245: client 127.0.0.1:47216 connected",
+          "[debug]\t11:56:45 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t11:56:45 tcp.go:245: client 127.0.0.1:32884 connected",
+          "[debug]\t11:56:45 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t11:56:45 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t11:56:45 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t11:56:45 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t11:56:45 tcp.go:245: client 46.5.248.165:62742 connected",
+          "[debug]\t11:56:45 tcp.go:245: client 46.5.248.165:62710 connected",
+          "[debug]\t11:56:45 tcp.go:245: client 46.5.248.165:62724 connected",
+          "[debug]\t11:56:45 tcp.go:245: client 46.5.248.165:62700 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "36cbfaf0642dc331abb47a49ac834ecd94f87490a2a11dffb089d960b0bc179d",
+        "tcp_route_lines": [
+          "[debug]\t13:56:45 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t13:56:45 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t13:56:45 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t13:56:45 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t13:56:45 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t13:56:45 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t13:56:45 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t13:56:45 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t13:56:45 croc.go:2849: connected to 141.147.1.21:9010"
+        ]
+      }
+    }
+  },
+  {
+    "size_mib": 64,
+    "run_index": 3,
+    "warmup": false,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "ab1b70bae9463488aac5c7660d475f1a39f7bf1c6d25026f548ed87a38e73502",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 11:57:23 starting TCP server on :9009",
+          "[info]\t2026/10/04 11:57:23 starting TCP server on :9010",
+          "[info]\t2026/10/04 11:57:23 starting TCP server on :9011",
+          "[info]\t2026/10/04 11:57:23 starting TCP server on :9012",
+          "[info]\t2026/10/04 11:57:23 starting TCP server on :9013",
+          "[debug]\t11:57:23 tcp.go:245: client 127.0.0.1:60118 connected",
+          "[debug]\t11:57:23 tcp.go:245: client 127.0.0.1:53132 connected",
+          "[debug]\t11:57:23 tcp.go:245: client 127.0.0.1:46008 connected",
+          "[debug]\t11:57:23 tcp.go:245: client 127.0.0.1:34726 connected",
+          "[debug]\t11:57:23 tcp.go:245: client 127.0.0.1:57472 connected",
+          "[debug]\t11:57:23 tcp.go:245: client 46.5.248.165:62713 connected",
+          "[debug]\t11:57:23 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t11:57:23 tcp.go:245: client 127.0.0.1:60128 connected",
+          "[debug]\t11:57:23 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t11:57:23 tcp.go:245: client 127.0.0.1:46010 connected",
+          "[debug]\t11:57:23 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t11:57:23 tcp.go:245: client 127.0.0.1:34738 connected",
+          "[debug]\t11:57:23 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t11:57:23 tcp.go:245: client 127.0.0.1:57484 connected",
+          "[debug]\t11:57:23 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t11:57:23 tcp.go:245: client 127.0.0.1:53140 connected",
+          "[debug]\t11:57:23 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t11:57:23 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t11:57:23 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t11:57:23 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t11:57:23 tcp.go:245: client 46.5.248.165:62715 connected",
+          "[debug]\t11:57:23 tcp.go:245: client 46.5.248.165:62717 connected",
+          "[debug]\t11:57:23 tcp.go:245: client 46.5.248.165:62721 connected",
+          "[debug]\t11:57:23 tcp.go:245: client 46.5.248.165:62719 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "3ac8d984ff5323df01c7281b225d56f9de5e0f9916293c2d9ae946fbdd623546",
+        "tcp_route_lines": [
+          "[debug]\t13:57:23 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t13:57:23 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t13:57:23 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t13:57:23 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t13:57:23 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t13:57:23 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t13:57:23 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t13:57:23 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t13:57:23 croc.go:2849: connected to 141.147.1.21:9012"
+        ]
+      }
+    }
+  },
+  {
+    "size_mib": 64,
+    "run_index": 4,
+    "warmup": false,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "6b212220eab4fcc73b0b93b6e03ac3143716fa1e5951da58035f81a4d78e344b",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 11:57:35 starting TCP server on :9009",
+          "[info]\t2026/10/04 11:57:35 starting TCP server on :9010",
+          "[info]\t2026/10/04 11:57:35 starting TCP server on :9011",
+          "[info]\t2026/10/04 11:57:35 starting TCP server on :9012",
+          "[info]\t2026/10/04 11:57:35 starting TCP server on :9013",
+          "[debug]\t11:57:35 tcp.go:245: client 127.0.0.1:37482 connected",
+          "[debug]\t11:57:35 tcp.go:245: client 127.0.0.1:55186 connected",
+          "[debug]\t11:57:35 tcp.go:245: client 127.0.0.1:47396 connected",
+          "[debug]\t11:57:35 tcp.go:245: client 127.0.0.1:47784 connected",
+          "[debug]\t11:57:35 tcp.go:245: client 127.0.0.1:49808 connected",
+          "[debug]\t11:57:35 tcp.go:245: client 46.5.248.165:62745 connected",
+          "[debug]\t11:57:35 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t11:57:35 tcp.go:245: client 127.0.0.1:49816 connected",
+          "[debug]\t11:57:36 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t11:57:36 tcp.go:245: client 127.0.0.1:55196 connected",
+          "[debug]\t11:57:36 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t11:57:36 tcp.go:245: client 127.0.0.1:47408 connected",
+          "[debug]\t11:57:36 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t11:57:36 tcp.go:245: client 127.0.0.1:47796 connected",
+          "[debug]\t11:57:36 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t11:57:36 tcp.go:245: client 127.0.0.1:37486 connected",
+          "[debug]\t11:57:36 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t11:57:36 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t11:57:36 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t11:57:36 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t11:57:36 tcp.go:245: client 46.5.248.165:62747 connected",
+          "[debug]\t11:57:36 tcp.go:245: client 46.5.248.165:62751 connected",
+          "[debug]\t11:57:36 tcp.go:245: client 46.5.248.165:62753 connected",
+          "[debug]\t11:57:36 tcp.go:245: client 46.5.248.165:62749 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "15227dba39e6bc265088efac296c74c38e170ed2d3345d7a947c19b7c618c7ba",
+        "tcp_route_lines": [
+          "[debug]\t13:57:35 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t13:57:35 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t13:57:35 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t13:57:35 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t13:57:35 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t13:57:35 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t13:57:35 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t13:57:35 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t13:57:35 croc.go:2849: connected to 141.147.1.21:9010"
+        ]
+      }
+    }
+  },
+  {
+    "size_mib": 64,
+    "run_index": 5,
+    "warmup": false,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "7e663eb98c3cc0484107ed77ea37eb3330f5fd6c6759e6687a0c47a3871055a8",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 11:58:13 starting TCP server on :9009",
+          "[info]\t2026/10/04 11:58:13 starting TCP server on :9010",
+          "[info]\t2026/10/04 11:58:13 starting TCP server on :9011",
+          "[info]\t2026/10/04 11:58:13 starting TCP server on :9012",
+          "[info]\t2026/10/04 11:58:13 starting TCP server on :9013",
+          "[debug]\t11:58:13 tcp.go:245: client 127.0.0.1:43122 connected",
+          "[debug]\t11:58:13 tcp.go:245: client 127.0.0.1:50186 connected",
+          "[debug]\t11:58:13 tcp.go:245: client 127.0.0.1:51114 connected",
+          "[debug]\t11:58:13 tcp.go:245: client 127.0.0.1:58770 connected",
+          "[debug]\t11:58:13 tcp.go:245: client 127.0.0.1:47794 connected",
+          "[debug]\t11:58:14 tcp.go:245: client 46.5.248.165:57549 connected",
+          "[debug]\t11:58:14 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t11:58:14 tcp.go:245: client 127.0.0.1:43138 connected",
+          "[debug]\t11:58:14 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t11:58:14 tcp.go:245: client 127.0.0.1:51126 connected",
+          "[debug]\t11:58:14 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t11:58:14 tcp.go:245: client 127.0.0.1:58782 connected",
+          "[debug]\t11:58:14 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t11:58:14 tcp.go:245: client 127.0.0.1:47808 connected",
+          "[debug]\t11:58:14 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t11:58:14 tcp.go:245: client 127.0.0.1:50202 connected",
+          "[debug]\t11:58:14 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t11:58:14 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t11:58:14 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t11:58:14 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t11:58:14 tcp.go:245: client 46.5.248.165:57551 connected",
+          "[debug]\t11:58:14 tcp.go:245: client 46.5.248.165:57555 connected",
+          "[debug]\t11:58:14 tcp.go:245: client 46.5.248.165:57557 connected",
+          "[debug]\t11:58:14 tcp.go:245: client 46.5.248.165:57553 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "37de3908db4195e414249401095c81c653aa55e6938c7d40ee458636e4b1cd46",
+        "tcp_route_lines": [
+          "[debug]\t13:58:13 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t13:58:13 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t13:58:13 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t13:58:13 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t13:58:13 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t13:58:13 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t13:58:13 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t13:58:13 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t13:58:13 croc.go:2849: connected to 141.147.1.21:9010"
+        ]
+      }
+    }
+  },
+  {
+    "size_mib": 512,
+    "run_index": 0,
+    "warmup": true,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "cdfd89b882176d2c158d85ae756fd1bb22f070267a0304b9be2813874fc252cd",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 11:59:09 starting TCP server on :9009",
+          "[info]\t2026/10/04 11:59:09 starting TCP server on :9010",
+          "[info]\t2026/10/04 11:59:09 starting TCP server on :9011",
+          "[info]\t2026/10/04 11:59:09 starting TCP server on :9012",
+          "[info]\t2026/10/04 11:59:09 starting TCP server on :9013",
+          "[debug]\t11:59:09 tcp.go:245: client 127.0.0.1:39778 connected",
+          "[debug]\t11:59:09 tcp.go:245: client 127.0.0.1:39756 connected",
+          "[debug]\t11:59:09 tcp.go:245: client 127.0.0.1:38112 connected",
+          "[debug]\t11:59:09 tcp.go:245: client 127.0.0.1:60092 connected",
+          "[debug]\t11:59:09 tcp.go:245: client 127.0.0.1:44828 connected",
+          "[debug]\t11:59:09 tcp.go:245: client 46.5.248.165:57623 connected",
+          "[debug]\t11:59:09 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t11:59:09 tcp.go:245: client 127.0.0.1:44842 connected",
+          "[debug]\t11:59:09 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t11:59:09 tcp.go:245: client 127.0.0.1:39762 connected",
+          "[debug]\t11:59:09 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t11:59:09 tcp.go:245: client 127.0.0.1:38126 connected",
+          "[debug]\t11:59:09 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t11:59:09 tcp.go:245: client 127.0.0.1:60108 connected",
+          "[debug]\t11:59:09 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t11:59:09 tcp.go:245: client 127.0.0.1:39782 connected",
+          "[debug]\t11:59:09 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t11:59:09 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t11:59:09 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t11:59:09 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t11:59:09 tcp.go:245: client 46.5.248.165:57631 connected",
+          "[debug]\t11:59:09 tcp.go:245: client 46.5.248.165:57625 connected",
+          "[debug]\t11:59:09 tcp.go:245: client 46.5.248.165:57627 connected",
+          "[debug]\t11:59:09 tcp.go:245: client 46.5.248.165:57629 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "9c589f5659e5ae0211d3f3f92c0ce383da988a3a6d5a9769181f8a698adf0a31",
+        "tcp_route_lines": [
+          "[debug]\t13:59:09 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t13:59:09 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t13:59:09 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t13:59:09 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t13:59:09 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t13:59:09 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t13:59:09 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t13:59:09 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t13:59:09 croc.go:2849: connected to 141.147.1.21:9011"
+        ]
+      }
+    }
+  },
+  {
+    "size_mib": 512,
+    "run_index": 1,
+    "warmup": false,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "598969ae23d5ba02bd94ff192adb07a4849e67bebd61e2c6af398267acab1c40",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 12:00:13 starting TCP server on :9009",
+          "[info]\t2026/10/04 12:00:13 starting TCP server on :9010",
+          "[info]\t2026/10/04 12:00:13 starting TCP server on :9011",
+          "[info]\t2026/10/04 12:00:13 starting TCP server on :9012",
+          "[info]\t2026/10/04 12:00:13 starting TCP server on :9013",
+          "[debug]\t12:00:13 tcp.go:245: client 127.0.0.1:37020 connected",
+          "[debug]\t12:00:13 tcp.go:245: client 127.0.0.1:35008 connected",
+          "[debug]\t12:00:13 tcp.go:245: client 127.0.0.1:51152 connected",
+          "[debug]\t12:00:13 tcp.go:245: client 127.0.0.1:34282 connected",
+          "[debug]\t12:00:13 tcp.go:245: client 127.0.0.1:58246 connected",
+          "[debug]\t12:00:14 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t12:00:14 tcp.go:245: client 127.0.0.1:51166 connected",
+          "[debug]\t12:00:14 tcp.go:245: client 46.5.248.165:57608 connected",
+          "[debug]\t12:00:14 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t12:00:14 tcp.go:245: client 127.0.0.1:58252 connected",
+          "[debug]\t12:00:14 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t12:00:14 tcp.go:245: client 127.0.0.1:37034 connected",
+          "[debug]\t12:00:14 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t12:00:14 tcp.go:245: client 127.0.0.1:35014 connected",
+          "[debug]\t12:00:14 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t12:00:14 tcp.go:245: client 127.0.0.1:34294 connected",
+          "[debug]\t12:00:14 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t12:00:14 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t12:00:14 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t12:00:14 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t12:00:14 tcp.go:245: client 46.5.248.165:57602 connected",
+          "[debug]\t12:00:14 tcp.go:245: client 46.5.248.165:57638 connected",
+          "[debug]\t12:00:14 tcp.go:245: client 46.5.248.165:57604 connected",
+          "[debug]\t12:00:14 tcp.go:245: client 46.5.248.165:57578 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "82f7b7c9ccc9055cdfe7c9a3ead6edbfc49b977597eb3e4c2371560729d305e1",
+        "tcp_route_lines": [
+          "[debug]\t14:00:13 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t14:00:13 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t14:00:13 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t14:00:13 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t14:00:13 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t14:00:13 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t14:00:13 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t14:00:13 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t14:00:13 croc.go:2849: connected to 141.147.1.21:9013"
+        ]
+      }
+    }
+  },
+  {
+    "size_mib": 512,
+    "run_index": 2,
+    "warmup": false,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "e202d5c715bbef9878cc5efb0f8c06169b4fb25d15b43f9c298aa615502f1143",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 12:00:43 starting TCP server on :9009",
+          "[info]\t2026/10/04 12:00:43 starting TCP server on :9010",
+          "[info]\t2026/10/04 12:00:43 starting TCP server on :9011",
+          "[info]\t2026/10/04 12:00:43 starting TCP server on :9012",
+          "[info]\t2026/10/04 12:00:43 starting TCP server on :9013",
+          "[debug]\t12:00:43 tcp.go:245: client 127.0.0.1:60750 connected",
+          "[debug]\t12:00:43 tcp.go:245: client 127.0.0.1:59668 connected",
+          "[debug]\t12:00:43 tcp.go:245: client 127.0.0.1:34730 connected",
+          "[debug]\t12:00:43 tcp.go:245: client 127.0.0.1:46260 connected",
+          "[debug]\t12:00:43 tcp.go:245: client 127.0.0.1:47934 connected",
+          "[debug]\t12:00:44 tcp.go:245: client 46.5.248.165:57542 connected",
+          "[debug]\t12:00:44 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t12:00:44 tcp.go:245: client 127.0.0.1:47948 connected",
+          "[debug]\t12:00:44 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t12:00:44 tcp.go:245: client 127.0.0.1:59684 connected",
+          "[debug]\t12:00:44 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t12:00:44 tcp.go:245: client 127.0.0.1:34738 connected",
+          "[debug]\t12:00:44 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t12:00:44 tcp.go:245: client 127.0.0.1:46266 connected",
+          "[debug]\t12:00:44 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t12:00:44 tcp.go:245: client 127.0.0.1:60752 connected",
+          "[debug]\t12:00:44 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t12:00:44 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t12:00:44 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t12:00:44 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t12:00:44 tcp.go:245: client 46.5.248.165:57558 connected",
+          "[debug]\t12:00:44 tcp.go:245: client 46.5.248.165:57622 connected",
+          "[debug]\t12:00:44 tcp.go:245: client 46.5.248.165:57624 connected",
+          "[debug]\t12:00:44 tcp.go:245: client 46.5.248.165:57548 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "a8f71d9f2c44d2682e553fd995a12a02465127a4509b3604a609d00f54233c7c",
+        "tcp_route_lines": [
+          "[debug]\t14:00:43 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t14:00:43 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t14:00:43 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t14:00:43 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t14:00:43 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t14:00:43 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t14:00:43 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t14:00:43 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t14:00:43 croc.go:2849: connected to 141.147.1.21:9012"
+        ]
+      }
+    }
+  },
+  {
+    "size_mib": 512,
+    "run_index": 3,
+    "warmup": false,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "bdd447667b9fca15c7dd5d0bf600cbd5a860fda52f9c9c769ab787e7e1d857ba",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 12:02:19 starting TCP server on :9009",
+          "[info]\t2026/10/04 12:02:19 starting TCP server on :9010",
+          "[info]\t2026/10/04 12:02:19 starting TCP server on :9011",
+          "[info]\t2026/10/04 12:02:19 starting TCP server on :9012",
+          "[info]\t2026/10/04 12:02:19 starting TCP server on :9013",
+          "[debug]\t12:02:19 tcp.go:245: client 127.0.0.1:51380 connected",
+          "[debug]\t12:02:19 tcp.go:245: client 127.0.0.1:49862 connected",
+          "[debug]\t12:02:19 tcp.go:245: client 127.0.0.1:57250 connected",
+          "[debug]\t12:02:19 tcp.go:245: client 127.0.0.1:39636 connected",
+          "[debug]\t12:02:19 tcp.go:245: client 127.0.0.1:49976 connected",
+          "[debug]\t12:02:20 tcp.go:245: client 46.5.248.165:57607 connected",
+          "[debug]\t12:02:20 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t12:02:20 tcp.go:245: client 127.0.0.1:51392 connected",
+          "[debug]\t12:02:20 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t12:02:20 tcp.go:245: client 127.0.0.1:57254 connected",
+          "[debug]\t12:02:20 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t12:02:20 tcp.go:245: client 127.0.0.1:39638 connected",
+          "[debug]\t12:02:20 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t12:02:20 tcp.go:245: client 127.0.0.1:49982 connected",
+          "[debug]\t12:02:20 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t12:02:20 tcp.go:245: client 127.0.0.1:49872 connected",
+          "[debug]\t12:02:20 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t12:02:20 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t12:02:20 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t12:02:20 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t12:02:20 tcp.go:245: client 46.5.248.165:57609 connected",
+          "[debug]\t12:02:20 tcp.go:245: client 46.5.248.165:57611 connected",
+          "[debug]\t12:02:20 tcp.go:245: client 46.5.248.165:57615 connected",
+          "[debug]\t12:02:20 tcp.go:245: client 46.5.248.165:57613 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "d21ed48b4581c7ab6d23673275e4d4df685c6c8e255903f6046ad523682f7955",
+        "tcp_route_lines": [
+          "[debug]\t14:02:19 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t14:02:19 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t14:02:19 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t14:02:19 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t14:02:19 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t14:02:19 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t14:02:19 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t14:02:19 croc.go:2849: connected to 141.147.1.21:9012",
+          "[debug]\t14:02:19 croc.go:2849: connected to 141.147.1.21:9010"
+        ]
+      }
+    }
+  },
+  {
+    "size_mib": 512,
+    "run_index": 4,
+    "warmup": false,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "fb8de82972af82766d65d88f7b66437ad9c24bf915993b5d1e87d3654b1a838f",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 12:02:50 starting TCP server on :9009",
+          "[info]\t2026/10/04 12:02:50 starting TCP server on :9010",
+          "[info]\t2026/10/04 12:02:50 starting TCP server on :9011",
+          "[info]\t2026/10/04 12:02:50 starting TCP server on :9012",
+          "[info]\t2026/10/04 12:02:50 starting TCP server on :9013",
+          "[debug]\t12:02:50 tcp.go:245: client 127.0.0.1:38222 connected",
+          "[debug]\t12:02:50 tcp.go:245: client 127.0.0.1:53154 connected",
+          "[debug]\t12:02:50 tcp.go:245: client 127.0.0.1:37270 connected",
+          "[debug]\t12:02:50 tcp.go:245: client 127.0.0.1:55506 connected",
+          "[debug]\t12:02:50 tcp.go:245: client 127.0.0.1:41016 connected",
+          "[debug]\t12:02:50 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t12:02:50 tcp.go:245: client 127.0.0.1:41020 connected",
+          "[debug]\t12:02:50 tcp.go:245: client 46.5.248.165:57586 connected",
+          "[debug]\t12:02:50 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t12:02:50 tcp.go:245: client 127.0.0.1:53170 connected",
+          "[debug]\t12:02:50 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t12:02:50 tcp.go:245: client 127.0.0.1:37278 connected",
+          "[debug]\t12:02:50 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t12:02:50 tcp.go:245: client 127.0.0.1:55518 connected",
+          "[debug]\t12:02:50 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t12:02:50 tcp.go:245: client 127.0.0.1:38228 connected",
+          "[debug]\t12:02:50 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t12:02:50 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t12:02:50 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t12:02:50 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t12:02:50 tcp.go:245: client 46.5.248.165:57584 connected",
+          "[debug]\t12:02:50 tcp.go:245: client 46.5.248.165:57588 connected",
+          "[debug]\t12:02:50 tcp.go:245: client 46.5.248.165:57604 connected",
+          "[debug]\t12:02:50 tcp.go:245: client 46.5.248.165:57618 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "ee68e1a44d5fcab6fb35833c1abc143bd1dbd4a408214c0a7e9648b5c6487f17",
+        "tcp_route_lines": [
+          "[debug]\t14:02:50 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t14:02:50 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t14:02:50 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t14:02:50 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t14:02:50 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t14:02:50 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t14:02:50 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t14:02:50 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t14:02:50 croc.go:2849: connected to 141.147.1.21:9012"
+        ]
+      }
+    }
+  },
+  {
+    "size_mib": 512,
+    "run_index": 5,
+    "warmup": false,
+    "endpoints": {
+      "sender": {
+        "redacted_full_log_sha256": "c5772e0039ab32ecb03c4d09357c3704fcc46024148bee5d0756e184daa1d857",
+        "tcp_route_lines": [
+          "[info]\t2026/10/04 12:04:35 starting TCP server on :9009",
+          "[info]\t2026/10/04 12:04:35 starting TCP server on :9010",
+          "[info]\t2026/10/04 12:04:35 starting TCP server on :9011",
+          "[info]\t2026/10/04 12:04:35 starting TCP server on :9012",
+          "[info]\t2026/10/04 12:04:35 starting TCP server on :9013",
+          "[debug]\t12:04:35 tcp.go:245: client 127.0.0.1:37438 connected",
+          "[debug]\t12:04:35 tcp.go:245: client 127.0.0.1:55588 connected",
+          "[debug]\t12:04:35 tcp.go:245: client 127.0.0.1:33552 connected",
+          "[debug]\t12:04:35 tcp.go:245: client 127.0.0.1:33182 connected",
+          "[debug]\t12:04:35 tcp.go:245: client 127.0.0.1:53424 connected",
+          "[debug]\t12:04:36 comm.go:124: connected to '127.0.0.1:9009'",
+          "[debug]\t12:04:36 tcp.go:245: client 127.0.0.1:53426 connected",
+          "[debug]\t12:04:36 tcp.go:245: client 46.5.248.165:57583 connected",
+          "[debug]\t12:04:36 comm.go:124: connected to '127.0.0.1:9012'",
+          "[debug]\t12:04:36 tcp.go:245: client 127.0.0.1:55596 connected",
+          "[debug]\t12:04:36 comm.go:124: connected to '127.0.0.1:9011'",
+          "[debug]\t12:04:36 tcp.go:245: client 127.0.0.1:33562 connected",
+          "[debug]\t12:04:36 comm.go:124: connected to '127.0.0.1:9010'",
+          "[debug]\t12:04:36 tcp.go:245: client 127.0.0.1:33188 connected",
+          "[debug]\t12:04:36 comm.go:124: connected to '127.0.0.1:9013'",
+          "[debug]\t12:04:36 tcp.go:245: client 127.0.0.1:37454 connected",
+          "[debug]\t12:04:36 croc.go:2849: connected to 127.0.0.1:9010",
+          "[debug]\t12:04:36 croc.go:2849: connected to 127.0.0.1:9011",
+          "[debug]\t12:04:36 croc.go:2849: connected to 127.0.0.1:9012",
+          "[debug]\t12:04:36 croc.go:2849: connected to 127.0.0.1:9013",
+          "[debug]\t12:04:36 tcp.go:245: client 46.5.248.165:57585 connected",
+          "[debug]\t12:04:36 tcp.go:245: client 46.5.248.165:57603 connected",
+          "[debug]\t12:04:36 tcp.go:245: client 46.5.248.165:57599 connected",
+          "[debug]\t12:04:36 tcp.go:245: client 46.5.248.165:57601 connected"
+        ]
+      },
+      "receiver": {
+        "redacted_full_log_sha256": "d3d6593d17e461ac3f4bc0b3c507b595d005c236a9782c25b8ccd168ab0cea95",
+        "tcp_route_lines": [
+          "[debug]\t14:04:35 comm.go:124: connected to '141.147.1.21:9009'",
+          "[debug]\t14:04:36 comm.go:124: connected to '141.147.1.21:9011'",
+          "[debug]\t14:04:36 comm.go:124: connected to '141.147.1.21:9013'",
+          "[debug]\t14:04:36 comm.go:124: connected to '141.147.1.21:9012'",
+          "[debug]\t14:04:36 comm.go:124: connected to '141.147.1.21:9010'",
+          "[debug]\t14:04:36 croc.go:2849: connected to 141.147.1.21:9011",
+          "[debug]\t14:04:36 croc.go:2849: connected to 141.147.1.21:9013",
+          "[debug]\t14:04:36 croc.go:2849: connected to 141.147.1.21:9010",
+          "[debug]\t14:04:36 croc.go:2849: connected to 141.147.1.21:9012"
+        ]
+      }
+    }
+  }
+]

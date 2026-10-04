@@ -1,0 +1,30 @@
+{
+  "accepted_performance_defaults": [],
+  "explicit_close_screen": "rejected-no-repeatable-threshold-gain",
+  "screen_changes_percent": {
+    "rate": -6.1588714721856235,
+    "sender_cpu_gib": 1.0852713178294726,
+    "receiver_cpu_gib": 1.555869872701554
+  },
+  "paired_rate_change_percent": 0.42096803031483887,
+  "confirmation_and_scored_guards": "not-run-after-failed-screen",
+  "benchmark_cwd_correction": "accepted-infrastructure-only",
+  "comparison_policy": "Only Rustytransfer phases individually versus Croc arithmetic mean full-transfer throughput.",
+  "croc_references": [
+    {
+      "size_mib": 64,
+      "mean_full_mib_per_second": 18.656005043964658
+    },
+    {
+      "size_mib": 512,
+      "mean_full_mib_per_second": 28.826342048829588
+    }
+  ],
+  "completed_cohort_transfers": 42,
+  "interrupted_unscored_transfers": 23,
+  "implementation_commit": "4e807a8",
+  "measured_build": "completion-v1-20261004",
+  "final_source_diff": "post-measurement-lint-cleanup-only; archived patch and hashes",
+  "validation": "final-required-gates-pass; exactly-three-existing-clippy-findings",
+  "next_priority": "Split durable commit; conditionally test bounded overlap while keeping final sync and publication guarantees."
+}

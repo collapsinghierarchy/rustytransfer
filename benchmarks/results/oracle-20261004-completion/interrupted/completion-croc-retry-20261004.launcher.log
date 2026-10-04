@@ -1,0 +1,25 @@
+{"size_mib": 64, "candidate": "rustytransfer", "run_index": 0, "warmup": true, "path": "direct", "rate": 15.351513863669936, "wall_seconds": 4.168969951000008}
+{"size_mib": 64, "candidate": "croc", "run_index": 0, "warmup": true, "path": "direct", "rate": 19.66428410892298, "wall_seconds": 3.254631576999998}
+{"size_mib": 64, "candidate": "rustytransfer", "run_index": 1, "warmup": false, "path": "direct", "rate": 16.815018494141263, "wall_seconds": 3.8061212970000042}
+{"size_mib": 64, "candidate": "croc", "run_index": 1, "warmup": false, "path": "direct", "rate": 15.014355949462129, "wall_seconds": 4.262587101000008}
+{"size_mib": 64, "candidate": "croc", "run_index": 2, "warmup": false, "path": "direct", "rate": 19.120846009312572, "wall_seconds": 3.347132233000025}
+{"size_mib": 64, "candidate": "rustytransfer", "run_index": 2, "warmup": false, "path": "direct", "rate": 16.698740742507344, "wall_seconds": 3.832624327000019}
+{"size_mib": 64, "candidate": "rustytransfer", "run_index": 3, "warmup": false, "path": "direct", "rate": 17.00664198229126, "wall_seconds": 3.7632355679999705}
+{"size_mib": 64, "candidate": "croc", "run_index": 3, "warmup": false, "path": "direct", "rate": 19.804486648212485, "wall_seconds": 3.231590959000016}
+{"size_mib": 64, "candidate": "croc", "run_index": 4, "warmup": false, "path": "direct", "rate": 19.745063921058062, "wall_seconds": 3.2413164249999795}
+{"size_mib": 64, "candidate": "rustytransfer", "run_index": 4, "warmup": false, "path": "direct", "rate": 16.552996763715893, "wall_seconds": 3.8663693899999885}
+{"size_mib": 64, "candidate": "rustytransfer", "run_index": 5, "warmup": false, "path": "direct", "rate": 16.7353775551866, "wall_seconds": 3.8242340090000084}
+{"size_mib": 64, "candidate": "croc", "run_index": 5, "warmup": false, "path": "direct", "rate": 19.595272691778046, "wall_seconds": 3.2660938690000307}
+{"size_mib": 512, "candidate": "rustytransfer", "run_index": 0, "warmup": true, "path": "direct", "rate": 20.8784472989248, "wall_seconds": 24.522896394999975}
+{"size_mib": 512, "candidate": "croc", "run_index": 0, "warmup": true, "path": "direct", "rate": 28.83877674863021, "wall_seconds": 17.753873698000007}
+{"size_mib": 512, "candidate": "rustytransfer", "run_index": 1, "warmup": false, "path": "direct", "rate": 24.604180788195976, "wall_seconds": 20.809471545000008}
+{"size_mib": 512, "candidate": "croc", "run_index": 1, "warmup": false, "path": "direct", "rate": 28.887973022159702, "wall_seconds": 17.72363881700005}
+{"size_mib": 512, "candidate": "croc", "run_index": 2, "warmup": false, "path": "direct", "rate": 28.90041964329393, "wall_seconds": 17.716005730000006}
+{"size_mib": 512, "candidate": "rustytransfer", "run_index": 2, "warmup": false, "path": "direct", "rate": 27.695560294526825, "wall_seconds": 18.486717529999964}
+{"size_mib": 512, "candidate": "rustytransfer", "run_index": 3, "warmup": false, "path": "direct", "rate": 23.712858355669507, "wall_seconds": 21.591661044000034}
+{"size_mib": 512, "candidate": "croc", "run_index": 3, "warmup": false, "path": "direct", "rate": 28.817220129727453, "wall_seconds": 17.767154419999997}
+{"size_mib": 512, "candidate": "croc", "run_index": 4, "warmup": false, "path": "direct", "rate": 28.77593447611318, "wall_seconds": 17.792645462999985}
+{"size_mib": 512, "candidate": "rustytransfer", "run_index": 4, "warmup": false, "path": "direct", "rate": 23.944911735567636, "wall_seconds": 21.382413335000024}
+{"size_mib": 512, "candidate": "rustytransfer", "run_index": 5, "warmup": false, "path": "direct", "rate": 18.096287501710577, "wall_seconds": 28.293096025999944}
+{"size_mib": 512, "candidate": "croc", "run_index": 5, "warmup": false, "path": "direct", "rate": 28.750162972853676, "wall_seconds": 17.80859470200005}
+Prepared comparison completed: /home/wasilij/rustytransfer-bench/results/completion-croc-retry-20261004

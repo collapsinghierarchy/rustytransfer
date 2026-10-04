@@ -1,0 +1,158 @@
+[
+  {
+    "cwd": "/mnt/c/Users/wasil/Documents/GitHub/rustytransfer",
+    "trial": 1,
+    "operations": [
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "seconds": 0.05365599499998552,
+        "returncode": 0,
+        "output_bytes": 41
+      },
+      {
+        "command": [
+          "git",
+          "status",
+          "--porcelain"
+        ],
+        "seconds": 3.223685477999993,
+        "returncode": 0,
+        "output_bytes": 5148
+      }
+    ]
+  },
+  {
+    "cwd": "/mnt/c/Users/wasil/Documents/GitHub/rustytransfer",
+    "trial": 2,
+    "operations": [
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "seconds": 0.04090401799999199,
+        "returncode": 0,
+        "output_bytes": 41
+      },
+      {
+        "command": [
+          "git",
+          "status",
+          "--porcelain"
+        ],
+        "seconds": 5.317347512000026,
+        "returncode": 0,
+        "output_bytes": 5148
+      }
+    ]
+  },
+  {
+    "cwd": "/mnt/c/Users/wasil/Documents/GitHub/rustytransfer",
+    "trial": 3,
+    "operations": [
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "seconds": 0.04619910899998558,
+        "returncode": 0,
+        "output_bytes": 41
+      },
+      {
+        "command": [
+          "git",
+          "status",
+          "--porcelain"
+        ],
+        "seconds": 3.297489431000031,
+        "returncode": 0,
+        "output_bytes": 5148
+      }
+    ]
+  },
+  {
+    "cwd": "/home/wasilij/rustytransfer-bench",
+    "trial": 1,
+    "operations": [
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "seconds": 0.0019839930000102868,
+        "returncode": 128,
+        "output_bytes": 0
+      },
+      {
+        "command": [
+          "git",
+          "status",
+          "--porcelain"
+        ],
+        "seconds": 0.0013545120000344468,
+        "returncode": 128,
+        "output_bytes": 0
+      }
+    ]
+  },
+  {
+    "cwd": "/home/wasilij/rustytransfer-bench",
+    "trial": 2,
+    "operations": [
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "seconds": 0.0013571519999686643,
+        "returncode": 128,
+        "output_bytes": 0
+      },
+      {
+        "command": [
+          "git",
+          "status",
+          "--porcelain"
+        ],
+        "seconds": 0.0011501640000233238,
+        "returncode": 128,
+        "output_bytes": 0
+      }
+    ]
+  },
+  {
+    "cwd": "/home/wasilij/rustytransfer-bench",
+    "trial": 3,
+    "operations": [
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "seconds": 0.0012425140000118517,
+        "returncode": 128,
+        "output_bytes": 0
+      },
+      {
+        "command": [
+          "git",
+          "status",
+          "--porcelain"
+        ],
+        "seconds": 0.001358633000052123,
+        "returncode": 128,
+        "output_bytes": 0
+      }
+    ]
+  }
+]

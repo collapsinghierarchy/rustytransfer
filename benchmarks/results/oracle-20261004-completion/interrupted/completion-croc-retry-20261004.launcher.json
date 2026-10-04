@@ -1,0 +1,26 @@
+{
+  "pid": 421,
+  "root": "/home/wasilij/rustytransfer-bench/results/completion-croc-retry-20261004",
+  "log": "/home/wasilij/rustytransfer-bench/results/completion-croc-retry-20261004.launcher.log",
+  "command": [
+    "python3",
+    "/mnt/c/Users/wasil/Documents/GitHub/rustytransfer/target/run-completion-croc.py",
+    "--ssh-key",
+    "/home/wasilij/.ssh/id_ed25519_oracle",
+    "--rusty-manifest",
+    "/home/wasilij/rustytransfer-bench/build-completion-v1-20261004/manifest.json",
+    "--croc-manifest",
+    "/home/wasilij/rustytransfer-bench/tools/croc-11.5.4/manifest.json",
+    "--local-input-64",
+    "/home/wasilij/rustytransfer-bench/input-64.bin",
+    "--local-input-512",
+    "/home/wasilij/rustytransfer-bench/input-512.bin",
+    "--remote-input-64",
+    "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-64.bin",
+    "--remote-input-512",
+    "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-512.bin",
+    "--output-root",
+    "/home/wasilij/rustytransfer-bench/results/completion-croc-retry-20261004"
+  ],
+  "scope": "One complete, direct-only retry of the interrupted Croc comparison; sequential and detached from chat tool lifetime."
+}

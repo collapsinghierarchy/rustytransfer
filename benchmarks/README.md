@@ -2,11 +2,15 @@
 
 The [efficiency report](../docs/direct-transfer-efficiency-report.md)
 records the accepted ARM CPU improvement, verified direct A/B measurements,
-startup/resume validation, and a final direct-only Croc 11.5.4 comparison.
-The report also includes the requested 1/2 GiB followups and a fresh 512 MiB
-control: Croc's median rate advantage was 14.2%, 6.2%, and 6.1% respectively
-at 512 MiB, 1 GiB, and 2 GiB. These sequential WAN cohorts show a gap near 6%
-at the two larger sizes; they do not establish payload size as its sole cause.
+startup/resume validation, and historical direct-only Croc 11.5.4 cohorts.
+Current comparisons use each Rustytransfer phase individually against Croc's
+arithmetic mean full-transfer throughput; historical raw records remain intact.
+
+The [completion diagnostics and phase reference](results/oracle-20261004-completion/README.md)
+provide fresh 64/512 MiB phase tables, completion instrumentation and an explicit
+endpoint cwd to avoid Git provenance-scan costs in the timed benchmark. Explicit
+QUIC close failed the performance screen; production defaults stay unchanged.
+Receiver durable commit is the next cost to dissect before testing overlap.
 
 The [direct tuning continuation](results/oracle-20261003-direct-tuning/README.md)
 records refreshed QUIC/stage diagnostics, bounded receive-window and chunk
@@ -82,6 +86,43 @@ record the current profiling evidence.
 The Oracle runner accepts `--chunk-size BYTES` (1 through 1048576). It passes
 the setting to the sender in either direction; the receiver uses the
 authenticated chunk-size negotiation. Omit it to retain the CLI default.
+
+For completion diagnostics, `--completion-profile` sets
+`RUSTYTRANSFER_BENCH_COMPLETION_PROFILE=1` on both production CLI endpoints.
+The optional `completion_profile` records setup, application and transfer
+lifetimes, protocol confirmation, receiver commit, stream finish, peer-close
+wait and endpoint close. Application lifetime stops before metric emission;
+transfer lifetime includes finalization. Setup and lifetime fields enclose
+other spans, and the endpoints run concurrently: do not add their medians.
+Existing CLI `handshake_seconds` includes setup; it is not just the application
+handshake. Croc's payload/commit phases remain unavailable in official logs.
+
+`--explicit-connection-close` requires completion profiling and enables the
+opt-in `RUSTYTRANSFER_BENCH_EXPLICIT_CLOSE=1` candidate. It requests QUIC close
+after the existing confirmation, commit and successful stream-delivery waits,
+then retains the bounded endpoint close. Applied-mode evidence is validated
+before scoring. It changes no default, key, framing, resume or timeout setting.
+Neither option supports the isolated parallel example.
+
+The Oracle runner records GNU time endpoint process lifetimes at 10 ms
+resolution and outer launch/ready/receiver-launch/pair-exit offsets on its own
+monotonic clock for Rustytransfer in both directions and Croc Oracle-to-WSL.
+Outer wall time remains the full scored interval, including
+SSH/process startup and completion. These boundaries are not payload markers.
+`--endpoint-cwd /absolute/native/directory` sets the local endpoint working
+directory for both programs; executable, fixture and output paths must then be
+absolute. Use a directory outside Git: CLI metric emission runs `git status`
+after the application timer, which can add seconds in a Windows-mounted
+checkout. A non-Git directory leaves endpoint Git metadata null; the runner's
+frozen source/executable provenance must identify the build. Historical rows
+keep their original timers and working-directory limitations.
+
+For current Croc reporting, use its arithmetic mean full-transfer rate as the
+reference and compare each Rustytransfer phase separately. Do not compare
+Rustytransfer's overall rate with Croc. Phase-rate means average `file MiB /
+phase seconds` over measured runs. Setup, completion and remaining outer time
+send no whole-file payload; their normalized rates are comparison indices.
+Keep durations alongside them, and do not add overlapping endpoint spans.
 
 For a bounded receive-window experiment, `--stream-window-bytes BYTES` accepts
 1250000 through 5000000 and sets `RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES` on

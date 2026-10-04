@@ -1,0 +1,389 @@
+{
+  "groups": [
+    {
+      "name": "s1-completion-oracle-to-wsl-512",
+      "variants": {
+        "baseline": {
+          "rate": {
+            "median": 25.391164577744767,
+            "min": 21.72303332029114,
+            "max": 26.801145549094247,
+            "mad": 1.40998097134948,
+            "count": 5
+          },
+          "wall": {
+            "median": 20.164494560000037,
+            "min": 19.10366103800004,
+            "max": 23.56945240799999,
+            "mad": 1.0608335219999958,
+            "count": 5
+          },
+          "sender_cpu_gib": {
+            "median": 12.899999999999999,
+            "min": 12.74,
+            "max": 13.34,
+            "mad": 0.10000000000000142,
+            "count": 5
+          },
+          "receiver_cpu_gib": {
+            "median": 14.14,
+            "min": 13.32,
+            "max": 14.68,
+            "mad": 0.23999999999999844,
+            "count": 5
+          },
+          "endpoint_profiles": {
+            "sender": {
+              "process_seconds": {
+                "median": 19.68,
+                "min": 18.64,
+                "max": 22.55,
+                "mad": 1.0399999999999991,
+                "count": 5
+              },
+              "application_wall_seconds": {
+                "median": 19.678387975,
+                "min": 18.63789978,
+                "max": 22.547991923,
+                "mad": 1.0404881949999982,
+                "count": 5
+              },
+              "close_send_seconds": {
+                "median": 1.36e-06,
+                "min": 1.04e-06,
+                "max": 1.44e-06,
+                "mad": 8.000000000000008e-08,
+                "count": 5
+              },
+              "endpoint_close_seconds": {
+                "median": 0.00456247,
+                "min": 0.00453291,
+                "max": 0.00459683,
+                "mad": 2.7919999999999855e-05,
+                "count": 5
+              },
+              "finish_receiving_seconds": {
+                "median": 1.8019515780000002,
+                "min": 1.030374563,
+                "max": 3.740026055,
+                "mad": 0.7715770150000001,
+                "count": 5
+              },
+              "protocol_confirmation_seconds": {
+                "median": 0.035025911,
+                "min": 0.031152366,
+                "max": 0.065330551,
+                "mad": 0.0026470580000000007,
+                "count": 5
+              },
+              "setup_seconds": {
+                "median": 1.057478781,
+                "min": 0.910492892,
+                "max": 1.1362757430000001,
+                "mad": 0.07738186899999988,
+                "count": 5
+              },
+              "transfer_lifetime_seconds": {
+                "median": 18.586345604999998,
+                "min": 17.727086806,
+                "max": 21.56765077,
+                "mad": 0.8592587989999991,
+                "count": 5
+              },
+              "wait_peer_close_seconds": {
+                "median": 0.046074704,
+                "min": 0.042770282,
+                "max": 0.058437866,
+                "mad": 0.0033044220000000013,
+                "count": 5
+              },
+              "post_metric_process_seconds": {
+                "median": 0.002100219999999098,
+                "min": 0.001612025000000017,
+                "max": 0.008470630000001478,
+                "mad": 0.0004881949999990809,
+                "count": 5
+              }
+            },
+            "receiver": {
+              "process_seconds": {
+                "median": 19.17,
+                "min": 18.19,
+                "max": 22.55,
+                "mad": 0.9800000000000004,
+                "count": 5
+              },
+              "application_wall_seconds": {
+                "median": 19.164574943,
+                "min": 18.188294619,
+                "max": 22.551687448,
+                "mad": 0.9762803240000011,
+                "count": 5
+              },
+              "endpoint_close_seconds": {
+                "median": 0.032374576,
+                "min": 0.022841518,
+                "max": 1.388336567,
+                "mad": 0.008930069000000002,
+                "count": 5
+              },
+              "finish_receiving_seconds": {
+                "median": 8.7e-06,
+                "min": 7.99e-06,
+                "max": 1.153e-05,
+                "mad": 7.1e-07,
+                "count": 5
+              },
+              "finish_sending_seconds": {
+                "median": 0.040423042,
+                "min": 0.039560849,
+                "max": 0.041406096,
+                "mad": 0.0008016579999999968,
+                "count": 5
+              },
+              "protocol_confirmation_seconds": {
+                "median": 0.010705649,
+                "min": 0.007503939,
+                "max": 0.04311665,
+                "mad": 0.0022917480000000014,
+                "count": 5
+              },
+              "receiver_commit_seconds": {
+                "median": 1.788465008,
+                "min": 1.016123687,
+                "max": 3.725790653,
+                "mad": 0.7723413209999999,
+                "count": 5
+              },
+              "setup_seconds": {
+                "median": 0.503369779,
+                "min": 0.436389811,
+                "max": 0.550966533,
+                "mad": 0.04313993599999999,
+                "count": 5
+              },
+              "transfer_lifetime_seconds": {
+                "median": 18.613493611,
+                "min": 17.751851928,
+                "max": 22.04825321,
+                "mad": 0.8616416829999984,
+                "count": 5
+              },
+              "post_metric_process_seconds": {
+                "median": 0.0017053810000007275,
+                "min": -0.0018719049999980086,
+                "max": 0.005425057000000066,
+                "mad": 0.0033928289999991534,
+                "count": 5
+              }
+            }
+          }
+        },
+        "explicit-close": {
+          "rate": {
+            "median": 23.827355386110344,
+            "min": 21.68470105896111,
+            "max": 26.91396980361408,
+            "mad": 2.142654327149234,
+            "count": 5
+          },
+          "wall": {
+            "median": 21.487907143,
+            "min": 19.02357785700002,
+            "max": 23.611116362999994,
+            "mad": 2.1232092199999926,
+            "count": 5
+          },
+          "sender_cpu_gib": {
+            "median": 13.04,
+            "min": 12.8,
+            "max": 13.5,
+            "mad": 0.11999999999999922,
+            "count": 5
+          },
+          "receiver_cpu_gib": {
+            "median": 14.36,
+            "min": 13.86,
+            "max": 14.58,
+            "mad": 0.1999999999999993,
+            "count": 5
+          },
+          "endpoint_profiles": {
+            "sender": {
+              "process_seconds": {
+                "median": 21.04,
+                "min": 18.6,
+                "max": 22.55,
+                "mad": 1.5100000000000016,
+                "count": 5
+              },
+              "application_wall_seconds": {
+                "median": 21.036898785,
+                "min": 18.601404051,
+                "max": 22.543973616,
+                "mad": 1.507074830999997,
+                "count": 5
+              },
+              "close_send_seconds": {
+                "median": 1.04e-06,
+                "min": 1e-06,
+                "max": 1.6e-06,
+                "mad": 0.0,
+                "count": 5
+              },
+              "endpoint_close_seconds": {
+                "median": 0.00451579,
+                "min": 0.004465069,
+                "max": 1.001267691,
+                "mad": 1.3879999999999969e-05,
+                "count": 5
+              },
+              "explicit_connection_close_seconds": {
+                "median": 3.44e-06,
+                "min": 2.96e-06,
+                "max": 5.96e-06,
+                "mad": 2.7999999999999986e-07,
+                "count": 5
+              },
+              "finish_receiving_seconds": {
+                "median": 3.470708917,
+                "min": 1.023637838,
+                "max": 3.803650835,
+                "mad": 0.33294191799999995,
+                "count": 5
+              },
+              "protocol_confirmation_seconds": {
+                "median": 0.037132405,
+                "min": 0.033700982,
+                "max": 0.038763776,
+                "mad": 0.0003571220000000014,
+                "count": 5
+              },
+              "setup_seconds": {
+                "median": 0.922866213,
+                "min": 0.88608393,
+                "max": 1.024734766,
+                "mad": 0.03678228300000008,
+                "count": 5
+              },
+              "transfer_lifetime_seconds": {
+                "median": 20.113621649,
+                "min": 17.708570876,
+                "max": 21.518688567,
+                "mad": 1.4050669180000028,
+                "count": 5
+              },
+              "wait_peer_close_seconds": {
+                "median": 0.044987657,
+                "min": 0.042015797,
+                "max": 0.049409927,
+                "mad": 0.0016324110000000003,
+                "count": 5
+              },
+              "post_metric_process_seconds": {
+                "median": 0.0031012149999973815,
+                "min": -0.0014040509999979633,
+                "max": 0.006026384000001883,
+                "mad": 0.0026527549999961764,
+                "count": 5
+              }
+            },
+            "receiver": {
+              "process_seconds": {
+                "median": 20.58,
+                "min": 18.16,
+                "max": 22.71,
+                "mad": 2.1300000000000026,
+                "count": 5
+              },
+              "application_wall_seconds": {
+                "median": 20.581507192,
+                "min": 18.158423235,
+                "max": 22.711823485,
+                "mad": 2.130316293,
+                "count": 5
+              },
+              "endpoint_close_seconds": {
+                "median": 0.022596821,
+                "min": 0.020897758,
+                "max": 1.6960121510000001,
+                "mad": 0.0011899770000000018,
+                "count": 5
+              },
+              "explicit_connection_close_seconds": {
+                "median": 3.881e-05,
+                "min": 3.456e-05,
+                "max": 4.609e-05,
+                "mad": 1.379999999999997e-06,
+                "count": 5
+              },
+              "finish_receiving_seconds": {
+                "median": 8.92e-06,
+                "min": 7.39e-06,
+                "max": 1.9529e-05,
+                "mad": 8.400000000000004e-07,
+                "count": 5
+              },
+              "finish_sending_seconds": {
+                "median": 0.039261829,
+                "min": 0.038721265,
+                "max": 0.043009252,
+                "mad": 0.0005405640000000003,
+                "count": 5
+              },
+              "protocol_confirmation_seconds": {
+                "median": 0.009467554,
+                "min": 0.007975643,
+                "max": 0.01221171,
+                "mad": 0.0014919110000000003,
+                "count": 5
+              },
+              "receiver_commit_seconds": {
+                "median": 3.456941596,
+                "min": 1.009801896,
+                "max": 3.79100232,
+                "mad": 0.334060724,
+                "count": 5
+              },
+              "setup_seconds": {
+                "median": 0.521347947,
+                "min": 0.425783016,
+                "max": 0.544575498,
+                "mad": 0.02322755100000007,
+                "count": 5
+              },
+              "transfer_lifetime_seconds": {
+                "median": 20.141251292,
+                "min": 17.704609689,
+                "max": 22.19038048,
+                "mad": 2.049129188000002,
+                "count": 5
+              },
+              "post_metric_process_seconds": {
+                "median": 0.0007255740000005062,
+                "min": -0.001823484999999181,
+                "max": 0.006580028999998433,
+                "mad": 0.0022327660000023286,
+                "count": 5
+              }
+            }
+          }
+        }
+      },
+      "changes_percent": {
+        "rate": -6.1588714721856235,
+        "sender_cpu_gib": 1.0852713178294726,
+        "receiver_cpu_gib": 1.555869872701554
+      },
+      "paired_rate_ratios": {
+        "median": 1.0042096803031484,
+        "min": 0.8760339084375722,
+        "max": 1.0968705444949804,
+        "mad": 0.025321943244732803,
+        "count": 5
+      },
+      "paired_wins": 3
+    }
+  ],
+  "limits": "Spans are elapsed time, not CPU attribution; enclosing spans and endpoint lifetimes overlap; medians must not be summed. Croc exact payload/commit phases remain unavailable."
+}

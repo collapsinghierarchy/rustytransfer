@@ -349,3 +349,59 @@ scripts, checks and cleanup are retained in the
 [evidence record](../benchmarks/results/oracle-20261004-independent-quic/README.md)
 and [acceptance decision](../benchmarks/results/oracle-20261004-independent-quic/acceptance.json).
 Desktop/device work remains stopped and pending release artifacts remain intact.
+
+
+## Completion diagnostics and phase-only Croc reference — 2026-10-04
+
+Current Croc reporting follows the requested phase policy: compare each
+Rustytransfer phase individually with Croc's arithmetic mean full-transfer
+rate; do not compare Rustytransfer's overall throughput with Croc. Historical
+tables above remain their original cohort records.
+
+| Rustytransfer payload phase | Mean MiB/s | Croc full mean MiB/s | Phase / reference |
+| --- | ---: | ---: | ---: |
+| 64 MiB sender payload | 30.589 | 18.656 | 1.640× |
+| 64 MiB receiver payload | 30.180 | 18.656 | 1.618× |
+| 512 MiB sender payload | 29.216 | 28.826 | 1.014× |
+| 512 MiB receiver payload | 29.172 | 28.826 | 1.012× |
+
+The fresh 512 MiB sender phase means were setup/handshake **0.925 s**, payload
+**17.812 s**, completion **2.930 s**, and remaining outer time **0.445 s**.
+Phase rates average each run's file MiB / phase seconds. Setup and completion
+rates are normalized indices, not actual data throughput. The slowest retained
+payload window was 22.793 s; completion alone cannot explain every slow run.
+
+The Rustytransfer-only explicit-close screen failed: baseline/candidate medians
+25.391/23.827 MiB/s, with paired median change +0.42% and no CPU saving. No
+default change, confirmation or scored guard campaign was accepted. Coarse
+baseline profiles measured receiver commit median 1.788 s (1.016–3.726), versus
+endpoint-close median 0.032 s (0.023–1.388). The sender's stream wait overlaps
+receiver commit. Those diagnostics are from a different window than the fresh
+Croc reference and do not supply Croc payload/commit phases.
+
+Metric emission exposed a working-directory confound: Git status took
+3.2–5.3 s in the Windows-mounted checkout. A 64 MiB diagnostic measured a
+3.125 s receiver tail after the application timestamp there, versus 0.003 s
+outside Git. `--endpoint-cwd` now fixes the local cwd for both products. This is
+benchmark infrastructure, not an ordinary-transfer improvement; old scan costs
+cannot be retroactively subtracted. Outer timing stays inclusive.
+
+Receiver commit includes durable `sync_data` before hard-link publication.
+The pinned [Croc completion path](https://github.com/schollz/croc/blob/v11.5.4/src/croc/croc.go#L3544-L3557)
+closes without an explicit `Sync` in that path. Split commit into sync and
+publication costs next; conditionally test bounded writeback overlap while
+preserving mandatory final sync, cancellation and publication guarantees.
+Similar ready-observed medians do not currently isolate startup as the gap's
+cause. CPU efficiency remains a separate goal.
+
+All 42 complete-cohort transfers passed full hashes and direct-route checks.
+An interrupted 23-transfer set stays unscored; its complete retry provides the
+phase reference. Final workspace/WASM/formatting/security/dependency gates and
+64 Python tests pass, with exactly three existing Clippy findings. The measured
+source archive and the four-file post-measurement lint-cleanup patch are both
+retained; no rate gain is attributed to that cleanup. Original INPUT was restored
+exactly, with no endpoints/listeners/leases left. Desktop/device and release
+boundaries remain unchanged.
+
+[Full phase tables, provenance, raw rows, acceptance and reproduction](../benchmarks/results/oracle-20261004-completion/README.md)
+record implementation commit `4e807a8` and exact measured frozen binaries.

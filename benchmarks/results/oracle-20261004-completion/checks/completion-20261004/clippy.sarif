@@ -1,0 +1,245 @@
+{
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "crates/crypto/src/mac.rs"
+                },
+                "region": {
+                  "byteLength": 79,
+                  "byteOffset": 999,
+                  "endColumn": 92,
+                  "endLine": 34,
+                  "startColumn": 13,
+                  "startLine": 34
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "used `expect()` on a `Result` value"
+          },
+          "relatedLocations": [],
+          "ruleId": "clippy::expect_used",
+          "ruleIndex": 0,
+          "partialFingerprints": {
+            "primaryLocationLineHash": "3f2e11b0322c54d7f246d25bdd78d91613579c8d05bc06e44dc86838f64fc451:1"
+          }
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "crates/crypto/src/mac.rs"
+                },
+                "region": {
+                  "byteLength": 79,
+                  "byteOffset": 1769,
+                  "endColumn": 92,
+                  "endLine": 53,
+                  "startColumn": 13,
+                  "startLine": 53
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "used `expect()` on a `Result` value"
+          },
+          "relatedLocations": [],
+          "ruleId": "clippy::expect_used",
+          "ruleIndex": 0,
+          "partialFingerprints": {
+            "primaryLocationLineHash": "c7283fc371a6eaf55e1e53523365686bdbe0dac0818ae8ac42e27bccf3f8c50c:1"
+          }
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "crates/transfer/src/session/sender.rs"
+                },
+                "region": {
+                  "byteLength": 413,
+                  "byteOffset": 3637,
+                  "endColumn": 31,
+                  "endLine": 132,
+                  "startColumn": 1,
+                  "startLine": 119
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "this function has too many arguments (8/7)"
+          },
+          "relatedLocations": [],
+          "ruleId": "clippy::too_many_arguments",
+          "ruleIndex": 1,
+          "partialFingerprints": {
+            "primaryLocationLineHash": "f076bca38f6292f8bc369c0539a199ee5419dc41c134d4be8feb41ec4f501855:1"
+          }
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "crates/native/src/transport/iroh.rs"
+                },
+                "region": {
+                  "byteLength": 204,
+                  "byteOffset": 21684,
+                  "endColumn": 10,
+                  "endLine": 557,
+                  "startColumn": 9,
+                  "startLine": 553
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "this `if` statement can be collapsed"
+          },
+          "relatedLocations": [
+            {
+              "message": {
+                "text": "collapse nested if block \"\""
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "crates/native/src/transport/iroh.rs"
+                },
+                "region": {
+                  "byteLength": 2,
+                  "byteOffset": 21720,
+                  "endColumn": 47,
+                  "endLine": 553,
+                  "startColumn": 45,
+                  "startLine": 553
+                }
+              }
+            },
+            {
+              "message": {
+                "text": "collapse nested if block \"\" \"\""
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "crates/native/src/transport/iroh.rs"
+                },
+                "region": {
+                  "byteLength": 10,
+                  "byteOffset": 21878,
+                  "endColumn": 10,
+                  "endLine": 557,
+                  "startColumn": 14,
+                  "startLine": 556
+                }
+              }
+            },
+            {
+              "message": {
+                "text": "collapse nested if block \"\" \"\" \"&&\""
+              },
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "crates/native/src/transport/iroh.rs"
+                },
+                "region": {
+                  "byteLength": 2,
+                  "byteOffset": 21735,
+                  "endColumn": 15,
+                  "endLine": 554,
+                  "startColumn": 13,
+                  "startLine": 554
+                }
+              }
+            }
+          ],
+          "ruleId": "clippy::collapsible_if",
+          "ruleIndex": 2,
+          "partialFingerprints": {
+            "primaryLocationLineHash": "c8da7e3f322de840c231091cd210d9e75f5502ebd073d45e384fcb8fb103756f:1"
+          }
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/cli/metrics.rs"
+                },
+                "region": {
+                  "byteLength": 17,
+                  "byteOffset": 977,
+                  "endColumn": 40,
+                  "endLine": 30,
+                  "startColumn": 23,
+                  "startLine": 30
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "using a potentially dangerous silent `as` conversion"
+          },
+          "relatedLocations": [],
+          "ruleId": "clippy::as_conversions",
+          "ruleIndex": 3,
+          "partialFingerprints": {
+            "primaryLocationLineHash": "0d8364a72f08b058ef8f1068ee15550553393bd1f0d285ffda7d2cacb2b1907a:1"
+          }
+        }
+      ],
+      "tool": {
+        "driver": {
+          "informationUri": "https://rust-lang.github.io/rust-clippy/",
+          "name": "clippy",
+          "rules": [
+            {
+              "fullDescription": {
+                "text": "if this value is an `Err`, it will panic\nfor further information visit https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#expect_used\nrequested on the command line with `-W clippy::expect-used`\n"
+              },
+              "helpUri": "https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#expect_used",
+              "id": "clippy::expect_used"
+            },
+            {
+              "fullDescription": {
+                "text": "for further information visit https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#too_many_arguments\n`-W clippy::too-many-arguments` implied by `-W clippy::all`\nto override `-W clippy::all` add `#[allow(clippy::too_many_arguments)]`\n"
+              },
+              "helpUri": "https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#too_many_arguments",
+              "id": "clippy::too_many_arguments"
+            },
+            {
+              "fullDescription": {
+                "text": "for further information visit https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#collapsible_if\n`-W clippy::collapsible-if` implied by `-W clippy::all`\nto override `-W clippy::all` add `#[allow(clippy::collapsible_if)]`\n"
+              },
+              "helpUri": "https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#collapsible_if",
+              "id": "clippy::collapsible_if"
+            },
+            {
+              "fullDescription": {
+                "text": "consider using a safe wrapper for this conversion\nfor further information visit https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#as_conversions\nrequested on the command line with `-W clippy::as-conversions`\n"
+              },
+              "id": "clippy::as_conversions"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "version": "2.1.0"
+}

@@ -1,0 +1,23 @@
+   Compiling rustytransfer-transfer v0.1.0 (/mnt/c/Users/wasil/Documents/GitHub/rustytransfer/crates/transfer)
+   Compiling rustytransfer-native v0.1.0 (/mnt/c/Users/wasil/Documents/GitHub/rustytransfer/crates/native)
+   Compiling rustytransfer v0.1.0 (/mnt/c/Users/wasil/Documents/GitHub/rustytransfer)
+   Compiling rustytransfer-firefox-host v0.1.0 (/mnt/c/Users/wasil/Documents/GitHub/rustytransfer/crates/firefox-host)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.29s
+     Running unittests src/lib.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/rustytransfer-fc75263853039fd1)
+     Running unittests src/bin/rustytransferCLI.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/rustytransfer-4ace4f6c72390e65)
+     Running tests/local_transport_regressions.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/local_transport_regressions-a1f8c04b8af63554)
+     Running tests/pake_kem_dem_mac_roundtrip.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/pake_kem_dem_mac_roundtrip-ca54cdb045c36708)
+     Running tests/webrtc_multi_messages.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/webrtc_multi_messages-25560acb7a3621aa)
+     Running unittests src/lib.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/rustytransfer_crypto-b738dc23728a8fbf)
+     Running unittests src/main.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/rustytransfer_firefox_host-e4976c7f084a9699)
+     Running unittests src/lib.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/rustytransfer_native-c67d855acc1e6de6)
+     Running unittests src/bin/iroh_probe.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/iroh_probe-a15ab26bd5b3d3e7)
+     Running unittests src/lib.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/rustytransfer_protocol-ff1f0c8b2af6bb97)
+     Running unittests src/lib.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/rustytransfer_transfer-b565f2684913db5f)
+     Running unittests src/lib.rs (/home/wasilij/rustytransfer-bench/target/debug/deps/rustytransfer_wasm-21f91e24ea7db175)
+   Doc-tests rustytransfer
+   Doc-tests rustytransfer_crypto
+   Doc-tests rustytransfer_native
+   Doc-tests rustytransfer_protocol
+   Doc-tests rustytransfer_transfer
+   Doc-tests rustytransfer_wasm

@@ -1,0 +1,159 @@
+--- frozen-v1/crates/native/src/transport/iroh.rs
++++ final/crates/native/src/transport/iroh.rs
+@@ -550,10 +550,10 @@
+         timeout(ENDPOINT_CLOSE_TIMEOUT, self.endpoint.close())
+             .await
+             .context("timed out while closing Iroh endpoint")?;
+-        if let Some(started) = close_started {
+-            if let Ok(mut recorded) = self.endpoint_close_seconds.lock() {
+-                *recorded = Some(started.elapsed().as_secs_f64());
+-            }
++        if let Some(started) = close_started
++            && let Ok(mut recorded) = self.endpoint_close_seconds.lock()
++        {
++            *recorded = Some(started.elapsed().as_secs_f64());
+         }
+         Ok(())
+     }
+--- frozen-v1/crates/transfer/src/lib.rs
++++ final/crates/transfer/src/lib.rs
+@@ -42,6 +42,12 @@
+     completion: CompletionState,
+     payload_profile_enabled: bool,
+     completion_profile_enabled: bool,
++}
++
++#[derive(Clone, Copy, Default)]
++struct ProfileOptions {
++    payload: bool,
++    completion: bool,
+ }
+ 
+ impl TransferContext {
+@@ -449,8 +455,10 @@
+                 b"ABCDE",
+                 TransferConfig { chunk_size },
+                 |_, _| {},
+-                profile_enabled,
+-                completion_profile_enabled,
++                ProfileOptions {
++                    payload: profile_enabled,
++                    completion: completion_profile_enabled,
++                },
+             )
+             .await
+         };
+@@ -463,8 +471,10 @@
+                 b"ABCDE",
+                 &output_for_receiver,
+                 |_, _| {},
+-                profile_enabled,
+-                completion_profile_enabled,
++                ProfileOptions {
++                    payload: profile_enabled,
++                    completion: completion_profile_enabled,
++                },
+             )
+             .await
+         };
+--- frozen-v1/crates/transfer/src/session/receiver.rs
++++ final/crates/transfer/src/session/receiver.rs
+@@ -26,2 +26,4 @@
+-        payload_profile_enabled_from_env(),
+-        completion_profile_enabled_from_env(),
++        ProfileOptions {
++            payload: payload_profile_enabled_from_env(),
++            completion: completion_profile_enabled_from_env(),
++        },
+@@ -53,8 +55,10 @@
+         Authentication::Direct(token),
+         output_path,
+         on_progress,
+-        payload_profile_enabled_from_env(),
+-        completion_profile_enabled_from_env(),
++        ProfileOptions {
++            payload: payload_profile_enabled_from_env(),
++            completion: completion_profile_enabled_from_env(),
++        },
+     )
+     .await
+ }
+@@ -70,16 +74,15 @@
+     authentication: Authentication<'_>,
+     output_path: &Path,
+     on_progress: F,
+-    profile_enabled: bool,
+-    completion_profile_enabled: bool,
++    profile_options: ProfileOptions,
+ ) -> std::result::Result<TransferMetrics, TransferError>
+ where
+     T: TransferTransport,
+     F: FnMut(u64, u64) + Send,
+ {
+     let mut context = TransferContext::new();
+-    context.payload_profile_enabled = profile_enabled;
+-    context.completion_profile_enabled = completion_profile_enabled;
++    context.payload_profile_enabled = profile_options.payload;
++    context.completion_profile_enabled = profile_options.completion;
+     let transfer_started = Instant::now();
+     let mut resume_output = match ResumeOutput::open(output_path).await {
+         Ok(output) => output,
+@@ -131,2 +134,1 @@
+-    profile_enabled: bool,
+-    completion_profile_enabled: bool,
++    profile_options: ProfileOptions,
+@@ -143,2 +145,1 @@
+-        profile_enabled,
+-        completion_profile_enabled,
++        profile_options,
+--- frozen-v1/crates/transfer/src/session/sender.rs
++++ final/crates/transfer/src/session/sender.rs
+@@ -72,2 +72,4 @@
+-        payload_profile_enabled_from_env(),
+-        completion_profile_enabled_from_env(),
++        ProfileOptions {
++            payload: payload_profile_enabled_from_env(),
++            completion: completion_profile_enabled_from_env(),
++        },
+@@ -104,8 +106,10 @@
+         Authentication::Direct(token),
+         config,
+         on_progress,
+-        payload_profile_enabled_from_env(),
+-        completion_profile_enabled_from_env(),
++        ProfileOptions {
++            payload: payload_profile_enabled_from_env(),
++            completion: completion_profile_enabled_from_env(),
++        },
+     )
+     .await
+ }
+@@ -123,8 +127,7 @@
+     authentication: Authentication<'_>,
+     config: TransferConfig,
+     on_progress: F,
+-    profile_enabled: bool,
+-    completion_profile_enabled: bool,
++    profile_options: ProfileOptions,
+ ) -> std::result::Result<TransferMetrics, TransferError>
+ where
+     T: TransferTransport,
+@@ -132,8 +135,8 @@
+     F: FnMut(u64, u64) + Send,
+ {
+     let mut context = TransferContext::new();
+-    context.payload_profile_enabled = profile_enabled;
+-    context.completion_profile_enabled = completion_profile_enabled;
++    context.payload_profile_enabled = profile_options.payload;
++    context.completion_profile_enabled = profile_options.completion;
+     let transfer_started = Instant::now();
+     let result = send_file_inner(
+         transport,
+@@ -172,2 +175,1 @@
+-    profile_enabled: bool,
+-    completion_profile_enabled: bool,
++    profile_options: ProfileOptions,
+@@ -187,2 +189,1 @@
+-        profile_enabled,
+-        completion_profile_enabled,
++        profile_options,

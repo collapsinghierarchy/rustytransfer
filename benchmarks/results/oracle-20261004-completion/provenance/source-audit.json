@@ -1,0 +1,36 @@
+{
+  "frozen_file_count": 56,
+  "all_archive_bytes_match_manifest": true,
+  "all_final_workspace_bytes_match_frozen": false,
+  "final_workspace_changes": [
+    {
+      "path": "crates/native/src/transport/iroh.rs",
+      "frozen_sha256": "2f2fae3f18d6c942fe089a2bc6cfa7241d2d63b011e05ae2224e56719b2623b6",
+      "final_sha256": "63fa55997e656176639aa21dffafe29030c2bcd7c7a58e74a9db18d82ecafdd7"
+    },
+    {
+      "path": "crates/transfer/src/lib.rs",
+      "frozen_sha256": "29c49f6a66afe8ee0685faa544c6ce4c4d613f3dd78b2a1f303e66c2e3a6f88c",
+      "final_sha256": "098e2e4c082fd7928b28add03069e7954e8c99c24f6af73afe8c7cedaa5f7826"
+    },
+    {
+      "path": "crates/transfer/src/session/receiver.rs",
+      "frozen_sha256": "1aabbb2784aa8127b60d1d37696719ba6a56f8455881ec0852f7d85ff7e105c0",
+      "final_sha256": "c7d1982c15e73ab484ce6944b2f129e3d172ecc8a1a34dc2f285e28a8c31191d"
+    },
+    {
+      "path": "crates/transfer/src/session/sender.rs",
+      "frozen_sha256": "86aa1521eb74e3b0fd4a59f5b85b79c6a62da77b1640254a2cd55c6cbdb2c4f2",
+      "final_sha256": "38b7daa512faeb4ae067764869b823d6cd59caef0b6eaae3c021971c0f43c6f0"
+    }
+  ],
+  "final_changes_scope": "Private ProfileOptions groups the same two boolean flags; nested Iroh if-let collapsed. No performance result is attributed to this post-measurement lint cleanup.",
+  "final_changes_patch": "post-measurement-lint-cleanup.patch",
+  "final_changes_patch_sha256": "610d252c8b4c7ddebee684892a9580888658d1bb7d3ba8ad155727c7a7931656",
+  "source_archive_sha256": "8999e8ab97f53d54f1e538db3f9564b5681b74f77cc6b92fe6a6f21f2d7a3b39",
+  "frozen_source_commit": "889ef41232399aa5151f8c14bae98f475df55600",
+  "implementation_commit": "4e807a8f09dd08ae933e0ff47d8b72867c359af5",
+  "source_dirty_at_freeze": true,
+  "authority": "Exact source archive and working-tree bytes; Git may normalize line endings.",
+  "original_final_changes_patch_sha256": "9a5fa4e5b60a9d256811904f67537a1f308739ee526666648b3a8b92cf969e0b"
+}

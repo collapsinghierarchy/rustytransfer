@@ -1,0 +1,18 @@
+{
+  "status": "interrupted-incomplete-unscored",
+  "recorded_transfers": 23,
+  "reason": "Runner session disappeared before final Croc trial was recorded; no trial reconstructed or selectively substituted.",
+  "missing_trial": {
+    "size_mib": 512,
+    "candidate": "croc",
+    "run_index": 5
+  },
+  "oracle_endpoint_cleanup": [
+    {
+      "pid": 684334,
+      "run_dir": "/home/ubuntu/rustytransfer-bench/run-croc-final-2c2cd74b9df5-512/croc-oracle-to-wsl-512mib-5"
+    }
+  ],
+  "firewall_restored_exactly": true,
+  "cleanup_note": "Expired bounded lease restored the original INPUT chain; final Oracle Croc waiter terminated through validated process-group cleanup."
+}

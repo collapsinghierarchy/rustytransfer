@@ -22,7 +22,11 @@ This enables this launcher only in that PowerShell process, without changing the
 
 ## Replay and controls
 
-The demo provides direct, relay, and resume scenario buttons; play, pause, restart, and step; a pointer vortex; clickable nodes and routes that open a draggable information lens; and draggable peers. Tab navigates the native controls. Press I to inspect the payload, N to cycle routes and nodes, Escape to close, arrow keys to move the lens (Shift moves it farther), Space to toggle playback, R to restart, M to toggle reduced motion, and F12 to show diagnostics. Reduced motion disables the pointer vortex and moving packet animation while keeping the lens's static separation effect.
+The demo provides direct, relay, and resume scenarios; play, pause, restart, and step; a pointer vortex; and visibility filters in the top-right corner. The source begins large in the top-left. The source and peers can be dragged. A press selects a node or route only when released with up to 6 px of movement; crossing that threshold keeps it a drag even if the pointer returns. Routes highlight on hover along a 26 px nearest-path corridor. Contextual actions appear inside the lens. Selecting a node animates it into the lens and keeps it following the lens; routes remain in the field.
+
+The source lens offers a demo scenario dropdown and replay actions. A peer lens offers actions for related transfer and control routes. Peer locality stays explicit: `network_scope` accepts `local`, `remote`, or `unknown`, and missing scope defaults to `unknown` for older event streams. A peer appears as local only when the event marks it `local` or an unknown peer has a local-topology payload route to the source. `nearby` reachability or a direct route alone does not establish LAN locality.
+
+Tab navigates the native controls. Press I to inspect the payload, N to cycle routes and nodes, Escape to close, arrow keys to move the lens (Shift moves it farther), Space to toggle playback, R to restart, M to toggle reduced motion, and F12 to show diagnostics. Reduced motion disables the pointer vortex and moving packet animation while keeping the lens's static separation effect.
 
 The command-line interface accepts:
 
@@ -34,7 +38,7 @@ The command-line interface accepts:
 --smoke-test DIR          Save PNG screenshots and frame-cadence JSON, then exit
 ```
 
-`--replay` and `--scenario` select event data for visualization only. Smoke-test screenshots are window captures saved as PNGs. The JSON records frame callback intervals during scripted lens motion; these callbacks do not measure GPU execution time and do not establish a 60 fps result.
+`--replay` and `--scenario` select event data for visualization only. Smoke tests save window captures as PNGs, including `overview.png`, `lens.png`, `dragged-lens.png`, `hovered-route.png`, `captured-node.png`, and `dragged-node-lens.png`, plus frame-cadence JSON. The JSON records frame callback intervals during scripted lens motion; these callbacks do not measure GPU execution time and do not establish a 60 fps result.
 
 ## Checks
 

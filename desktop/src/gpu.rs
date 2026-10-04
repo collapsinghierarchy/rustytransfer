@@ -1,5 +1,5 @@
 //! Instanced dots: geometry uploads only on scene/size changes, motion in WGSL.
-use crate::field::{Dot, Field, Lens};
+use crate::field::{Attachment, Dot, Field, Lens};
 use iced::{
     Rectangle, mouse, wgpu,
     widget::shader::{self, Viewport},
@@ -12,6 +12,8 @@ struct Uniforms {
     size_time: [f32; 4],
     pointer: [f32; 4],
     lens: [f32; 4],
+    emphasis: [f32; 4],
+    attachment: [f32; 4],
 }
 pub struct View<'a> {
     pub field: &'a Field,
@@ -19,6 +21,9 @@ pub struct View<'a> {
     pub lens: Option<Lens>,
     pub time: f32,
     pub reduced_motion: bool,
+    pub hovered_route: f32,
+    pub selected_route: f32,
+    pub attachment: Option<Attachment>,
 }
 impl<Message> shader::Program<Message> for View<'_> {
     type State = ();
@@ -40,6 +45,11 @@ impl<Message> shader::Program<Message> for View<'_> {
                 lens: self
                     .lens
                     .map_or([0.0; 4], |l| [l.center.x, l.center.y, l.core, l.radius]),
+                emphasis: [self.hovered_route, self.selected_route, 0.0, 0.0],
+                attachment: self
+                    .attachment
+                    .as_ref()
+                    .map_or([0.0; 4], |a| [a.delta.x, a.delta.y, a.index, 1.0]),
             },
         }
     }
@@ -104,7 +114,7 @@ impl shader::Pipeline for Pipeline {
                 module: &shader, entry_point: Some("vs_main"), compilation_options: Default::default(),
                 buffers: &[wgpu::VertexBufferLayout {
                     array_stride: std::mem::size_of::<Dot>() as u64, step_mode: wgpu::VertexStepMode::Instance,
-                    attributes: &wgpu::vertex_attr_array![0 => Float32x2, 1 => Float32, 2 => Float32, 3 => Float32x4, 4 => Float32x4],
+                    attributes: &wgpu::vertex_attr_array![0 => Float32x2, 1 => Float32, 2 => Float32, 3 => Float32x4, 4 => Float32x4, 5 => Float32x4],
                 }],
             },
             fragment: Some(wgpu::FragmentState {

@@ -2,6 +2,8 @@ struct Uniforms {
     size_time: vec4<f32>,
     pointer: vec4<f32>,
     lens: vec4<f32>,
+    emphasis: vec4<f32>,
+    attachment: vec4<f32>,
 }
 @group(0) @binding(0) var<uniform> u: Uniforms;
 
@@ -50,25 +52,39 @@ struct Output {
     @location(0) local: vec2<f32>,
     @location(1) color: vec4<f32>,
     @location(2) radius: f32,
+    @location(3) glow: f32,
 }
 @vertex fn vs_main(@builtin(vertex_index) vertex: u32,
     @location(0) position: vec2<f32>, @location(1) radius: f32,
-    @location(2) kind: f32, @location(3) color: vec4<f32>, @location(4) packet: vec4<f32>) -> Output {
+    @location(2) kind: f32, @location(3) color: vec4<f32>, @location(4) packet: vec4<f32>,
+    @location(5) attachment: vec4<f32>) -> Output {
     let corners = array<vec2<f32>,6>(vec2(-1.0,-1.0),vec2(1.0,-1.0),vec2(-1.0,1.0),
                                     vec2(-1.0,1.0),vec2(1.0,-1.0),vec2(1.0,1.0));
     var r = radius;
     var c = color;
+    var glow = 0.0;
+    if kind == 1.0 && (packet.w == u.emphasis.x || packet.w == u.emphasis.y) {
+        r = 3.0;
+        c = vec4(min(color.rgb + vec3(0.20), vec3(1.0)), 1.0);
+        glow = 1.0;
+    }
     if kind == 1.0 && packet.z == 1.0 && u.size_time.w == 0.0 {
         let head = floor(u.size_time.z * 14.2857) % max(packet.y, 1.0);
         if abs(packet.x - head) < 1.0 { r = 3.1; c = vec4(0.92,0.97,1.0,1.0); }
     }
-    let local = corners[vertex] * (r + 1.0);
-    let p = warp_lens(warp_pointer(position)) + local;
+    let local = corners[vertex] * (r + 1.0 + glow * 4.0);
+    var factor = 0.0;
+    if u.attachment.w == 1.0 {
+        if attachment.x == u.attachment.z { factor += pow(1.0 - attachment.z, 2.0); }
+        if attachment.y == u.attachment.z { factor += pow(attachment.z, 2.0); }
+    }
+    let p = warp_lens(warp_pointer(position + u.attachment.xy * factor)) + local;
     var output: Output;
     output.position = vec4(p.x / u.size_time.x * 2.0 - 1.0, 1.0 - p.y / u.size_time.y * 2.0, 0.0, 1.0);
     output.local = local;
     output.color = c;
     output.radius = r;
+    output.glow = glow;
     return output;
 }
 fn linear(c: vec3<f32>) -> vec3<f32> {
@@ -77,5 +93,6 @@ fn linear(c: vec3<f32>) -> vec3<f32> {
 @fragment fn fs_main(input: Output) -> @location(0) vec4<f32> {
     let edge = max(fwidth(length(input.local)), 0.55);
     let alpha = 1.0 - smoothstep(input.radius - edge * 0.5, input.radius + edge * 0.5, length(input.local));
-    return vec4(linear(input.color.rgb), input.color.a * alpha);
+    let halo = input.glow * 0.18 * exp(-length(input.local) * length(input.local) / 22.0);
+    return vec4(linear(input.color.rgb), input.color.a * max(alpha, halo));
 }

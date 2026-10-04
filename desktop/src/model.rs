@@ -21,6 +21,15 @@ pub enum Reachability {
     Offline,
 }
 
+#[derive(Clone, Copy, Debug, Default, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum NetworkScope {
+    #[default]
+    Unknown,
+    Local,
+    Remote,
+}
+
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum RouteKind {
@@ -74,6 +83,8 @@ pub struct Node {
     pub label: String,
     pub kind: NodeKind,
     pub reachability: Reachability,
+    #[serde(default)]
+    pub network_scope: NetworkScope,
     #[serde(default)]
     pub transport: Option<String>,
 }
@@ -163,6 +174,24 @@ pub struct Scene {
 }
 
 impl Scene {
+    pub fn is_local_peer(&self, id: &str) -> bool {
+        match self.nodes.get(id).map(|node| node.network_scope) {
+            Some(NetworkScope::Local) => true,
+            Some(NetworkScope::Remote) | None => false,
+            Some(NetworkScope::Unknown) => {
+                let Some(source_id) = self.source.as_ref().map(|source| source.id.as_str()) else {
+                    return false;
+                };
+                self.routes.values().any(|route| {
+                    route.kind == RouteKind::Payload
+                        && route.topology == RouteTopology::Local
+                        && ((route.from == source_id && route.to == id)
+                            || (route.to == source_id && route.from == id))
+                })
+            }
+        }
+    }
+
     pub fn apply(&mut self, event: Event) -> Result<(), String> {
         match event {
             Event::Snapshot {
@@ -385,5 +414,72 @@ mod tests {
             })
             .unwrap();
         assert!(!scene.routes.contains_key("r"));
+    }
+
+    fn peer_event() -> Event {
+        parse_ndjson(include_str!("../fixtures/direct.ndjson")).unwrap()[1].clone()
+    }
+
+    fn scene_with_direct_peer_and_routes() -> Scene {
+        let mut scene = Scene::default();
+        for event in parse_ndjson(include_str!("../fixtures/direct.ndjson"))
+            .unwrap()
+            .into_iter()
+            .take(6)
+        {
+            scene.apply(event).unwrap();
+        }
+        scene
+    }
+
+    #[test]
+    fn legacy_fixtures_default_network_scope_to_unknown() {
+        let events = parse_ndjson(include_str!("../fixtures/direct.ndjson")).unwrap();
+        let Event::PeerUpsert { peer } = &events[1] else {
+            panic!("fixture's second event is a peer upsert");
+        };
+        assert_eq!(peer.reachability, Reachability::Nearby);
+        assert_eq!(peer.network_scope, NetworkScope::Unknown);
+    }
+
+    #[test]
+    fn explicit_network_scope_is_authoritative() {
+        let mut scene = scene_with_direct_peer_and_routes();
+        let Event::PeerUpsert { mut peer } = peer_event() else {
+            panic!("fixture's second event is a peer upsert");
+        };
+        peer.network_scope = NetworkScope::Local;
+        scene
+            .apply(Event::PeerUpsert { peer: peer.clone() })
+            .unwrap();
+        assert!(scene.is_local_peer("phone"));
+
+        peer.network_scope = NetworkScope::Remote;
+        scene.apply(Event::PeerUpsert { peer }).unwrap();
+        assert!(!scene.is_local_peer("phone"));
+    }
+
+    #[test]
+    fn unknown_scope_is_local_only_with_local_payload_route_to_source() {
+        let events = parse_ndjson(include_str!("../fixtures/direct.ndjson")).unwrap();
+        let mut scene = Scene::default();
+        for event in events.iter().take(5).cloned() {
+            scene.apply(event).unwrap();
+        }
+        let Event::RouteUpsert { mut route } = events[5].clone() else {
+            panic!("fixture's sixth event is a route upsert");
+        };
+        route.topology = RouteTopology::Local;
+        scene.apply(Event::RouteUpsert { route }).unwrap();
+        assert_eq!(scene.nodes["phone"].network_scope, NetworkScope::Unknown);
+        assert!(scene.is_local_peer("phone"));
+    }
+
+    #[test]
+    fn nearby_reachability_and_direct_route_do_not_imply_local_scope() {
+        let scene = scene_with_direct_peer_and_routes();
+        assert_eq!(scene.nodes["phone"].reachability, Reachability::Nearby);
+        assert_eq!(scene.nodes["phone"].network_scope, NetworkScope::Unknown);
+        assert!(!scene.is_local_peer("phone"));
     }
 }

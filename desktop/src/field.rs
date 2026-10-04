@@ -19,6 +19,7 @@ pub struct Dot {
     pub kind: f32,
     pub color: [f32; 4],
     pub packet: [f32; 4],
+    pub attachment: [f32; 4],
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -29,7 +30,7 @@ pub struct Lens {
 }
 impl Lens {
     pub fn new(center: Point, size: Size) -> Self {
-        let core = (size.height.min(size.width) * 0.36).clamp(150.0, 260.0);
+        let core = (size.height.min(size.width) * 0.39).clamp(235.0, 280.0);
         Self {
             center,
             core,
@@ -102,6 +103,28 @@ pub struct RouteGeometry {
     pub id: String,
     pub points: Vec<Point>,
     pub color: Color,
+    pub attachments: Vec<[f32; 4]>,
+}
+#[derive(Debug, Clone)]
+pub struct Attachment {
+    pub id: String,
+    pub index: f32,
+    pub delta: Point,
+}
+pub fn attach(p: Point, weights: [f32; 4], attachment: Option<&Attachment>) -> Point {
+    let Some(a) = attachment else {
+        return p;
+    };
+    let factor = if weights[0] == a.index {
+        (1.0 - weights[2]).powi(2)
+    } else {
+        0.0
+    } + if weights[1] == a.index {
+        weights[2].powi(2)
+    } else {
+        0.0
+    };
+    Point::new(p.x + a.delta.x * factor, p.y + a.delta.y * factor)
 }
 #[derive(Debug, Clone)]
 pub struct Field {
@@ -110,6 +133,7 @@ pub struct Field {
     pub nodes: BTreeMap<String, Point>,
     pub revision: u64,
     pub size: Size,
+    pub source_id: Option<String>,
 }
 impl Default for Field {
     fn default() -> Self {
@@ -119,6 +143,7 @@ impl Default for Field {
             nodes: BTreeMap::new(),
             revision: 0,
             size: Size::ZERO,
+            source_id: None,
         }
     }
 }
@@ -150,13 +175,28 @@ impl Field {
         self.size = size;
         self.revision += 1;
         self.nodes.clear();
+        self.source_id = scene.source.as_ref().map(|s| s.id.clone());
         if let Some(source) = &scene.source {
             self.nodes.insert(
                 source.id.clone(),
-                Point::new(size.width * 0.12, size.height * 0.22),
+                overrides
+                    .get(&source.id)
+                    .copied()
+                    .unwrap_or(Point::new(96.0, 78.0)),
             );
         }
-        let mut peer = 0;
+        let mut remote_peer = 0;
+        let mut local_peer = 0;
+        let local_count = scene
+            .nodes
+            .values()
+            .filter(|n| n.kind == NodeKind::Peer && scene.is_local_peer(&n.id))
+            .count();
+        let remote_count = scene
+            .nodes
+            .values()
+            .filter(|n| n.kind == NodeKind::Peer && !scene.is_local_peer(&n.id))
+            .count();
         for node in scene.nodes.values() {
             let p = match node.kind {
                 NodeKind::Signaling => Point::new(size.width * 0.49, size.height * 0.28),
@@ -164,11 +204,22 @@ impl Field {
                 NodeKind::Router => Point::new(size.width * 0.30, size.height * 0.42),
                 NodeKind::Service => Point::new(size.width * 0.23, size.height * 0.74),
                 _ => {
-                    peer += 1;
-                    Point::new(
-                        size.width * 0.86,
-                        size.height * (0.45 + (peer - 1) as f32 * 0.17),
-                    )
+                    let local = scene.is_local_peer(&node.id);
+                    let (index, count, x, start) = if local {
+                        let index = local_peer;
+                        local_peer += 1;
+                        (index, local_count, 96.0, 210.0)
+                    } else {
+                        let index = remote_peer;
+                        remote_peer += 1;
+                        (index, remote_count, size.width - 110.0, size.height * 0.42)
+                    };
+                    let spacing = if count > 1 {
+                        ((size.height - 75.0 - start) / (count - 1) as f32).clamp(55.0, 140.0)
+                    } else {
+                        0.0
+                    };
+                    Point::new(x, start + index as f32 * spacing)
                 }
             };
             self.nodes.insert(
@@ -182,32 +233,43 @@ impl Field {
             else {
                 continue;
             };
-            let mut anchors = vec![from];
+            let mut anchors = vec![(from, self.node_index(&route.from))];
             if route.via.is_empty() && route.kind == RouteKind::Payload {
-                anchors.push(Point::new(size.width * 0.42, size.height * 0.72));
+                anchors.push((Point::new(size.width * 0.42, size.height * 0.72), 0.0));
             }
-            anchors.extend(
-                route
-                    .via
-                    .iter()
-                    .filter_map(|id| self.nodes.get(id))
-                    .copied(),
-            );
-            anchors.push(to);
+            anchors.extend(route.via.iter().filter_map(|id| {
+                self.nodes
+                    .get(id)
+                    .map(|point| (*point, self.node_index(id)))
+            }));
+            anchors.push((to, self.node_index(&route.to)));
             let mut points = Vec::new();
+            let mut attachments = Vec::new();
             for segment in anchors.windows(2) {
-                grid_line(segment[0], segment[1], &mut points);
+                let mut line = Vec::new();
+                grid_line(segment[0].0, segment[1].0, &mut line);
+                let count = line.len().saturating_sub(1).max(1) as f32;
+                for (i, p) in line.into_iter().enumerate() {
+                    if points.last() == Some(&p) {
+                        continue;
+                    }
+                    points.push(p);
+                    attachments.push([segment[0].1, segment[1].1, i as f32 / count, 0.0]);
+                }
             }
             self.routes.push(RouteGeometry {
                 id: route.id.clone(),
                 points,
                 color: route_color(route.kind, route.topology, route.state),
+                attachments,
             });
         }
         // Cache the route trench field. Pointer/lens motion only changes GPU uniforms.
         let cols = (size.width / 7.0).ceil() as usize + 1;
         let rows = (size.height / 7.0).ceil() as usize + 1;
         let mut offsets = vec![(0.0_f32, 0.0_f32, 0.0_f32); cols * rows];
+        let mut grid_attachments = vec![[0.0; 4]; cols * rows];
+        let mut strongest = vec![0.0_f32; cols * rows];
         for route in &self.routes {
             for (i, p) in route.points.iter().enumerate() {
                 let before = route.points[i.saturating_sub(1)];
@@ -232,6 +294,11 @@ impl Field {
                         let trench = -side.signum() * side.abs().min(2.2) * 2.4 * fall;
                         let wake = (i as f32 * 0.31 + distance * 0.62).sin() * 2.3 * fall;
                         let entry = &mut offsets[r as usize * cols + c as usize];
+                        let index = r as usize * cols + c as usize;
+                        if fall > strongest[index] {
+                            strongest[index] = fall;
+                            grid_attachments[index] = route.attachments[i];
+                        }
                         entry.0 += nx * (trench + wake) + tx / length * 0.5 * wake;
                         entry.1 += ny * (trench + wake) + ty / length * 0.5 * wake;
                         entry.2 += fall * 0.42;
@@ -256,10 +323,11 @@ impl Field {
                         1.0,
                     ],
                     packet: [0.0; 4],
+                    attachment: grid_attachments[row * cols + col],
                 });
             }
         }
-        for geometry in &mut self.routes {
+        for (route_index, geometry) in self.routes.iter_mut().enumerate() {
             let Some(route) = scene.routes.get(&geometry.id) else {
                 continue;
             };
@@ -283,7 +351,13 @@ impl Field {
                     radius: 1.8,
                     kind: 1.0,
                     color: rgba(geometry.color),
-                    packet: [i as f32, count as f32, if active { 1.0 } else { 0.0 }, 0.0],
+                    packet: [
+                        i as f32,
+                        count as f32,
+                        if active { 1.0 } else { 0.0 },
+                        (route_index + 1) as f32,
+                    ],
+                    attachment: geometry.attachments[i],
                 });
             }
         }
@@ -291,11 +365,15 @@ impl Field {
     }
     fn node_warp(&self, p: Point) -> Point {
         let mut result = p;
-        for (i, node) in self.nodes.values().enumerate() {
+        for (id, node) in &self.nodes {
             let dx = p.x - node.x;
             let dy = p.y - node.y;
             let d = dx.hypot(dy).max(1.0);
-            let radius = if i == 0 { 78.0 } else { 48.0 };
+            let radius = if self.source_id.as_ref() == Some(id) {
+                105.0
+            } else {
+                48.0
+            };
             if d >= radius {
                 continue;
             }
@@ -312,21 +390,78 @@ impl Field {
         position: Point,
         pointer: Option<Point>,
         lens: Option<Lens>,
+        attachment: Option<&Attachment>,
     ) -> Option<Selection> {
         for (id, point) in &self.nodes {
-            if warp(*point, pointer, lens).distance(position) < 27.0 {
+            if attachment.is_some_and(|a| &a.id == id) {
+                continue;
+            }
+            let radius = if self.source_id.as_ref() == Some(id) {
+                53.0
+            } else {
+                25.0
+            };
+            let visible = warp(*point, pointer, lens);
+            let source = self.source_id.as_ref() == Some(id);
+            let labels = iced::Rectangle {
+                x: visible.x - if source { 110.0 } else { 90.0 },
+                y: visible.y + if source { 55.0 } else { 22.0 },
+                width: if source { 220.0 } else { 180.0 },
+                height: if source { 48.0 } else { 38.0 },
+            };
+            if visible.distance(position) < radius || labels.contains(position) {
                 return Some(Selection::Node(id.clone()));
             }
         }
         self.routes
             .iter()
-            .find(|r| {
-                r.points
-                    .iter()
-                    .any(|p| warp(*p, pointer, lens).distance(position) < 18.0)
+            .filter_map(|route| {
+                let distance = route
+                    .points
+                    .windows(2)
+                    .enumerate()
+                    .map(|(i, segment)| {
+                        let from = warp(
+                            attach(segment[0], route.attachments[i], attachment),
+                            pointer,
+                            lens,
+                        );
+                        let to = warp(
+                            attach(segment[1], route.attachments[i + 1], attachment),
+                            pointer,
+                            lens,
+                        );
+                        segment_distance(position, from, to)
+                    })
+                    .fold(f32::INFINITY, f32::min);
+                (distance <= 26.0).then_some((route, distance))
             })
-            .map(|r| Selection::Route(r.id.clone()))
+            .min_by(|a, b| a.1.total_cmp(&b.1))
+            .map(|(r, _)| Selection::Route(r.id.clone()))
     }
+    pub fn node_index(&self, id: &str) -> f32 {
+        self.nodes
+            .keys()
+            .position(|key| key == id)
+            .map_or(0.0, |i| (i + 1) as f32)
+    }
+    pub fn route_index(&self, id: &str) -> f32 {
+        self.routes
+            .iter()
+            .position(|r| r.id == id)
+            .map_or(0.0, |i| (i + 1) as f32)
+    }
+}
+fn segment_distance(p: Point, a: Point, b: Point) -> f32 {
+    let (dx, dy) = (b.x - a.x, b.y - a.y);
+    let length = dx * dx + dy * dy;
+    let t = if length > 0.0 {
+        ((p.x - a.x) * dx + (p.y - a.y) * dy) / length
+    } else {
+        0.0
+    }
+    .clamp(0.0, 1.0);
+    p.distance(Point::new(a.x + t * dx, a.y + t * dy))
 }
 #[derive(Debug, Clone, PartialEq)]
 pub enum Selection {
@@ -396,8 +531,53 @@ mod tests {
         let geometry = field.routes.iter().find(|r| r.id == "payload-t1").unwrap();
         let p = warp(geometry.points[geometry.points.len() / 2], None, lens);
         assert_eq!(
-            field.hit(p, None, lens),
+            field.hit(p, None, lens, None),
             Some(Selection::Route("payload-t1".into()))
+        );
+    }
+    #[test]
+    fn route_hit_chooses_nearest_path_and_accepts_space_between_dots() {
+        let mut field = Field::default();
+        // Both paths are in range: the first entry must not steal the nearer hit.
+        for (id, y) in [("far", 100.0), ("near", 120.0)] {
+            field.routes.push(RouteGeometry {
+                id: id.into(),
+                points: vec![Point::new(100.0, y), Point::new(180.0, y)],
+                color: BLUE,
+                attachments: vec![[0.0; 4]; 2],
+            });
+        }
+        assert_eq!(
+            field.hit(Point::new(140.0, 119.0), None, None, None),
+            Some(Selection::Route("near".into()))
+        );
+        assert_eq!(
+            field.hit(Point::new(140.0, 146.0), None, None, None),
+            Some(Selection::Route("near".into()))
+        );
+        assert_eq!(field.hit(Point::new(140.0, 147.0), None, None, None), None);
+    }
+    #[test]
+    fn route_hit_tracks_captured_endpoint_without_leaving_original_path_clickable() {
+        let mut field = Field::default();
+        field.routes.push(RouteGeometry {
+            id: "attached".into(),
+            points: vec![Point::new(100.0, 100.0), Point::new(180.0, 100.0)],
+            color: BLUE,
+            attachments: vec![[1.0, 0.0, 0.0, 0.0], [1.0, 0.0, 1.0, 0.0]],
+        });
+        let attachment = Attachment {
+            id: "source".into(),
+            index: 1.0,
+            delta: Point::new(0.0, 100.0),
+        };
+        assert_eq!(
+            field.hit(Point::new(140.0, 150.0), None, None, Some(&attachment)),
+            Some(Selection::Route("attached".into()))
+        );
+        assert_eq!(
+            field.hit(Point::new(100.0, 100.0), None, None, Some(&attachment)),
+            None
         );
     }
 }

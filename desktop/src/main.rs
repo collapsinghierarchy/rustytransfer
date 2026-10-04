@@ -3,6 +3,7 @@
     windows_subsystem = "windows"
 )]
 
+mod actions;
 mod field;
 mod gpu;
 mod model;
@@ -60,7 +61,7 @@ fn main() -> iced::Result {
         })
         .window(window::Settings {
             size: Size::new(1280.0, 840.0),
-            min_size: Some(Size::new(800.0, 650.0)),
+            min_size: Some(Size::new(800.0, 700.0)),
             ..Default::default()
         })
         .subscription(App::subscription)
@@ -70,6 +71,9 @@ fn main() -> iced::Result {
             "overview.png",
             "lens.png",
             "dragged-lens.png",
+            "hovered-route.png",
+            "captured-node.png",
+            "dragged-node-lens.png",
             "frame-cadence.json",
         ]
         .iter()
@@ -169,6 +173,38 @@ struct App {
     drag_revision: Option<u64>,
     motion_rebuilds: u64,
     drag_resizes: u64,
+    hovered: Option<Selection>,
+    capture: Option<Capture>,
+    visibility: Visibility,
+}
+#[derive(Clone)]
+struct Capture {
+    start: Point,
+    began: Instant,
+}
+#[derive(Clone, Copy)]
+struct Visibility {
+    peers: bool,
+    network: bool,
+    payload: bool,
+    control: bool,
+}
+impl Default for Visibility {
+    fn default() -> Self {
+        Self {
+            peers: true,
+            network: true,
+            payload: true,
+            control: true,
+        }
+    }
+}
+#[derive(Debug, Clone, Copy)]
+enum FilterKind {
+    Peers,
+    Network,
+    Payload,
+    Control,
 }
 #[derive(Clone)]
 enum Drag {
@@ -181,6 +217,11 @@ enum Drag {
         origin: Point,
         moved: bool,
     },
+    Route {
+        id: String,
+        origin: Point,
+        moved: bool,
+    },
 }
 #[derive(Debug, Clone)]
 enum Message {
@@ -189,6 +230,8 @@ enum Message {
     Move(Option<Point>),
     Down(Point),
     Up,
+    CancelGesture,
+    CloseLens,
     Scenario(usize),
     Play,
     Restart,
@@ -199,6 +242,9 @@ enum Message {
     Keyboard(Key, keyboard::Modifiers),
     Captured(&'static str, window::Screenshot),
     Saved(Result<(), String>),
+    Select(Selection),
+    Visible(FilterKind, bool),
+    ResetPosition(String),
 }
 impl App {
     fn new(options: Options) -> Result<Self, String> {
@@ -237,6 +283,9 @@ impl App {
             drag_revision: None,
             motion_rebuilds: 0,
             drag_resizes: 0,
+            hovered: None,
+            capture: None,
+            visibility: Visibility::default(),
         };
         // Open on the first observed transferring event; all data is from the replay.
         while app.index < app.events.len() {
@@ -254,8 +303,34 @@ impl App {
     }
     fn rebuild(&mut self) {
         if self.field.size.width > 0.0 {
+            let mut visible = self.scene.clone();
+            for node in visible.nodes.values_mut() {
+                if node.kind == model::NodeKind::Peer && self.scene.is_local_peer(&node.id) {
+                    node.network_scope = model::NetworkScope::Local;
+                }
+            }
+            visible.nodes.retain(|_, node| {
+                if node.kind == model::NodeKind::Peer {
+                    self.visibility.peers
+                } else {
+                    self.visibility.network
+                }
+            });
+            let present = |id: &String| {
+                visible.nodes.contains_key(id)
+                    || visible.source.as_ref().is_some_and(|s| &s.id == id)
+            };
+            visible.routes.retain(|_, route| {
+                (if route.kind == model::RouteKind::Payload {
+                    self.visibility.payload
+                } else {
+                    self.visibility.control
+                }) && present(&route.from)
+                    && present(&route.to)
+                    && route.via.iter().all(present)
+            });
             self.field
-                .rebuild(&self.scene, self.field.size, &self.overrides);
+                .rebuild(&visible, self.field.size, &self.overrides);
         }
     }
     fn step(&mut self) {
@@ -268,9 +343,7 @@ impl App {
             self.index += 1;
             self.rebuild();
             if !self.selection_exists() {
-                self.selection = None;
-                self.lens = None;
-                self.drag = None;
+                self.close_lens();
             }
         }
         if self.index == self.events.len() {
@@ -280,28 +353,109 @@ impl App {
     fn selection_exists(&self) -> bool {
         match &self.selection {
             None => true,
-            Some(Selection::Node(id)) => {
-                self.scene.nodes.contains_key(id)
-                    || self.scene.source.as_ref().is_some_and(|s| &s.id == id)
-            }
-            Some(Selection::Route(id)) => self.scene.routes.contains_key(id),
+            Some(Selection::Node(id)) => self.field.nodes.contains_key(id),
+            Some(Selection::Route(id)) => self.field.routes.iter().any(|r| &r.id == id),
         }
     }
     fn select(&mut self, selection: Selection) {
+        let start = match &selection {
+            Selection::Node(id) => self
+                .field
+                .nodes
+                .get(id)
+                .map(|p| field::warp(*p, self.motion_pointer(), self.lens)),
+            Selection::Route(_) => None,
+        };
         self.selection = Some(selection);
         self.lens = Some(Lens::new(
             Point::new(self.field.size.width * 0.52, self.field.size.height * 0.50),
             self.field.size,
         ));
         self.pointer = None;
+        self.hovered = None;
+        self.drag = None;
+        self.capture = start.map(|start| Capture {
+            start,
+            began: Instant::now(),
+        });
+    }
+    fn close_lens(&mut self) {
+        self.selection = None;
+        self.lens = None;
+        self.capture = None;
+        self.drag = None;
+        self.hovered = None;
+    }
+    fn source_lens(&self) -> Option<(String, Lens, Option<Capture>)> {
+        let Some(Selection::Node(id)) = &self.selection else {
+            return None;
+        };
+        self.scene
+            .source
+            .as_ref()
+            .filter(|s| &s.id == id)
+            .and_then(|_| {
+                self.lens
+                    .map(|lens| (id.clone(), lens, self.capture.clone()))
+            })
+    }
+    fn restore_source_lens(&mut self, saved: Option<(String, Lens, Option<Capture>)>) {
+        if let Some((id, lens, capture)) = saved
+            && self.scene.source.as_ref().is_some_and(|s| s.id == id)
+        {
+            self.select(Selection::Node(id));
+            self.lens = Some(lens);
+            self.capture = capture;
+        }
+    }
+    fn captured_position(&self) -> Option<Point> {
+        let lens = self.lens?;
+        if !matches!(self.selection, Some(Selection::Node(_))) {
+            return None;
+        }
+        let target = Point::new(lens.center.x, lens.center.y - 145.0);
+        let capture = self.capture.as_ref()?;
+        let t = if self.reduced_motion {
+            1.0
+        } else {
+            (capture.began.elapsed().as_secs_f32() / 0.28).clamp(0.0, 1.0)
+        };
+        let ease = 1.0 - (1.0 - t).powi(3);
+        Some(Point::new(
+            capture.start.x + (target.x - capture.start.x) * ease,
+            capture.start.y + (target.y - capture.start.y) * ease,
+        ))
+    }
+    fn attachment(&self) -> Option<field::Attachment> {
+        let Some(Selection::Node(id)) = &self.selection else {
+            return None;
+        };
+        let original = *self.field.nodes.get(id)?;
+        let position = self.captured_position()?;
+        Some(field::Attachment {
+            id: id.clone(),
+            index: self.field.node_index(id),
+            delta: Point::new(position.x - original.x, position.y - original.y),
+        })
+    }
+    fn hit_at(&self, p: Point) -> Option<Selection> {
+        if self
+            .lens
+            .is_some_and(|lens| p.distance(lens.center) < lens.core)
+        {
+            return None;
+        }
+        self.field.hit(
+            p,
+            self.motion_pointer(),
+            self.lens,
+            self.attachment().as_ref(),
+        )
     }
     fn inspect(&mut self) {
-        if let Some(route) = self
-            .scene
-            .routes
-            .values()
-            .find(|r| r.kind == model::RouteKind::Payload)
-        {
+        if let Some(route) = self.scene.routes.values().find(|r| {
+            r.kind == model::RouteKind::Payload && self.field.routes.iter().any(|g| g.id == r.id)
+        }) {
             self.select(Selection::Route(route.id.clone()));
         } else if let Some(source) = &self.scene.source {
             self.select(Selection::Node(source.id.clone()));
@@ -316,7 +470,8 @@ impl App {
                 if self.smoke_stage == 4 {
                     self.drag_resizes += 1;
                 }
-                self.field.rebuild(&self.scene, size, &self.overrides);
+                self.field.size = size;
+                self.rebuild();
                 if let Some(lens) = self.lens {
                     self.lens = Some(Lens::new(clamp_lens(lens.center, size), size));
                 }
@@ -339,24 +494,42 @@ impl App {
                             origin,
                             moved,
                         }) => {
+                            let moved = moved || p.distance(origin) > 6.0;
+                            if !moved {
+                                return Task::none();
+                            }
                             let next = Point::new(p.x - offset.x, p.y - offset.y);
                             self.overrides.insert(
                                 id.clone(),
                                 Point::new(
-                                    next.x.clamp(30.0, self.field.size.width - 30.0),
-                                    next.y.clamp(30.0, self.field.size.height - 30.0),
+                                    next.x.clamp(55.0, self.field.size.width.max(110.0) - 55.0),
+                                    next.y.clamp(55.0, self.field.size.height.max(110.0) - 55.0),
                                 ),
                             );
                             self.drag = Some(Drag::Node {
                                 id,
                                 offset,
                                 origin,
-                                moved: moved || p.distance(origin) > 4.0,
+                                moved,
                             });
                             self.rebuild();
                         }
+                        Some(Drag::Route { id, origin, moved }) => {
+                            self.drag = Some(Drag::Route {
+                                id,
+                                origin,
+                                moved: moved || p.distance(origin) > 6.0,
+                            });
+                        }
                         None => {}
                     }
+                }
+                self.hovered = point.and_then(|p| self.hit_at(p));
+                if point.is_none()
+                    && let Some(Drag::Node { moved, .. } | Drag::Route { moved, .. }) =
+                        &mut self.drag
+                {
+                    *moved = true;
                 }
             }
             Message::Down(p) => {
@@ -364,38 +537,65 @@ impl App {
                     self.drag = Some(Drag::Lens {
                         offset: Point::new(p.x - lens.center.x, p.y - lens.center.y),
                     });
-                } else if let Some(selection) = self.field.hit(p, self.motion_pointer(), self.lens)
-                {
+                } else if let Some(selection) = self.hit_at(p) {
                     if let Selection::Node(id) = &selection {
-                        if self.scene.source.as_ref().is_none_or(|s| &s.id != id) {
-                            if let Some(raw) = self.field.nodes.get(id) {
-                                self.drag = Some(Drag::Node {
-                                    id: id.clone(),
-                                    offset: Point::new(p.x - raw.x, p.y - raw.y),
-                                    origin: p,
-                                    moved: false,
-                                });
-                            }
-                        } else {
-                            self.select(selection);
+                        if self.field.nodes.contains_key(id) {
+                            self.close_lens();
+                            let raw = self.field.nodes[id];
+                            self.drag = Some(Drag::Node {
+                                id: id.clone(),
+                                offset: Point::new(p.x - raw.x, p.y - raw.y),
+                                origin: p,
+                                moved: false,
+                            });
                         }
-                    } else {
-                        self.select(selection);
+                    } else if let Selection::Route(id) = selection {
+                        self.drag = Some(Drag::Route {
+                            id,
+                            origin: p,
+                            moved: false,
+                        });
                     }
                 } else {
-                    self.selection = None;
-                    self.lens = None;
+                    self.close_lens();
                 }
             }
-            Message::Up => {
-                if let Some(Drag::Node {
+            Message::Up => match self.drag.take() {
+                Some(Drag::Node {
                     id, moved: false, ..
-                }) = self.drag.take()
-                {
-                    self.select(Selection::Node(id));
+                }) => self.select(Selection::Node(id)),
+                Some(Drag::Route {
+                    id, moved: false, ..
+                }) => self.select(Selection::Route(id)),
+                _ => {}
+            },
+            Message::CancelGesture => {
+                self.drag = None;
+                self.pointer = None;
+                self.hovered = None;
+            }
+            Message::CloseLens => self.close_lens(),
+            Message::Select(selection) => self.select(selection),
+            Message::Visible(kind, value) => {
+                match kind {
+                    FilterKind::Peers => self.visibility.peers = value,
+                    FilterKind::Network => self.visibility.network = value,
+                    FilterKind::Payload => self.visibility.payload = value,
+                    FilterKind::Control => self.visibility.control = value,
                 }
+                self.drag = None;
+                self.hovered = None;
+                self.rebuild();
+                if !self.selection_exists() {
+                    self.close_lens();
+                }
+            }
+            Message::ResetPosition(id) => {
+                self.overrides.remove(&id);
+                self.rebuild();
             }
             Message::Scenario(index) => {
+                let source_lens = self.source_lens();
                 self.events = match model::parse_ndjson(FIXTURES[index]) {
                     Ok(events) => events,
                     Err(e) => {
@@ -407,9 +607,7 @@ impl App {
                 self.custom = false;
                 self.scene = Scene::default();
                 self.index = 0;
-                self.selection = None;
-                self.lens = None;
-                self.drag = None;
+                self.close_lens();
                 self.overrides.clear();
                 self.error = None;
                 while self.index < self.events.len() {
@@ -424,6 +622,7 @@ impl App {
                     }
                 }
                 self.playing = false;
+                self.restore_source_lens(source_lens);
             }
             Message::Play => {
                 if self.index == self.events.len() {
@@ -433,16 +632,16 @@ impl App {
                 self.last_event = Instant::now();
             }
             Message::Restart => {
+                let source_lens = self.source_lens();
                 self.scene = Scene::default();
                 self.index = 0;
-                self.selection = None;
-                self.lens = None;
-                self.drag = None;
+                self.close_lens();
                 self.overrides.clear();
                 self.error = None;
                 self.step();
                 self.playing = true;
                 self.last_event = Instant::now();
+                self.restore_source_lens(source_lens);
             }
             Message::Step => {
                 self.playing = false;
@@ -456,18 +655,16 @@ impl App {
             Message::Diagnostics => self.diagnostics = !self.diagnostics,
             Message::Keyboard(key, modifiers) => match key.as_ref() {
                 Key::Named(Named::Escape) => {
-                    self.lens = None;
-                    self.selection = None;
-                    self.drag = None;
+                    self.close_lens();
                 }
                 Key::Named(Named::Space) => return self.update(Message::Play),
                 Key::Named(Named::F12) => return self.update(Message::Diagnostics),
                 Key::Character("n" | "N") => {
                     let selections: Vec<_> = self
-                        .scene
+                        .field
                         .routes
-                        .keys()
-                        .map(|id| Selection::Route(id.clone()))
+                        .iter()
+                        .map(|route| Selection::Route(route.id.clone()))
                         .chain(
                             self.field
                                 .nodes
@@ -589,6 +786,64 @@ impl App {
                     std::process::exit(1);
                 }
                 self.smoke_stage = 6;
+                self.close_lens();
+                let hover = self
+                    .field
+                    .routes
+                    .iter()
+                    .find(|route| {
+                        self.scene
+                            .routes
+                            .get(&route.id)
+                            .is_some_and(|r| r.kind == model::RouteKind::Payload)
+                    })
+                    .and_then(|route| {
+                        route.points.iter().copied().find(|p| {
+                            self.field.hit(*p, None, None, None)
+                                == Some(Selection::Route(route.id.clone()))
+                        })
+                    });
+                if let Some(p) = hover {
+                    let _ = self.update(Message::Move(Some(p)));
+                } else {
+                    self.error = Some("smoke test found no selectable payload path".into());
+                }
+            }
+            6 if seconds >= 14.0 => {
+                self.smoke_stage = 7;
+                return capture("hovered-route.png");
+            }
+            7 if seconds >= 14.5 => {
+                if let Some(source) = &self.scene.source {
+                    self.select(Selection::Node(source.id.clone()));
+                }
+                self.smoke_stage = 8;
+            }
+            8 if seconds >= 15.5 => {
+                self.smoke_stage = 9;
+                return capture("captured-node.png");
+            }
+            9 if seconds >= 16.0 => {
+                if let Some(lens) = self.lens {
+                    let _ = self.update(Message::Down(lens.center));
+                    let _ = self.update(Message::Move(Some(Point::new(
+                        lens.center.x + 110.0,
+                        lens.center.y + 30.0,
+                    ))));
+                    let _ = self.update(Message::Up);
+                }
+                self.smoke_stage = 10;
+            }
+            10 if seconds >= 17.0 => {
+                self.smoke_stage = 11;
+                return capture("dragged-node-lens.png");
+            }
+            11 if seconds >= 18.0 => {
+                if let Some(error) = &self.error {
+                    eprintln!("Smoke test failed: {error}");
+                    std::process::exit(1);
+                }
+                self.smoke_stage = 12;
                 return window::oldest().and_then(window::close);
             }
             _ => {}
@@ -635,18 +890,25 @@ impl App {
             Event::Keyboard(keyboard::Event::KeyPressed { key, modifiers, .. }) => {
                 Some(Message::Keyboard(key, modifiers))
             }
-            Event::Window(window::Event::Unfocused) => Some(Message::Up),
+            Event::Window(window::Event::Unfocused) => Some(Message::CancelGesture),
             _ => None,
         });
         // Demand-driven when paused/reduced; only active packet/replay/smoke motion ticks.
-        let animated = self.smoke.is_some()
+        let animated = self.capture.as_ref().is_some_and(|c| {
+            !self.reduced_motion && c.began.elapsed() < Duration::from_millis(300)
+        }) || self.smoke.is_some()
             || self.playing
             || (!self.reduced_motion
-                && self
-                    .scene
-                    .transfers
-                    .values()
-                    .any(|t| t.state == TransferState::Transferring));
+                && self.field.routes.iter().any(|g| {
+                    self.scene.routes.get(&g.id).is_some_and(|r| {
+                        r.kind == model::RouteKind::Payload
+                            && r.state == model::RouteState::Connected
+                            && r.transfer_id
+                                .as_ref()
+                                .and_then(|id| self.scene.transfers.get(id))
+                                .is_some_and(|t| t.state == TransferState::Transferring)
+                    })
+                }));
         if animated {
             Subscription::batch([keyboard, window::frames().map(Message::Tick)])
         } else {
@@ -661,31 +923,30 @@ impl App {
             ]
             .spacing(5),
             iced::widget::space().width(Fill),
-            button("Direct").on_press(Message::Scenario(0)).style(
-                if self.scenario == 0 && !self.custom {
-                    button::primary
-                } else {
-                    quiet_button
-                }
-            ),
-            button("Relay").on_press(Message::Scenario(1)).style(
-                if self.scenario == 1 && !self.custom {
-                    button::primary
-                } else {
-                    quiet_button
-                }
-            ),
-            button("Failure / resume")
-                .on_press(Message::Scenario(2))
-                .style(if self.scenario == 2 && !self.custom {
-                    button::primary
-                } else {
-                    quiet_button
-                }),
+            checkbox(self.visibility.peers)
+                .label("Peers")
+                .size(12)
+                .text_size(12)
+                .on_toggle(|v| Message::Visible(FilterKind::Peers, v)),
+            checkbox(self.visibility.network)
+                .label("Network")
+                .size(12)
+                .text_size(12)
+                .on_toggle(|v| Message::Visible(FilterKind::Network, v)),
+            checkbox(self.visibility.payload)
+                .label("Transfers")
+                .size(12)
+                .text_size(12)
+                .on_toggle(|v| Message::Visible(FilterKind::Payload, v)),
+            checkbox(self.visibility.control)
+                .label("Control")
+                .size(12)
+                .text_size(12)
+                .on_toggle(|v| Message::Visible(FilterKind::Control, v)),
         ]
         .spacing(10)
         .align_y(iced::Center);
-        let controls = row![
+        let hint = row![
             text(if self.custom {
                 "EVENT REPLAY · CUSTOM"
             } else {
@@ -693,18 +954,13 @@ impl App {
             })
             .size(11)
             .color(field::RELAY),
-            text("Click a route. Move the field.").size(12).color(MUTED),
+            text("Drag to arrange · Click to explore")
+                .size(12)
+                .color(MUTED),
             iced::widget::space().width(Fill),
-            button(if self.playing { "Pause" } else { "Play" })
-                .on_press(Message::Play)
-                .style(quiet_button),
-            button("Step").on_press(Message::Step).style(quiet_button),
-            button("Restart")
-                .on_press(Message::Restart)
-                .style(quiet_button),
-            button("Inspect payload")
-                .on_press(Message::Inspect)
-                .style(quiet_button),
+            text("Actions live with the selected item")
+                .size(11)
+                .color(MUTED),
         ]
         .spacing(10)
         .align_y(iced::Center);
@@ -714,11 +970,21 @@ impl App {
                 pointer: self.pointer,
                 lens: self.lens,
                 time: self.start.elapsed().as_secs_f32(),
-                reduced_motion: self.reduced_motion
+                reduced_motion: self.reduced_motion,
+                hovered_route: match &self.hovered {
+                    Some(Selection::Route(id)) => self.field.route_index(id),
+                    _ => 0.0,
+                },
+                selected_route: match &self.selection {
+                    Some(Selection::Route(id)) => self.field.route_index(id),
+                    _ => 0.0,
+                },
+                attachment: self.attachment(),
             })
             .width(Fill)
             .height(Fill),
             canvas(self).width(Fill).height(Fill),
+            self.lens_actions(),
         ];
         let transfer = self.scene.transfers.values().next();
         let status = if let Some(error) = &self.error {
@@ -748,14 +1014,14 @@ impl App {
         ]
         .spacing(15)
         .align_y(iced::Center);
-        container(column![header, controls, field_view, footer,
-            text("Visual MVP · No files are sent   /   Drag peers or the lens · Esc closes · Arrow keys move the lens").size(11).color(MUTED)]
+        container(column![header, hint, field_view, footer,
+            text("Visual MVP · No files are sent   /   Hover a connection · Click for actions · Esc closes · Arrow keys move the lens").size(11).color(MUTED)]
             .spacing(14)).padding(24).into()
     }
 }
 fn clamp_lens(p: Point, size: Size) -> Point {
     let lens = Lens::new(p, size);
-    let margin = lens.core * 0.74;
+    let margin = lens.core * 0.94;
     Point::new(
         p.x.clamp(margin, size.width.max(margin * 2.0) - margin),
         p.y.clamp(margin, size.height.max(margin * 2.0) - margin),
@@ -869,14 +1135,16 @@ impl canvas::Program<Message> for App {
     ) -> mouse::Interaction {
         if self.drag.is_some() {
             mouse::Interaction::Grabbing
-        } else if cursor.position_in(bounds).is_some_and(|p| {
-            self.lens.is_some_and(|l| p.distance(l.center) < l.core)
-                || self
-                    .field
-                    .hit(p, self.motion_pointer(), self.lens)
-                    .is_some()
-        }) {
-            mouse::Interaction::Grab
+        } else if let Some(p) = cursor.position_in(bounds) {
+            if self.lens.is_some_and(|l| p.distance(l.center) < l.core) {
+                mouse::Interaction::Grab
+            } else {
+                match self.hit_at(p) {
+                    Some(Selection::Node(_)) => mouse::Interaction::Grab,
+                    Some(Selection::Route(_)) => mouse::Interaction::Pointer,
+                    None => mouse::Interaction::default(),
+                }
+            }
         } else {
             mouse::Interaction::default()
         }
@@ -899,11 +1167,21 @@ impl canvas::Program<Message> for App {
             let Some(node) = node else {
                 continue;
             };
-            let p = field::warp(*raw, self.motion_pointer(), self.lens);
+            let selected = self.selection == Some(Selection::Node(id.clone()));
+            let p = if selected {
+                self.captured_position().unwrap_or(*raw)
+            } else {
+                field::warp(*raw, self.motion_pointer(), self.lens)
+            };
             let color = field::node_color(node.kind);
             let source = node.kind == model::NodeKind::LocalSource;
-            let radius = if source { 16.0 } else { 7.0 };
-            let selected = self.selection == Some(Selection::Node(id.clone()));
+            let radius = if source {
+                if selected { 32.0 } else { 42.0 }
+            } else if selected {
+                16.0
+            } else {
+                8.0
+            };
             frame.stroke(
                 &canvas::Path::circle(p, radius + if selected { 12.0 } else { 7.0 }),
                 canvas::Stroke::default()
@@ -914,31 +1192,40 @@ impl canvas::Program<Message> for App {
             if source {
                 label(
                     &mut frame,
-                    Point::new(p.x, p.y - 7.0),
+                    Point::new(p.x, p.y - 15.0),
                     "[ : ]",
-                    12.0,
+                    24.0,
                     BG,
                     true,
                 );
+            }
+            if selected {
+                continue;
             }
             label(
                 &mut frame,
                 Point::new(p.x, p.y + radius + 18.0),
                 &node.label,
-                if source { 15.0 } else { 12.0 },
+                if source { 20.0 } else { 12.0 },
                 color,
                 true,
             );
             let detail = match node.kind {
-                model::NodeKind::LocalSource => "LOCAL SOURCE",
-                model::NodeKind::Peer => "RECEIVER",
+                model::NodeKind::LocalSource => "THIS DEVICE",
+                model::NodeKind::Peer => {
+                    if self.scene.is_local_peer(id) {
+                        "LOCAL NETWORK PEER"
+                    } else {
+                        "PEER"
+                    }
+                }
                 model::NodeKind::Relay => "RELAY",
                 model::NodeKind::Signaling => "SIGNALING",
                 _ => "LOCAL NETWORK",
             };
             label(
                 &mut frame,
-                Point::new(p.x, p.y + radius + 36.0),
+                Point::new(p.x, p.y + radius + if source { 48.0 } else { 36.0 }),
                 detail,
                 9.0,
                 MUTED,
@@ -954,7 +1241,7 @@ impl canvas::Program<Message> for App {
             // The information core moves rigidly; no text participates in deformation.
             label(
                 &mut frame,
-                Point::new(c.x, c.y - 121.0),
+                Point::new(c.x, c.y - 204.0),
                 "CONTEXT / DRAG TO EXPLORE",
                 9.0,
                 MUTED,
@@ -962,7 +1249,7 @@ impl canvas::Program<Message> for App {
             );
             label(
                 &mut frame,
-                Point::new(c.x, c.y - 84.0),
+                Point::new(c.x, c.y - 98.0),
                 &title,
                 26.0,
                 color,
@@ -970,24 +1257,24 @@ impl canvas::Program<Message> for App {
             );
             label(
                 &mut frame,
-                Point::new(c.x, c.y - 46.0),
+                Point::new(c.x, c.y - 58.0),
                 &subtitle,
                 11.0,
                 MUTED,
                 true,
             );
             frame.stroke(
-                &canvas::Path::line(Point::new(left, c.y - 18.0), Point::new(right, c.y - 18.0)),
+                &canvas::Path::line(Point::new(left, c.y - 30.0), Point::new(right, c.y - 30.0)),
                 canvas::Stroke::default().with_color(Color::from_rgb8(31, 48, 67)),
             );
             for (i, (key, value)) in facts.iter().enumerate() {
-                let y = c.y + 2.0 + i as f32 * 31.0;
+                let y = c.y - 10.0 + i as f32 * 28.0;
                 label(&mut frame, Point::new(left, y), key, 10.0, MUTED, false);
                 label_right(&mut frame, Point::new(right, y), value, 12.0, INK);
             }
             label(
                 &mut frame,
-                Point::new(c.x, c.y + 158.0),
+                Point::new(c.x, c.y + 208.0),
                 "DEMO DATA   ·   ESC TO CLOSE",
                 9.0,
                 MUTED,
@@ -1044,7 +1331,19 @@ impl App {
                                 n.transport.clone().unwrap_or("Unknown".into()),
                             ),
                             ("IDENTITY".into(), n.id.clone()),
-                            ("NETWORK / TRUST".into(), "Not supplied".into()),
+                            (
+                                "NETWORK".into(),
+                                if n.kind == model::NodeKind::LocalSource {
+                                    "This device"
+                                } else if self.scene.is_local_peer(id) {
+                                    "Local network"
+                                } else if n.network_scope == model::NetworkScope::Remote {
+                                    "Remote"
+                                } else {
+                                    "Not supplied"
+                                }
+                                .into(),
+                            ),
                         ],
                     )
                 } else {

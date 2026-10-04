@@ -587,3 +587,18 @@ or platform testing are named limitations, never reported as passed checks.
   and [efficiency report](direct-transfer-efficiency-report.md) for the fresh
   Croc comparison, checks, exclusions and cleanup. Desktop/device work remains
   stopped and pending extension/release artifacts remain intact.
+- 2026-10-04: Evaluated four independent QUIC connections in the isolated `/2`
+  example with exactly one application KEM exchange and one payload key per file.
+  One connection/one stream, one connection/four streams, and four
+  connections/four streams used the same frozen `d703bcd` executable pair;
+  each had one warmup and five measured 512 MiB Oracle-to-WSL transfers.
+  Rates were 27.374/27.223/27.252 MiB/s. Four connections added 29.3%/38.4%
+  sender/receiver CPU and 53.9%/33.8% peak RSS against the one-stream baseline.
+  The screen failed both control comparisons' thresholds, so no confirmation,
+  scored guard series or production architecture is accepted. All 18 transfers
+  passed hashes and strict per-connection direct-route proof. Eight local cases,
+  16 example tests, 56 Python tests and all required gates passed; cleanup
+  restored the exact original firewall state without a Croc lease. See the
+  [independent-connection evidence](../benchmarks/results/oracle-20261004-independent-quic/README.md).
+  Production framing/resume/defaults, desktop/device stop and release boundaries
+  remain unchanged.

@@ -1,0 +1,998 @@
+[
+  {
+    "path": ".gitattributes",
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    "retention": "versioned"
+  },
+  {
+    "path": "README.md",
+    "bytes": 8702,
+    "sha256": "20cc6bb570a2214d0386932b790218961ab614bce762c45faae4ae2ce044befd",
+    "retention": "versioned"
+  },
+  {
+    "path": "acceptance.json",
+    "bytes": 6109,
+    "sha256": "d554245b0ef4de22320c823ae162336718873f8b4b7f7d1740166863917f915f",
+    "retention": "versioned"
+  },
+  {
+    "path": "builds/independent-connections-v2-20261004/arm-build.log",
+    "bytes": 742,
+    "sha256": "af6a642926ed67940a465c0a80564c654b3c069ac2ebff38e73ac51d1b078222",
+    "retention": "versioned"
+  },
+  {
+    "path": "builds/independent-connections-v2-20261004/manifest.json",
+    "bytes": 9087,
+    "sha256": "d160280e3dc54915b14014f26cf47be5db54ef290a7d1bd26b8ea272fb4efdbd",
+    "retention": "versioned",
+    "original": {
+      "bytes": 6959,
+      "sha256": "3576b9268098bf9d7dbfb5238f1e2a7d8b32a81ea4a6385d6d10b7620841800b"
+    }
+  },
+  {
+    "path": "builds/independent-connections-v2-20261004/source.tar.gz",
+    "bytes": 120885,
+    "sha256": "73e82145ffa28d5bcf8c01d78f50ed3ec48ee4922792a5039b052c016cae4920",
+    "retention": "versioned"
+  },
+  {
+    "path": "builds/independent-connections-v2-20261004/x86-build.log",
+    "bytes": 750,
+    "sha256": "d221a694693db9685e1f69867bfd8acf9c3dc33e994490effcf549199f6aaff1",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/cancel-initial-accept-c4-s4/sender.log",
+    "bytes": 186,
+    "sha256": "0db2f22341a5dc7edde4fbde8879b89b4544fff944c0dac738b8266902c45503",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/cancel-receiver-payload-c4-s4/receiver.log",
+    "bytes": 49,
+    "sha256": "735a9eecf2382c1cbb54c4859138c87634b3972e1266a2f348920597c23e100b",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/cancel-receiver-payload-c4-s4/sender.log",
+    "bytes": 177,
+    "sha256": "85795c03dd09d0429515dfe5f71b43d5a124216a72ab6d1fc9ff3ccf5c157497",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/cancel-sender-payload-c4-s4/receiver.log",
+    "bytes": 91,
+    "sha256": "767dfd2c3d3f6b6a3a0d031ff6368f5b073a86350d138ead0bd72142005b914e",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/cancel-sender-payload-c4-s4/sender.log",
+    "bytes": 186,
+    "sha256": "0db2f22341a5dc7edde4fbde8879b89b4544fff944c0dac738b8266902c45503",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/success-c1-s1/receiver.log",
+    "bytes": 111,
+    "sha256": "61f2c4b9d44193e0a1e311b790fe5e23b0fb1c338f3718032204126c3e563f98",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/success-c1-s1/sender.log",
+    "bytes": 137,
+    "sha256": "607cf83ef43b38615ca0867f06fcaaa859af7e7c3aa89c1d3a00cea1e0c3a8bd",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/success-c1-s4/receiver.log",
+    "bytes": 111,
+    "sha256": "fdac9954f885c849d68167df04e66dd50b857cea53f98e15d8a9c7fae598e115",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/success-c1-s4/sender.log",
+    "bytes": 137,
+    "sha256": "8f028614cb16b9fe7c7c5ae8aa805f8208356925dc394da73f718a398ffa4b64",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/success-c4-s4/receiver.log",
+    "bytes": 111,
+    "sha256": "a2c596722bafe9f51fecd71f9644d88029cde11440a5edfea77f2495c62b85dc",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/success-c4-s4/sender.log",
+    "bytes": 137,
+    "sha256": "454a6c5037f575c8000d502e133e7c992bc21affaea87577cd7945bbd67bd26d",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/success-empty-lanes-c4-s4/receiver.log",
+    "bytes": 111,
+    "sha256": "a2c596722bafe9f51fecd71f9644d88029cde11440a5edfea77f2495c62b85dc",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/success-empty-lanes-c4-s4/sender.log",
+    "bytes": 137,
+    "sha256": "454a6c5037f575c8000d502e133e7c992bc21affaea87577cd7945bbd67bd26d",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/truncated-source-c4-s4/receiver.log",
+    "bytes": 44,
+    "sha256": "98b0f9ac525d440643cda85a10c3f156b3bc54a0bd73a93ca7d25f12e8e44515",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/logs/truncated-source-c4-s4/sender.log",
+    "bytes": 154,
+    "sha256": "48830187ea289f0b5d30ec7d9875feab1772bd5b60056fc5b3d3309d7e4b8c99",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/results.json",
+    "bytes": 3350,
+    "sha256": "99dce28dc7e0961a70414e798006161e793e621643fa4cc6cb9ab59c32e66014",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/root-independent-smoke.py",
+    "bytes": 7970,
+    "sha256": "5207215171c928fd5adbcd82859f8d70d1123dd3e51799ef70bb4aea67f4daa1",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/success-c1-s1/receiver.jsonl",
+    "bytes": 1238,
+    "sha256": "3bee09b83b9a68977adc20c09e3a05991d418960dba325db4a749b54daca609d",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/success-c1-s1/sender.jsonl",
+    "bytes": 1236,
+    "sha256": "11cc85b4710f15cf254b76e5ea11a8e38014f551e9142787b538c90b9181a39a",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/success-c1-s4/receiver.jsonl",
+    "bytes": 1237,
+    "sha256": "1f620530e0af25e4626a430dd60d142e0b865e14318d76b04542e6fc3eab903c",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/success-c1-s4/sender.jsonl",
+    "bytes": 1236,
+    "sha256": "93ce4ec0cb2e1fc9160f44780ae316bc2db8923bd70780723f97eae0c12a9b96",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/success-c4-s4/receiver.jsonl",
+    "bytes": 2720,
+    "sha256": "0fcf6ca00aa7b735d89c35654b84a2c89cf94c22215aa66c2e600171b76518d3",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/success-c4-s4/sender.jsonl",
+    "bytes": 2717,
+    "sha256": "6ce64dbfcbaf5711b3e5255166ce182174665255cbc68f7940040df6ee2ca743",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/success-empty-lanes-c4-s4/receiver.jsonl",
+    "bytes": 2703,
+    "sha256": "3ac6407282b59eb518694d258e02d314f87dae438089fe67494049bf65e5a81a",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-local-v1-20261004/success-empty-lanes-c4-s4/sender.jsonl",
+    "bytes": 2701,
+    "sha256": "0105f3920b9a81bf67e71d08247c3e586dd4488977fe0529901d0c28cba87c09",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/00.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/00.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/01.log",
+    "bytes": 6389,
+    "sha256": "e964f5bb8c53737c9cc50a5fc9f4047deb85ba87803c8e195fb32840c531b12a",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/01.stderr.log",
+    "bytes": 1939,
+    "sha256": "2d8a8a65e165e6eff4c3a10ec4939963b7d205a1d203c85b61c1ddfcab9a7bf8",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/02.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/02.stderr.log",
+    "bytes": 72,
+    "sha256": "45f75b19e5718ce74d75d27dc949e2b0cc21908a1e53dca4d31c24e03ebe8e09",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/03.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/03.stderr.log",
+    "bytes": 20177,
+    "sha256": "2e5914d6a36136b5ba4f7e125fb04bd9ca5839d4b09ebc85c69329aa783716d2",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/04.log",
+    "bytes": 2483,
+    "sha256": "c4a2778afc6437f8083115ab47128a48ce4fb837c1e7c5cd4f0e568ec5d3727f",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/04.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/05.log",
+    "bytes": 1237,
+    "sha256": "3da3ff685b45d2558bc401b2337921b3283ec0511c07c7d579d0273b18e34c74",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/05.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/06.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/06.stderr.log",
+    "bytes": 112,
+    "sha256": "e73ebbcc4a6e98c15c487aaf249d47d57a99a123243bb226551c0ce7def7f2f5",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/07.stderr.log",
+    "bytes": 72,
+    "sha256": "fc5b16bc4342f093a52115087c240e1f6fe65f972486e7cac73e26a2ac51b1c9",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/08.log",
+    "bytes": 48,
+    "sha256": "f1a0fca39d4280363937aabd77783990ea6480bd9ca257816de3b68fc8efa845",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/08.stderr.log",
+    "bytes": 321909,
+    "sha256": "68c2414588b20e34b60370198c22ab482cc97c8b66e4ec86ff62a3050ac07a27",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/clippy.json",
+    "bytes": 378757,
+    "sha256": "5e96527e4cbc83d5e8313c08f9caaa8a3aac6abdf1b1c9e3db00f7ce907ae0d9",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/clippy.sarif",
+    "bytes": 3869,
+    "sha256": "a144afbbfc9f931ca52edb2eb438c7ee70be53c69cf27c393bebee05e69ca06e",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/example-clippy.json",
+    "bytes": 418166,
+    "sha256": "55aeac0fdd78a6c59a8ce01c6571dc4652226eb585f28409c8a20e3596f5f272",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/example-clippy.json.stderr.log",
+    "bytes": 158,
+    "sha256": "13cf938244a13982c88f6a358feb7924baa0c1fd2af4f43ffdf6a6a9d2d56045",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/example-test.log",
+    "bytes": 1164,
+    "sha256": "d1fd43992d35aa6cda7a622945f7fa4ced5dadf4e8ce4dd0d94ded3e98ee15a3",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/example-test.log.stderr.log",
+    "bytes": 309,
+    "sha256": "8bc6c8fff20d1fc37e412ad11a9c1b8ef7ed491dca7809deb5c4436e8cf6ffda",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/gate-output.log",
+    "bytes": 2292,
+    "sha256": "cf05c17cf68fe241d097c2460c2db52615eb21e310c1066058b44770945affd9",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/results.json",
+    "bytes": 3305,
+    "sha256": "83083c8a9d7adf028df04d331dc8b4e60bbc84e15c3f1bb308a24527d46c30c0",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/independent-connections-v2-20261004/validation.json",
+    "bytes": 184,
+    "sha256": "483424cb095791c5ff6780c1bd5188bfb51c92f2ad6e3cc0486afe951c66ccf8",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/shared-key-connections-20261004/release-build-final.log",
+    "bytes": 149,
+    "sha256": "b50adb9ae04b417ac6c64c3e7a9b3f9f56a0cad7f78736d4f7879b921870150e",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/shared-key-connections-20261004/release-build-native.log",
+    "bytes": 149,
+    "sha256": "2fc8599ee21b3d71fc0f7f2064db86a07198a5222480b565dc5751555a3dce79",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/shared-key-connections-20261004/release-build.log",
+    "bytes": 2049,
+    "sha256": "f4c2899486c3c58c477830fde6c20911247242f81275af7cd854aa0ab3f13a41",
+    "retention": "versioned"
+  },
+  {
+    "path": "checks/shared-key-connections-20261004/rust-example-tests.log",
+    "bytes": 1440,
+    "sha256": "765f6c855ea5d93e0dc88f0c865263b84255043a2ddaaa371a212b6929b64590",
+    "retention": "versioned"
+  },
+  {
+    "path": "cleanup/README.md",
+    "bytes": 728,
+    "sha256": "284d1edc09cb52c3f611bf322822a7d97d1b1e5b03af55054341c7d70ffdc8b1",
+    "retention": "versioned"
+  },
+  {
+    "path": "cleanup/expanded-independent-connections-cleanup-20261004.json",
+    "bytes": 665,
+    "sha256": "0bec712ce9ecad971b018858fe794555b5fa561ac3b2da6ffc2826f2eb475c9b",
+    "retention": "versioned"
+  },
+  {
+    "path": "cleanup/final-independent-connections-cleanup-20261004.json",
+    "bytes": 388,
+    "sha256": "966ab0f9db1a128bc0659c588b36ee743da608de8081bf2676d80f51fd5707a4",
+    "retention": "versioned"
+  },
+  {
+    "path": "cleanup/pre-independent-connections-cleanup-20261004.json",
+    "bytes": 388,
+    "sha256": "966ab0f9db1a128bc0659c588b36ee743da608de8081bf2676d80f51fd5707a4",
+    "retention": "versioned"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-1/receiver.jsonl",
+    "bytes": 1247,
+    "sha256": "1f8b46a75b812be02bfbd3a3e95230a90f0b65b5f3ff1ae63c24698449dc8992",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-1/receiver.log",
+    "bytes": 111,
+    "sha256": "61f2c4b9d44193e0a1e311b790fe5e23b0fb1c338f3718032204126c3e563f98",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-1/receiver.time.json",
+    "bytes": 72,
+    "sha256": "1ebcb449306a3d0a9285229447f33bbbc76ddbcd1696931bea2d4e93bd684a53",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-1/sender.log",
+    "bytes": 137,
+    "sha256": "607cf83ef43b38615ca0867f06fcaaa859af7e7c3aa89c1d3a00cea1e0c3a8bd",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-2/receiver.jsonl",
+    "bytes": 1247,
+    "sha256": "0bfcdc4f6035fcd032b2f3c03f08cc1e3f0775bea587b85f6a7ad62ed4699a2f",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-2/receiver.log",
+    "bytes": 111,
+    "sha256": "61f2c4b9d44193e0a1e311b790fe5e23b0fb1c338f3718032204126c3e563f98",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-2/receiver.time.json",
+    "bytes": 72,
+    "sha256": "54c260885a8ccd1e9f305a877e9b806da0eb0c52685ac63e82a84b5191f26ce5",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-2/sender.log",
+    "bytes": 137,
+    "sha256": "607cf83ef43b38615ca0867f06fcaaa859af7e7c3aa89c1d3a00cea1e0c3a8bd",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-3/receiver.jsonl",
+    "bytes": 1247,
+    "sha256": "59b48a3929ea134e505646169bfe1e12c268b1b9bc546bc38c866c1ed945a4b3",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-3/receiver.log",
+    "bytes": 111,
+    "sha256": "61f2c4b9d44193e0a1e311b790fe5e23b0fb1c338f3718032204126c3e563f98",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-3/receiver.time.json",
+    "bytes": 72,
+    "sha256": "caa25a7e91e1934b2f9eeedc1a0ead3648ed70feabde2abebb77a9eda74e8c86",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-3/sender.log",
+    "bytes": 137,
+    "sha256": "607cf83ef43b38615ca0867f06fcaaa859af7e7c3aa89c1d3a00cea1e0c3a8bd",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-4/receiver.jsonl",
+    "bytes": 1246,
+    "sha256": "4b3c7af8ec6503fa8d25289b7e5b47ca6539067b822322a31c3a4be941fae870",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-4/receiver.log",
+    "bytes": 111,
+    "sha256": "61f2c4b9d44193e0a1e311b790fe5e23b0fb1c338f3718032204126c3e563f98",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-4/receiver.time.json",
+    "bytes": 72,
+    "sha256": "2886224f9f46053b591ef3e8705dd9ef1b04ddfba66d9edc4dad465b0761b03d",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-4/sender.log",
+    "bytes": 137,
+    "sha256": "607cf83ef43b38615ca0867f06fcaaa859af7e7c3aa89c1d3a00cea1e0c3a8bd",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-5/receiver.jsonl",
+    "bytes": 1246,
+    "sha256": "a81fced2d0c6f5fd7aa12382f680dcf3dbf86c48ddb6b26021d589d0c9f65160",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-5/receiver.log",
+    "bytes": 111,
+    "sha256": "61f2c4b9d44193e0a1e311b790fe5e23b0fb1c338f3718032204126c3e563f98",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-5/receiver.time.json",
+    "bytes": 72,
+    "sha256": "cf30ff2102c369443c749912208ae122f095d159e20e2b9035136f16f5331dd2",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-5/sender.log",
+    "bytes": 137,
+    "sha256": "607cf83ef43b38615ca0867f06fcaaa859af7e7c3aa89c1d3a00cea1e0c3a8bd",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-warmup/receiver.jsonl",
+    "bytes": 1243,
+    "sha256": "ff8c5d9b869cdd1ce0a85a432e7291b2e7f647485ee8acbfa8795db987a6d16a",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-warmup/receiver.log",
+    "bytes": 111,
+    "sha256": "61f2c4b9d44193e0a1e311b790fe5e23b0fb1c338f3718032204126c3e563f98",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-warmup/receiver.time.json",
+    "bytes": 72,
+    "sha256": "deec38c1dcbf55f9a1abc1178971fa72ec3af1c5cf06af3f55779343bdbb2fb3",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/logs/rustytransfer-oracle-to-wsl-512mib-warmup/sender.log",
+    "bytes": 137,
+    "sha256": "607cf83ef43b38615ca0867f06fcaaa859af7e7c3aa89c1d3a00cea1e0c3a8bd",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s1/rows.jsonl",
+    "bytes": 28981,
+    "sha256": "6d42c89d487927de4ea9d81331461b6a01843f9933e87109b457dbb70c0ad40e",
+    "retention": "versioned"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-1/receiver.jsonl",
+    "bytes": 1247,
+    "sha256": "2cd06dfa07f45170161da292956940fb26b44ffff19605a7becdcc9b1c1bd344",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-1/receiver.log",
+    "bytes": 111,
+    "sha256": "fdac9954f885c849d68167df04e66dd50b857cea53f98e15d8a9c7fae598e115",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-1/receiver.time.json",
+    "bytes": 72,
+    "sha256": "9cf8aae66b774a5568fed11da655ce622e1dcce7a91b0169bbe65ffdc2d23076",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-1/sender.log",
+    "bytes": 137,
+    "sha256": "8f028614cb16b9fe7c7c5ae8aa805f8208356925dc394da73f718a398ffa4b64",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-2/receiver.jsonl",
+    "bytes": 1247,
+    "sha256": "3f216135b72cdb9ef5f12d4891e889b3c7ee233954f5b513934361af7387cd4a",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-2/receiver.log",
+    "bytes": 111,
+    "sha256": "fdac9954f885c849d68167df04e66dd50b857cea53f98e15d8a9c7fae598e115",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-2/receiver.time.json",
+    "bytes": 72,
+    "sha256": "d8213e6ea685b6d26775a18b04d70b737a7892b1a81362b400f2acefb1492b90",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-2/sender.log",
+    "bytes": 137,
+    "sha256": "8f028614cb16b9fe7c7c5ae8aa805f8208356925dc394da73f718a398ffa4b64",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-3/receiver.jsonl",
+    "bytes": 1246,
+    "sha256": "d5c6e1c0c31ec657da4ad943c3d4043d146de6bdfe24b0e7663ad68cd13107a9",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-3/receiver.log",
+    "bytes": 111,
+    "sha256": "fdac9954f885c849d68167df04e66dd50b857cea53f98e15d8a9c7fae598e115",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-3/receiver.time.json",
+    "bytes": 72,
+    "sha256": "f64cfe7961684bdd31a1e56c3806e4024ecef73bcb4b537296a33c60d172dd5f",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-3/sender.log",
+    "bytes": 137,
+    "sha256": "8f028614cb16b9fe7c7c5ae8aa805f8208356925dc394da73f718a398ffa4b64",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-4/receiver.jsonl",
+    "bytes": 1244,
+    "sha256": "ad8fa17e685ce1275e4226eff88a56579fc34e5842976a0393bee70101f0ebc1",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-4/receiver.log",
+    "bytes": 111,
+    "sha256": "fdac9954f885c849d68167df04e66dd50b857cea53f98e15d8a9c7fae598e115",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-4/receiver.time.json",
+    "bytes": 72,
+    "sha256": "56dd786003d90cafe5ff8f37b3396f1e98fe50bfe81bf73ee097d021426d55cc",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-4/sender.log",
+    "bytes": 137,
+    "sha256": "8f028614cb16b9fe7c7c5ae8aa805f8208356925dc394da73f718a398ffa4b64",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-5/receiver.jsonl",
+    "bytes": 1247,
+    "sha256": "07feeb09ea6f1da4d63cb77467a2c494b04af815125a5578a1568e14973315aa",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-5/receiver.log",
+    "bytes": 111,
+    "sha256": "fdac9954f885c849d68167df04e66dd50b857cea53f98e15d8a9c7fae598e115",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-5/receiver.time.json",
+    "bytes": 72,
+    "sha256": "0ba25cd07a614f9425a5aaf8bfcbf747fa024a75fa8ed3e14b611b15dff0a445",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-5/sender.log",
+    "bytes": 137,
+    "sha256": "8f028614cb16b9fe7c7c5ae8aa805f8208356925dc394da73f718a398ffa4b64",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-warmup/receiver.jsonl",
+    "bytes": 1247,
+    "sha256": "f90141d55ace836756ed90980e78bd282edb969ca0a5e380cd0da43b5c5d5519",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-warmup/receiver.log",
+    "bytes": 111,
+    "sha256": "fdac9954f885c849d68167df04e66dd50b857cea53f98e15d8a9c7fae598e115",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-warmup/receiver.time.json",
+    "bytes": 72,
+    "sha256": "ff36e0e914b1e99f6fc44d4bd42a911efbe7a5c1c1ec195f336419b5b5bf08e8",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/logs/rustytransfer-oracle-to-wsl-512mib-warmup/sender.log",
+    "bytes": 137,
+    "sha256": "8f028614cb16b9fe7c7c5ae8aa805f8208356925dc394da73f718a398ffa4b64",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c1-s4/rows.jsonl",
+    "bytes": 29042,
+    "sha256": "d23d81a14ce0b7d99c15eb41857e4edd9a468c340f0be445fc8b92c02aadb861",
+    "retention": "versioned"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-1/receiver.jsonl",
+    "bytes": 2730,
+    "sha256": "dec6ec6232cdd31a82af613637310fee5a59c15350de8cfe463f7961b34c2117",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-1/receiver.log",
+    "bytes": 111,
+    "sha256": "a2c596722bafe9f51fecd71f9644d88029cde11440a5edfea77f2495c62b85dc",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-1/receiver.time.json",
+    "bytes": 72,
+    "sha256": "eb4aa5a18f8eedb334187474f87a1a3d58720e1c3cb9d6cd4b98128071e186ff",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-1/sender.log",
+    "bytes": 137,
+    "sha256": "454a6c5037f575c8000d502e133e7c992bc21affaea87577cd7945bbd67bd26d",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-2/receiver.jsonl",
+    "bytes": 2730,
+    "sha256": "941700556eed1de840abed614e20c338e3bb42794a1e6013c6f607dfa50a9cff",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-2/receiver.log",
+    "bytes": 111,
+    "sha256": "a2c596722bafe9f51fecd71f9644d88029cde11440a5edfea77f2495c62b85dc",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-2/receiver.time.json",
+    "bytes": 72,
+    "sha256": "c9023d44a5108fe9d8f5513f3721f64654062790ce5eb54fa51ed367f9d8717c",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-2/sender.log",
+    "bytes": 137,
+    "sha256": "454a6c5037f575c8000d502e133e7c992bc21affaea87577cd7945bbd67bd26d",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-3/receiver.jsonl",
+    "bytes": 2734,
+    "sha256": "1404f5cfd5af34e71c644319ab804f511505244398a9538acb55f8c8f91ba7dd",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-3/receiver.log",
+    "bytes": 111,
+    "sha256": "a2c596722bafe9f51fecd71f9644d88029cde11440a5edfea77f2495c62b85dc",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-3/receiver.time.json",
+    "bytes": 72,
+    "sha256": "d8a4e4e30c76acb20a0006b40ff6eb5099e02930bed3b28418804e3fdbb292a5",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-3/sender.log",
+    "bytes": 137,
+    "sha256": "454a6c5037f575c8000d502e133e7c992bc21affaea87577cd7945bbd67bd26d",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-4/receiver.jsonl",
+    "bytes": 2731,
+    "sha256": "379bdcfa06f9f2a724ef76bd707337e27003680fdc4ea9236e35fdc0ed2bdcb7",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-4/receiver.log",
+    "bytes": 111,
+    "sha256": "a2c596722bafe9f51fecd71f9644d88029cde11440a5edfea77f2495c62b85dc",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-4/receiver.time.json",
+    "bytes": 72,
+    "sha256": "692cea4d1c5a515911f9c2908a805193dc30b8bfa40c531a1688c81abfa4ad50",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-4/sender.log",
+    "bytes": 137,
+    "sha256": "454a6c5037f575c8000d502e133e7c992bc21affaea87577cd7945bbd67bd26d",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-5/receiver.jsonl",
+    "bytes": 2728,
+    "sha256": "cf8aa3f5060951a160693aaa51136ef4f27a978904447333a074de6d33ba1add",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-5/receiver.log",
+    "bytes": 111,
+    "sha256": "a2c596722bafe9f51fecd71f9644d88029cde11440a5edfea77f2495c62b85dc",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-5/receiver.time.json",
+    "bytes": 72,
+    "sha256": "4a8f119907e1018d9c98de71223d3a519a0d54e3ffb3abcc80af68bf01ab42fc",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-5/sender.log",
+    "bytes": 137,
+    "sha256": "454a6c5037f575c8000d502e133e7c992bc21affaea87577cd7945bbd67bd26d",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-warmup/receiver.jsonl",
+    "bytes": 2732,
+    "sha256": "abf6b1765d19c39318c883d24cac1b4cf0cbfce9b3b0e03d10f9af84b9d6dd74",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-warmup/receiver.log",
+    "bytes": 111,
+    "sha256": "a2c596722bafe9f51fecd71f9644d88029cde11440a5edfea77f2495c62b85dc",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-warmup/receiver.time.json",
+    "bytes": 72,
+    "sha256": "81f040e4f63302662300e7b37c8b9affeaa9a5f7f9299a6bba3563b60de4a427",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/logs/rustytransfer-oracle-to-wsl-512mib-warmup/sender.log",
+    "bytes": 137,
+    "sha256": "454a6c5037f575c8000d502e133e7c992bc21affaea87577cd7945bbd67bd26d",
+    "retention": "local-only-log"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/00-s1-independent-oracle-to-wsl-512/c4-s4/rows.jsonl",
+    "bytes": 48031,
+    "sha256": "3e7c2601e11f3de34c1fabc5ba0e1d4955159bf7f21c9011c61252db023a91ce",
+    "retention": "versioned"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/audit-report.json",
+    "bytes": 16372,
+    "sha256": "217999c49904c84e27fd99b1ab64bca0325f3f915687d6310743c54847138e57",
+    "retention": "versioned"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/comparisons.json",
+    "bytes": 1697,
+    "sha256": "5589a281aa957d6c0092d80a1257176eddc165616819b978833e448dc17b30c0",
+    "retention": "versioned"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/config.json",
+    "bytes": 31201,
+    "sha256": "dafb86fe463766193fe635474ff9518ae0daa53c7daa2f3a6952943d141152fc",
+    "retention": "versioned",
+    "original": {
+      "bytes": 22801,
+      "sha256": "33583014e741269dfcd3989f2bc7e7e0bef274ef5be0bcc184dc7703269d014b"
+    }
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/manifest.json",
+    "bytes": 37127,
+    "sha256": "d05d0315676279bc51cdbb6728465804b39b892aea563ecfb8163ccc4bcb7688",
+    "retention": "versioned",
+    "original": {
+      "bytes": 28727,
+      "sha256": "86ddf36e939a8f5ec5def6f93c6f59994870c4b0ef0f4994412ed0b17b6014b4"
+    }
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/run-direct-matrix.py",
+    "bytes": 7484,
+    "sha256": "46702f6e36dc9d563bf1b18c610321e044919b48116aed64bc7c79f813e6dc44",
+    "retention": "versioned"
+  },
+  {
+    "path": "cohorts/independent-connections-screen-20261004/run_oracle_transfer.py",
+    "bytes": 74852,
+    "sha256": "6b6face8dc586edd448abbd49e98b47cc1ccde3d13ca96461642c9b5826c0284",
+    "retention": "versioned"
+  },
+  {
+    "path": "provenance/source-audit.json",
+    "bytes": 831,
+    "sha256": "debf962312dce8761cb57d82f2508809bc5f158bdf5746d30d1dd93a6c849fa3",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/analyze-independent-connections.py",
+    "bytes": 2848,
+    "sha256": "9bc2513da0d21f3c4abd92c8c1770836ddcb9691c47904e52ec54ebee04a6f4b",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/audit-direct-matrix.py",
+    "bytes": 12531,
+    "sha256": "09f65684f2160ef6f86dbc4437c98cddbae3445f3b9cbfac82655aa5fd019e9e",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/audit-independent-cleanup.py",
+    "bytes": 2755,
+    "sha256": "45d3ec0d99680eada939d0d335edf42f6f34c28a78e23f98fb5bd0e43f2ec606",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/audit-next-cleanup.py",
+    "bytes": 2687,
+    "sha256": "5c3fa3b3a2ef32f63cdcbf0bd158a858731e4a7e62c4cb29bd308189fc39b5f7",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/build-direct-candidate.py",
+    "bytes": 4667,
+    "sha256": "eb302200971cc4e0c48e94c67d088b1d1574c4c4dfee401127f714d08ca0d578",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/check-direct-workspace.py",
+    "bytes": 2922,
+    "sha256": "9c43dd33a937eaf5a6fca59b28183311f3473c262a9f92d6491c47c7b854d0df",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/check-staged-independent-evidence.py",
+    "bytes": 1574,
+    "sha256": "f35830f5a3698ca6a7b4a79df1f30322c15190fdaff1b151e54a1d54d0ac3d09",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/complete-independent-evidence.py",
+    "bytes": 6775,
+    "sha256": "98cdd7833f89801b53a577ca0ee0777e83aae30f55b453042b28793c637ff899",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/export-independent-evidence.py",
+    "bytes": 3414,
+    "sha256": "e6c8dce78f6d140606856ebed20318532e804a2f3ee06d4da3c2022702799f71",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/finalize-independent-inventory.py",
+    "bytes": 1453,
+    "sha256": "50c35cf223ee96d98b42cb8f8470886390cb91040e89942ca7c2e82a63605df1",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/independent-connections-plan.md",
+    "bytes": 2809,
+    "sha256": "44b50b9b7dcf7b3dcc870ad17f8f1746ce3f06cd8519eae802e0b53904d52df3",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/prepare-independent-connections.py",
+    "bytes": 1853,
+    "sha256": "34e79fbcfe29a6e7cc5c07cada0a744fe8bedafdc125d3c02beaef55e265a331",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/retain-arm-build-logs.py",
+    "bytes": 845,
+    "sha256": "822c779acf7a972152ac3362db3550b66d6cadb107fecb295587b43691170b27",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/root-independent-smoke.py",
+    "bytes": 7970,
+    "sha256": "5207215171c928fd5adbcd82859f8d70d1123dd3e51799ef70bb4aea67f4daa1",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/run-direct-matrix.py",
+    "bytes": 7484,
+    "sha256": "46702f6e36dc9d563bf1b18c610321e044919b48116aed64bc7c79f813e6dc44",
+    "retention": "versioned"
+  },
+  {
+    "path": "reproduction/run-independent-gates.py",
+    "bytes": 2685,
+    "sha256": "8e8fe812b42d0c0a005b6b4e3f0fb073cb8d812daa8ea09330b07c3d3ae7281c",
+    "retention": "versioned"
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "group": "s1-independent-oracle-to-wsl-512",
+    "series": 1,
+    "control": "c1-s1",
+    "candidate": "c4-s4",
+    "rate_change_percent": -0.44508894935715304,
+    "cpu_per_gib_change_percent": {
+      "sender": 29.292929292929305,
+      "receiver": 38.35877862595418
+    },
+    "rss_change_percent": {
+      "sender": 53.93112410656271,
+      "receiver": 33.7947741823845
+    },
+    "paired_rate_change_percent": [
+      -1.6322928482287002,
+      -0.6983866125135685,
+      -0.030432125053458936,
+      0.6595244645466014,
+      -0.9495095013901445
+    ],
+    "paired_median_rate_change_percent": -0.6983866125135685,
+    "paired_rate_wins": 1,
+    "paired_count": 5,
+    "screen_threshold_met": false,
+    "scope": "Measured comparison only; confirmation, guard cases, startup, RSS, variance and correctness remain separate gates."
+  },
+  {
+    "group": "s1-independent-oracle-to-wsl-512",
+    "series": 1,
+    "control": "c1-s4",
+    "candidate": "c4-s4",
+    "rate_change_percent": 0.10637686552563697,
+    "cpu_per_gib_change_percent": {
+      "sender": 6.518723994452147,
+      "receiver": -5.721716514954478
+    },
+    "rss_change_percent": {
+      "sender": 2.899337604517327,
+      "receiver": 4.528863052588883
+    },
+    "paired_rate_change_percent": [
+      -0.9365977864456587,
+      -0.32826771443752456,
+      3.406438178180138,
+      1.189085930423306,
+      0.10307005685383785
+    ],
+    "paired_median_rate_change_percent": 0.10307005685383785,
+    "paired_rate_wins": 3,
+    "paired_count": 5,
+    "screen_threshold_met": false,
+    "scope": "Measured comparison only; confirmation, guard cases, startup, RSS, variance and correctness remain separate gates."
+  }
+]

@@ -1,0 +1,143 @@
+{
+  "date": "2026-10-04",
+  "evaluation_complete": true,
+  "candidate": "four-independent-QUIC-connections/four-streams",
+  "status": "rejected-for-production-performance-acceptance",
+  "reason": "Neither control comparison reaches >=5% median throughput gain or >=10% CPU/GiB reduction. CPU/RSS increase materially against the one-stream baseline.",
+  "scope": {
+    "direction": "oracle-to-wsl",
+    "size_bytes": 536870912,
+    "chunk_size": 262144,
+    "warmups_per_variant": 1,
+    "measured_trials_per_variant": 5,
+    "accepted_transfers_including_warmups": 18,
+    "endpoint_rows": 36,
+    "protocol": "shared-key-parallel/2",
+    "payload_keys_per_file": 1,
+    "application_kem_sessions_per_file": 1
+  },
+  "thresholds": {
+    "minimum_rate_gain_percent": 5,
+    "minimum_cpu_per_gib_reduction_percent": 10,
+    "maximum_unexplained_guard_rate_regression_percent": 3,
+    "require_both_controls_for_independent_connection_benefit": true,
+    "require_reversed_order_confirmation_if_screen_qualifies": true,
+    "require_no_material_rss_startup_correctness_regression": true
+  },
+  "comparisons": [
+    {
+      "group": "s1-independent-oracle-to-wsl-512",
+      "series": 1,
+      "control": "c1-s1",
+      "candidate": "c4-s4",
+      "rate_change_percent": -0.44508894935715304,
+      "cpu_per_gib_change_percent": {
+        "sender": 29.292929292929305,
+        "receiver": 38.35877862595418
+      },
+      "rss_change_percent": {
+        "sender": 53.93112410656271,
+        "receiver": 33.7947741823845
+      },
+      "paired_rate_change_percent": [
+        -1.6322928482287002,
+        -0.6983866125135685,
+        -0.030432125053458936,
+        0.6595244645466014,
+        -0.9495095013901445
+      ],
+      "paired_median_rate_change_percent": -0.6983866125135685,
+      "paired_rate_wins": 1,
+      "paired_count": 5,
+      "screen_threshold_met": false,
+      "scope": "Measured comparison only; confirmation, guard cases, startup, RSS, variance and correctness remain separate gates."
+    },
+    {
+      "group": "s1-independent-oracle-to-wsl-512",
+      "series": 1,
+      "control": "c1-s4",
+      "candidate": "c4-s4",
+      "rate_change_percent": 0.10637686552563697,
+      "cpu_per_gib_change_percent": {
+        "sender": 6.518723994452147,
+        "receiver": -5.721716514954478
+      },
+      "rss_change_percent": {
+        "sender": 2.899337604517327,
+        "receiver": 4.528863052588883
+      },
+      "paired_rate_change_percent": [
+        -0.9365977864456587,
+        -0.32826771443752456,
+        3.406438178180138,
+        1.189085930423306,
+        0.10307005685383785
+      ],
+      "paired_median_rate_change_percent": 0.10307005685383785,
+      "paired_rate_wins": 3,
+      "paired_count": 5,
+      "screen_threshold_met": false,
+      "scope": "Measured comparison only; confirmation, guard cases, startup, RSS, variance and correctness remain separate gates."
+    }
+  ],
+  "confirmation_series_run": false,
+  "scored_guard_series_run": false,
+  "unrun_followup_reason": "Preregistered representative screen failed against both controls; no qualifying candidate to confirm or guard.",
+  "correctness": {
+    "full_size_and_sha256_all_transfers": true,
+    "strict_direct_payload_proof_every_connection_both_endpoints": true,
+    "distinct_connection_ids_verified": true,
+    "endpoint_ids_cross_checked": true,
+    "local_smokes_passed": 8,
+    "example_tests_passed": 16,
+    "python_tests_passed": 56,
+    "required_repository_commands_passed": 9,
+    "workspace_clippy_existing_findings": 3,
+    "new_example_clippy_findings": 0,
+    "no_scored_failures_or_sample_exclusions": true,
+    "valid_slow_samples_retained": true
+  },
+  "frozen_build": {
+    "source_commit": "d703bcdbd137a6f4848fe6f274ed33e4db670ab2",
+    "source_archive_sha256": "73e82145ffa28d5bcf8c01d78f50ed3ec48ee4922792a5039b052c016cae4920",
+    "x86_binary_sha256": "940fa0b98c191745c368aa46ad9a09b32d4e6fdab902e7f162d830e1b77f7e62",
+    "arm_binary_sha256": "81de710316bb3d49360dbb4b5dc197bc36cecdc398443532f9a538c9ae467e2d"
+  },
+  "source_audit": {
+    "audited_at_utc": "2026-10-04T08:09:59.484684+00:00",
+    "frozen_source_commit": "d703bcdbd137a6f4848fe6f274ed33e4db670ab2",
+    "source_archive_sha256": "73e82145ffa28d5bcf8c01d78f50ed3ec48ee4922792a5039b052c016cae4920",
+    "frozen_source_files_checked": 56,
+    "all_frozen_source_bytes_match_final_workspace": true,
+    "production_baseline_source_commit": "37a2bad844766c4750c1806b53b074fe33bfd5ec",
+    "production_baseline_archive_sha256": "82c2b07fb35c3f5a4ac8cf41bb764997bae000f886c36aac07da74f8b3cba035",
+    "production_source_files_checked": 55,
+    "all_production_source_bytes_unchanged": true,
+    "raw_build_source_dirty": true,
+    "dirty_field_note": "Raw WSL Git line-ending differences and unrelated user edits are preserved. Exact archive/file hashes identify the source; production bytes match the previous frozen build."
+  },
+  "cleanup": {
+    "local": {
+      "active_benchmark_endpoints": [],
+      "croc_tcp_listen_ports": [],
+      "active_firewall_leases": []
+    },
+    "oracle": {
+      "active_benchmark_endpoints": [],
+      "croc_tcp_listen_ports": [],
+      "active_firewall_leases": []
+    },
+    "original_input_chain_restored": true,
+    "oracle_input_chain_sha256": "8eabe87e4569e251c3147f193c0880b3c52ae3eaf5d007db8dda219ad79a53a5"
+  },
+  "limits": [
+    "Only this prototype/size/direction/endpoint pair is scored.",
+    "Fresh transfer only; experimental resume is unimplemented and production resume is unchanged.",
+    "Prototype framing, chunk buffers and finalization differ from production; no direct historical Croc/production speed comparison.",
+    "Negative screen does not establish global optimality or a fundamental QUIC throughput ceiling.",
+    "Partial bootstrap guards are audited in source; physical signals cover initial accept and active payload.",
+    "Failed Windows-mounted build log is retained and superseded by successful native builds; no failed scored transfer."
+  ],
+  "production_performance_defaults_changed": false,
+  "desktop_or_release_artifacts_changed": false
+}

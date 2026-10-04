@@ -1,0 +1,13 @@
+{
+  "audited_at_utc": "2026-10-04T08:09:59.484684+00:00",
+  "frozen_source_commit": "d703bcdbd137a6f4848fe6f274ed33e4db670ab2",
+  "source_archive_sha256": "73e82145ffa28d5bcf8c01d78f50ed3ec48ee4922792a5039b052c016cae4920",
+  "frozen_source_files_checked": 56,
+  "all_frozen_source_bytes_match_final_workspace": true,
+  "production_baseline_source_commit": "37a2bad844766c4750c1806b53b074fe33bfd5ec",
+  "production_baseline_archive_sha256": "82c2b07fb35c3f5a4ac8cf41bb764997bae000f886c36aac07da74f8b3cba035",
+  "production_source_files_checked": 55,
+  "all_production_source_bytes_unchanged": true,
+  "raw_build_source_dirty": true,
+  "dirty_field_note": "Raw WSL Git line-ending differences and unrelated user edits are preserved. Exact archive/file hashes identify the source; production bytes match the previous frozen build."
+}

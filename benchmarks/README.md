@@ -20,6 +20,15 @@ higher RSS leave a general default benefit uncertain. Production stays at
 payload key across streams; it is fresh-transfer only and does not implement
 resume. Raw valid slow samples and excluded diagnostics remain visible.
 
+The [independent QUIC connection evaluation](results/oracle-20261004-independent-quic/README.md)
+uses one shared payload key and one KEM exchange per file across all three `/2`
+layouts. At 512 MiB Oracle-to-WSL, median rates were 27.374/27.223/27.252 MiB/s
+for one connection/one stream, one connection/four streams, and four
+connections/four streams. Four connections added 29.3%/38.4% sender/receiver
+CPU and 53.9%/33.8% peak RSS against the one-stream baseline. All 18 transfers
+passed full hashes and direct-route evidence for every connection at both ends.
+The screen failed acceptance; production retains its existing architecture.
+
 Each CLI endpoint can append one JSON object to the file named by
 `RUSTYTRANSFER_METRICS_JSONL`. The record uses
 [`performance-v1.schema.json`](performance-v1.schema.json), schema version 1.

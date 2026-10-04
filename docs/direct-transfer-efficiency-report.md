@@ -234,7 +234,8 @@ rose from 25,028/22,316 to 35,608/29,748 KiB. All twelve transfers, including
 warmups and a valid slow one-stream sample, passed strict direct-route and full
 hash checks. The representative screen failed both acceptance gates, so no
 production parallel architecture is accepted. These modes share a congestion
-budget; multiple independent QUIC connections remain unmeasured. The prototype
+budget; independent QUIC connections were not part of that screen and are now
+evaluated below. The prototype
 also differs from production in buffering and finalization, so its rates do not
 establish a production throughput improvement.
 
@@ -284,3 +285,67 @@ leases and verified the original INPUT-chain hash. The temporary rule was
 bounded and restricted to the dynamically derived SSH client IPv4 /32; OCI
 settings were unchanged. Desktop/device work remains stopped and pending
 extension/release artifacts remain intact.
+
+## Independent QUIC connections - 2026-10-04
+
+The requested [independent-connection evaluation](../benchmarks/results/oracle-20261004-independent-quic/README.md)
+is complete. The isolated `shared-key-parallel/2` example uses one application
+KEM exchange and the same AES-256-GCM payload key across every data connection.
+Each extra connection performs its normal QUIC handshake and an AEAD lane
+binding under that shared key; binding and payload nonce domains are disjoint.
+The primary control connection also carries data, so four means exactly four
+connections. Production framing, default chunk size and resume are unchanged.
+
+Three layouts use the same frozen source and executable pair at `d703bcd`:
+one connection/one stream, one connection/four streams, and four independent
+connections/four streams. The four-stream control matches file tasks and
+buffer geometry while testing the benefit of separate connections. Each layout
+had one warmup and five measured 512 MiB Oracle-to-WSL transfers in rotated,
+alternating order, with profiling/window controls unset and 256 KiB chunks.
+
+| Layout | Median MiB/s | Sender / receiver CPU s/GiB | Sender / receiver peak RSS KiB |
+| --- | ---: | ---: | ---: |
+| One connection, one stream | 27.374 | 11.88 / 10.48 | 24,624 / 23,116 |
+| One connection, four streams | 27.223 | 14.42 / 15.38 | 36,836 / 29,588 |
+| Four connections, four streams | 27.252 | 15.36 / 14.50 | 37,904 / 30,928 |
+
+Four connections changed throughput -0.45% against the one-stream baseline and
++0.11% against the matched four-stream control. Against the baseline, CPU rose
+29.3% sending and 38.4% receiving; peak RSS rose 53.9%/33.8%. Against the
+four-stream control, CPU changed +6.5%/-5.7%, below the 10% reduction gate.
+Neither comparison passes the >=5% throughput or >=10% CPU/GiB screen, and only
+one of five paired rate comparisons beat the one-stream baseline. A failed
+representative screen ends acceptance: no confirmation or scored guard series
+is warranted, and no production parallel architecture is accepted.
+
+All 18 transfers / 36 endpoint rows passed received-size/SHA-256 checks and
+strict direct STREAM-frame evidence for every connection at both endpoints.
+Distinct connection IDs, lane indices and matching endpoint identities verify
+the requested architecture; a verified primary cannot hide an unverified extra
+connection. Valid slow samples remain included. The source archive and final
+source audit match all 56 frozen files; the 55 production files are byte-identical
+to the previous frozen build. Actual startup remains timed, and stable-direct
+readiness runs concurrently across connections.
+
+Eight local correctness cases passed: all three 8 MiB layouts, four connections
+with a 64 KiB file and empty ranges, truncation, cancellation during initial
+accept, and payload cancellation at either endpoint. Sixteen example tests,
+56 Python benchmark tests, all required workspace/WASM/security/dependency
+checks, and Clippy/SARIF gates pass with exactly the three existing workspace
+findings and no new example finding. A Windows-mounted-target build permission
+failure is retained; successful native Linux builds supersede it. Independent
+cleanup found no benchmark endpoints, listeners or leases and verified the exact
+original Oracle INPUT-chain hash. This QUIC-only evaluation needed no Croc
+firewall rule and made no OCI change.
+
+The result does not support attributing Croc's earlier advantage simply to
+connection count. It establishes no independent-connection benefit for this
+prototype, size, direction and route; it is not a universal QUIC limit or a
+global-optimality claim. Prototype framing, buffers and finalization differ from
+production, so these rates cannot be compared directly with historical Croc or
+production measurements as an improvement. The example remains fresh-transfer
+only, without resume. Raw rows, ranges/MAD, source/build provenance, reproduction
+scripts, checks and cleanup are retained in the
+[evidence record](../benchmarks/results/oracle-20261004-independent-quic/README.md)
+and [acceptance decision](../benchmarks/results/oracle-20261004-independent-quic/acceptance.json).
+Desktop/device work remains stopped and pending release artifacts remain intact.

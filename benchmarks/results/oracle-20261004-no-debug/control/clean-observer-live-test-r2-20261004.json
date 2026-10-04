@@ -1,0 +1,101 @@
+{
+  "kind": "external-sampled-direct-ipv4-udp",
+  "peer": "127.0.0.1",
+  "local_port": 46655,
+  "requested_packets": 8,
+  "observed_packets": 8,
+  "complete": true,
+  "rejected_headers": 0,
+  "observer_seconds": 0.3193699019999485,
+  "packets": [
+    {
+      "elapsed_seconds": 0.3116094029999772,
+      "interface": "lo",
+      "packet_type": 4,
+      "source_ip": "127.0.0.1",
+      "destination_ip": "127.0.0.1",
+      "source_port": 36968,
+      "destination_port": 46655,
+      "ip_bytes": 1228,
+      "udp_bytes": 1208
+    },
+    {
+      "elapsed_seconds": 0.3116402629999584,
+      "interface": "lo",
+      "packet_type": 0,
+      "source_ip": "127.0.0.1",
+      "destination_ip": "127.0.0.1",
+      "source_port": 36968,
+      "destination_port": 46655,
+      "ip_bytes": 1228,
+      "udp_bytes": 1208
+    },
+    {
+      "elapsed_seconds": 0.31164831299997786,
+      "interface": "lo",
+      "packet_type": 4,
+      "source_ip": "127.0.0.1",
+      "destination_ip": "127.0.0.1",
+      "source_port": 36968,
+      "destination_port": 46655,
+      "ip_bytes": 1228,
+      "udp_bytes": 1208
+    },
+    {
+      "elapsed_seconds": 0.3116539429999534,
+      "interface": "lo",
+      "packet_type": 0,
+      "source_ip": "127.0.0.1",
+      "destination_ip": "127.0.0.1",
+      "source_port": 36968,
+      "destination_port": 46655,
+      "ip_bytes": 1228,
+      "udp_bytes": 1208
+    },
+    {
+      "elapsed_seconds": 0.3116589320000003,
+      "interface": "lo",
+      "packet_type": 4,
+      "source_ip": "127.0.0.1",
+      "destination_ip": "127.0.0.1",
+      "source_port": 36968,
+      "destination_port": 46655,
+      "ip_bytes": 1228,
+      "udp_bytes": 1208
+    },
+    {
+      "elapsed_seconds": 0.3116641419999837,
+      "interface": "lo",
+      "packet_type": 0,
+      "source_ip": "127.0.0.1",
+      "destination_ip": "127.0.0.1",
+      "source_port": 36968,
+      "destination_port": 46655,
+      "ip_bytes": 1228,
+      "udp_bytes": 1208
+    },
+    {
+      "elapsed_seconds": 0.3116689519999909,
+      "interface": "lo",
+      "packet_type": 4,
+      "source_ip": "127.0.0.1",
+      "destination_ip": "127.0.0.1",
+      "source_port": 36968,
+      "destination_port": 46655,
+      "ip_bytes": 1228,
+      "udp_bytes": 1208
+    },
+    {
+      "elapsed_seconds": 0.3116736220000007,
+      "interface": "lo",
+      "packet_type": 0,
+      "source_ip": "127.0.0.1",
+      "destination_ip": "127.0.0.1",
+      "source_port": 36968,
+      "destination_port": 46655,
+      "ip_bytes": 1228,
+      "udp_bytes": 1208
+    }
+  ],
+  "limitation": "Header samples identify actual peer UDP bulk traffic at observation times; they do not decrypt QUIC STREAM frames or establish continuous route coverage."
+}

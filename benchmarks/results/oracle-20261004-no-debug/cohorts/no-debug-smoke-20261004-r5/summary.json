@@ -1,0 +1,22 @@
+[
+  {
+    "transport": "croc",
+    "size_bytes": 536870912,
+    "measured_runs": 1,
+    "arithmetic_mean_mib_per_second": 27.786006278221308,
+    "median_mib_per_second": 27.786006278221308,
+    "min_mib_per_second": 27.786006278221308,
+    "max_mib_per_second": 27.786006278221308,
+    "mad_mib_per_second": 0.0
+  },
+  {
+    "transport": "rustytransfer",
+    "size_bytes": 536870912,
+    "measured_runs": 1,
+    "arithmetic_mean_mib_per_second": 26.84737895145765,
+    "median_mib_per_second": 26.84737895145765,
+    "min_mib_per_second": 26.84737895145765,
+    "max_mib_per_second": 26.84737895145765,
+    "mad_mib_per_second": 0.0
+  }
+]

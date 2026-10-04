@@ -1,0 +1,6 @@
+{
+  "path": "/home/wasilij/rustytransfer-bench/results/no-debug-smoke-20261004-r4/trials/512mib-rustytransfer-warmup-f5e9aa31/out/input-512.bin",
+  "bytes": 536870912,
+  "sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+  "classification": "Unscored smoke output; full file verified after clean cohort ended."
+}

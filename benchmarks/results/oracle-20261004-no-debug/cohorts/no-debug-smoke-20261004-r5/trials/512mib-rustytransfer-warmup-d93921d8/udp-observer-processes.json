@@ -1,0 +1,30 @@
+[
+  {
+    "role": "receiver",
+    "sample_index": 0,
+    "status": 0,
+    "stdout": "{\"kind\": \"external-sampled-direct-ipv4-udp\", \"peer\": \"141.147.1.21\", \"local_port\": 41991, \"requested_packets\": 2, \"observed_packets\": 2, \"complete\": true, \"rejected_headers\": 1, \"observer_seconds\": 0.015492435999988174, \"limitation\": \"Header samples identify actual peer UDP bulk traffic at observation times; they do not decrypt QUIC STREAM frames or establish continuous route coverage.\"}\n",
+    "stderr": ""
+  },
+  {
+    "role": "receiver",
+    "sample_index": 1,
+    "status": 0,
+    "stdout": "{\"kind\": \"external-sampled-direct-ipv4-udp\", \"peer\": \"141.147.1.21\", \"local_port\": 41991, \"requested_packets\": 2, \"observed_packets\": 2, \"complete\": true, \"rejected_headers\": 1, \"observer_seconds\": 0.014642866000031063, \"limitation\": \"Header samples identify actual peer UDP bulk traffic at observation times; they do not decrypt QUIC STREAM frames or establish continuous route coverage.\"}\n",
+    "stderr": ""
+  },
+  {
+    "role": "sender",
+    "sample_index": 0,
+    "status": 0,
+    "stdout": "{\"kind\": \"external-sampled-direct-ipv4-udp\", \"peer\": \"46.5.248.165\", \"local_port\": 51994, \"requested_packets\": 2, \"observed_packets\": 2, \"complete\": true, \"rejected_headers\": 0, \"observer_seconds\": 0.0009143659844994545, \"limitation\": \"Header samples identify actual peer UDP bulk traffic at observation times; they do not decrypt QUIC STREAM frames or establish continuous route coverage.\"}\n",
+    "stderr": ""
+  },
+  {
+    "role": "sender",
+    "sample_index": 1,
+    "status": 0,
+    "stdout": "{\"kind\": \"external-sampled-direct-ipv4-udp\", \"peer\": \"46.5.248.165\", \"local_port\": 51994, \"requested_packets\": 2, \"observed_packets\": 2, \"complete\": true, \"rejected_headers\": 0, \"observer_seconds\": 0.0016969311982393265, \"limitation\": \"Header samples identify actual peer UDP bulk traffic at observation times; they do not decrypt QUIC STREAM frames or establish continuous route coverage.\"}\n",
+    "stderr": ""
+  }
+]

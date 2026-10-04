@@ -1,0 +1,4 @@
+{"run_index": 0, "size_mib": 512, "transport": "rustytransfer", "warmup": true}
+{"run_index": 0, "size_mib": 512, "transport": "croc", "warmup": true}
+{"run_index": 1, "size_mib": 512, "transport": "rustytransfer", "warmup": false}
+{"run_index": 1, "size_mib": 512, "transport": "croc", "warmup": false}

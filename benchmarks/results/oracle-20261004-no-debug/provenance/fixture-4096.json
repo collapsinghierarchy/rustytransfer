@@ -1,0 +1,13 @@
+{
+  "size_mib": 4096,
+  "size_bytes": 4294967296,
+  "generation": "OpenSSL AES-256-CTR over 4 GiB of zero bytes",
+  "key_hex": "0000000000000000000000000000000000000000000000000000000000000000",
+  "iv_hex": "00000000000000000000000000000000",
+  "local_path": "/home/wasilij/rustytransfer-bench/input-4096.bin",
+  "remote_path": "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-4096.bin",
+  "sha256": "4bfffb60c90afb2e7b945bb974d1f5bfc16557723fc1199e55adb7e01f1fc413",
+  "first_512_mib_sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+  "caller_owned_pre_staged_input": true,
+  "generation_is_not_transfer_measurement": true
+}

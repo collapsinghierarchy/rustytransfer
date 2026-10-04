@@ -1,0 +1,169 @@
+{
+  "clean_cohort_audit": {
+    "accepted_transfers": 36,
+    "canonical_endpoint_rows": 72,
+    "measured_transfers": 30,
+    "unscored_warmups": 6,
+    "live_no_debug_checks_passed": true,
+    "received_hashes_verified": true,
+    "leases_restored_exactly": 18,
+    "summary": [
+      {
+        "size_mib": 1024,
+        "transport": "rustytransfer",
+        "measured_runs": 5,
+        "mean_wall_seconds": 37.52501939139997,
+        "mean_mib_per_second": 27.337654481416518,
+        "median_mib_per_second": 27.635409356826273,
+        "min_mib_per_second": 25.157260479738817,
+        "max_mib_per_second": 28.35316885372596,
+        "mad_mib_per_second": 0.38462205034264585
+      },
+      {
+        "size_mib": 1024,
+        "transport": "croc",
+        "measured_runs": 5,
+        "mean_wall_seconds": 34.89780963600001,
+        "mean_mib_per_second": 29.343440978523493,
+        "median_mib_per_second": 29.396744091787042,
+        "min_mib_per_second": 29.138194220546488,
+        "max_mib_per_second": 29.485700681314743,
+        "mad_mib_per_second": 0.08895658952770091
+      },
+      {
+        "size_mib": 2048,
+        "transport": "rustytransfer",
+        "measured_runs": 5,
+        "mean_wall_seconds": 71.9899191518,
+        "mean_mib_per_second": 28.462839113018283,
+        "median_mib_per_second": 28.4427816889079,
+        "min_mib_per_second": 27.640102657375426,
+        "max_mib_per_second": 29.2748628094834,
+        "mad_mib_per_second": 0.6328695331688579
+      },
+      {
+        "size_mib": 2048,
+        "transport": "croc",
+        "measured_runs": 5,
+        "mean_wall_seconds": 68.12534336540003,
+        "mean_mib_per_second": 30.06224010401048,
+        "median_mib_per_second": 30.061925479326675,
+        "min_mib_per_second": 30.03870133888781,
+        "max_mib_per_second": 30.076791430917634,
+        "mad_mib_per_second": 0.013273110284277578
+      },
+      {
+        "size_mib": 4096,
+        "transport": "rustytransfer",
+        "measured_runs": 5,
+        "mean_wall_seconds": 135.88231907820017,
+        "mean_mib_per_second": 30.1442717177337,
+        "median_mib_per_second": 30.120664214086876,
+        "min_mib_per_second": 29.966975077799887,
+        "max_mib_per_second": 30.29155627014458,
+        "mad_mib_per_second": 0.15368913628698877
+      },
+      {
+        "size_mib": 4096,
+        "transport": "croc",
+        "measured_runs": 5,
+        "mean_wall_seconds": 177.28074409680002,
+        "mean_mib_per_second": 23.115571340288724,
+        "median_mib_per_second": 23.304011730431107,
+        "min_mib_per_second": 22.22799184397355,
+        "max_mib_per_second": 23.660817869388595,
+        "mad_mib_per_second": 0.3496972455823659
+      }
+    ],
+    "route_limitations": "Croc proof is four actual ESTABLISHED TCP data sockets per endpoint, matched by listener ports and expected peers with NAT-aware tuple preservation. Normal Rustytransfer can initially select relay before upgrading to direct; retain that initial path and require two sampled direct bulk UDP header captures per endpoint. Continuous STREAM-frame counters and a pure-direct-from-start guarantee are unavailable with all benchmark controls disabled."
+  },
+  "comparisons": [
+    {
+      "size_mib": 1024,
+      "rustytransfer": {
+        "size_mib": 1024,
+        "transport": "rustytransfer",
+        "measured_runs": 5,
+        "mean_wall_seconds": 37.52501939139997,
+        "mean_mib_per_second": 27.337654481416518,
+        "median_mib_per_second": 27.635409356826273,
+        "min_mib_per_second": 25.157260479738817,
+        "max_mib_per_second": 28.35316885372596,
+        "mad_mib_per_second": 0.38462205034264585
+      },
+      "croc": {
+        "size_mib": 1024,
+        "transport": "croc",
+        "measured_runs": 5,
+        "mean_wall_seconds": 34.89780963600001,
+        "mean_mib_per_second": 29.343440978523493,
+        "median_mib_per_second": 29.396744091787042,
+        "min_mib_per_second": 29.138194220546488,
+        "max_mib_per_second": 29.485700681314743,
+        "mad_mib_per_second": 0.08895658952770091
+      },
+      "throughput_gap_percent": 6.835553126080251,
+      "rustytransfer_rate_difference_percent": -6.835553126080251
+    },
+    {
+      "size_mib": 2048,
+      "rustytransfer": {
+        "size_mib": 2048,
+        "transport": "rustytransfer",
+        "measured_runs": 5,
+        "mean_wall_seconds": 71.9899191518,
+        "mean_mib_per_second": 28.462839113018283,
+        "median_mib_per_second": 28.4427816889079,
+        "min_mib_per_second": 27.640102657375426,
+        "max_mib_per_second": 29.2748628094834,
+        "mad_mib_per_second": 0.6328695331688579
+      },
+      "croc": {
+        "size_mib": 2048,
+        "transport": "croc",
+        "measured_runs": 5,
+        "mean_wall_seconds": 68.12534336540003,
+        "mean_mib_per_second": 30.06224010401048,
+        "median_mib_per_second": 30.061925479326675,
+        "min_mib_per_second": 30.03870133888781,
+        "max_mib_per_second": 30.076791430917634,
+        "mad_mib_per_second": 0.013273110284277578
+      },
+      "throughput_gap_percent": 5.32029877167679,
+      "rustytransfer_rate_difference_percent": -5.32029877167679
+    },
+    {
+      "size_mib": 4096,
+      "rustytransfer": {
+        "size_mib": 4096,
+        "transport": "rustytransfer",
+        "measured_runs": 5,
+        "mean_wall_seconds": 135.88231907820017,
+        "mean_mib_per_second": 30.1442717177337,
+        "median_mib_per_second": 30.120664214086876,
+        "min_mib_per_second": 29.966975077799887,
+        "max_mib_per_second": 30.29155627014458,
+        "mad_mib_per_second": 0.15368913628698877
+      },
+      "croc": {
+        "size_mib": 4096,
+        "transport": "croc",
+        "measured_runs": 5,
+        "mean_wall_seconds": 177.28074409680002,
+        "mean_mib_per_second": 23.115571340288724,
+        "median_mib_per_second": 23.304011730431107,
+        "min_mib_per_second": 22.22799184397355,
+        "max_mib_per_second": 23.660817869388595,
+        "mad_mib_per_second": 0.3496972455823659
+      },
+      "throughput_gap_percent": -30.406777639082083,
+      "rustytransfer_rate_difference_percent": 30.406777639082083
+    }
+  ],
+  "production_default_changed": false,
+  "additional_tuning_deferred": true,
+  "source_built_croc_used_in_final": false,
+  "phase_timings_available": false,
+  "exact_application_phase_timings_available": false,
+  "normal_croc_progress_hints_available": true
+}

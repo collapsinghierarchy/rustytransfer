@@ -1,0 +1,44 @@
+{
+  "official_tag": "v11.5.4",
+  "source_commit": "15a4577e56bf6bbad116576e448bd33120bd90c1",
+  "source_archive_sha256": "16910b594704b40e9df35eb3bc637db675fe3d770a4588bd32b5a12c5ff174ff",
+  "instrumentation_patch_sha256": "c2d6ed24e908d40f37eecac3943e77df14d2385bd00836493518cff10bba8d7a",
+  "go_version": "go1.27.0",
+  "toolchain_manifest_sha256": "5f437e3de0f02c0250979cb5d8c0e5b5c4963d83c81155cfa9224017879cf500",
+  "build_flags": ["-trimpath", "-ldflags=-s -w"],
+  "binary_paths": {
+    "linux-amd64": "/home/wasilij/rustytransfer-bench/tools/croc-phase-20261004/bin/croc-linux-amd64",
+    "linux-arm64": "/home/ubuntu/rustytransfer-bench/tools/croc-phase-20261004/bin/croc-linux-arm64"
+  },
+  "binary_sha256": {
+    "linux-amd64": "42ecc43717e03a5da491f0c48b3620e7cce06a7081637f8df7d8d04458d370a0",
+    "linux-arm64": "ab08e3a83400dfab146328ddc979a4ff28e8a4f3bd5f824e81a1591ea45037d1"
+  },
+  "wrapper_paths": {
+    "linux-amd64": {
+      "off": "/home/wasilij/rustytransfer-bench/tools/croc-phase-20261004/wrappers/croc-amd64-off",
+      "on": "/home/wasilij/rustytransfer-bench/tools/croc-phase-20261004/wrappers/croc-amd64-on"
+    },
+    "linux-arm64": {
+      "off": "/home/ubuntu/rustytransfer-bench/tools/croc-phase-20261004/wrappers/croc-arm64-off",
+      "on": "/home/ubuntu/rustytransfer-bench/tools/croc-phase-20261004/wrappers/croc-arm64-on"
+    }
+  },
+  "wrapper_sha256": {
+    "linux-amd64": {
+      "off": "b2dcb8e0622b6deb5792247af0b57ff2291084eb9db54d84deedd5d33142c268",
+      "on": "6e4069b383992c30e88b67930103ee2eeb37f41a85fa3c80ca48fa4a657c8856"
+    },
+    "linux-arm64": {
+      "off": "b96a6537ad9f3b54f4a7a1a89665ef509096022dae5eec47e1696c255b16b2c2",
+      "on": "a9f3f177a0dd70a4825aa2b72e02aac8bb91b677775471d254d0f1b57f0c7aa7"
+    }
+  },
+  "profile_environment": "CROC_BENCH_PHASE_PROFILE",
+  "profile_off_value": "0",
+  "profile_on_value": "1",
+  "transfer_debug_flags": [],
+  "reference_assets_modified": false,
+  "diagnostic_build_is_byte_identical_to_official": false,
+  "focused_tests": "go test ./src/croc ./src/tcp passed; arm64 test packages cross-compiled"
+}

@@ -1,0 +1,524 @@
+{
+  "canonical_endpoint_rows": 48,
+  "accepted_transfers": 24,
+  "all_routes_verified_both": true,
+  "full_hashes_verified": true,
+  "all_valid_slow_samples_retained": true,
+  "firewall_restored_exactly": true,
+  "comparisons": [
+    {
+      "size_mib": 1024,
+      "comparison_policy": "Rustytransfer phases individually versus Croc arithmetic mean full-transfer MiB/s; no overall Rustytransfer/Croc throughput comparison.",
+      "croc_reference": {
+        "mean_full_mib_per_second": 27.9049328431381,
+        "full_mib_per_second": {
+          "median": 29.070152666607342,
+          "mad": 0.4253191173605515,
+          "min": 23.814267132792867,
+          "max": 29.495471783967893,
+          "count": 5
+        }
+      },
+      "resources": {
+        "iroh": {
+          "sender_cpu_seconds_per_gib": {
+            "median": 12.95,
+            "mad": 0.1899999999999995,
+            "min": 12.7,
+            "max": 13.149999999999999,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 31836,
+            "mad": 644,
+            "min": 29828,
+            "max": 32480,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 13.850000000000001,
+            "mad": 0.02000000000000135,
+            "min": 13.83,
+            "max": 14.18,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 24884,
+            "mad": 228,
+            "min": 23916,
+            "max": 25204,
+            "count": 5
+          },
+          "ready_observed_seconds": {
+            "median": 0.8607490440000447,
+            "mad": 0.029623129000242443,
+            "min": 0.8311259149998023,
+            "max": 1.5455097250001018,
+            "count": 5
+          }
+        },
+        "croc": {
+          "sender_cpu_seconds_per_gib": {
+            "median": 3.4299999999999997,
+            "mad": 0.040000000000000036,
+            "min": 3.31,
+            "max": 3.4699999999999998,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 24264,
+            "mad": 112,
+            "min": 24044,
+            "max": 24560,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 11.559999999999999,
+            "mad": 0.3899999999999988,
+            "min": 11.17,
+            "max": 12.56,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 24960,
+            "mad": 316,
+            "min": 24500,
+            "max": 25536,
+            "count": 5
+          },
+          "ready_observed_seconds": {
+            "median": 0.9278981459999613,
+            "mad": 0.006342303999986143,
+            "min": 0.9041621720000421,
+            "max": 0.9433946120000201,
+            "count": 5
+          }
+        }
+      },
+      "rustytransfer_phases": {
+        "sender": {
+          "handshake_seconds": {
+            "seconds": {
+              "median": 0.932617396,
+              "mad": 0.02084797500000002,
+              "min": 0.911769421,
+              "max": 1.0421970790000001,
+              "count": 5
+            },
+            "mean_seconds": 0.9659071368000001,
+            "mean_normalized_mib_per_second": 1063.5245716623617,
+            "normalized_mib_per_second": {
+              "median": 1097.9850948437595,
+              "mad": 25.105871375428933,
+              "min": 982.5396948747348,
+              "max": 1123.0909662191884,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 38.11242183024588,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "payload_seconds": {
+            "seconds": {
+              "median": 33.294960398,
+              "mad": 0.1743452509999983,
+              "min": 33.120615147,
+              "max": 34.000390097,
+              "count": 5
+            },
+            "mean_seconds": 33.440442203,
+            "mean_normalized_mib_per_second": 30.624319496786022,
+            "normalized_mib_per_second": {
+              "median": 30.755405255310375,
+              "mad": 0.1618949051835301,
+              "min": 30.11730150973626,
+              "max": 30.917300160493905,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 1.0974518257734,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "shutdown_seconds": {
+            "seconds": {
+              "median": 1.5332442,
+              "mad": 0.009111298999999962,
+              "min": 0.291484764,
+              "max": 1.54614829,
+              "count": 5
+            },
+            "mean_seconds": 1.2865568702,
+            "mean_normalized_mib_per_second": 1236.1917771226229,
+            "normalized_mib_per_second": {
+              "median": 667.8649102341298,
+              "mad": 3.992510682473153,
+              "min": 662.2909371778304,
+              "max": 3513.0481125250167,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 44.30011654468489,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "remaining_outer_seconds": {
+            "seconds": {
+              "median": 0.4881886800000643,
+              "mad": 0.07143004900009942,
+              "min": 0.4167586309999649,
+              "max": 1.1825691620001066,
+              "count": 5
+            },
+            "mean_seconds": 0.7403232154000534,
+            "mean_normalized_mib_per_second": 1690.5993960263402,
+            "normalized_mib_per_second": {
+              "median": 2097.5496605121302,
+              "mad": 359.50803147382476,
+              "min": 865.9112996554765,
+              "max": 2457.057691985955,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 60.584248868459945,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          }
+        },
+        "receiver": {
+          "handshake_seconds": {
+            "seconds": {
+              "median": 0.529299022,
+              "mad": 0.02363426199999996,
+              "min": 0.453182278,
+              "max": 0.552933284,
+              "count": 5
+            },
+            "mean_seconds": 0.5110889308,
+            "mean_normalized_mib_per_second": 2017.1165095444808,
+            "normalized_mib_per_second": {
+              "median": 1934.6342189160516,
+              "mad": 82.69289139777538,
+              "min": 1851.9413275182762,
+              "max": 2259.5764435430992,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 72.28530241886948,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "payload_seconds": {
+            "seconds": {
+              "median": 33.321755012,
+              "mad": 0.1776263579999977,
+              "min": 33.144128654,
+              "max": 34.022724752,
+              "count": 5
+            },
+            "mean_seconds": 33.4649334004,
+            "mean_normalized_mib_per_second": 30.601890457953886,
+            "normalized_mib_per_second": {
+              "median": 30.730674288651123,
+              "mad": 0.16469214833676205,
+              "min": 30.097530620024926,
+              "max": 30.895366436987885,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 1.096648059680924,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "shutdown_seconds": {
+            "seconds": {
+              "median": 1.506579084,
+              "mad": 0.01032779099999992,
+              "min": 0.267896512,
+              "max": 1.52195163,
+              "count": 5
+            },
+            "mean_seconds": 1.2604351376,
+            "mean_normalized_mib_per_second": 1307.5252000738658,
+            "normalized_mib_per_second": {
+              "median": 679.6855278789998,
+              "mad": 4.691491402880956,
+              "min": 672.8203313531061,
+              "max": 3822.3715283011975,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 46.85641809008653,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "remaining_outer_seconds": {
+            "seconds": {
+              "median": 0.9596392580000668,
+              "mad": 0.10006457000010016,
+              "min": 0.8595746879999666,
+              "max": 1.6538053240001105,
+              "count": 5
+            },
+            "mean_seconds": 1.1967719566000568,
+            "mean_normalized_mib_per_second": 933.2126469539825,
+            "normalized_mib_per_second": {
+              "median": 1067.0676417866273,
+              "mad": 124.21918214558195,
+              "min": 619.1780768507984,
+              "max": 1191.2868239322092,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 33.44256917584599,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          }
+        }
+      }
+    },
+    {
+      "size_mib": 2048,
+      "comparison_policy": "Rustytransfer phases individually versus Croc arithmetic mean full-transfer MiB/s; no overall Rustytransfer/Croc throughput comparison.",
+      "croc_reference": {
+        "mean_full_mib_per_second": 27.506385384153994,
+        "full_mib_per_second": {
+          "median": 26.233762187396046,
+          "mad": 0.9611643383773014,
+          "min": 25.272597849018744,
+          "max": 30.26598644095432,
+          "count": 5
+        }
+      },
+      "resources": {
+        "iroh": {
+          "sender_cpu_seconds_per_gib": {
+            "median": 12.945,
+            "mad": 0.054999999999999716,
+            "min": 12.89,
+            "max": 13.15,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 30828,
+            "mad": 680,
+            "min": 29948,
+            "max": 32296,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 13.885,
+            "mad": 0.13000000000000078,
+            "min": 13.43,
+            "max": 14.120000000000001,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 25220,
+            "mad": 36,
+            "min": 24544,
+            "max": 25588,
+            "count": 5
+          },
+          "ready_observed_seconds": {
+            "median": 0.8701904210001885,
+            "mad": 0.03128790399978243,
+            "min": 0.8054450069998893,
+            "max": 0.9014783249999709,
+            "count": 5
+          }
+        },
+        "croc": {
+          "sender_cpu_seconds_per_gib": {
+            "median": 3.4,
+            "mad": 0.06000000000000005,
+            "min": 3.17,
+            "max": 3.46,
+            "count": 5
+          },
+          "sender_max_rss_kib": {
+            "median": 24004,
+            "mad": 96,
+            "min": 23808,
+            "max": 24184,
+            "count": 5
+          },
+          "receiver_cpu_seconds_per_gib": {
+            "median": 12.195,
+            "mad": 0.6150000000000002,
+            "min": 11.565000000000001,
+            "max": 13.105,
+            "count": 5
+          },
+          "receiver_max_rss_kib": {
+            "median": 24644,
+            "mad": 324,
+            "min": 24320,
+            "max": 25288,
+            "count": 5
+          },
+          "ready_observed_seconds": {
+            "median": 0.9590059219999603,
+            "mad": 0.12831699700018362,
+            "min": 0.4337420180004301,
+            "max": 7.343596413999876,
+            "count": 5
+          }
+        }
+      },
+      "rustytransfer_phases": {
+        "sender": {
+          "handshake_seconds": {
+            "seconds": {
+              "median": 0.9552195480000001,
+              "mad": 0.06097404000000006,
+              "min": 0.889406194,
+              "max": 1.093756703,
+              "count": 5
+            },
+            "mean_seconds": 0.9597516434,
+            "mean_normalized_mib_per_second": 2145.822218541765,
+            "normalized_mib_per_second": {
+              "median": 2144.0097245581073,
+              "mad": 146.18908737710444,
+              "min": 1872.4456676541165,
+              "max": 2302.6599250330833,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 78.01178484825346,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "payload_seconds": {
+            "seconds": {
+              "median": 67.627685649,
+              "mad": 0.5821909640000058,
+              "min": 66.42110711,
+              "max": 70.911433739,
+              "count": 5
+            },
+            "mean_seconds": 67.9903622592,
+            "mean_normalized_mib_per_second": 30.137218006577843,
+            "normalized_mib_per_second": {
+              "median": 30.283455368109045,
+              "mad": 0.26296702197284105,
+              "min": 28.881097053233564,
+              "max": 30.833572174705058,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 1.0956444325810775,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "shutdown_seconds": {
+            "seconds": {
+              "median": 1.418573693,
+              "mad": 0.4037536620000002,
+              "min": 0.27407765,
+              "max": 1.822327355,
+              "count": 5
+            },
+            "mean_seconds": 1.095540213,
+            "mean_normalized_mib_per_second": 3649.8016116603762,
+            "normalized_mib_per_second": {
+              "median": 1443.7036370446779,
+              "mad": 319.86603762500613,
+              "min": 1123.8375994196717,
+              "max": 7472.334938656983,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 132.68924872124313,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "remaining_outer_seconds": {
+            "seconds": {
+              "median": 0.49541666400011763,
+              "mad": 0.005741603000132045,
+              "min": 0.42983284300004243,
+              "max": 0.5743759470002203,
+              "count": 5
+            },
+            "mean_seconds": 0.49781654340006015,
+            "mean_normalized_mib_per_second": 4148.859235008703,
+            "normalized_mib_per_second": {
+              "median": 4133.894050845883,
+              "mad": 48.47128305063052,
+              "min": 3565.6089199000085,
+              "max": 4764.642891654972,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 150.83258585473018,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          }
+        },
+        "receiver": {
+          "handshake_seconds": {
+            "seconds": {
+              "median": 0.509605617,
+              "mad": 0.04681776900000001,
+              "min": 0.46169264,
+              "max": 0.596546867,
+              "count": 5
+            },
+            "mean_seconds": 0.518608047,
+            "mean_normalized_mib_per_second": 3987.4503451589753,
+            "normalized_mib_per_second": {
+              "median": 4018.794007916126,
+              "mad": 350.0701764584751,
+              "min": 3433.091536125694,
+              "max": 4435.851522346122,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 144.9645342152475,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "payload_seconds": {
+            "seconds": {
+              "median": 67.645803306,
+              "mad": 0.5767512540000013,
+              "min": 66.446130453,
+              "max": 70.937944034,
+              "count": 5
+            },
+            "mean_seconds": 68.013147024,
+            "mean_normalized_mib_per_second": 30.127131681743837,
+            "normalized_mib_per_second": {
+              "median": 30.275344513771895,
+              "mad": 0.26034873580831075,
+              "min": 28.870303867538222,
+              "max": 30.821960376588557,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 1.095277742276512,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "shutdown_seconds": {
+            "seconds": {
+              "median": 1.39424554,
+              "mad": 0.5517235409999999,
+              "min": 0.254597214,
+              "max": 1.9459690809999999,
+              "count": 5
+            },
+            "mean_seconds": 1.1012469986,
+            "mean_normalized_mib_per_second": 3873.8400198682575,
+            "normalized_mib_per_second": {
+              "median": 1468.8947830523452,
+              "mad": 416.4628508103549,
+              "min": 1052.4319322419904,
+              "max": 8044.078597026595,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 140.83420870340592,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          },
+          "remaining_outer_seconds": {
+            "seconds": {
+              "median": 0.9087938899999273,
+              "mad": 0.04846377199970675,
+              "min": 0.8578532000000507,
+              "max": 0.991391774000121,
+              "count": 5
+            },
+            "mean_seconds": 0.9104685894000596,
+            "mean_normalized_mib_per_second": 2255.9872091667294,
+            "normalized_mib_per_second": {
+              "median": 2253.536277626343,
+              "mad": 126.94530397914377,
+              "min": 2065.7827245596554,
+              "max": 2387.3548527881912,
+              "count": 5
+            },
+            "ratio_to_croc_full_mean": 82.0168545470307,
+            "limitation": "Only payload is a data-transfer window. Other rates normalize the whole file size by an overhead duration; they are comparison indices, not actual wire throughput."
+          }
+        }
+      }
+    }
+  ],
+  "rusty_manifest_sha256": "ad96054b0420e952b3d0e70d012f2ef03cc13d5e5e634de957e16cce63232ded",
+  "croc_manifest_sha256": "0204e0efbf5e81f9598beddacbd3f5ba2dbb9d0d353f402ace2590683d035b78"
+}

@@ -1,0 +1,248 @@
+{
+  "sender": [
+    {
+      "observed_at_monotonic": 1318724.132974917,
+      "process": {
+        "pid": 734609,
+        "pgid": 734608,
+        "exe": "/home/ubuntu/rustytransfer-bench/build-completion-v1-20261004/rustytransfer-arm",
+        "cwd": "/home/ubuntu/rustytransfer-bench/no-debug-cohort/cohort-5fae682930/512mib-rustytransfer-01-d1ddd231",
+        "argv_redacted": [
+          "/home/ubuntu/rustytransfer-bench/build-completion-v1-20261004/rustytransfer-arm",
+          "--transport",
+          "iroh",
+          "send",
+          "--direct",
+          "--file",
+          "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-512.bin"
+        ],
+        "debug_flags_present": [],
+        "debug_env_present": [],
+        "tcp": [
+          {
+            "local_ip": "10.0.0.218",
+            "local_port": 48094,
+            "remote_ip": "91.99.237.97",
+            "remote_port": 443,
+            "state": "ESTABLISHED",
+            "inode": "4255009"
+          },
+          {
+            "local_ip": "10.0.0.218",
+            "local_port": 55168,
+            "remote_ip": "49.13.207.244",
+            "remote_port": 443,
+            "state": "ESTABLISHED",
+            "inode": "4254993"
+          }
+        ],
+        "udp": [
+          {
+            "local_ip": "0.0.0.0",
+            "local_port": 39663,
+            "remote_ip": "0.0.0.0",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "4254978"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 37152,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "4254979"
+          }
+        ]
+      }
+    },
+    {
+      "observed_at_monotonic": 1318731.095520381,
+      "process": {
+        "pid": 734609,
+        "pgid": 734608,
+        "exe": "/home/ubuntu/rustytransfer-bench/build-completion-v1-20261004/rustytransfer-arm",
+        "cwd": "/home/ubuntu/rustytransfer-bench/no-debug-cohort/cohort-5fae682930/512mib-rustytransfer-01-d1ddd231",
+        "argv_redacted": [
+          "/home/ubuntu/rustytransfer-bench/build-completion-v1-20261004/rustytransfer-arm",
+          "--transport",
+          "iroh",
+          "send",
+          "--direct",
+          "--file",
+          "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-512.bin"
+        ],
+        "debug_flags_present": [],
+        "debug_env_present": [],
+        "tcp": [
+          {
+            "local_ip": "10.0.0.218",
+            "local_port": 48094,
+            "remote_ip": "91.99.237.97",
+            "remote_port": 443,
+            "state": "ESTABLISHED",
+            "inode": "4255009"
+          },
+          {
+            "local_ip": "10.0.0.218",
+            "local_port": 55168,
+            "remote_ip": "49.13.207.244",
+            "remote_port": 443,
+            "state": "ESTABLISHED",
+            "inode": "4254993"
+          }
+        ],
+        "udp": [
+          {
+            "local_ip": "0.0.0.0",
+            "local_port": 39663,
+            "remote_ip": "0.0.0.0",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "4254978"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 37152,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "4254979"
+          }
+        ]
+      }
+    }
+  ],
+  "receiver": [
+    {
+      "observed_at_monotonic": 332.221960714,
+      "process": {
+        "pid": 646,
+        "pgid": 642,
+        "exe": "/home/wasilij/rustytransfer-bench/build-completion-v1-20261004/rustytransfer-x86",
+        "cwd": "/home/wasilij/rustytransfer-bench/results/no-debug-smoke-20261004-r5/trials/512mib-rustytransfer-01-d1ddd231/endpoint-work",
+        "argv_redacted": [
+          "/home/wasilij/rustytransfer-bench/build-completion-v1-20261004/rustytransfer-x86",
+          "--transport",
+          "iroh",
+          "recv",
+          "--invite",
+          "<redacted>",
+          "--out",
+          "/home/wasilij/rustytransfer-bench/results/no-debug-smoke-20261004-r5/trials/512mib-rustytransfer-01-d1ddd231/out/input-512.bin"
+        ],
+        "debug_flags_present": [],
+        "debug_env_present": [],
+        "tcp": [
+          {
+            "local_ip": "172.28.150.231",
+            "local_port": 45270,
+            "remote_ip": "91.99.237.97",
+            "remote_port": 443,
+            "state": "ESTABLISHED",
+            "inode": "36485"
+          },
+          {
+            "local_ip": "172.28.150.231",
+            "local_port": 57560,
+            "remote_ip": "49.13.207.244",
+            "remote_port": 443,
+            "state": "ESTABLISHED",
+            "inode": "36483"
+          },
+          {
+            "local_ip": "172.28.150.231",
+            "local_port": 57568,
+            "remote_ip": "49.13.207.244",
+            "remote_port": 443,
+            "state": "ESTABLISHED",
+            "inode": "36484"
+          }
+        ],
+        "udp": [
+          {
+            "local_ip": "0.0.0.0",
+            "local_port": 51454,
+            "remote_ip": "0.0.0.0",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "36475"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 54822,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "36476"
+          }
+        ]
+      }
+    },
+    {
+      "observed_at_monotonic": 339.172618629,
+      "process": {
+        "pid": 646,
+        "pgid": 642,
+        "exe": "/home/wasilij/rustytransfer-bench/build-completion-v1-20261004/rustytransfer-x86",
+        "cwd": "/home/wasilij/rustytransfer-bench/results/no-debug-smoke-20261004-r5/trials/512mib-rustytransfer-01-d1ddd231/endpoint-work",
+        "argv_redacted": [
+          "/home/wasilij/rustytransfer-bench/build-completion-v1-20261004/rustytransfer-x86",
+          "--transport",
+          "iroh",
+          "recv",
+          "--invite",
+          "<redacted>",
+          "--out",
+          "/home/wasilij/rustytransfer-bench/results/no-debug-smoke-20261004-r5/trials/512mib-rustytransfer-01-d1ddd231/out/input-512.bin"
+        ],
+        "debug_flags_present": [],
+        "debug_env_present": [],
+        "tcp": [
+          {
+            "local_ip": "172.28.150.231",
+            "local_port": 45270,
+            "remote_ip": "91.99.237.97",
+            "remote_port": 443,
+            "state": "ESTABLISHED",
+            "inode": "36485"
+          },
+          {
+            "local_ip": "172.28.150.231",
+            "local_port": 57560,
+            "remote_ip": "49.13.207.244",
+            "remote_port": 443,
+            "state": "ESTABLISHED",
+            "inode": "36483"
+          },
+          {
+            "local_ip": "172.28.150.231",
+            "local_port": 57568,
+            "remote_ip": "49.13.207.244",
+            "remote_port": 443,
+            "state": "ESTABLISHED",
+            "inode": "36484"
+          }
+        ],
+        "udp": [
+          {
+            "local_ip": "0.0.0.0",
+            "local_port": 51454,
+            "remote_ip": "0.0.0.0",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "36475"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 54822,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "36476"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "kind": "external-sampled-direct-ipv4-udp",
+  "peer": "141.147.1.21",
+  "local_port": 53357,
+  "requested_packets": 2,
+  "observed_packets": 2,
+  "complete": true,
+  "rejected_headers": 0,
+  "observer_seconds": 0.021147631999838268,
+  "packets": [
+    {
+      "elapsed_seconds": 0.00038176499992914614,
+      "interface": "eth0",
+      "packet_type": 0,
+      "source_ip": "141.147.1.21",
+      "destination_ip": "172.28.150.231",
+      "source_port": 35850,
+      "destination_port": 53357,
+      "ip_bytes": 8740,
+      "udp_bytes": 8720
+    },
+    {
+      "elapsed_seconds": 0.0003986549997989641,
+      "interface": "eth0",
+      "packet_type": 0,
+      "source_ip": "141.147.1.21",
+      "destination_ip": "172.28.150.231",
+      "source_port": 35850,
+      "destination_port": 53357,
+      "ip_bytes": 1480,
+      "udp_bytes": 1460
+    }
+  ],
+  "limitation": "Header samples identify actual peer UDP bulk traffic at observation times; they do not decrypt QUIC STREAM frames or establish continuous route coverage."
+}

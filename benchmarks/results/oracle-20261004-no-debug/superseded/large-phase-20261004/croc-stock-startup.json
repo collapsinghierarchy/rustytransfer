@@ -1,0 +1,505 @@
+{
+  "source": "Existing debug startupTiming milestones from official Croc 11.5.4, no added instrumentation.",
+  "limitation": "Elapsed values share the Croc startupTiming origin labelled process-start; milestones are semantic events, not an additive phase decomposition. They do not identify exact payload completion.",
+  "records": [
+    {
+      "size_mib": 1024,
+      "run_index": 1,
+      "warmup": false,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "file-metadata-ready": 0.623349594,
+            "relay-control-ready": 0.631949771,
+            "peer-pake-complete": 0.646706068,
+            "transport-ready": 0.70758535
+          },
+          "redacted_log_sha256": "3a5b381a2a9b2ec65a8ed185a9a3e73597bd5d2b017787aab9f9e8f077585996"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.093619053,
+            "peer-pake-complete": 0.16660154800000002,
+            "transport-ready": 0.252367284,
+            "file-metadata-ready": 0.253051405,
+            "recipient-ready": 0.253637448,
+            "first-decrypted-data-byte": 0.299025829
+          },
+          "redacted_log_sha256": "a94b3b67f5ec92869c100392a40f18d5b90a84ef908148a76c71d88dcc97bdfa"
+        }
+      }
+    },
+    {
+      "size_mib": 1024,
+      "run_index": 2,
+      "warmup": false,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "file-metadata-ready": 0.6150255,
+            "relay-control-ready": 0.65142814,
+            "peer-pake-complete": 0.6661383970000001,
+            "transport-ready": 0.722459009
+          },
+          "redacted_log_sha256": "c24243ebb7ed6004ed343c2a34e79a9c5828d8cec188ae3a923a8b9d7d13e2f6"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.054041067,
+            "peer-pake-complete": 0.121756277,
+            "transport-ready": 0.198136763,
+            "file-metadata-ready": 0.19863413600000002,
+            "recipient-ready": 0.199270958,
+            "first-decrypted-data-byte": 0.239116581
+          },
+          "redacted_log_sha256": "d0b0558de055587b0fbe03d7d329c3465a1342fb73a1bf57c8f0372784c3fd51"
+        }
+      }
+    },
+    {
+      "size_mib": 1024,
+      "run_index": 3,
+      "warmup": false,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "file-metadata-ready": 0.62687538,
+            "relay-control-ready": 0.627729385,
+            "peer-pake-complete": 0.641850439,
+            "transport-ready": 0.6964672789999999
+          },
+          "redacted_log_sha256": "07f41c241bae638452a57fd80ab969a90c895b1feebc7d98eb2934d035679255"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.07126895700000001,
+            "peer-pake-complete": 0.13885752299999998,
+            "transport-ready": 0.21021307200000003,
+            "file-metadata-ready": 0.210665186,
+            "recipient-ready": 0.211043011,
+            "first-decrypted-data-byte": 0.24818400000000002
+          },
+          "redacted_log_sha256": "fbbf5265bf2f5b9ebc6e4922fa6447a32d02b48cfa4413708871bdb74a3d9738"
+        }
+      }
+    },
+    {
+      "size_mib": 1024,
+      "run_index": 4,
+      "warmup": false,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "file-metadata-ready": 0.617584279,
+            "relay-control-ready": 0.6301273220000001,
+            "peer-pake-complete": 0.6473783949999999,
+            "transport-ready": 0.70251144
+          },
+          "redacted_log_sha256": "8288ad5ec75230750ca27fb620deca49380f1c5eea95ac5923f2d9cd9ab2b005"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.065172937,
+            "peer-pake-complete": 0.13377238,
+            "transport-ready": 0.21253109900000003,
+            "file-metadata-ready": 0.213089381,
+            "recipient-ready": 0.213886861,
+            "first-decrypted-data-byte": 0.250044392
+          },
+          "redacted_log_sha256": "b23fc5ed393bd7e6e0ac35490611cc7db14c78c9a2351addabbfcb2f5d7203fa"
+        }
+      }
+    },
+    {
+      "size_mib": 1024,
+      "run_index": 5,
+      "warmup": false,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "file-metadata-ready": 0.622907473,
+            "relay-control-ready": 0.662661096,
+            "peer-pake-complete": 0.680660695,
+            "transport-ready": 0.734753772
+          },
+          "redacted_log_sha256": "661bbe442c9531cf4e7ab3230a89c34a6858aa132af2ad1da1d30a83a83a9ae3"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.056881618,
+            "peer-pake-complete": 0.126547187,
+            "transport-ready": 0.20515158,
+            "file-metadata-ready": 0.205625713,
+            "recipient-ready": 0.206002718,
+            "first-decrypted-data-byte": 0.24768302600000003
+          },
+          "redacted_log_sha256": "6f62e2186d75ac46e3298a79d3bee7cff546e056bb71462ebc52e06dbf9ddcbc"
+        }
+      }
+    },
+    {
+      "size_mib": 1024,
+      "run_index": 0,
+      "warmup": true,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "file-metadata-ready": 0.60752697,
+            "relay-control-ready": 0.660643161,
+            "peer-pake-complete": 0.6765251449999999,
+            "transport-ready": 0.733849164
+          },
+          "redacted_log_sha256": "48fff44867dc81bf10c8379a8ecd029349f4113dcd6489a26153bad5ee319e68"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.053323633,
+            "peer-pake-complete": 0.12106306,
+            "transport-ready": 0.19609447800000002,
+            "file-metadata-ready": 0.196478143,
+            "recipient-ready": 0.197258443,
+            "first-decrypted-data-byte": 0.23506848400000002
+          },
+          "redacted_log_sha256": "d93137440df6685bc0d3efee0ef66a1d299c055189dd3acf7ebc7f944119e983"
+        }
+      }
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 1,
+      "warmup": false,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.5993985980000001,
+            "peer-pake-complete": 0.660906964,
+            "transport-ready": 0.84956201,
+            "file-metadata-ready": 1.022785594
+          },
+          "redacted_log_sha256": "dd76c3c84ca9d10b742fa37de59983a6a07ac82d0089605dca1b196877c918af"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.060871821,
+            "peer-pake-complete": 0.48320883,
+            "transport-ready": 0.598369719,
+            "file-metadata-ready": 0.816439136,
+            "recipient-ready": 0.81692498,
+            "first-decrypted-data-byte": 0.866398236
+          },
+          "redacted_log_sha256": "07b7b07703822c47ef83117e8927a617c07a214ac9cb4e834b977ce3ee810506"
+        }
+      }
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 2,
+      "warmup": false,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.709886208,
+            "peer-pake-complete": 0.776258926,
+            "transport-ready": 0.919007669,
+            "file-metadata-ready": 1.168484076
+          },
+          "redacted_log_sha256": "2cd867603e29a84a6491c29cda6bb83966810aac81c877b7c1204d7f1be08b86"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.09075308200000001,
+            "peer-pake-complete": 0.210130505,
+            "transport-ready": 0.308277608,
+            "file-metadata-ready": 0.5708604860000001,
+            "recipient-ready": 0.57128809,
+            "first-decrypted-data-byte": 0.61895865
+          },
+          "redacted_log_sha256": "b7024f31dfa324a248dc815e027dd43dcf1032eee1eb61bb118dbbd779341120"
+        }
+      }
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 3,
+      "warmup": false,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.756104473,
+            "peer-pake-complete": 0.812076563,
+            "transport-ready": 0.989565655,
+            "file-metadata-ready": 1.152024328
+          },
+          "redacted_log_sha256": "e1dce392b8e676f3ffb8a240b6eea598e46ab14938b07612a5a9991bf6538db4"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.07393521800000001,
+            "peer-pake-complete": 0.202120191,
+            "transport-ready": 0.34717129799999996,
+            "file-metadata-ready": 0.510898651,
+            "recipient-ready": 0.512559989,
+            "first-decrypted-data-byte": 0.551744542
+          },
+          "redacted_log_sha256": "560cf11a77ae0517814b1a3507412220f29a213f6baca0e5da0150f022f9e26a"
+        }
+      }
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 4,
+      "warmup": false,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.6070241710000001,
+            "peer-pake-complete": 0.642949248,
+            "transport-ready": 0.794766891,
+            "file-metadata-ready": 1.003941073
+          },
+          "redacted_log_sha256": "390b9058264b961654a965c676b446f1173beadd5981153c5ba0839e7fc02bec"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.086202843,
+            "peer-pake-complete": 0.627748512,
+            "transport-ready": 0.7441941799999999,
+            "file-metadata-ready": 0.933899712,
+            "recipient-ready": 0.9343051560000001,
+            "first-decrypted-data-byte": 0.9752434409999999
+          },
+          "redacted_log_sha256": "9f2401fac39cad8b78c84f471cb9e8b14d5eb01adc5f9d0c21c489a7226f9d48"
+        }
+      }
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 5,
+      "warmup": false,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.794879252,
+            "peer-pake-complete": 0.855535613,
+            "transport-ready": 0.998586278,
+            "file-metadata-ready": 1.160946991
+          },
+          "redacted_log_sha256": "ee6ed6b520e84101d20eb7c68d4afbe200d172b004c34631a7b8204d02a5a61c"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.079535619,
+            "peer-pake-complete": 0.211645202,
+            "transport-ready": 0.32066785700000006,
+            "file-metadata-ready": 0.486398209,
+            "recipient-ready": 0.487392615,
+            "first-decrypted-data-byte": 0.526462557
+          },
+          "redacted_log_sha256": "06b7393aa2d3bb196759b5aeb41a8c020330f0750bbf939cb69bcb16c503f535"
+        }
+      }
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 0,
+      "warmup": true,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.700925148,
+            "peer-pake-complete": 0.773198106,
+            "transport-ready": 0.962526516,
+            "file-metadata-ready": 1.147179656
+          },
+          "redacted_log_sha256": "eda4d758a948c9a3ee6d5e8ca365f972ffaa057187f55a01e2db237790e38e57"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.074858362,
+            "peer-pake-complete": 0.20304344800000002,
+            "transport-ready": 0.33377079,
+            "file-metadata-ready": 0.5591480910000001,
+            "recipient-ready": 0.5597929229999999,
+            "first-decrypted-data-byte": 0.602678776
+          },
+          "redacted_log_sha256": "c4bfe01839575074fbb784f4a626729aa518527e9c807524845c8105493849aa"
+        }
+      }
+    },
+    {
+      "size_mib": 4096,
+      "run_index": 0,
+      "warmup": true,
+      "endpoints": {
+        "sender": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.6443473380000001,
+            "peer-pake-complete": 0.6610378480000001,
+            "transport-ready": 0.735100737,
+            "file-metadata-ready": 43.360290218
+          },
+          "redacted_log_sha256": "63573f6807101bc893724945e778d68655909413ba6d6db7947e8f3ae69d4c97"
+        },
+        "receiver": {
+          "milestone_elapsed_seconds": {
+            "process-start": 0.0,
+            "relay-control-ready": 0.065637027,
+            "peer-pake-complete": 0.139523596,
+            "transport-ready": 0.230164993,
+            "file-metadata-ready": 42.797837898,
+            "recipient-ready": 42.798780547,
+            "first-decrypted-data-byte": 42.849872412
+          },
+          "redacted_log_sha256": "3a1cf6e6cb3f0e7fdb340d2e5338e321f71fbb54109508474eefc7b73f536506"
+        }
+      }
+    }
+  ],
+  "summary": [
+    {
+      "size_mib": 1024,
+      "endpoints": {
+        "sender": {
+          "file-metadata-ready": {
+            "mean_seconds": 0.6211484452,
+            "measured_count": 5
+          },
+          "peer-pake-complete": {
+            "mean_seconds": 0.6565467988,
+            "measured_count": 5
+          },
+          "process-start": {
+            "mean_seconds": 0.0,
+            "measured_count": 5
+          },
+          "relay-control-ready": {
+            "mean_seconds": 0.6407791428,
+            "measured_count": 5
+          },
+          "transport-ready": {
+            "mean_seconds": 0.71275537,
+            "measured_count": 5
+          }
+        },
+        "receiver": {
+          "file-metadata-ready": {
+            "mean_seconds": 0.2162131642,
+            "measured_count": 5
+          },
+          "first-decrypted-data-byte": {
+            "mean_seconds": 0.2568107656,
+            "measured_count": 5
+          },
+          "peer-pake-complete": {
+            "mean_seconds": 0.137506983,
+            "measured_count": 5
+          },
+          "process-start": {
+            "mean_seconds": 0.0,
+            "measured_count": 5
+          },
+          "recipient-ready": {
+            "mean_seconds": 0.2167681992,
+            "measured_count": 5
+          },
+          "relay-control-ready": {
+            "mean_seconds": 0.0681967264,
+            "measured_count": 5
+          },
+          "transport-ready": {
+            "mean_seconds": 0.21567995960000003,
+            "measured_count": 5
+          }
+        }
+      }
+    },
+    {
+      "size_mib": 2048,
+      "endpoints": {
+        "sender": {
+          "file-metadata-ready": {
+            "mean_seconds": 1.1016364124,
+            "measured_count": 5
+          },
+          "peer-pake-complete": {
+            "mean_seconds": 0.7495454628,
+            "measured_count": 5
+          },
+          "process-start": {
+            "mean_seconds": 0.0,
+            "measured_count": 5
+          },
+          "relay-control-ready": {
+            "mean_seconds": 0.6934585404,
+            "measured_count": 5
+          },
+          "transport-ready": {
+            "mean_seconds": 0.9102977006,
+            "measured_count": 5
+          }
+        },
+        "receiver": {
+          "file-metadata-ready": {
+            "mean_seconds": 0.6636992388,
+            "measured_count": 5
+          },
+          "first-decrypted-data-byte": {
+            "mean_seconds": 0.7077614852,
+            "measured_count": 5
+          },
+          "peer-pake-complete": {
+            "mean_seconds": 0.346970648,
+            "measured_count": 5
+          },
+          "process-start": {
+            "mean_seconds": 0.0,
+            "measured_count": 5
+          },
+          "recipient-ready": {
+            "mean_seconds": 0.664494166,
+            "measured_count": 5
+          },
+          "relay-control-ready": {
+            "mean_seconds": 0.0782597166,
+            "measured_count": 5
+          },
+          "transport-ready": {
+            "mean_seconds": 0.4637361324,
+            "measured_count": 5
+          }
+        }
+      }
+    },
+    {
+      "size_mib": 4096,
+      "measured_count": 0,
+      "endpoints": {},
+      "note": "Only an unscored warmup was retained."
+    }
+  ]
+}

@@ -1,0 +1,380 @@
+{
+  "sender": [
+    {
+      "observed_at_monotonic": 1320106.330409415,
+      "process": {
+        "pid": 755778,
+        "pgid": 755775,
+        "exe": "/home/ubuntu/rustytransfer-bench/bin/croc-11.5.4",
+        "cwd": "/home/ubuntu/rustytransfer-bench/no-debug-cohort/cohort-48e3408148/2048mib-croc-04-e573650b",
+        "argv_redacted": [
+          "/home/ubuntu/rustytransfer-bench/bin/croc-11.5.4",
+          "--local",
+          "--no-compress",
+          "--disable-clipboard",
+          "--ignore-stdin",
+          "send",
+          "--transport",
+          "auto",
+          "--port",
+          "9009",
+          "--transfers",
+          "4",
+          "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-2048.bin"
+        ],
+        "debug_flags_present": [],
+        "debug_env_present": [],
+        "tcp": [
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 55322,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 9009,
+            "state": "ESTABLISHED",
+            "inode": "4336710"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9010,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "LISTEN",
+            "inode": "4336465"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9011,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "LISTEN",
+            "inode": "4336469"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9009,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "LISTEN",
+            "inode": "4336461"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9012,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "LISTEN",
+            "inode": "4336473"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9013,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "LISTEN",
+            "inode": "4336477"
+          },
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 9009,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 55322,
+            "state": "ESTABLISHED",
+            "inode": "4336711"
+          }
+        ],
+        "udp": [
+          {
+            "local_ip": "0.0.0.0",
+            "local_port": 9999,
+            "remote_ip": "0.0.0.0",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "4336484"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9999,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "4336492"
+          }
+        ]
+      }
+    },
+    {
+      "observed_at_monotonic": 1320107.392760418,
+      "process": {
+        "pid": 755778,
+        "pgid": 755775,
+        "exe": "/home/ubuntu/rustytransfer-bench/bin/croc-11.5.4",
+        "cwd": "/home/ubuntu/rustytransfer-bench/no-debug-cohort/cohort-48e3408148/2048mib-croc-04-e573650b",
+        "argv_redacted": [
+          "/home/ubuntu/rustytransfer-bench/bin/croc-11.5.4",
+          "--local",
+          "--no-compress",
+          "--disable-clipboard",
+          "--ignore-stdin",
+          "send",
+          "--transport",
+          "auto",
+          "--port",
+          "9009",
+          "--transfers",
+          "4",
+          "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-2048.bin"
+        ],
+        "debug_flags_present": [],
+        "debug_env_present": [],
+        "tcp": [
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 47196,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 9010,
+            "state": "ESTABLISHED",
+            "inode": "4336974"
+          },
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 54696,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 9011,
+            "state": "ESTABLISHED",
+            "inode": "4336975"
+          },
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 55322,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 9009,
+            "state": "ESTABLISHED",
+            "inode": "4336710"
+          },
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 38024,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 9012,
+            "state": "ESTABLISHED",
+            "inode": "4336982"
+          },
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 45936,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 9013,
+            "state": "ESTABLISHED",
+            "inode": "4336973"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9010,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "LISTEN",
+            "inode": "4336465"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9011,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "LISTEN",
+            "inode": "4336469"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9009,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "LISTEN",
+            "inode": "4336461"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9012,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "LISTEN",
+            "inode": "4336473"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9013,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "LISTEN",
+            "inode": "4336477"
+          },
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 9013,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 45936,
+            "state": "ESTABLISHED",
+            "inode": "4336999"
+          },
+          {
+            "local_ip": "10.0.0.218",
+            "local_port": 9013,
+            "remote_ip": "46.5.248.165",
+            "remote_port": 57578,
+            "state": "ESTABLISHED",
+            "inode": "4337088"
+          },
+          {
+            "local_ip": "10.0.0.218",
+            "local_port": 9009,
+            "remote_ip": "46.5.248.165",
+            "remote_port": 57576,
+            "state": "ESTABLISHED",
+            "inode": "4336924"
+          },
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 9012,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 38024,
+            "state": "ESTABLISHED",
+            "inode": "4337029"
+          },
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 9009,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 55322,
+            "state": "ESTABLISHED",
+            "inode": "4336711"
+          },
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 9010,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 47196,
+            "state": "ESTABLISHED",
+            "inode": "4336988"
+          },
+          {
+            "local_ip": "10.0.0.218",
+            "local_port": 9010,
+            "remote_ip": "46.5.248.165",
+            "remote_port": 57541,
+            "state": "ESTABLISHED",
+            "inode": "4337039"
+          },
+          {
+            "local_ip": "127.0.0.1",
+            "local_port": 9011,
+            "remote_ip": "127.0.0.1",
+            "remote_port": 54696,
+            "state": "ESTABLISHED",
+            "inode": "4336983"
+          },
+          {
+            "local_ip": "10.0.0.218",
+            "local_port": 9012,
+            "remote_ip": "46.5.248.165",
+            "remote_port": 57543,
+            "state": "ESTABLISHED",
+            "inode": "4337049"
+          },
+          {
+            "local_ip": "10.0.0.218",
+            "local_port": 9011,
+            "remote_ip": "46.5.248.165",
+            "remote_port": 57586,
+            "state": "ESTABLISHED",
+            "inode": "4337057"
+          }
+        ],
+        "udp": [
+          {
+            "local_ip": "0.0.0.0",
+            "local_port": 9999,
+            "remote_ip": "0.0.0.0",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "4336484"
+          },
+          {
+            "local_ip": "::",
+            "local_port": 9999,
+            "remote_ip": "::",
+            "remote_port": 0,
+            "state": "UNCONNECTED",
+            "inode": "4336492"
+          }
+        ]
+      }
+    }
+  ],
+  "receiver": [
+    {
+      "observed_at_monotonic": 1715.481867272,
+      "process": {
+        "pid": 1781,
+        "pgid": 1777,
+        "exe": "/home/wasilij/rustytransfer-bench/tools/croc-11.5.4/croc-x86_64",
+        "cwd": "/home/wasilij/rustytransfer-bench/results/no-debug-final-20261004/trials/2048mib-croc-04-e573650b/out",
+        "argv_redacted": [
+          "/home/wasilij/rustytransfer-bench/tools/croc-11.5.4/croc-x86_64",
+          "--yes",
+          "--overwrite",
+          "--no-compress",
+          "--disable-clipboard",
+          "--ignore-stdin",
+          "--ip",
+          "141.147.1.21:9009",
+          "--out",
+          "/home/wasilij/rustytransfer-bench/results/no-debug-final-20261004/trials/2048mib-croc-04-e573650b/out"
+        ],
+        "debug_flags_present": [],
+        "debug_env_present": [],
+        "tcp": [
+          {
+            "local_ip": "172.28.150.231",
+            "local_port": 32984,
+            "remote_ip": "141.147.1.21",
+            "remote_port": 9010,
+            "state": "ESTABLISHED",
+            "inode": "56753"
+          },
+          {
+            "local_ip": "172.28.150.231",
+            "local_port": 55914,
+            "remote_ip": "141.147.1.21",
+            "remote_port": 9012,
+            "state": "ESTABLISHED",
+            "inode": "47672"
+          },
+          {
+            "local_ip": "172.28.150.231",
+            "local_port": 45156,
+            "remote_ip": "141.147.1.21",
+            "remote_port": 9013,
+            "state": "ESTABLISHED",
+            "inode": "41822"
+          },
+          {
+            "local_ip": "172.28.150.231",
+            "local_port": 56394,
+            "remote_ip": "141.147.1.21",
+            "remote_port": 9009,
+            "state": "ESTABLISHED",
+            "inode": "59503"
+          },
+          {
+            "local_ip": "172.28.150.231",
+            "local_port": 42850,
+            "remote_ip": "141.147.1.21",
+            "remote_port": 9011,
+            "state": "ESTABLISHED",
+            "inode": "59504"
+          }
+        ],
+        "udp": []
+      }
+    }
+  ]
+}

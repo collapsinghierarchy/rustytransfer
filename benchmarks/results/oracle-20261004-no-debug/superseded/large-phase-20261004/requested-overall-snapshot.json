@@ -1,0 +1,63 @@
+{
+  "retained_at_utc": "2026-10-04T13:22:26.461318+00:00",
+  "authorization": "User explicitly requested overall runtimes and throughputs of both during the phase-only investigation.",
+  "aggregation": "Arithmetic means of per-run full wall seconds and per-run full MiB/s; averages are separate and not reciprocal.",
+  "snapshot": [
+    {
+      "size_mib": 1024,
+      "tool": "iroh",
+      "measured_runs": 5,
+      "complete_cohort": true,
+      "mean_wall_seconds": 36.43322942540006,
+      "mean_full_mib_per_second": 28.122091250484527,
+      "run_indices": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "size_mib": 1024,
+      "tool": "croc",
+      "measured_runs": 5,
+      "complete_cohort": true,
+      "mean_wall_seconds": 36.93122064559996,
+      "mean_full_mib_per_second": 27.9049328431381,
+      "run_indices": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "size_mib": 2048,
+      "tool": "iroh",
+      "measured_runs": 3,
+      "complete_cohort": false,
+      "mean_wall_seconds": 69.83561215533344,
+      "mean_full_mib_per_second": 29.330559784226732,
+      "run_indices": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "size_mib": 2048,
+      "tool": "croc",
+      "measured_runs": 3,
+      "complete_cohort": false,
+      "mean_wall_seconds": 79.31259980266653,
+      "mean_full_mib_per_second": 25.82832472393553,
+      "run_indices": [
+        1,
+        2,
+        3
+      ]
+    }
+  ]
+}

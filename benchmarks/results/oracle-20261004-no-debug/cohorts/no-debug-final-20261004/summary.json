@@ -1,0 +1,62 @@
+[
+  {
+    "transport": "croc",
+    "size_bytes": 1073741824,
+    "measured_runs": 5,
+    "arithmetic_mean_mib_per_second": 29.343440978523493,
+    "median_mib_per_second": 29.396744091787042,
+    "min_mib_per_second": 29.138194220546488,
+    "max_mib_per_second": 29.485700681314743,
+    "mad_mib_per_second": 0.08895658952770091
+  },
+  {
+    "transport": "croc",
+    "size_bytes": 2147483648,
+    "measured_runs": 5,
+    "arithmetic_mean_mib_per_second": 30.06224010401048,
+    "median_mib_per_second": 30.061925479326675,
+    "min_mib_per_second": 30.03870133888781,
+    "max_mib_per_second": 30.076791430917634,
+    "mad_mib_per_second": 0.013273110284277578
+  },
+  {
+    "transport": "croc",
+    "size_bytes": 4294967296,
+    "measured_runs": 5,
+    "arithmetic_mean_mib_per_second": 23.115571340288724,
+    "median_mib_per_second": 23.304011730431107,
+    "min_mib_per_second": 22.22799184397355,
+    "max_mib_per_second": 23.660817869388595,
+    "mad_mib_per_second": 0.3496972455823659
+  },
+  {
+    "transport": "rustytransfer",
+    "size_bytes": 1073741824,
+    "measured_runs": 5,
+    "arithmetic_mean_mib_per_second": 27.337654481416518,
+    "median_mib_per_second": 27.635409356826273,
+    "min_mib_per_second": 25.157260479738817,
+    "max_mib_per_second": 28.35316885372596,
+    "mad_mib_per_second": 0.38462205034264585
+  },
+  {
+    "transport": "rustytransfer",
+    "size_bytes": 2147483648,
+    "measured_runs": 5,
+    "arithmetic_mean_mib_per_second": 28.462839113018283,
+    "median_mib_per_second": 28.4427816889079,
+    "min_mib_per_second": 27.640102657375426,
+    "max_mib_per_second": 29.2748628094834,
+    "mad_mib_per_second": 0.6328695331688579
+  },
+  {
+    "transport": "rustytransfer",
+    "size_bytes": 4294967296,
+    "measured_runs": 5,
+    "arithmetic_mean_mib_per_second": 30.1442717177337,
+    "median_mib_per_second": 30.120664214086876,
+    "min_mib_per_second": 29.966975077799887,
+    "max_mib_per_second": 30.29155627014458,
+    "mad_mib_per_second": 0.15368913628698877
+  }
+]

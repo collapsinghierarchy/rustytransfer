@@ -1,0 +1,330 @@
+{
+  "source": "Existing normal progress output from official Croc; no debug/profile flags.",
+  "limitation": "Coarse rounded display elapsed values, potentially stale before final completion. Not exact phase boundaries, additive phases, or clean application timing instrumentation.",
+  "observations": [
+    {
+      "size_mib": 1024,
+      "run_index": 1,
+      "warmup": false,
+      "full_wall_seconds": 35.142877841000086,
+      "sender_process_seconds": 34.66,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 0.0,
+          "text": "Hashing input-102...   0% |                    | ( 0 B/1.1 GB) [0s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 32.0,
+          "text": "input-102...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (1.1/1.1 GB, 32 MB/s) [32s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "ec47b5328ddb38f4b91802b1872788dd2ea9401a5c43b748f1123a3ee4526c7e"
+    },
+    {
+      "size_mib": 1024,
+      "run_index": 2,
+      "warmup": false,
+      "full_wall_seconds": 34.728698194,
+      "sender_process_seconds": 34.27,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 0.0,
+          "text": "Hashing input-102...   0% |                    | ( 0 B/1.1 GB) [0s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 31.0,
+          "text": "input-102...  97% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (1.0/1.1 GB, 32 MB/s) [31s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "f5f75e1b6a9180d76f5b64c5806269d510ab900a1ed98247750b5c47f03f683a"
+    },
+    {
+      "size_mib": 1024,
+      "run_index": 3,
+      "warmup": false,
+      "full_wall_seconds": 35.02815654300002,
+      "sender_process_seconds": 34.53,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 0.0,
+          "text": "Hashing input-102...   0% |                    | ( 0 B/1.1 GB) [0s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 31.0,
+          "text": "input-102...  98% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (1.1/1.1 GB, 33 MB/s) [31s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "ace18aba304ff253710bfd6dc3a501aa0fbf70a153f03ff1ad4b80fe74f5a1a7"
+    },
+    {
+      "size_mib": 1024,
+      "run_index": 4,
+      "warmup": false,
+      "full_wall_seconds": 34.833789647,
+      "sender_process_seconds": 34.35,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 0.0,
+          "text": "Hashing input-102...   0% |                    | ( 0 B/1.1 GB) [0s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 31.0,
+          "text": "input-102...  97% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (1.0/1.1 GB, 32 MB/s) [31s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "a8f62c8d9eaf0420f0b580ed71e92dd66d01f545e9442bb5fcb6bc6feab1e8ea"
+    },
+    {
+      "size_mib": 1024,
+      "run_index": 5,
+      "warmup": false,
+      "full_wall_seconds": 34.75552595499994,
+      "sender_process_seconds": 34.28,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 0.0,
+          "text": "Hashing input-102...   0% |                    | ( 0 B/1.1 GB) [0s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 31.0,
+          "text": "input-102...  97% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (1.0/1.1 GB, 33 MB/s) [31s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "7f1ce23d91cc0db169a2dc2c301ec1bfc80ff992301e21dc7f09966601856060"
+    },
+    {
+      "size_mib": 1024,
+      "run_index": 0,
+      "warmup": true,
+      "full_wall_seconds": 43.15527117600004,
+      "sender_process_seconds": 42.58,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 8.0,
+          "text": "Hashing input-102...  74% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588      | (800 MB/1.1 GB, 52 MB/s) [8s:5s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 32.0,
+          "text": "input-102...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (1.1/1.1 GB, 33 MB/s) [32s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "1e32b8d81138f3d030c23b8e9dd95dff97e42d3788fff2a37e0237d3a27de1d6"
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 1,
+      "warmup": false,
+      "full_wall_seconds": 68.13361606499984,
+      "sender_process_seconds": 67.68,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 1.0,
+          "text": "Hashing input-204...  78% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588     | (1.7/2.1 GB, 1.7 GB/s) [1s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 64.0,
+          "text": "input-204...  98% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (2.1/2.1 GB, 33 MB/s) [1m4s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "b3f2e41750da1b4dc055a518971bb182f13c0022353b070fd09d40eb8f12d06b"
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 2,
+      "warmup": false,
+      "full_wall_seconds": 68.17871308400004,
+      "sender_process_seconds": 67.7,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 1.0,
+          "text": "Hashing input-204...  77% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588     | (1.7/2.1 GB, 1.6 GB/s) [1s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 64.0,
+          "text": "input-204...  98% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (2.1/2.1 GB, 32 MB/s) [1m4s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "23dad5ba5b0e563d98cf926dd32945580884279c64cf2b4d69d15ddd8914fee2"
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 3,
+      "warmup": false,
+      "full_wall_seconds": 68.12604207300001,
+      "sender_process_seconds": 67.66,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 1.0,
+          "text": "Hashing input-204...  76% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588     | (1.6/2.1 GB, 1.6 GB/s) [1s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 64.0,
+          "text": "input-204...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (2.1/2.1 GB, 33 MB/s) [1m4s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "dc8d54ede41bc1afb7588555a34bbeb2ad9d8c2064ac9c3ea06a03e1c761c6b3"
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 4,
+      "warmup": false,
+      "full_wall_seconds": 68.09597595500009,
+      "sender_process_seconds": 67.64,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 1.0,
+          "text": "Hashing input-204...  76% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588     | (1.7/2.1 GB, 1.6 GB/s) [1s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 64.0,
+          "text": "input-204...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (2.1/2.1 GB, 33 MB/s) [1m4s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "6f4dde56a8a3f11180b302d4f7204388e212e0ca9508999dc66e19d02138df87"
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 5,
+      "warmup": false,
+      "full_wall_seconds": 68.09236965000014,
+      "sender_process_seconds": 67.63,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 1.0,
+          "text": "Hashing input-204...  75% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588     | (1.6/2.1 GB, 1.6 GB/s) [1s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 64.0,
+          "text": "input-204...  98% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (2.1/2.1 GB, 32 MB/s) [1m4s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "c3367749189f43b613be721266b9abcfd8d7f0157eefe233d92c5ea6a71050d3"
+    },
+    {
+      "size_mib": 2048,
+      "run_index": 0,
+      "warmup": true,
+      "full_wall_seconds": 68.19732293099992,
+      "sender_process_seconds": 67.7,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 1.0,
+          "text": "Hashing input-204...  76% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588     | (1.6/2.1 GB, 1.6 GB/s) [1s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 64.0,
+          "text": "input-204...  98% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (2.1/2.1 GB, 33 MB/s) [1m4s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "47cc3023ff88aa4ea1f21cc2d54449b294525248951c7d5e7d54751ddeca279e"
+    },
+    {
+      "size_mib": 4096,
+      "run_index": 1,
+      "warmup": false,
+      "full_wall_seconds": 178.4413994460001,
+      "sender_process_seconds": 177.94,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 44.0,
+          "text": "Hashing input-409...  89% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | (3.8/4.3 GB, 161 MB/s) [44s:2s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 131.0,
+          "text": "input-409...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (4.3/4.3 GB, 33 MB/s) [2m11s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "9cd105476732ddd16c2dfd5152d6444e7416f9a9390e71d686e00d4b3d3f8028"
+    },
+    {
+      "size_mib": 4096,
+      "run_index": 2,
+      "warmup": false,
+      "full_wall_seconds": 174.81323087400006,
+      "sender_process_seconds": 174.33,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 41.0,
+          "text": "Hashing input-409...  98% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (4.2/4.3 GB, 51 MB/s) [41s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 130.0,
+          "text": "input-409...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (4.3/4.3 GB, 33 MB/s) [2m10s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "bef869b6033afce6523d1f4144a1fe08422c8abd5a04901b08c85c75217022a7"
+    },
+    {
+      "size_mib": 4096,
+      "run_index": 3,
+      "warmup": false,
+      "full_wall_seconds": 175.76372889699996,
+      "sender_process_seconds": 175.27,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 42.0,
+          "text": "Hashing input-409...  98% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (4.2/4.3 GB, 52 MB/s) [42s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 130.0,
+          "text": "input-409...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (4.3/4.3 GB, 32 MB/s) [2m10s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "2a8ac4108503f818e171d3271c5d9f30786e21aa57219a590997f3597ab931b6"
+    },
+    {
+      "size_mib": 4096,
+      "run_index": 4,
+      "warmup": false,
+      "full_wall_seconds": 184.27215687099988,
+      "sender_process_seconds": 183.78,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 51.0,
+          "text": "Hashing input-409...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (4.3/4.3 GB, 51 MB/s) [51s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 130.0,
+          "text": "input-409...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (4.3/4.3 GB, 33 MB/s) [2m10s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "7971505dfb7e014a613a6e7d1395d9e45854b7c5eb0679233adf998148696dcf"
+    },
+    {
+      "size_mib": 4096,
+      "run_index": 5,
+      "warmup": false,
+      "full_wall_seconds": 173.11320439600013,
+      "sender_process_seconds": 172.64,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 39.0,
+          "text": "Hashing input-409...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (4.3/4.3 GB, 102 MB/s) [39s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 131.0,
+          "text": "input-409...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (4.3/4.3 GB, 33 MB/s) [2m11s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "4628ce4ed2212236c403447dbcefa8c7c56ba02a61599a2f4dd4e4e82a91b307"
+    },
+    {
+      "size_mib": 4096,
+      "run_index": 0,
+      "warmup": true,
+      "full_wall_seconds": 177.76962188299967,
+      "sender_process_seconds": 177.26,
+      "progress_elapsed_hints": {
+        "source_hash": {
+          "displayed_elapsed_seconds": 44.0,
+          "text": "Hashing input-409...  98% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (4.2/4.3 GB, 94 MB/s) [44s:0s]"
+        },
+        "data_transfer": {
+          "displayed_elapsed_seconds": 130.0,
+          "text": "input-409...  99% |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | (4.3/4.3 GB, 32 MB/s) [2m10s:0s]"
+        }
+      },
+      "redacted_sender_log_sha256": "b5f1f48ea290df8b1927e94f3ba722af3b57ad445e38933c121a785c04afdffc"
+    }
+  ]
+}

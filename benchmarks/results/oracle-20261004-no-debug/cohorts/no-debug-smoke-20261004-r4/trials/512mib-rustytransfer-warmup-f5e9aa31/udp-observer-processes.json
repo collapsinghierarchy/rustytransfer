@@ -1,0 +1,30 @@
+[
+  {
+    "role": "receiver",
+    "sample_index": 0,
+    "status": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/home/wasilij/rustytransfer-bench/tools/no-debug-20261004/clean-endpoint-observer.py\", line 204, in <module>\n    main()\n    ~~~~^^\n  File \"/home/wasilij/rustytransfer-bench/tools/no-debug-20261004/clean-endpoint-observer.py\", line 200, in main\n    {'launch':launch,'snapshot':snapshot,'capture-udp':capture_udp}[args.mode](args)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/home/wasilij/rustytransfer-bench/tools/no-debug-20261004/clean-endpoint-observer.py\", line 171, in capture_udp\n    assert valid and header['ip_bytes']>=1000, header\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'source_ip': '172.28.150.231', 'destination_ip': '141.147.1.21', 'source_port': 56646, 'destination_port': 49299, 'ip_bytes': 64, 'udp_bytes': 44}\n"
+  },
+  {
+    "role": "receiver",
+    "sample_index": 1,
+    "status": 0,
+    "stdout": "{\"kind\": \"external-sampled-direct-ipv4-udp\", \"peer\": \"141.147.1.21\", \"local_port\": 56646, \"requested_packets\": 2, \"observed_packets\": 2, \"complete\": true, \"observer_seconds\": 0.02595206700000574, \"limitation\": \"Header samples identify actual peer UDP bulk traffic at observation times; they do not decrypt QUIC STREAM frames or establish continuous route coverage.\"}\n",
+    "stderr": ""
+  },
+  {
+    "role": "sender",
+    "sample_index": 0,
+    "status": 0,
+    "stdout": "{\"kind\": \"external-sampled-direct-ipv4-udp\", \"peer\": \"46.5.248.165\", \"local_port\": 49299, \"requested_packets\": 2, \"observed_packets\": 2, \"complete\": true, \"observer_seconds\": 0.0008511249907314777, \"limitation\": \"Header samples identify actual peer UDP bulk traffic at observation times; they do not decrypt QUIC STREAM frames or establish continuous route coverage.\"}\n",
+    "stderr": ""
+  },
+  {
+    "role": "sender",
+    "sample_index": 1,
+    "status": 0,
+    "stdout": "{\"kind\": \"external-sampled-direct-ipv4-udp\", \"peer\": \"46.5.248.165\", \"local_port\": 49299, \"requested_packets\": 2, \"observed_packets\": 2, \"complete\": true, \"observer_seconds\": 0.0017918921075761318, \"limitation\": \"Header samples identify actual peer UDP bulk traffic at observation times; they do not decrypt QUIC STREAM frames or establish continuous route coverage.\"}\n",
+    "stderr": ""
+  }
+]

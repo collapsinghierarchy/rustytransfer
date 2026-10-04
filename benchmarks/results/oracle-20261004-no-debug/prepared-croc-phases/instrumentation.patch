@@ -1,0 +1,393 @@
+diff --git a/src/croc/chunk_queue.go b/src/croc/chunk_queue.go
+index 0e876b1..128a515 100644
+--- a/src/croc/chunk_queue.go
++++ b/src/croc/chunk_queue.go
+@@ -4,6 +4,7 @@ import (
+ 	"errors"
+ 	"os"
+ 	"sync"
++	"time"
+ 
+ 	"github.com/schollz/croc/v11/src/comm"
+ 	log "github.com/schollz/croc/v11/src/logger"
+@@ -76,8 +77,16 @@ func (c *Client) startSenderChunkQueue(attempt *transferAttemptState, file *os.F
+ 		c.FilesToTransfer[c.FilesToTransferCurrentNum].Size,
+ 		models.TCP_BUFFER_SIZE/2,
+ 		func() {
++			c.benchPhases.endPayload()
+ 			log.Debug("closing file")
+-			if err := file.Close(); err != nil && !errors.Is(err, os.ErrClosed) {
++			if c.benchPhases != nil {
++				closeStarted := time.Now()
++				err := file.Close()
++				c.benchPhases.recordFileClose(closeStarted)
++				if err != nil && !errors.Is(err, os.ErrClosed) {
++					log.Errorf("error closing file: %v", err)
++				}
++			} else if err := file.Close(); err != nil && !errors.Is(err, os.ErrClosed) {
+ 				log.Errorf("error closing file: %v", err)
+ 			}
+ 		},
+diff --git a/src/croc/croc.go b/src/croc/croc.go
+index b1c5b70..fdc91a7 100644
+--- a/src/croc/croc.go
++++ b/src/croc/croc.go
+@@ -191,6 +191,7 @@ type Client struct {
+ 	Key                             []byte
+ 	ExternalIP, ExternalIPConnected string
+ 	startup                         startupTiming
++	benchPhases                     *benchmarkPhaseProfile
+ 
+ 	// steps involved in forming relationship
+ 	lifecycleMu               sync.RWMutex
+@@ -1779,6 +1780,10 @@ func (c *Client) receiverReconnectRelayAttempt(attempt int) error {
+ // Send will send the specified file
+ func (c *Client) Send(filesInfo []FileInfo, emptyFoldersToTransfer []FileInfo, totalNumberFolders int) (err error) {
+ 	defer func() { err = c.redactError(err) }()
++	c.benchPhases = newBenchmarkPhaseProfile("sender")
++	if c.benchPhases != nil {
++		defer c.benchPhases.emit()
++	}
+ 	go c.stop.done()
+ 	defer c.stop.Cancel()
+ 	defer c.closeTailcatBundle()
+@@ -1789,9 +1794,11 @@ func (c *Client) Send(filesInfo []FileInfo, emptyFoldersToTransfer []FileInfo, t
+ 	c.tailcat.transferBytes.Store(totalLogicalTransferSize(filesInfo))
+ 	c.startTailcatPreparation()
+ 	hashResult := make(chan error, 1)
++	c.benchPhases.startPreparation()
+ 	go func() {
+ 		prepareErr := c.sendCollectFiles(filesInfo)
+ 		c.finishFilePreparation(prepareErr)
++		c.benchPhases.endPreparation()
+ 		hashResult <- prepareErr
+ 	}()
+ 	flags := &strings.Builder{}
+@@ -2007,6 +2014,10 @@ func (c *Client) discoverReceivePeers() (discoveries []peerdiscovery.Discovered)
+ // Receive will receive a file
+ func (c *Client) Receive() (err error) {
+ 	defer func() { err = c.redactError(err) }()
++	c.benchPhases = newBenchmarkPhaseProfile("receiver")
++	if c.benchPhases != nil {
++		defer c.benchPhases.emit()
++	}
+ 	go c.stop.done()
+ 	defer c.stop.Cancel()
+ 	defer c.closeTailcatBundle()
+@@ -3195,6 +3206,7 @@ func (c *Client) recipientInitializeFile() (err error) {
+ 
+ func (c *Client) recipientGetFileReady(finished bool) (err error) {
+ 	if finished {
++		c.benchPhases.endPayload()
+ 		// TODO: do the last finishing stuff
+ 		log.Debug("finished")
+ 		err = message.Send(c.connection(0), c.Key, message.Message{
+@@ -3610,6 +3622,7 @@ func (c *Client) receiveData(i int, dataConn *comm.Comm, attempt *transferAttemp
+ 	log.Tracef("%d receiving data", i)
+ 	var receiveBuffer []byte
+ 	var decompressedBuffer []byte
++	payloadStarted := false
+ 	for {
+ 		data, err := dataConn.ReceiveInto(receiveBuffer)
+ 		if err != nil {
+@@ -3630,6 +3643,10 @@ func (c *Client) receiveData(i int, dataConn *comm.Comm, attempt *transferAttemp
+ 			log.Trace("got ping")
+ 			continue
+ 		}
++		if !payloadStarted {
++			c.benchPhases.startPayload()
++			payloadStarted = true
++		}
+ 
+ 		if c.dataAEAD == nil {
+ 			attempt.report(fmt.Errorf("data cipher is not initialized"))
+@@ -3715,7 +3732,14 @@ func (c *Client) receiveData(i int, dataConn *comm.Comm, attempt *transferAttemp
+ 		c.addProgress(int64(len(data[8:])))
+ 		if finished {
+ 			log.Debug("finished receiving!")
+-			if err = receiveFile.Close(); err != nil {
++			if c.benchPhases != nil {
++				closeStarted := time.Now()
++				err = receiveFile.Close()
++				c.benchPhases.recordFileClose(closeStarted)
++			} else {
++				err = receiveFile.Close()
++			}
++			if err != nil {
+ 				log.Debugf("error closing %s: %v", receiveFile.Name(), err)
+ 			} else {
+ 				log.Debugf("Successful closing %s", receiveFile.Name())
+@@ -3788,6 +3812,7 @@ func (c *Client) sendData(i int, dataConn *comm.Comm, fread *os.File, queue *req
+ 
+ 	chunkSize := int64(models.TCP_BUFFER_SIZE / 2)
+ 	payload := make([]byte, 8+chunkSize)
++	payloadStarted := false
+ 	var encryptedBuffer []byte
+ 	var compressedBuffer []byte
+ 	for {
+@@ -3799,6 +3824,10 @@ func (c *Client) sendData(i int, dataConn *comm.Comm, fread *os.File, queue *req
+ 		if !ok {
+ 			return
+ 		}
++		if !payloadStarted {
++			c.benchPhases.startPayload()
++			payloadStarted = true
++		}
+ 
+ 		n, errRead := fread.ReadAt(payload[8:], readingPos)
+ 		if n == 0 {
+diff --git a/src/croc/benchmark_phases.go b/src/croc/benchmark_phases.go
+new file mode 100644
+index 0000000..e48ee12
+--- /dev/null
++++ b/src/croc/benchmark_phases.go
+@@ -0,0 +1,150 @@
++package croc
++
++import (
++	"encoding/json"
++	"fmt"
++	"os"
++	"sync"
++	"time"
++)
++
++const benchmarkPhaseProfileEnv = "CROC_BENCH_PHASE_PROFILE"
++
++type benchmarkPhaseProfile struct {
++	mu sync.Mutex
++
++	role             string
++	started          time.Time
++	payloadAt        time.Time
++	payloadEnd       time.Time
++	prepStart        time.Time
++	prepEnd          time.Time
++	fileCloseSeconds float64
++}
++
++type benchmarkPhaseRecord struct {
++	SchemaVersion          int     `json:"schema_version"`
++	Role                   string  `json:"role"`
++	TotalSeconds           float64 `json:"total_seconds"`
++	SetupSeconds           float64 `json:"setup_seconds"`
++	PayloadSeconds         float64 `json:"payload_seconds"`
++	PayloadStartObserved   bool    `json:"payload_start_observed"`
++	PayloadEndObserved     bool    `json:"payload_end_observed"`
++	PreparationEndObserved bool    `json:"preparation_end_observed"`
++	CompletionSeconds      float64 `json:"completion_seconds"`
++	PreparationSeconds     float64 `json:"preparation_seconds"`
++	FileCloseSeconds       float64 `json:"file_close_seconds,omitempty"`
++	SetupBoundary          string  `json:"setup_boundary"`
++	PayloadEndBoundary     string  `json:"payload_end_boundary"`
++	PreparationOverlaps    bool    `json:"preparation_may_overlap_transfer"`
++}
++
++// newBenchmarkPhaseProfile is deliberately opt-in. When disabled, callers keep
++// a nil pointer, so profile methods do no timestamp, mutex, or JSON work. The
++// sender/receiver loops still check their local first-payload booleans.
++func newBenchmarkPhaseProfile(role string) *benchmarkPhaseProfile {
++	if os.Getenv(benchmarkPhaseProfileEnv) != "1" {
++		return nil
++	}
++	return &benchmarkPhaseProfile{role: role, started: time.Now()}
++}
++
++func (p *benchmarkPhaseProfile) startPayload() {
++	if p == nil {
++		return
++	}
++	p.mu.Lock()
++	if p.payloadAt.IsZero() {
++		p.payloadAt = time.Now()
++	}
++	p.mu.Unlock()
++}
++
++// endPayload records the most recent data-queue completion. Sender queues are
++// per-file, so the final value is the last completed file's final Send return.
++func (p *benchmarkPhaseProfile) endPayload() {
++	if p == nil {
++		return
++	}
++	p.mu.Lock()
++	if !p.payloadAt.IsZero() {
++		p.payloadEnd = time.Now()
++	}
++	p.mu.Unlock()
++}
++
++func (p *benchmarkPhaseProfile) startPreparation() {
++	if p == nil {
++		return
++	}
++	p.mu.Lock()
++	if p.prepStart.IsZero() {
++		p.prepStart = time.Now()
++	}
++	p.mu.Unlock()
++}
++
++func (p *benchmarkPhaseProfile) endPreparation() {
++	if p == nil {
++		return
++	}
++	p.mu.Lock()
++	if !p.prepStart.IsZero() && p.prepEnd.IsZero() {
++		p.prepEnd = time.Now()
++	}
++	p.mu.Unlock()
++}
++
++func (p *benchmarkPhaseProfile) recordFileClose(start time.Time) {
++	if p == nil || start.IsZero() {
++		return
++	}
++	p.mu.Lock()
++	p.fileCloseSeconds += time.Since(start).Seconds()
++	p.mu.Unlock()
++}
++
++func (p *benchmarkPhaseProfile) emit() {
++	if p == nil {
++		return
++	}
++	p.mu.Lock()
++	finished := time.Now()
++	started, payloadAt, payloadEnd := p.started, p.payloadAt, p.payloadEnd
++	prepStart, prepEnd, role := p.prepStart, p.prepEnd, p.role
++	payloadStartObserved, payloadEndObserved := !payloadAt.IsZero(), !payloadEnd.IsZero()
++	preparationEndObserved := !prepEnd.IsZero()
++	fileCloseSeconds := p.fileCloseSeconds
++	p.mu.Unlock()
++
++	if payloadAt.IsZero() {
++		payloadAt = finished
++	}
++	if payloadEnd.IsZero() || payloadEnd.Before(payloadAt) {
++		payloadEnd = finished
++	}
++	record := benchmarkPhaseRecord{
++		SchemaVersion:          1,
++		Role:                   role,
++		TotalSeconds:           finished.Sub(started).Seconds(),
++		SetupSeconds:           payloadAt.Sub(started).Seconds(),
++		PayloadSeconds:         payloadEnd.Sub(payloadAt).Seconds(),
++		PayloadStartObserved:   payloadStartObserved,
++		PayloadEndObserved:     payloadEndObserved,
++		PreparationEndObserved: preparationEndObserved,
++		CompletionSeconds:      finished.Sub(payloadEnd).Seconds(),
++		SetupBoundary:          "sender first chunk claim; receiver first non-ping data frame",
++		PayloadEndBoundary:     "sender final per-file chunk-queue Send return; receiver all-files-ready after final file close/checks",
++		PreparationOverlaps:    role == "sender",
++		FileCloseSeconds:       fileCloseSeconds,
++	}
++	if !prepStart.IsZero() && !prepEnd.IsZero() {
++		record.PreparationSeconds = prepEnd.Sub(prepStart).Seconds()
++	}
++	encoded, err := json.Marshal(record)
++	if err != nil {
++		fmt.Fprintf(os.Stderr, "CROC_BENCH_PHASE_PROFILE_ERROR: %v\n", err)
++		return
++	}
++	fmt.Fprintf(os.Stderr, "CROC_BENCH_PHASE_PROFILE %s\n", encoded)
++}
+diff --git a/src/croc/benchmark_phases_test.go b/src/croc/benchmark_phases_test.go
+new file mode 100644
+index 0000000..872bd59
+--- /dev/null
++++ b/src/croc/benchmark_phases_test.go
+@@ -0,0 +1,93 @@
++package croc
++
++import (
++	"encoding/json"
++	"io"
++	"os"
++	"strings"
++	"sync"
++	"testing"
++)
++
++func captureBenchmarkPhaseRecord(t *testing.T, profile *benchmarkPhaseProfile) benchmarkPhaseRecord {
++	t.Helper()
++	reader, writer, err := os.Pipe()
++	if err != nil {
++		t.Fatal(err)
++	}
++	oldStderr := os.Stderr
++	os.Stderr = writer
++	profile.emit()
++	if err := writer.Close(); err != nil {
++		os.Stderr = oldStderr
++		t.Fatal(err)
++	}
++	os.Stderr = oldStderr
++	raw, err := io.ReadAll(reader)
++	if err != nil {
++		t.Fatal(err)
++	}
++	const prefix = "CROC_BENCH_PHASE_PROFILE "
++	line := strings.TrimSpace(string(raw))
++	if !strings.HasPrefix(line, prefix) {
++		t.Fatalf("unexpected marker: %q", line)
++	}
++	var record benchmarkPhaseRecord
++	if err := json.Unmarshal([]byte(strings.TrimPrefix(line, prefix)), &record); err != nil {
++		t.Fatal(err)
++	}
++	return record
++}
++
++func TestBenchmarkPhaseProfileOptInDurationsAndConcurrentEnd(t *testing.T) {
++	t.Setenv(benchmarkPhaseProfileEnv, "0")
++	if got := newBenchmarkPhaseProfile("sender"); got != nil {
++		t.Fatal("profile should be disabled unless explicitly enabled")
++	}
++
++	t.Setenv(benchmarkPhaseProfileEnv, "1")
++	profile := newBenchmarkPhaseProfile("sender")
++	if profile == nil {
++		t.Fatal("profile should be enabled")
++	}
++	profile.startPreparation()
++	profile.startPayload()
++	profile.endPreparation()
++	profile.recordFileClose(profile.started)
++
++	var end sync.WaitGroup
++	end.Add(1)
++	go func() {
++		defer end.Done()
++		profile.endPayload()
++	}()
++	record := captureBenchmarkPhaseRecord(t, profile)
++	end.Wait()
++
++	if record.SchemaVersion != 1 || record.Role != "sender" {
++		t.Fatalf("unexpected profile identity: %+v", record)
++	}
++	if !record.PayloadStartObserved || !record.PreparationEndObserved {
++		t.Fatalf("expected observed start/preparation boundaries: %+v", record)
++	}
++	if record.TotalSeconds < 0 || record.SetupSeconds < 0 || record.PayloadSeconds < 0 || record.CompletionSeconds < 0 {
++		t.Fatalf("negative duration: %+v", record)
++	}
++	if record.SetupSeconds+record.PayloadSeconds+record.CompletionSeconds > record.TotalSeconds+1e-9 {
++		t.Fatalf("non-overlapping phases exceed total: %+v", record)
++	}
++	if record.PreparationSeconds < 0 || record.FileCloseSeconds < 0 {
++		t.Fatalf("negative subspan: %+v", record)
++	}
++}
++
++func TestBenchmarkPhaseProfileMarksUnobservedBoundaries(t *testing.T) {
++	t.Setenv(benchmarkPhaseProfileEnv, "1")
++	record := captureBenchmarkPhaseRecord(t, newBenchmarkPhaseProfile("receiver"))
++	if record.PayloadStartObserved || record.PayloadEndObserved || record.PreparationEndObserved {
++		t.Fatalf("empty operation reported an observed boundary: %+v", record)
++	}
++	if record.SetupSeconds < 0 || record.PayloadSeconds != 0 || record.CompletionSeconds != 0 {
++		t.Fatalf("unexpected fallback durations for unobserved payload: %+v", record)
++	}
++}

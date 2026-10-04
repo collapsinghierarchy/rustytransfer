@@ -1,0 +1,26 @@
+{
+  "1024": {
+    "size_mib": 1024,
+    "size_bytes": 1073741824,
+    "sha256": "d37dfb4cb391e50e142f164f25a5d9b87b01b1c811d714f985c73aae53ac80c5",
+    "local_path": "/home/wasilij/rustytransfer-bench/input-1024.bin",
+    "remote_path": "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-1024.bin",
+    "caller_owned_pre_staged_input": true
+  },
+  "2048": {
+    "size_mib": 2048,
+    "size_bytes": 2147483648,
+    "sha256": "fd23e40748d31513a8d01ee79911e637d22bd39d02da98d47471c24f804fad28",
+    "local_path": "/home/wasilij/rustytransfer-bench/input-2048.bin",
+    "remote_path": "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-2048.bin",
+    "caller_owned_pre_staged_input": true
+  },
+  "4096": {
+    "size_mib": 4096,
+    "size_bytes": 4294967296,
+    "sha256": "4bfffb60c90afb2e7b945bb974d1f5bfc16557723fc1199e55adb7e01f1fc413",
+    "local_path": "/home/wasilij/rustytransfer-bench/input-4096.bin",
+    "remote_path": "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-4096.bin",
+    "caller_owned_pre_staged_input": true
+  }
+}

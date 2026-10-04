@@ -1,0 +1,21 @@
+{
+  "prepared_at_utc": "2026-10-04T12:52:28.705178+00:00",
+  "sizes_mib": [
+    1024,
+    2048,
+    4096
+  ],
+  "runner_sha256": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e",
+  "helper_sha256": "7b77781718c864a5ea23fa6bf18872fc982aaa7e5b585c22751003abdc0851b1",
+  "common_helper_sha256": "a44b8c5c48c1247073f7abe3b443dab30cb6a31482674cd2129ad00f626c74a8",
+  "firewall_helper_sha256": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2",
+  "runs_per_size_candidate": 5,
+  "warmups_per_size_candidate": 1,
+  "direction": "oracle-to-wsl",
+  "completion_profile_enabled": false,
+  "explicit_connection_close": false,
+  "local_endpoint_working_directory": "/home/wasilij/rustytransfer-bench",
+  "comparison_policy": "Rustytransfer phases individually versus stock Croc full arithmetic mean; no overall Rustytransfer/Croc rate comparison.",
+  "firewall_lease_scope": "One Croc transfer per lease, 1200 s maximum; each restores exact original INPUT.",
+  "run_started_at_utc": "2026-10-04T12:55:06.725770+00:00"
+}

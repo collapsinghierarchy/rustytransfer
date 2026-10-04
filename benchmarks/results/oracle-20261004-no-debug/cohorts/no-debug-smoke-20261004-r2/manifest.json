@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "measurement": "clean direct Rustytransfer vs official Croc; no debug/profile controls",
+  "direction": "Oracle-to-WSL",
+  "host": "141.147.1.21",
+  "sizes_mib": [
+    512
+  ],
+  "warmups_per_tool_size": 1,
+  "measured_per_tool_size": 1,
+  "order": "warmup both transports; alternate candidate first on measured trials",
+  "timeout_seconds": 900,
+  "local_binary_sha256": {
+    "rustytransfer": "48ef6ccd810721285af34d5787d61a00a9bef3a63f82c885c0799c775a41598c",
+    "croc": "2688f2e4a150e434fb9ad94a6f5b831365fe3a04f0ab52c4d73f1a7e7830355f"
+  },
+  "remote_binary_sha256": {
+    "rustytransfer": "c325bf4a2a58b078ea20928bbea2e446fe9c22d907f8d459e9c728c25ef1fba9",
+    "croc": "4c23b4697bff52d98c6d5d66037ef393daf41b503da2db66f0542f14e4e63b04"
+  },
+  "versions": {
+    "local_rusty": "Release CLI pinned by binary SHA-256; this CLI has no --version option",
+    "local_croc": "croc version 11.5.4",
+    "remote_rusty": "Release CLI pinned by binary SHA-256; this CLI has no --version option",
+    "remote_croc": "croc version 11.5.4"
+  },
+  "fixtures": {
+    "512": {
+      "sha256": "30671134dac585f880ff30d0a898cba69535339855bd938ef68585a8d142c1de",
+      "bytes": 536870912,
+      "local": "/home/wasilij/rustytransfer-bench/input-512.bin",
+      "remote": "/home/ubuntu/rustytransfer-bench/fixtures-20261002/input-512.bin"
+    }
+  },
+  "observer_helper": "/home/wasilij/rustytransfer-bench/tools/no-debug-20261004/clean-endpoint-observer.py",
+  "remote_observer_helper": "/home/ubuntu/rustytransfer-bench/tools/no-debug-20261004/clean-endpoint-observer.py",
+  "observer_sha256": {
+    "local_native": "3973c3856f87ad7c3c69d1daeac31f2ad1667f14f8d7991dc6360de123b5a56d",
+    "local_shared": "3973c3856f87ad7c3c69d1daeac31f2ad1667f14f8d7991dc6360de123b5a56d",
+    "remote": "3973c3856f87ad7c3c69d1daeac31f2ad1667f14f8d7991dc6360de123b5a56d"
+  },
+  "harness_dependencies_sha256": {
+    "runner": "8c6c91915a4659058e4796117c3ca658089155d6ae35dec7b3a170e575b25b7e",
+    "croc_firewall_lease": "c697bc40732af42f90d5b13591563eb3c36be5a89cbdd64a12a4e49e878484a2",
+    "croc_log_helpers": "609ec195a3de6324930613d4337dd20175eb8775736e52409cb269631cbb4368",
+    "summarizer": "a66c436c51bae4c7551ed9a8e781eec27a95ea49ba2b7aebd2cad839acac0bf2",
+    "this_script": "998625f02f79e670122cae5e2edbbb8d6072493215cd7b80381bb7270184bcf7"
+  },
+  "debug_controls": "observer strips all Rustytransfer benchmark vars, metrics JSONL, Rust log/backtrace controls, Croc phase profile and proxy vars; launch rejects debug argv",
+  "route_limitations": "Croc proof is four actual ESTABLISHED TCP data sockets per endpoint, matched by listener ports and expected peers with NAT-aware tuple preservation. Rust proof is normal direct-path output plus two sampled bulk UDP header captures per endpoint; continuous STREAM-frame counters are unavailable without debug controls."
+}

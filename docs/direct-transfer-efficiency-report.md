@@ -405,3 +405,56 @@ boundaries remain unchanged.
 
 [Full phase tables, provenance, raw rows, acceptance and reproduction](../benchmarks/results/oracle-20261004-completion/README.md)
 record implementation commit `4e807a8` and exact measured frozen binaries.
+
+## Final comparison without debug flags — 2026-10-04
+
+At the user's subsequent explicit request, this cohort reports both tools' full
+runtimes and full-transfer rates. It supersedes the earlier debug-enabled
+large-file measurements for the final comparison. The diagnostic phase policy
+above still applies to those earlier phase tables; their timings are not
+assigned to these clean runs.
+
+Each size has one unscored warmup and five alternating measured runs per tool,
+from Oracle ARM to native WSL x86. Rustytransfer uses the frozen optimized
+release build with one QUIC connection, one stream and 256 KiB chunks. Croc
+uses the official pinned 11.5.4 release with four TCP data connections and
+compression disabled. Neither tool has debug flags or application benchmark,
+metrics or custom logging environment controls enabled. Live process snapshots
+verify that configuration.
+
+| Size | Rustytransfer mean seconds | Croc mean seconds | Rustytransfer mean MiB/s | Croc mean MiB/s | Rustytransfer rate difference |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1 GiB | 37.53 | 34.90 | 27.34 | 29.34 | −6.84% |
+| 2 GiB | 71.99 | 68.13 | 28.46 | 30.06 | −5.32% |
+| 4 GiB | 135.88 | 177.28 | 30.14 | 23.12 | +30.41% |
+
+Rate means average the five per-run rates; durations are averaged separately.
+Full wall time starts at the first endpoint launch and ends when both endpoint
+subprocesses exit. External file verification occurs outside that timer.
+Application work, including Croc's source hashing, remains inside it. All valid
+slow runs are included.
+
+Croc's normal 4 GiB progress output shows source-hashing elapsed hints of
+39–51 seconds and data-transfer hints of 130–131 seconds. These rounded,
+potentially stale displays explain most of its longer full runtime here; they
+are not exact additive phases. This cohort does not establish a general Croc
+regression, isolate why hashing was costly, or attribute a new speedup to
+Rustytransfer. No production performance default changed for this comparison.
+
+Normal Rustytransfer initially selects relay before upgrading to direct UDP.
+Each endpoint has two verified bulk-sized direct UDP header samples, with the
+initial CLI path retained separately. This proves direct traffic at the sampled
+times, rather than continuous payload accounting or a pure-direct start.
+Croc's four established TCP data sockets and control socket were verified on
+both endpoint processes with NAT-aware peer tuples.
+
+The independent audit accepted all 36 transfers: 30 measured and six warmups,
+with matching full received sizes and SHA-256 hashes. All 18 temporary Croc
+firewall leases restored the exact original INPUT chain; final cleanup found
+no remaining endpoints, listeners or leases. Failed smoke attempts remain
+unscored with their evidence retained. The user accepts a 6–10% gap for now,
+so further tuning is deferred. The optional source-built Croc phase workflow
+is prepared but unexecuted.
+
+[Final report, raw measurements, configuration, audit and reproduction](../benchmarks/results/oracle-20261004-no-debug/README.md)
+retain the clean results separately from the earlier diagnostic cohorts.

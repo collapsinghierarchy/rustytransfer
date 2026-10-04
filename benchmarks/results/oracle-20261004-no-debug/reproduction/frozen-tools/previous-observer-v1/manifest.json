@@ -1,0 +1,9 @@
+{
+  "sha256": "3973c3856f87ad7c3c69d1daeac31f2ad1667f14f8d7991dc6360de123b5a56d",
+  "local_path": "/home/wasilij/rustytransfer-bench/tools/no-debug-20261004/clean-endpoint-observer.py",
+  "shared_path": "/mnt/c/Users/wasil/Documents/GitHub/rustytransfer/target/clean-endpoint-observer.py",
+  "remote_path": "/home/ubuntu/rustytransfer-bench/tools/no-debug-20261004/clean-endpoint-observer.py",
+  "unit_acceptance": "test-clean-observer.py passed",
+  "live_kernel_acceptance": "test-clean-capture-live.py passed",
+  "source_role": "External launcher/sanitizer and read-only OS socket/UDP header observer; no app debug flags."
+}

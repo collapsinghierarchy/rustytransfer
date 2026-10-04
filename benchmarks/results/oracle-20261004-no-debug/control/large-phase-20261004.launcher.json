@@ -1,0 +1,12 @@
+{
+  "pid": 1550,
+  "root": "/home/wasilij/rustytransfer-bench/results/large-phase-20261004",
+  "log": "/home/wasilij/rustytransfer-bench/results/large-phase-20261004.launcher.log",
+  "command": [
+    "python3",
+    "/mnt/c/Users/wasil/Documents/GitHub/rustytransfer/target/run-large-phase-cohort.py",
+    "--output-root",
+    "/home/wasilij/rustytransfer-bench/results/large-phase-20261004"
+  ],
+  "scope": "Stock pinned Croc and frozen Rustytransfer; 1/2/4 GiB, warmup plus five alternating runs each, sequential, phase-only reporting."
+}

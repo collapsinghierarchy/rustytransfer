@@ -1,0 +1,9 @@
+{
+  "sha256": "771becac9d05a57167a94f3dc2c5e20974a36dc4cb1e2d5ed4c55d416df441c3",
+  "local_path": "/home/wasilij/rustytransfer-bench/tools/no-debug-20261004/clean-endpoint-observer.py",
+  "shared_path": "/mnt/c/Users/wasil/Documents/GitHub/rustytransfer/target/clean-endpoint-observer.py",
+  "remote_path": "/home/ubuntu/rustytransfer-bench/tools/no-debug-20261004/clean-endpoint-observer.py",
+  "previous_observer_sha256": "3973c3856f87ad7c3c69d1daeac31f2ad1667f14f8d7991dc6360de123b5a56d",
+  "correction": "Revalidate captured headers in userspace and skip pre-filter queued packets instead of aborting.",
+  "source_role": "External observer only; application binaries and commands unchanged."
+}

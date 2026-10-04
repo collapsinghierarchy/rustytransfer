@@ -64,6 +64,7 @@ jobs:
           if-no-files-found: warn
           path: |
             target/performance/ci/report.json
+            target/performance/ci/runner.py
             target/performance/ci/raw.jsonl
             target/performance/ci/summary.md
             target/performance/ci/build-*.log

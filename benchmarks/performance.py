@@ -118,6 +118,9 @@ def validate(pair, rows, expected, version):
                 or any(row.get(k) != expected["sha256"] for k in ("source_sha256", "received_sha256"))):
             raise ValueError("invalid transfer row")
         evidence = row.get("path_evidence") or {}
+        counters = ("direct_stream_tx", "direct_stream_rx", "relay_stream_tx", "relay_stream_rx")
+        if any(type(evidence.get(k)) is not int or evidence[k] < 0 for k in counters):
+            raise ValueError("invalid STREAM evidence counters")
         if (evidence.get("verified") is not True or evidence.get("classification") != "direct"
                 or not (evidence.get("direct_stream_tx", 0) > 0 or evidence.get("direct_stream_rx", 0) > 0)
                 or any(evidence.get(k) != 0 for k in ("relay_stream_tx", "relay_stream_rx"))
@@ -241,9 +244,15 @@ def main():
     output = (args.output or ROOT / "target/performance" / time.strftime("%Y%m%d-%H%M%S")).resolve()
     output.mkdir(parents=True, exist_ok=False)
     environment = trial_environment()
+    runner_snapshot = Path(__file__).read_bytes()
+    (output / "runner.py").write_bytes(runner_snapshot)
     report = {"schema_version": 1, "scope": "local Iroh transfer-core; endpoints share one process",
               "gating": config["gating"], "configuration": config, "calibration": args.calibration,
-              "runner_sha256": digest(Path(__file__)), "platform": platform.platform(),
+              "runner_sha256": hashlib.sha256(runner_snapshot).hexdigest(),
+              "runner_commit": run(["git", "rev-parse", "HEAD"]).strip(),
+              "runner_changes": run(["git", "diff", "--name-only", "HEAD", "--",
+                                     "benchmarks/performance.py", "benchmarks/baseline.json"]).splitlines(),
+              "platform": platform.platform(),
               "configuration_sha256": digest(ROOT / "benchmarks/baseline.json"),
               "architecture": platform.machine(), "runner_image": {k: os.getenv(k) for k in
                   ("ImageOS", "ImageVersion", "RUNNER_ARCH", "GITHUB_SHA", "GITHUB_HEAD_REF")},

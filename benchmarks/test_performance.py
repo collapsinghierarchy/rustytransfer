@@ -1,4 +1,6 @@
 import copy
+from contextlib import redirect_stderr
+import io
 import json
 import os
 from pathlib import Path
@@ -57,7 +59,8 @@ class PerformanceTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaises(ValueError):
                 p.validate(pair, rows, expected, 1)
         for field, value in (("relay_stream_tx", 1), ("lagged", True),
-                             ("missing_path_stats", True), ("verified", False)):
+                             ("missing_path_stats", True), ("verified", False),
+                             ("direct_stream_tx", True), ("direct_stream_rx", -1)):
             pair, rows, expected = sample()
             rows[1]["path_evidence"][field] = value
             with self.subTest(field=field), self.assertRaises(ValueError):
@@ -145,6 +148,33 @@ class PerformanceTests(unittest.TestCase):
             self.assertFalse((output / "sources").exists())
             self.assertFalse((output / "fixtures").exists())
             self.assertEqual(preserved.read_text(), "keep")
+
+    def test_incompatible_harness_fails_before_builds(self):
+        with tempfile.TemporaryDirectory() as root:
+            output = Path(root) / "run"
+            args = ["performance.py", "--profile", "ci", "--baseline-ref", CONFIG["baseline_ref"],
+                    "--candidate-ref", "b" * 40, "--output", str(output)]
+
+            def command(args, **kwargs):
+                if args[:2] == ["git", "show"]:
+                    return "performance harness v1" if args[2].startswith(CONFIG["baseline_ref"]) else "incompatible"
+                return "version"
+
+            with patch.object(sys, "argv", args), patch.object(p, "resolve", side_effect=lambda x: x), \
+                    patch.object(p, "run", side_effect=command), patch.object(p, "build") as build:
+                with self.assertRaisesRegex(ValueError, "incompatible committed harness"):
+                    p.main()
+                build.assert_not_called()
+            self.assertEqual(json.loads((output / "report.json").read_text())["status"], "invalid")
+
+    def test_same_revision_and_unreviewed_baselines_are_rejected(self):
+        for baseline, candidate in ((CONFIG["baseline_ref"], CONFIG["baseline_ref"]),
+                                    ("a" * 40, "b" * 40)):
+            args = ["performance.py", "--profile", "ci", "--baseline-ref", baseline,
+                    "--candidate-ref", candidate]
+            with patch.object(sys, "argv", args), patch.object(p, "resolve", side_effect=lambda x: x), \
+                    redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+                p.main()
 
 
 if __name__ == "__main__":

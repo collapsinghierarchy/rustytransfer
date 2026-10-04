@@ -1,0 +1,8 @@
+{"type":"snapshot","source":{"id":"source","label":"MacBook Pro","kind":"local_source","reachability":"reachable","transport":"Iroh / QUIC"},"peers":[],"infrastructure":[],"routes":[],"transfers":[]}
+{"type":"peer_upsert","peer":{"id":"tablet","label":"iPad Air","kind":"peer","reachability":"reachable","transport":"Iroh / QUIC"}}
+{"type":"infrastructure_upsert","node":{"id":"signal","label":"Signaling backend","kind":"signaling","reachability":"reachable","transport":"HTTPS / WSS"}}
+{"type":"transfer_created","transfer":{"id":"t1","source_id":"source","target_id":"tablet","file_name":"DesignReview.pdf","bytes_total":86000000,"bytes_sent":0,"state":"connecting","error":null}}
+{"type":"infrastructure_upsert","node":{"id":"relay","label":"EU Relay","kind":"relay","reachability":"reachable","transport":"Iroh / QUIC"}}
+{"type":"route_upsert","route":{"id":"signal-t1","transfer_id":"t1","kind":"signaling","topology":"indirect","from":"source","via":["signal"],"to":"tablet","state":"connected","transport":"Iroh discovery/signaling"}}
+{"type":"route_upsert","route":{"id":"payload-t1","transfer_id":"t1","kind":"payload","topology":"relay","from":"source","via":["relay"],"to":"tablet","state":"connected","transport":"Iroh / relay"}}
+{"type":"transfer_progress","transfer":{"id":"t1","source_id":"source","target_id":"tablet","file_name":"DesignReview.pdf","bytes_total":86000000,"bytes_sent":30960000,"state":"transferring","error":null}}

@@ -16,6 +16,7 @@ import subprocess
 import tarfile
 import tempfile
 import time
+import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 HARNESS = "tests/local_transport_regressions.rs"
@@ -200,7 +201,13 @@ def build(ref, label, output, environment, config):
     if len(binaries) != 1:
         raise ValueError("build did not produce exactly one harness executable")
     binary = Path(binaries[0])
+    production_tree = run(["git", "ls-tree", "-r", ref, "--", "Cargo.toml", "Cargo.lock",
+                           ".cargo", "src", "crates"])
+    cargo_manifest = tomllib.loads((source / "Cargo.toml").read_text())
     return {"commit": ref, "source_tree": run(["git", "rev-parse", f"{ref}^{{tree}}"]).strip(),
+            "production_source_sha256": hashlib.sha256(production_tree.encode()).hexdigest(),
+            "production_source_identity": "SHA-256 of git ls-tree -r: Cargo.toml, Cargo.lock, .cargo, src, crates",
+            "release_profile": cargo_manifest.get("profile", {}).get("release", {}),
             "binary": str(binary), "binary_sha256": digest(binary),
             "harness_sha256": digest(source / HARNESS),
             "cargo_lock_sha256": digest(source / "Cargo.lock"), "command": command}
@@ -258,6 +265,8 @@ def main():
             write_json(output / "report.json", report)
         if len({b["harness_sha256"] for b in report["builds"].values()}) != 1:
             raise ValueError("harness binary sources differ")
+        if report["builds"]["baseline"]["release_profile"] != report["builds"]["candidate"]["release_profile"]:
+            raise ValueError("release profiles differ; use identical build profiles")
         fixtures = output / "fixtures"
         fixtures.mkdir()
         report["fixtures"] = {str(size): fixture(fixtures / f"{size}.bin", size)

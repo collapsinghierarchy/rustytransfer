@@ -1,5 +1,7 @@
 # Native desktop MVP validation record
 
+The [interaction update record](interactions/README.md) contains the subsequent gesture, contextual lens, filter, and LAN-layout validation. This page preserves the initial MVP run.
+
 This record describes the local validation run for source commit `38f468a415f5e75ba977a7d09d87ea05cb742128`. The toolchain was Rust/Cargo 1.97.0. The Linux build used WSL; Windows GNU release artifacts were cross-compiled there for `x86_64-pc-windows-gnu` with MinGW GCC, then executed on Windows.
 
 ## Recorded checks

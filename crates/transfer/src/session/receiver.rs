@@ -23,7 +23,10 @@ where
         Authentication::Pake(password),
         output_path,
         on_progress,
-        payload_profile_enabled_from_env(),
+        ProfileOptions {
+            payload: payload_profile_enabled_from_env(),
+            completion: completion_profile_enabled_from_env(),
+        },
     )
     .await
 }
@@ -52,7 +55,10 @@ where
         Authentication::Direct(token),
         output_path,
         on_progress,
-        payload_profile_enabled_from_env(),
+        ProfileOptions {
+            payload: payload_profile_enabled_from_env(),
+            completion: completion_profile_enabled_from_env(),
+        },
     )
     .await
 }
@@ -68,14 +74,16 @@ async fn receive_file_with_auth<T, F>(
     authentication: Authentication<'_>,
     output_path: &Path,
     on_progress: F,
-    profile_enabled: bool,
+    profile_options: ProfileOptions,
 ) -> std::result::Result<TransferMetrics, TransferError>
 where
     T: TransferTransport,
     F: FnMut(u64, u64) + Send,
 {
     let mut context = TransferContext::new();
-    context.payload_profile_enabled = profile_enabled;
+    context.payload_profile_enabled = profile_options.payload;
+    context.completion_profile_enabled = profile_options.completion;
+    let transfer_started = Instant::now();
     let mut resume_output = match ResumeOutput::open(output_path).await {
         Ok(output) => output,
         Err(error) => {
@@ -96,7 +104,12 @@ where
     )
     .await;
     match result {
-        Ok(metrics) => Ok(metrics),
+        Ok(mut metrics) => {
+            if let Some(profile) = metrics.completion_profile.as_mut() {
+                profile.transfer_lifetime_seconds = Some(transfer_started.elapsed().as_secs_f64());
+            }
+            Ok(metrics)
+        }
         Err(mut error) => {
             if let Err(issue) = resume_output.flush().await {
                 error.add_cleanup_issue(format!("partial output flush failed: {issue}"));
@@ -118,7 +131,7 @@ pub(crate) async fn receive_file_with_profile<T, F>(
     password: &[u8],
     output_path: &Path,
     on_progress: F,
-    profile_enabled: bool,
+    profile_options: ProfileOptions,
 ) -> std::result::Result<TransferMetrics, TransferError>
 where
     T: TransferTransport,
@@ -129,7 +142,7 @@ where
         Authentication::Pake(password),
         output_path,
         on_progress,
-        profile_enabled,
+        profile_options,
     )
     .await
 }
@@ -220,6 +233,8 @@ where
     let payload_started = Instant::now();
     let mut payload_profile =
         crate::PayloadProfile::for_enabled_transfer(context.payload_profile_enabled);
+    let mut completion_profile =
+        crate::CompletionProfile::for_enabled_transfer(context.completion_profile_enabled);
     while receiver.bytes_received() < receiver.remaining_len() {
         let receive_started = payload_profile
             .as_ref()
@@ -277,6 +292,7 @@ where
     context.phase = Phase::Finalize;
     context.completion = CompletionState::DataCompleteUnconfirmed;
     let shutdown_started = Instant::now();
+    let confirmation_started = std::time::Instant::now();
     let fin = required_output(
         "receiver FIN",
         receiver
@@ -296,34 +312,77 @@ where
     if !matches!(receiver.state, State::Success(_)) {
         return Err(context.error(TransferErrorKind::Internal("receiver did not complete")));
     }
+    if let Some(profile) = completion_profile.as_mut() {
+        record_seconds(
+            &mut profile.protocol_confirmation_seconds,
+            confirmation_started,
+        );
+    }
     let path_end = transport.observe_path().await.ok().flatten();
     context.phase = Phase::Finalize;
+    let commit_started = std::time::Instant::now();
     resume_output
         .commit(output_path)
         .await
         .map_err(|error| context.error(TransferErrorKind::CommitIo(error)))?;
+    if let Some(profile) = completion_profile.as_mut() {
+        record_seconds(&mut profile.receiver_commit_seconds, commit_started);
+    }
     context.completion = CompletionState::Committed;
     context.phase = Phase::Shutdown;
     // The peer confirmed the full payload. Stream shutdown cannot undo the
     // committed file, so close failures are diagnostic only.
     let mut cleanup_issues = Vec::new();
-    if !matches!(
+    let finish_receiving_started = std::time::Instant::now();
+    let finish_receiving_ok = matches!(
         timeout(CLEANUP_TIMEOUT, transport.finish_receiving()).await,
         Ok(Ok(()))
-    ) {
+    );
+    if let Some(profile) = completion_profile.as_mut() {
+        record_seconds(
+            &mut profile.finish_receiving_seconds,
+            finish_receiving_started,
+        );
+    }
+    if !finish_receiving_ok {
         cleanup_issues.push("receive stream shutdown failed after commit");
     }
-    if !matches!(
+    let finish_sending_started = std::time::Instant::now();
+    let finish_sending_ok = matches!(
         timeout(CLEANUP_TIMEOUT, transport.finish_sending()).await,
         Ok(Ok(()))
-    ) {
+    );
+    if let Some(profile) = completion_profile.as_mut() {
+        record_seconds(&mut profile.finish_sending_seconds, finish_sending_started);
+    }
+    if !finish_sending_ok {
         cleanup_issues.push("send stream shutdown failed after commit");
     }
+    let explicit_close_started = std::time::Instant::now();
+    let explicit_close_applied = finish_receiving_ok
+        && finish_sending_ok
+        && completion_profile.is_some()
+        && transport.close_connection_if_enabled();
+    if let Some(profile) = completion_profile.as_mut() {
+        profile.explicit_connection_close_applied = Some(explicit_close_applied);
+        if explicit_close_applied {
+            record_seconds(
+                &mut profile.explicit_connection_close_seconds,
+                explicit_close_started,
+            );
+        }
+    }
+    let endpoint_close_started = std::time::Instant::now();
     if !matches!(
         timeout(CLEANUP_TIMEOUT, transport.close_transport()).await,
         Ok(Ok(()))
     ) {
         cleanup_issues.push("transport close failed after commit");
+    }
+    if let Some(profile) = completion_profile.as_mut() {
+        profile.endpoint_close_seconds = transport
+            .take_endpoint_close_seconds()
+            .or_else(|| Some(endpoint_close_started.elapsed().as_secs_f64()));
     }
 
     Ok(TransferMetrics {
@@ -336,5 +395,6 @@ where
         path_end,
         cleanup_issues,
         payload_profile,
+        completion_profile,
     })
 }

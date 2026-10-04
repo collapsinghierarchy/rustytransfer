@@ -69,7 +69,10 @@ where
         Authentication::Pake(password),
         config,
         on_progress,
-        payload_profile_enabled_from_env(),
+        ProfileOptions {
+            payload: payload_profile_enabled_from_env(),
+            completion: completion_profile_enabled_from_env(),
+        },
     )
     .await
 }
@@ -103,7 +106,10 @@ where
         Authentication::Direct(token),
         config,
         on_progress,
-        payload_profile_enabled_from_env(),
+        ProfileOptions {
+            payload: payload_profile_enabled_from_env(),
+            completion: completion_profile_enabled_from_env(),
+        },
     )
     .await
 }
@@ -121,7 +127,7 @@ async fn send_file_with_auth<T, R, F>(
     authentication: Authentication<'_>,
     config: TransferConfig,
     on_progress: F,
-    profile_enabled: bool,
+    profile_options: ProfileOptions,
 ) -> std::result::Result<TransferMetrics, TransferError>
 where
     T: TransferTransport,
@@ -129,7 +135,9 @@ where
     F: FnMut(u64, u64) + Send,
 {
     let mut context = TransferContext::new();
-    context.payload_profile_enabled = profile_enabled;
+    context.payload_profile_enabled = profile_options.payload;
+    context.completion_profile_enabled = profile_options.completion;
+    let transfer_started = Instant::now();
     let result = send_file_inner(
         transport,
         source,
@@ -141,7 +149,12 @@ where
     )
     .await;
     match result {
-        Ok(metrics) => Ok(metrics),
+        Ok(mut metrics) => {
+            if let Some(profile) = metrics.completion_profile.as_mut() {
+                profile.transfer_lifetime_seconds = Some(transfer_started.elapsed().as_secs_f64());
+            }
+            Ok(metrics)
+        }
         Err(mut error) => {
             if let Err(issue) = abort_transport(transport).await {
                 error.add_cleanup_issue(issue);
@@ -159,7 +172,7 @@ pub(crate) async fn send_file_with_profile<T, R, F>(
     password: &[u8],
     config: TransferConfig,
     on_progress: F,
-    profile_enabled: bool,
+    profile_options: ProfileOptions,
 ) -> std::result::Result<TransferMetrics, TransferError>
 where
     T: TransferTransport,
@@ -173,7 +186,7 @@ where
         Authentication::Pake(password),
         config,
         on_progress,
-        profile_enabled,
+        profile_options,
     )
     .await
 }
@@ -266,6 +279,8 @@ where
     let payload_started = Instant::now();
     let mut payload_profile =
         crate::PayloadProfile::for_enabled_transfer(context.payload_profile_enabled);
+    let mut completion_profile =
+        crate::CompletionProfile::for_enabled_transfer(context.completion_profile_enabled);
     let allocation_started = payload_profile
         .as_ref()
         .map(crate::PayloadProfile::start_stage);
@@ -395,6 +410,7 @@ where
     context.phase = Phase::Finalize;
     context.completion = CompletionState::DataCompleteUnconfirmed;
     let shutdown_started = Instant::now();
+    let confirmation_started = std::time::Instant::now();
     let fin = receive_with_timeout(transport, SHUTDOWN_TIMEOUT, *context).await?;
     if sender
         .step("FIN", Some(fin))
@@ -409,27 +425,69 @@ where
         return Err(context.error(TransferErrorKind::Internal("sender did not complete")));
     }
     send_with_timeout(transport, FIN_ACK.to_vec(), SHUTDOWN_TIMEOUT, *context).await?;
+    if let Some(profile) = completion_profile.as_mut() {
+        record_seconds(
+            &mut profile.protocol_confirmation_seconds,
+            confirmation_started,
+        );
+    }
     context.completion = CompletionState::ProtocolConfirmed;
     context.phase = Phase::Shutdown;
+    let close_send_started = std::time::Instant::now();
     timeout(SHUTDOWN_TIMEOUT, transport.close_send_half())
         .await
         .map_err(|_source| context.error(TransferErrorKind::Timeout))?
         .map_err(|error| context.transport(error))?;
+    if let Some(profile) = completion_profile.as_mut() {
+        record_seconds(&mut profile.close_send_seconds, close_send_started);
+    }
+    let finish_receiving_started = std::time::Instant::now();
     timeout(SHUTDOWN_TIMEOUT, transport.finish_receiving())
         .await
         .map_err(|_source| context.error(TransferErrorKind::Timeout))?
         .map_err(|error| context.transport(error))?;
+    if let Some(profile) = completion_profile.as_mut() {
+        record_seconds(
+            &mut profile.finish_receiving_seconds,
+            finish_receiving_started,
+        );
+    }
     let path_end = transport.observe_path().await.ok().flatten();
+    let wait_peer_close_started = std::time::Instant::now();
     timeout(SHUTDOWN_TIMEOUT, transport.wait_for_peer_close())
         .await
         .map_err(|_source| context.error(TransferErrorKind::Timeout))?
         .map_err(|error| context.transport(error))?;
+    if let Some(profile) = completion_profile.as_mut() {
+        record_seconds(
+            &mut profile.wait_peer_close_seconds,
+            wait_peer_close_started,
+        );
+    }
+    let explicit_close_started = std::time::Instant::now();
+    let explicit_close_applied =
+        completion_profile.is_some() && transport.close_connection_if_enabled();
+    if let Some(profile) = completion_profile.as_mut() {
+        profile.explicit_connection_close_applied = Some(explicit_close_applied);
+        if explicit_close_applied {
+            record_seconds(
+                &mut profile.explicit_connection_close_seconds,
+                explicit_close_started,
+            );
+        }
+    }
     let mut cleanup_issues = Vec::new();
+    let endpoint_close_started = std::time::Instant::now();
     if !matches!(
         timeout(CLEANUP_TIMEOUT, transport.close_transport()).await,
         Ok(Ok(()))
     ) {
         cleanup_issues.push("transport close failed after confirmation");
+    }
+    if let Some(profile) = completion_profile.as_mut() {
+        profile.endpoint_close_seconds = transport
+            .take_endpoint_close_seconds()
+            .or_else(|| Some(endpoint_close_started.elapsed().as_secs_f64()));
     }
 
     Ok(TransferMetrics {
@@ -442,5 +500,6 @@ where
         path_end,
         cleanup_issues,
         payload_profile,
+        completion_profile,
     })
 }

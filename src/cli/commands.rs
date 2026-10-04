@@ -458,6 +458,11 @@ pub(super) async fn send_cmd(
     let path_end = transfer_metrics.path_end.unwrap_or(path.clone());
     let path_evidence = st.take_path_evidence().await;
 
+    let mut completion_profile = transfer_metrics.completion_profile.clone();
+    if let Some(profile) = completion_profile.as_mut() {
+        profile.setup_seconds = Some(setup_handshake_seconds);
+        profile.application_wall_seconds = Some(run.started.elapsed().as_secs_f64());
+    }
     if write_transfer_metric(
         "sender",
         &transport,
@@ -473,6 +478,7 @@ pub(super) async fn send_cmd(
             payload_seconds: transfer_metrics.payload_seconds,
             shutdown_seconds: transfer_metrics.shutdown_seconds,
             payload_profile: transfer_metrics.payload_profile.clone(),
+            completion_profile,
         },
         MetricOutcome {
             run_id: run.run_id.clone(),
@@ -669,6 +675,11 @@ pub(super) async fn recv_cmd(
     let path_end = transfer_metrics.path_end.unwrap_or(path.clone());
     let path_evidence = st.take_path_evidence().await;
 
+    let mut completion_profile = transfer_metrics.completion_profile.clone();
+    if let Some(profile) = completion_profile.as_mut() {
+        profile.setup_seconds = Some(setup_handshake_seconds);
+        profile.application_wall_seconds = Some(run.started.elapsed().as_secs_f64());
+    }
     if write_transfer_metric(
         "receiver",
         &transport,
@@ -684,6 +695,7 @@ pub(super) async fn recv_cmd(
             payload_seconds: transfer_metrics.payload_seconds,
             shutdown_seconds: transfer_metrics.shutdown_seconds,
             payload_profile: transfer_metrics.payload_profile.clone(),
+            completion_profile,
         },
         MetricOutcome {
             run_id: run.run_id.clone(),

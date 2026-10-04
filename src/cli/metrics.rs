@@ -53,6 +53,7 @@ pub(super) fn write_transfer_metric(
         path_end: paths.end.path,
         path_evidence: paths.path_evidence,
         payload_profile: timing.payload_profile,
+        completion_profile: timing.completion_profile,
         local_candidate_type: paths.start.local_candidate_type,
         remote_candidate_type: paths.start.remote_candidate_type,
         size_bytes,

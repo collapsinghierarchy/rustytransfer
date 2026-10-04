@@ -41,6 +41,14 @@ impl TransferTransport for DataTransport {
         DataTransport::close_transport(self).await
     }
 
+    fn close_connection_if_enabled(&mut self) -> bool {
+        DataTransport::close_connection_if_enabled(self)
+    }
+
+    fn take_endpoint_close_seconds(&mut self) -> Option<f64> {
+        DataTransport::take_endpoint_close_seconds(self)
+    }
+
     async fn observe_path(&mut self) -> Result<Option<PathObservation>> {
         self.path_observation().await.map(Some)
     }

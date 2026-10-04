@@ -220,4 +220,22 @@ impl DataTransport {
             Self::Iroh(state) => state.close_transport().await,
         }
     }
+
+    pub fn close_connection_if_enabled(&mut self) -> bool {
+        match self {
+            #[cfg(feature = "webrtc")]
+            Self::WebRtc(_) => false,
+            #[cfg(feature = "iroh")]
+            Self::Iroh(state) => state.close_connection_if_enabled(),
+        }
+    }
+
+    pub fn take_endpoint_close_seconds(&mut self) -> Option<f64> {
+        match self {
+            #[cfg(feature = "webrtc")]
+            Self::WebRtc(_) => None,
+            #[cfg(feature = "iroh")]
+            Self::Iroh(state) => state.take_endpoint_close_seconds(),
+        }
+    }
 }

@@ -100,6 +100,9 @@ GROUP_FIELDS = (
     "storage_class",
     "pairing_mode",
     "profile_mode",
+    "completion_profile_enabled",
+    "explicit_connection_close",
+    "local_endpoint_working_directory",
     "stream_window_bytes",
     "experimental_protocol_version",
     "parallel_streams",
@@ -143,10 +146,55 @@ def group_key(record):
             value = record.get(field)
             if field == "profile_mode" and value is None:
                 value = "standard"
+            if field in ("completion_profile_enabled", "explicit_connection_close") and value is None:
+                value = False
             if field == "source_staging" and value is None:
                 value = "per-trial"
         key.append("unknown" if value is None else value)
     return tuple(key)
+
+
+def completion_profile_rejection_reason(row):
+    profile = row.get("completion_profile")
+    if not isinstance(profile, dict):
+        return "profile missing"
+    required = {
+        "setup_seconds", "application_wall_seconds", "transfer_lifetime_seconds",
+        "protocol_confirmation_seconds", "finish_receiving_seconds", "endpoint_close_seconds",
+    }
+    if row.get("role") == "sender":
+        required |= {"close_send_seconds", "wait_peer_close_seconds"}
+    elif row.get("role") == "receiver":
+        required |= {"receiver_commit_seconds", "finish_sending_seconds"}
+    else:
+        return "unknown endpoint role"
+    if not required <= profile.keys():
+        return "required lifecycle spans missing"
+    for name, value in profile.items():
+        if name.endswith("_seconds") and (
+            not isinstance(value, (int, float)) or isinstance(value, bool)
+            or not 0 <= value < float("inf")
+        ):
+            return f"invalid {name}"
+    applied = profile.get("explicit_connection_close_applied")
+    if not isinstance(applied, bool) or applied != row.get("explicit_connection_close", False):
+        return "explicit-close application differs from requested mode"
+    if applied and "explicit_connection_close_seconds" not in profile:
+        return "explicit close duration missing"
+    shutdown_names = {
+        "protocol_confirmation_seconds", "receiver_commit_seconds", "close_send_seconds",
+        "finish_receiving_seconds", "finish_sending_seconds", "wait_peer_close_seconds",
+        "explicit_connection_close_seconds", "endpoint_close_seconds",
+    }
+    shutdown_sum = sum(profile.get(name, 0) for name in shutdown_names)
+    if shutdown_sum > row.get("shutdown_seconds", -1) + 1e-5:
+        return "completion spans exceed shutdown interval"
+    if profile["setup_seconds"] + profile["transfer_lifetime_seconds"] > profile["application_wall_seconds"] + 1e-5:
+        return "setup and transfer lifetimes exceed application lifetime"
+    process_seconds = row.get("endpoint_process_seconds")
+    if process_seconds is not None and profile["application_wall_seconds"] > process_seconds + 0.02:
+        return "application lifetime exceeds endpoint process lifetime"
+    return None
 
 
 def payload_profile_rejection_reason(profile, bytes_transferred, payload_seconds):
@@ -253,6 +301,10 @@ def load_records(input_paths):
 def rejection_reason(record):
     if record.get("success") is not True:
         return "transfer failed"
+    if record.get("completion_profile_enabled"):
+        completion_error = completion_profile_rejection_reason(record)
+        if completion_error is not None:
+            return f"invalid completion profile: {completion_error}"
     experiment_error = experimental_connection_rejection_reason(record)
     if experiment_error is not None:
         return experiment_error

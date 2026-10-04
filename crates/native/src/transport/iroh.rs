@@ -10,6 +10,7 @@ use std::{
     fs::{self, OpenOptions},
     io::Write,
     path::{Path, PathBuf},
+    sync::Mutex,
     time::Instant,
 };
 use tokio::io::AsyncWriteExt;
@@ -106,6 +107,7 @@ pub struct IrohState {
     recv: RecvStream,
     path_evidence: Option<PathEvidenceSession>,
     connection_profile: Option<Box<IrohConnectionProfile>>,
+    endpoint_close_seconds: Mutex<Option<f64>>,
 }
 
 #[derive(Clone, Default)]
@@ -355,6 +357,7 @@ impl IrohState {
             recv,
             path_evidence: None,
             connection_profile: None,
+            endpoint_close_seconds: Mutex::new(None),
         }
     }
 
@@ -541,10 +544,36 @@ impl IrohState {
     /// Iroh's endpoint close waits for QUIC close notifications to be acknowledged,
     /// so the sender does not mistake a completed transfer for a lost connection.
     pub async fn close_transport(&self) -> Result<()> {
+        let profile_enabled =
+            std::env::var("RUSTYTRANSFER_BENCH_COMPLETION_PROFILE").is_ok_and(|value| value == "1");
+        let close_started = profile_enabled.then(Instant::now);
         timeout(ENDPOINT_CLOSE_TIMEOUT, self.endpoint.close())
             .await
             .context("timed out while closing Iroh endpoint")?;
+        if let Some(started) = close_started
+            && let Ok(mut recorded) = self.endpoint_close_seconds.lock()
+        {
+            *recorded = Some(started.elapsed().as_secs_f64());
+        }
         Ok(())
+    }
+
+    /// Explicitly request a QUIC connection close for the opt-in benchmark candidate.
+    /// The normal protocol confirmation and stream delivery waits have already completed.
+    pub fn close_connection_if_enabled(&self) -> bool {
+        if !std::env::var("RUSTYTRANSFER_BENCH_EXPLICIT_CLOSE").is_ok_and(|value| value == "1") {
+            return false;
+        }
+        self.connection
+            .close(VarInt::from_u32(0), b"benchmark explicit close");
+        true
+    }
+
+    pub fn take_endpoint_close_seconds(&self) -> Option<f64> {
+        self.endpoint_close_seconds
+            .lock()
+            .ok()
+            .and_then(|mut recorded| recorded.take())
     }
 
     /// Read the peer's stream FIN after the last framed message so its

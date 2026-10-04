@@ -31,6 +31,18 @@ pub trait TransferTransport: Send {
     async fn wait_for_peer_close(&mut self) -> Result<()>;
     async fn close_transport(&mut self) -> Result<()>;
 
+    /// Request an explicit connection close after protocol completion when the
+    /// concrete transport has an opt-in benchmark close mode. Returns true only
+    /// when the close request was actually issued.
+    fn close_connection_if_enabled(&mut self) -> bool {
+        false
+    }
+
+    /// Return the elapsed endpoint-close span when the concrete transport records it.
+    fn take_endpoint_close_seconds(&mut self) -> Option<f64> {
+        None
+    }
+
     /// Mark the exact beginning of application payload traffic for optional transport diagnostics.
     fn begin_payload_observation(&mut self) {}
 

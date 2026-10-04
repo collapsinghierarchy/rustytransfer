@@ -16,8 +16,9 @@ pub use session::{receive_file, receive_file_direct, send_file, send_file_direct
 use session::{receive_file_with_profile, send_file_with_profile};
 mod transport_api;
 pub(crate) use metrics::PayloadStage;
-pub(crate) use metrics::payload_profile_enabled_from_env;
-pub use metrics::{PayloadProfile, TransferMetrics};
+pub(crate) use metrics::record_seconds;
+pub use metrics::{CompletionProfile, PayloadProfile, TransferMetrics};
+pub(crate) use metrics::{completion_profile_enabled_from_env, payload_profile_enabled_from_env};
 pub use transport_api::{PathObservation, TransferTransport};
 
 use crate::error::{CompletionState, Phase, TransferError, TransferErrorKind};
@@ -40,6 +41,13 @@ struct TransferContext {
     bytes_transferred: u64,
     completion: CompletionState,
     payload_profile_enabled: bool,
+    completion_profile_enabled: bool,
+}
+
+#[derive(Clone, Copy, Default)]
+struct ProfileOptions {
+    payload: bool,
+    completion: bool,
 }
 
 impl TransferContext {
@@ -49,6 +57,7 @@ impl TransferContext {
             bytes_transferred: 0,
             completion: CompletionState::NotStarted,
             payload_profile_enabled: false,
+            completion_profile_enabled: false,
         }
     }
 
@@ -111,6 +120,7 @@ mod tests {
         path::{Path, PathBuf},
         pin::Pin,
         sync::atomic::{AtomicU64, Ordering},
+        sync::{Arc, Mutex},
         task::{Context, Poll},
     };
     use tokio::io::ReadBuf;
@@ -184,6 +194,9 @@ mod tests {
         fin_ack_receive_delay: Duration,
         send_fault: SendFault,
         sent_messages: usize,
+        explicit_close_enabled: bool,
+        role: &'static str,
+        events: Arc<Mutex<Vec<String>>>,
     }
 
     impl MemoryTransport {
@@ -197,6 +210,7 @@ mod tests {
             let (b_to_a_tx, b_to_a_rx) = mpsc::channel(capacity);
             let (a_closed_tx, a_closed_rx) = watch::channel(false);
             let (b_closed_tx, b_closed_rx) = watch::channel(false);
+            let events = Arc::new(Mutex::new(Vec::new()));
             (
                 Self {
                     tx: Some(a_to_b_tx),
@@ -208,6 +222,9 @@ mod tests {
                     fin_ack_receive_delay: Duration::ZERO,
                     send_fault: SendFault::None,
                     sent_messages: 0,
+                    explicit_close_enabled: false,
+                    role: "sender",
+                    events: Arc::clone(&events),
                 },
                 Self {
                     tx: Some(b_to_a_tx),
@@ -219,6 +236,9 @@ mod tests {
                     fin_ack_receive_delay,
                     send_fault: SendFault::None,
                     sent_messages: 0,
+                    explicit_close_enabled: false,
+                    role: "receiver",
+                    events,
                 },
             )
         }
@@ -231,6 +251,16 @@ mod tests {
     #[async_trait::async_trait]
     impl TransferTransport for MemoryTransport {
         async fn send_message(&mut self, mut data: Vec<u8>) -> Result<()> {
+            let label = match data.as_slice() {
+                b"FIN" => Some("send_FIN"),
+                b"FIN_ACK" => Some("send_FIN_ACK"),
+                _ => None,
+            };
+            if let Some(label) = label
+                && let Ok(mut events) = self.events.lock()
+            {
+                events.push(format!("{}:{label}", self.role));
+            }
             self.sent_messages += 1;
             match self.send_fault {
                 SendFault::None => {}
@@ -267,6 +297,16 @@ mod tests {
                 .recv()
                 .await
                 .ok_or_else(|| anyhow!("peer closed its sending half"))?;
+            let label = match message.as_slice() {
+                b"FIN" => Some("receive_FIN"),
+                b"FIN_ACK" => Some("receive_FIN_ACK"),
+                _ => None,
+            };
+            if let Some(label) = label
+                && let Ok(mut events) = self.events.lock()
+            {
+                events.push(format!("{}:{label}", self.role));
+            }
             if message == b"FIN_ACK" && !self.fin_ack_receive_delay.is_zero() {
                 tokio::time::sleep(self.fin_ack_receive_delay).await;
             }
@@ -278,20 +318,32 @@ mod tests {
 
         async fn close_send_half(&mut self) -> Result<()> {
             self.close_send_half();
+            if let Ok(mut events) = self.events.lock() {
+                events.push(format!("{}:close_send", self.role));
+            }
             Ok(())
         }
 
         async fn finish_sending(&mut self) -> Result<()> {
             self.close_send_half();
+            if let Ok(mut events) = self.events.lock() {
+                events.push(format!("{}:finish_sending", self.role));
+            }
             Ok(())
         }
 
         async fn finish_receiving(&mut self) -> Result<()> {
             while self.rx.recv().await.is_some() {}
+            if let Ok(mut events) = self.events.lock() {
+                events.push(format!("{}:finish_receiving", self.role));
+            }
             Ok(())
         }
 
         async fn wait_for_peer_close(&mut self) -> Result<()> {
+            if let Ok(mut events) = self.events.lock() {
+                events.push(format!("{}:wait_peer_close", self.role));
+            }
             while !*self.peer_closed.borrow() {
                 self.peer_closed
                     .changed()
@@ -303,7 +355,19 @@ mod tests {
 
         async fn close_transport(&mut self) -> Result<()> {
             self.local_closed.send_replace(true);
+            if let Ok(mut events) = self.events.lock() {
+                events.push(format!("{}:close_transport", self.role));
+            }
             Ok(())
+        }
+
+        fn close_connection_if_enabled(&mut self) -> bool {
+            if self.explicit_close_enabled
+                && let Ok(mut events) = self.events.lock()
+            {
+                events.push(format!("{}:connection_close", self.role));
+            }
+            self.explicit_close_enabled
         }
     }
 
@@ -371,13 +435,19 @@ mod tests {
         data: Vec<u8>,
         chunk_size: usize,
         profile_enabled: bool,
-    ) -> Result<(TransferMetrics, TransferMetrics)> {
+        completion_profile_enabled: bool,
+        explicit_close_enabled: bool,
+        fin_ack_receive_delay: Duration,
+    ) -> Result<(TransferMetrics, TransferMetrics, Vec<String>)> {
         let (sender, receiver) =
-            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, Duration::ZERO);
+            MemoryTransport::pair(1, Duration::ZERO, Duration::ZERO, fin_ack_receive_delay);
         let expected_len = u64::try_from(data.len()).context("test input length exceeds u64")?;
         let output = output_path();
+        let expected_data = data.clone();
+        let events = Arc::clone(&sender.events);
         let sender_future = async move {
             let mut sender = sender;
+            sender.explicit_close_enabled = explicit_close_enabled;
             send_file_with_profile(
                 &mut sender,
                 Cursor::new(data),
@@ -385,19 +455,26 @@ mod tests {
                 b"ABCDE",
                 TransferConfig { chunk_size },
                 |_, _| {},
-                profile_enabled,
+                ProfileOptions {
+                    payload: profile_enabled,
+                    completion: completion_profile_enabled,
+                },
             )
             .await
         };
         let output_for_receiver = output.clone();
         let receiver_future = async move {
             let mut receiver = receiver;
+            receiver.explicit_close_enabled = explicit_close_enabled;
             receive_file_with_profile(
                 &mut receiver,
                 b"ABCDE",
                 &output_for_receiver,
                 |_, _| {},
-                profile_enabled,
+                ProfileOptions {
+                    payload: profile_enabled,
+                    completion: completion_profile_enabled,
+                },
             )
             .await
         };
@@ -406,20 +483,38 @@ mod tests {
         })
         .await
         .context("in-memory profiled transfer timed out")?;
+        let sender_metrics = sender_metrics?;
+        let receiver_metrics = receiver_metrics?;
+        ensure!(
+            tokio::fs::read(&output).await? == expected_data,
+            "profiled transfer output changed"
+        );
         tokio::fs::remove_file(&output).await?;
-        Ok((sender_metrics?, receiver_metrics?))
+        let events = events
+            .lock()
+            .map_err(|_| anyhow!("event log poisoned"))?
+            .clone();
+        Ok((sender_metrics, receiver_metrics, events))
     }
 
     #[tokio::test]
     async fn payload_profile_is_opt_in_and_counts_payload_chunks() -> Result<()> {
-        let (sender_metrics, receiver_metrics) =
-            transfer_metrics_with_profile(vec![7; 9], 4, false).await?;
+        let (sender_metrics, receiver_metrics, _) =
+            transfer_metrics_with_profile(vec![7; 9], 4, false, false, false, Duration::ZERO)
+                .await?;
         assert!(sender_metrics.payload_profile.is_none());
         assert!(receiver_metrics.payload_profile.is_none());
 
         for length in [0, 8, 9] {
-            let (sender_metrics, receiver_metrics) =
-                transfer_metrics_with_profile(vec![7; length], 4, true).await?;
+            let (sender_metrics, receiver_metrics, _) = transfer_metrics_with_profile(
+                vec![7; length],
+                4,
+                true,
+                false,
+                false,
+                Duration::ZERO,
+            )
+            .await?;
             let expected_chunks = u64::try_from(length.div_ceil(4))?;
             for (metrics, profile) in [(sender_metrics, "sender"), (receiver_metrics, "receiver")] {
                 let profile_data = metrics
@@ -440,6 +535,98 @@ mod tests {
                         + profile_data.sender_encrypt_seconds
                         <= profile_data.allocation_copy_encrypt_seconds + 1e-6
                 );
+            }
+        }
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn completion_profile_is_opt_in_and_close_candidate_follows_confirmation() -> Result<()> {
+        let (sender_off, receiver_off, _) =
+            transfer_metrics_with_profile(vec![7; 9], 4, false, false, false, Duration::ZERO)
+                .await?;
+        assert!(sender_off.completion_profile.is_none());
+        assert!(receiver_off.completion_profile.is_none());
+
+        let (sender, receiver, events) = transfer_metrics_with_profile(
+            vec![7; 9],
+            4,
+            false,
+            true,
+            true,
+            Duration::from_millis(20),
+        )
+        .await?;
+        let sender_profile = sender
+            .completion_profile
+            .as_ref()
+            .context("sender completion profile was not enabled")?;
+        let receiver_profile = receiver
+            .completion_profile
+            .as_ref()
+            .context("receiver completion profile was not enabled")?;
+        assert!(sender_profile.protocol_confirmation_seconds.is_some());
+        assert!(sender_profile.close_send_seconds.is_some());
+        assert!(sender_profile.finish_receiving_seconds.is_some());
+        assert!(sender_profile.wait_peer_close_seconds.is_some());
+        assert_eq!(sender_profile.explicit_connection_close_applied, Some(true));
+        assert!(sender_profile.transfer_lifetime_seconds.is_some());
+        assert!(receiver_profile.protocol_confirmation_seconds.is_some());
+        assert!(receiver_profile.receiver_commit_seconds.is_some());
+        assert!(receiver_profile.finish_receiving_seconds.is_some());
+        assert!(receiver_profile.finish_sending_seconds.is_some());
+        assert_eq!(
+            receiver_profile.explicit_connection_close_applied,
+            Some(true)
+        );
+        assert!(receiver_profile.transfer_lifetime_seconds.is_some());
+        assert!(
+            receiver_profile
+                .protocol_confirmation_seconds
+                .unwrap_or_default()
+                >= 0.015
+        );
+
+        let event_index = |event: &str| -> Result<usize> {
+            events
+                .iter()
+                .position(|observed| observed == event)
+                .with_context(|| format!("missing lifecycle event {event}"))
+        };
+        assert!(event_index("sender:send_FIN_ACK")? < event_index("sender:close_send")?);
+        assert!(event_index("sender:close_send")? < event_index("sender:finish_receiving")?);
+        assert!(event_index("sender:finish_receiving")? < event_index("sender:wait_peer_close")?);
+        assert!(event_index("sender:wait_peer_close")? < event_index("sender:connection_close")?);
+        assert!(event_index("sender:connection_close")? < event_index("sender:close_transport")?);
+        assert!(
+            event_index("receiver:receive_FIN_ACK")? < event_index("receiver:finish_receiving")?
+        );
+        assert!(
+            event_index("receiver:finish_receiving")? < event_index("receiver:finish_sending")?
+        );
+        assert!(
+            event_index("receiver:finish_sending")? < event_index("receiver:connection_close")?
+        );
+        assert!(
+            event_index("receiver:connection_close")? < event_index("receiver:close_transport")?
+        );
+
+        for profile in [sender_profile, receiver_profile] {
+            for duration in [
+                profile.transfer_lifetime_seconds,
+                profile.protocol_confirmation_seconds,
+                profile.receiver_commit_seconds,
+                profile.close_send_seconds,
+                profile.finish_receiving_seconds,
+                profile.finish_sending_seconds,
+                profile.wait_peer_close_seconds,
+                profile.explicit_connection_close_seconds,
+                profile.endpoint_close_seconds,
+            ]
+            .into_iter()
+            .flatten()
+            {
+                assert!(duration.is_finite() && duration >= 0.0);
             }
         }
         Ok(())

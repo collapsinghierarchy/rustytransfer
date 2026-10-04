@@ -17,11 +17,11 @@ import uuid
 from pathlib import Path
 from types import SimpleNamespace
 
-from run_croc_baseline import CapturedOutput, git_output, parse_time, selected_auto_path, time_command
-from summarize import payload_profile_rejection_reason
+from run_croc_baseline import CapturedOutput, git_output, parse_time, selected_auto_path
+from summarize import completion_profile_rejection_reason, payload_profile_rejection_reason
 
 
-TIME_FORMAT = '{"user_cpu_seconds":%U,"system_cpu_seconds":%S,"max_rss_kib":%M}'
+TIME_FORMAT = '{"user_cpu_seconds":%U,"system_cpu_seconds":%S,"max_rss_kib":%M,"process_seconds":%e}'
 SHARE_CODE = re.compile(r"Share this code:\s*([0-9]{4}-[A-Z]{5})")
 DIRECT_INVITE = re.compile(r"Direct invite:\s*(rt1:[^\s]+)")
 DIRECT_INVITE_TOKEN = re.compile(r"rt1:[^\s]+")
@@ -59,6 +59,14 @@ METRIC_FIELDS = (
     "path_end",
     "path_evidence",
     "payload_profile",
+    "completion_profile",
+    "completion_profile_enabled",
+    "explicit_connection_close",
+    "sender_process_seconds",
+    "receiver_process_seconds",
+    "endpoint_process_seconds",
+    "benchmark_timing",
+    "local_endpoint_working_directory",
     "stream_window_bytes",
     "experimental_protocol_version",
     "parallel_streams",
@@ -151,6 +159,9 @@ def rust_provenance(args, size_mib=64):
         "host_pair": f"WSL/{args.user}@{args.host}",
         "storage_class": args.storage_class,
         "profile_mode": "payload-profile" if payload_profile_enabled(args) else "standard",
+        "completion_profile_enabled": bool(getattr(args, "completion_profile", False)),
+        "explicit_connection_close": bool(getattr(args, "explicit_connection_close", False)),
+        "local_endpoint_working_directory": str(getattr(args, "endpoint_cwd", None) or Path.cwd()),
         "stream_window_bytes": getattr(args, "stream_window_bytes", None),
         "source_staging": "pre-staged" if remote_staged_input(args, args.direction == "oracle-to-wsl", size_mib) else "per-trial",
     }
@@ -174,6 +185,7 @@ def croc_provenance(args, size_mib=64):
         "profile_mode": "standard",
         "stream_window_bytes": None,
         "source_staging": "pre-staged" if remote_staged_input(args, args.direction == "oracle-to-wsl", size_mib) else "per-trial",
+        "local_endpoint_working_directory": str(getattr(args, "endpoint_cwd", None) or Path.cwd()),
     }
 
 
@@ -187,8 +199,49 @@ def payload_profile_enabled(args):
 
 def configure_profile_env(environment, args):
     environment.pop("RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE", None)
+    environment.pop("RUSTYTRANSFER_BENCH_COMPLETION_PROFILE", None)
+    environment.pop("RUSTYTRANSFER_BENCH_EXPLICIT_CLOSE", None)
     if payload_profile_enabled(args):
         environment["RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE"] = "1"
+    if getattr(args, "completion_profile", False):
+        environment["RUSTYTRANSFER_BENCH_COMPLETION_PROFILE"] = "1"
+    if getattr(args, "explicit_connection_close", False):
+        environment["RUSTYTRANSFER_BENCH_EXPLICIT_CLOSE"] = "1"
+
+
+def time_command(command, time_path, log_path, environment, cwd=None):
+    """Measure the actual endpoint process independently of SSH orchestration."""
+    process = subprocess.Popen(
+        ["/usr/bin/time", "-f", TIME_FORMAT, "-o", str(time_path), *command],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        env=environment,
+        cwd=cwd,
+    )
+    if process.stdout is None:
+        raise RuntimeError("Endpoint process output pipe was not created")
+    return process, CapturedOutput(process.stdout, log_path)
+
+
+def attach_benchmark_timing(rows, started, ready, receiver_launch, finished):
+    """All boundary offsets use the runner's monotonic clock, never remote clocks.
+
+    Ready means the runner observed an invite or Croc listeners. These are
+    orchestration boundaries, not application payload or commit events. GNU
+    time endpoint lifetimes have 10ms resolution and can overlap each other.
+    """
+    if not started <= ready <= receiver_launch <= finished:
+        raise RuntimeError("Benchmark lifecycle boundaries are out of order")
+    timing = {
+        "clock": "runner-monotonic",
+        "ready_observed_seconds": ready - started,
+        "receiver_launch_seconds": receiver_launch - started,
+        "pair_exit_observed_seconds": finished - started,
+        "endpoint_process_resolution_seconds": 0.01,
+        "scope": "SSH/process launch through both exits; phases and endpoints overlap",
+    }
+    for row in rows:
+        row["benchmark_timing"] = dict(timing)
 
 
 def configure_stream_window_env(environment, args):
@@ -418,9 +471,16 @@ def remote_process_command(
         if getattr(args, "stream_window_bytes", None) is not None
         else ""
     )
+    completion_env = ""
+    if getattr(args, "completion_profile", False):
+        completion_env += "RUSTYTRANSFER_BENCH_COMPLETION_PROFILE=1 "
+    if getattr(args, "explicit_connection_close", False):
+        completion_env += "RUSTYTRANSFER_BENCH_EXPLICIT_CLOSE=1 "
     env_command = (
         f"env -u RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE "
+        f"-u RUSTYTRANSFER_BENCH_COMPLETION_PROFILE -u RUSTYTRANSFER_BENCH_EXPLICIT_CLOSE "
         f"-u RUSTYTRANSFER_BENCH_STREAM_WINDOW_BYTES {profile_env}{stream_window_env}"
+        f"{completion_env}"
         f"{path_env}=1 RUSTYTRANSFER_BENCH_PATH_EVIDENCE=1 "
         f"RUSTYTRANSFER_METRICS_JSONL={remote_quote(metrics_path)} "
         f"/usr/bin/time -f {remote_quote(TIME_FORMAT)} "
@@ -498,12 +558,19 @@ def cleanup_remote(args, run_dir, files, directories=()):
 def resource_values(sender_time, receiver_time):
     sender_cpu = sender_time["user_cpu_seconds"] + sender_time["system_cpu_seconds"]
     receiver_cpu = receiver_time["user_cpu_seconds"] + receiver_time["system_cpu_seconds"]
-    return {
+    resources = {
         "sender_cpu_seconds": sender_cpu,
         "receiver_cpu_seconds": receiver_cpu,
         "sender_max_rss_kib": sender_time["max_rss_kib"],
         "receiver_max_rss_kib": receiver_time["max_rss_kib"],
     }
+    for role, report in (("sender", sender_time), ("receiver", receiver_time)):
+        if "process_seconds" in report:
+            value = report["process_seconds"]
+            if not isinstance(value, (int, float)) or isinstance(value, bool) or not 0 <= value < float("inf"):
+                raise RuntimeError(f"Invalid {role} process elapsed time")
+            resources[f"{role}_process_seconds"] = value
+    return resources
 
 
 def verified_direct_evidence(metric):
@@ -602,6 +669,11 @@ def ensure_direct_route_evidence(rows, requested_path):
 
 def append_and_validate_rust_rows(raw_path, rows, requested_path, actual_path):
     append_rows(raw_path, rows)
+    for row in rows:
+        if row.get("completion_profile_enabled"):
+            reason = completion_profile_rejection_reason(row)
+            if reason is not None:
+                raise RuntimeError(f"Invalid completion profile: {reason}; diagnostic rows were retained")
     if any(
         row.get("profile_mode") == "payload-profile"
         and payload_profile_rejection_reason(
@@ -703,6 +775,8 @@ def rust_rows(
     rows = []
     for role, metric in (("sender", sender_metrics), ("receiver", receiver_metrics)):
         row = {key: metric[key] for key in METRIC_FIELDS if key in metric}
+        if f"{role}_process_seconds" in resources:
+            row["endpoint_process_seconds"] = resources[f"{role}_process_seconds"]
         row.update(
             {
                 "schema_version": 1,
@@ -771,7 +845,8 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
 
     started = time.monotonic()
     sender, sender_output = time_command(
-        sender_command, sender_time_path, sender_log, sender_env
+        sender_command, sender_time_path, sender_log, sender_env,
+        cwd=getattr(args, "endpoint_cwd", None),
     )
     receiver = None
     receiver_output = None
@@ -782,6 +857,7 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
             if args.rusty_auth == "invite"
             else wait_for_share_code(sender, sender_log)
         )
+        ready_observed = time.monotonic()
         remote_receiver = remote_receiver_command(
             args,
             run_dir,
@@ -792,6 +868,7 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
             remote_receiver_log,
             remote_receiver_pid,
         )
+        receiver_launched = time.monotonic()
         receiver = subprocess.Popen(
             ssh_command(args, remote_receiver),
             stdout=subprocess.PIPE,
@@ -799,7 +876,8 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
         )
         receiver_output = CapturedOutput(receiver.stdout, receiver_log)
         wait_for_pair(sender, receiver, args.timeout, sender_log, receiver_log)
-        wall = time.monotonic() - started
+        finished = time.monotonic()
+        wall = finished - started
     except Exception as error:
         with sender_log.open("a", encoding="utf-8") as log:
             log.write(f"\nBenchmark runner failure: {error}\n")
@@ -869,6 +947,7 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
         getattr(args, "experimental_streams", None),
         getattr(args, "experimental_connections", None),
     )
+    attach_benchmark_timing(rows, started, ready_observed, receiver_launched, finished)
     cleanup_remote(
         args,
         run_dir,
@@ -935,6 +1014,7 @@ def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_ro
         authorization = wait_for_remote_authorization(
             args, sender, remote_log, args.rusty_auth
         )
+        ready_observed = time.monotonic()
         auth_flag = "--invite" if args.rusty_auth == "invite" else "--code"
         receiver_env = os.environ.copy()
         configure_profile_env(receiver_env, args)
@@ -952,11 +1032,14 @@ def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_ro
             "--out",
             str(receiver_output_path),
         ]
+        receiver_launched = time.monotonic()
         receiver, receiver_output = time_command(
-            receiver_command, receiver_time_path, receiver_log, receiver_env
+            receiver_command, receiver_time_path, receiver_log, receiver_env,
+            cwd=getattr(args, "endpoint_cwd", None),
         )
         wait_for_pair(sender, receiver, args.timeout, sender_log, receiver_log)
-        wall = time.monotonic() - started
+        finished = time.monotonic()
+        wall = finished - started
     except Exception as error:
         with receiver_log.open("a", encoding="utf-8") as log:
             log.write(f"\nBenchmark runner failure: {error}\n")
@@ -1027,6 +1110,7 @@ def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_ro
         getattr(args, "experimental_streams", None),
         getattr(args, "experimental_connections", None),
     )
+    attach_benchmark_timing(rows, started, ready_observed, receiver_launched, finished)
     cleanup_remote(
         args,
         run_dir,
@@ -1246,6 +1330,8 @@ def croc_rows(args, source_hash, received_hash, expected_size, wall, sender_time
             "working_tree_dirty": bool(git_output("status", "--porcelain")),
             "role": role,
             "transport": "croc",
+            **({"endpoint_process_seconds": resources[f"{role}_process_seconds"]}
+               if f"{role}_process_seconds" in resources else {}),
             **croc_provenance(args, expected_size // (1024 * 1024)),
             "transport_mode": mode,
             "path": path,
@@ -1281,7 +1367,7 @@ def croc_rows(args, source_hash, received_hash, expected_size, wall, sender_time
     return rows
 
 
-def start_croc_receiver(command, time_path, log_path, environment):
+def start_croc_receiver(command, time_path, log_path, environment, cwd=None):
     wrapped = [
         "/usr/bin/time",
         "-f",
@@ -1296,6 +1382,7 @@ def start_croc_receiver(command, time_path, log_path, environment):
         stderr=subprocess.STDOUT,
         env=environment,
         start_new_session=True,
+        cwd=cwd,
     )
     if process.stdout is None:
         raise RuntimeError("Croc receiver output pipe was not created")
@@ -1408,11 +1495,15 @@ def run_croc_reverse(args, source, size_mib, expected_size, source_hash, log_roo
         wait_for_remote_croc_listeners(
             args, sender, remote_log_path, set(range(9009, 9014))
         )
+        ready_observed = time.monotonic()
+        receiver_launched = time.monotonic()
         receiver, receiver_output = start_croc_receiver(
-            receiver_command, receiver_time_path, receiver_log, receiver_env
+            receiver_command, receiver_time_path, receiver_log, receiver_env,
+            cwd=getattr(args, "endpoint_cwd", None),
         )
         wait_for_pair(sender, receiver, args.timeout, sender_log, receiver_log)
-        wall = time.monotonic() - started
+        finished = time.monotonic()
+        wall = finished - started
     except Exception as error:
         with receiver_log.open("a", encoding="utf-8") as log:
             log.write(f"\nBenchmark runner failure: {error}\n")
@@ -1496,6 +1587,7 @@ def run_croc_reverse(args, source, size_mib, expected_size, source_hash, log_roo
         warmup,
         evidence,
     )
+    attach_benchmark_timing(rows, started, ready_observed, receiver_launched, finished)
     cleanup_remote(
         args,
         run_dir,
@@ -1557,7 +1649,8 @@ def run_croc(args, source, size_mib, expected_size, source_hash, log_root, run_i
     started = time.monotonic()
     args._trial_started = started
     sender, sender_output = time_command(
-        sender_command, sender_time_path, sender_log, sender_env
+        sender_command, sender_time_path, sender_log, sender_env,
+        cwd=getattr(args, "endpoint_cwd", None),
     )
     receiver = None
     receiver_output = None
@@ -1743,6 +1836,16 @@ def build_parser():
         help="enable opt-in payload stage wall-time diagnostics on both endpoints",
     )
     parser.add_argument(
+        "--completion-profile",
+        action="store_true",
+        help="record opt-in completion wait and application lifetime timings on both endpoints",
+    )
+    parser.add_argument(
+        "--explicit-connection-close",
+        action="store_true",
+        help="test explicit Iroh connection close after existing delivery/commit conditions",
+    )
+    parser.add_argument(
         "--experimental-streams",
         type=int,
         choices=(1, 4),
@@ -1760,10 +1863,22 @@ def build_parser():
         help="measure Rustytransfer alone; use this when Croc cannot select the same path",
     )
     parser.add_argument("--timeout", type=int, default=900)
+    parser.add_argument(
+        "--endpoint-cwd", type=Path,
+        help="local endpoint working directory; use native storage outside the source checkout",
+    )
     return parser
 
 
 def validate_local_args(parser, args):
+    endpoint_cwd = getattr(args, "endpoint_cwd", None)
+    if endpoint_cwd is not None:
+        if not endpoint_cwd.is_absolute() or not endpoint_cwd.is_dir():
+            parser.error("--endpoint-cwd must be an existing absolute directory")
+        for name in ("rusty_sender", "croc", "input_64", "input_512", "output_dir"):
+            path = getattr(args, name, None)
+            if path is not None and not path.is_absolute():
+                parser.error(f"--endpoint-cwd requires an absolute --{name.replace('_', '-')} path")
     if args.runs < 1:
         parser.error("--runs must be positive")
     chunk_size = getattr(args, "chunk_size", None)
@@ -1781,6 +1896,12 @@ def validate_local_args(parser, args):
         parser.error("--experimental-streams requires an explicit --chunk-size")
     if experimental_streams is not None and payload_profile_enabled(args):
         parser.error("--payload-profile is not supported by the shared-key benchmark example")
+    if experimental_streams is not None and (
+        getattr(args, "completion_profile", False) or getattr(args, "explicit_connection_close", False)
+    ):
+        parser.error("completion experiments require the production CLI, not the parallel example")
+    if getattr(args, "explicit_connection_close", False) and not getattr(args, "completion_profile", False):
+        parser.error("--explicit-connection-close requires --completion-profile to verify application")
     experimental_connections = getattr(args, "experimental_connections", None)
     if experimental_connections not in (None, 1, 4):
         parser.error("--experimental-connections must be 1 or 4")

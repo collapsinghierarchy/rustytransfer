@@ -5,6 +5,51 @@ pub(crate) fn payload_profile_enabled_from_env() -> bool {
     std::env::var("RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE").is_ok_and(|value| value == "1")
 }
 
+pub(crate) fn completion_profile_enabled_from_env() -> bool {
+    std::env::var("RUSTYTRANSFER_BENCH_COMPLETION_PROFILE").is_ok_and(|value| value == "1")
+}
+
+pub(crate) fn record_seconds(slot: &mut Option<f64>, started: Instant) {
+    *slot = Some(started.elapsed().as_secs_f64());
+}
+
+/// Optional lifecycle spans around transfer confirmation and transport shutdown.
+/// Individual sequential spans can be compared with shutdown time; setup,
+/// application wall, and transfer lifetime are enclosing spans and overlap them.
+#[derive(Debug, Clone, Default, PartialEq, serde::Serialize)]
+pub struct CompletionProfile {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub setup_seconds: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub application_wall_seconds: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub transfer_lifetime_seconds: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub protocol_confirmation_seconds: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub receiver_commit_seconds: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub close_send_seconds: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub finish_receiving_seconds: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub finish_sending_seconds: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub wait_peer_close_seconds: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub explicit_connection_close_seconds: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub explicit_connection_close_applied: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub endpoint_close_seconds: Option<f64>,
+}
+
+impl CompletionProfile {
+    pub(crate) fn for_enabled_transfer(enabled: bool) -> Option<Self> {
+        enabled.then(Self::default)
+    }
+}
+
 /// Optional payload-stage wall-time profile. Timings include async waiting and
 /// backpressure; they are elapsed spans, not CPU time. Sender reads include the
 /// EOF probe and receiver writes include the payload flush. Stage spans do not
@@ -81,4 +126,6 @@ pub struct TransferMetrics {
     pub path_end: Option<PathObservation>,
     pub cleanup_issues: Vec<&'static str>,
     pub payload_profile: Option<PayloadProfile>,
+    /// Coarse completion timings, absent unless the benchmark profile is enabled.
+    pub completion_profile: Option<CompletionProfile>,
 }

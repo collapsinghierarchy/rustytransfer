@@ -85,6 +85,8 @@ struct TransferMetric {
     path_evidence: Option<crate::transport::PathEvidence>,
     #[serde(skip_serializing_if = "Option::is_none")]
     payload_profile: Option<transfer::PayloadProfile>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    completion_profile: Option<transfer::CompletionProfile>,
     local_candidate_type: Option<String>,
     remote_candidate_type: Option<String>,
     size_bytes: u64,
@@ -114,6 +116,7 @@ struct TransferTiming {
     payload_seconds: f64,
     shutdown_seconds: f64,
     payload_profile: Option<transfer::PayloadProfile>,
+    completion_profile: Option<transfer::CompletionProfile>,
 }
 
 struct MetricPaths {
@@ -223,6 +226,7 @@ pub async fn main() -> ExitCode {
                         payload_seconds: 0.0,
                         shutdown_seconds: 0.0,
                         payload_profile: None,
+                        completion_profile: None,
                     },
                     MetricOutcome {
                         run_id: run.run_id.clone(),
@@ -310,6 +314,7 @@ pub async fn main() -> ExitCode {
                     payload_seconds: 0.0,
                     shutdown_seconds: 0.0,
                     payload_profile: None,
+                    completion_profile: None,
                 },
                 MetricOutcome {
                     run_id: run.run_id.clone(),

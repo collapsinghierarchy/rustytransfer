@@ -82,6 +82,32 @@
     "payload_key_count": { "type": "integer", "const": 1 },
     "kem_sessions": { "type": "integer", "const": 1 },
     "source_staging": { "enum": ["per-trial", "pre-staged"] },
+    "completion_profile_enabled": { "type": "boolean" },
+    "explicit_connection_close": { "type": "boolean" },
+    "sender_process_seconds": { "type": "number", "minimum": 0 },
+    "receiver_process_seconds": { "type": "number", "minimum": 0 },
+    "endpoint_process_seconds": { "type": "number", "minimum": 0 },
+    "local_endpoint_working_directory": { "type": "string", "minLength": 1 },
+    "benchmark_timing": {
+      "type": "object",
+      "required": [
+        "clock",
+        "ready_observed_seconds",
+        "receiver_launch_seconds",
+        "pair_exit_observed_seconds",
+        "endpoint_process_resolution_seconds",
+        "scope"
+      ],
+      "properties": {
+        "clock": { "const": "runner-monotonic" },
+        "ready_observed_seconds": { "type": "number", "minimum": 0 },
+        "receiver_launch_seconds": { "type": "number", "minimum": 0 },
+        "pair_exit_observed_seconds": { "type": "number", "minimum": 0 },
+        "endpoint_process_resolution_seconds": { "const": 0.01 },
+        "scope": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
     "payload_profile": {
       "type": "object",
       "required": [
@@ -106,6 +132,24 @@
         "chunk_count": { "type": "integer", "minimum": 0 },
         "payload_bytes": { "type": "integer", "minimum": 0 }
       }
+    },
+    "completion_profile": {
+      "type": "object",
+      "properties": {
+        "setup_seconds": { "type": "number", "minimum": 0 },
+        "application_wall_seconds": { "type": "number", "minimum": 0 },
+        "transfer_lifetime_seconds": { "type": "number", "minimum": 0 },
+        "protocol_confirmation_seconds": { "type": "number", "minimum": 0 },
+        "receiver_commit_seconds": { "type": "number", "minimum": 0 },
+        "close_send_seconds": { "type": "number", "minimum": 0 },
+        "finish_receiving_seconds": { "type": "number", "minimum": 0 },
+        "finish_sending_seconds": { "type": "number", "minimum": 0 },
+        "wait_peer_close_seconds": { "type": "number", "minimum": 0 },
+        "explicit_connection_close_seconds": { "type": "number", "minimum": 0 },
+        "explicit_connection_close_applied": { "type": "boolean" },
+        "endpoint_close_seconds": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
     },
     "path": { "enum": ["direct", "relay", "mixed", "unknown", "auto"] },
     "path_start": { "enum": ["direct", "relay", "unknown"] },

@@ -42,6 +42,34 @@ def record(**updates):
 
 
 class SummarizeTests(unittest.TestCase):
+    def test_completion_settings_and_working_directory_keep_controls_separate(self):
+        profile = dict(setup_seconds=0.25, application_wall_seconds=2,
+                       transfer_lifetime_seconds=1.75, protocol_confirmation_seconds=0.01,
+                       finish_receiving_seconds=0.01, endpoint_close_seconds=0.01,
+                       close_send_seconds=0.01, wait_peer_close_seconds=0.01,
+                       explicit_connection_close_applied=False)
+        rows = [record(local_endpoint_working_directory="/native"),
+                record(local_endpoint_working_directory="/native", completion_profile_enabled=True,
+                       completion_profile=profile),
+                record(local_endpoint_working_directory="/native", completion_profile_enabled=True,
+                       explicit_connection_close=True, completion_profile={**profile,
+                           "explicit_connection_close_applied": True,
+                           "explicit_connection_close_seconds": 0.001}),
+                record(local_endpoint_working_directory="/checkout")]
+        summary = summarize.summarize_records(rows)
+        self.assertEqual(summary["rejected_rows"], [])
+        self.assertEqual(len(summary["groups"]), 4)
+        controls = {(group["completion_profile_enabled"], group["explicit_connection_close"],
+                     group["local_endpoint_working_directory"]) for group in summary["groups"]}
+        self.assertEqual(controls, {(False, False, "/native"), (True, False, "/native"),
+                                    (True, True, "/native"), (False, False, "/checkout")})
+
+    def test_completion_summary_rejects_missing_candidate_evidence(self):
+        summary = summarize.summarize_records([record(completion_profile_enabled=True,
+                                                       explicit_connection_close=True)])
+        self.assertEqual(summary["groups"], [])
+        self.assertIn("invalid completion profile", summary["rejected_rows"][0]["reason"])
+
     def test_profile_summary_accepts_overlapping_sender_substages_and_connection_counters(self):
         row = record(
             profile_mode="payload-profile",

@@ -174,18 +174,98 @@ class SummarizeTests(unittest.TestCase):
             {"unknown", 2_500_000},
         )
 
-    def test_shared_key_stream_experiments_group_apart_from_production_and_each_other(self):
+    def test_shared_key_experiments_group_by_protocol_stream_and_connection_count(self):
+        path_evidence = {
+            "classification": "direct", "verified": True, "lagged": False,
+            "missing_path_stats": False, "relay_selected": False,
+            "relay_stream_tx": 0, "relay_stream_rx": 0,
+            "direct_stream_tx": 1, "direct_stream_rx": 1,
+        }
+
+        def experiment(streams, connections, protocol="shared-key-parallel/2"):
+            per_connection = [
+                {
+                    "connection_index": index,
+                    "stable_id": 10 + index,
+                    "local_endpoint_id": "sender",
+                    "remote_endpoint_id": "receiver",
+                    "path": "direct",
+                    "path_start": "direct",
+                    "path_end": "direct",
+                    "path_evidence": path_evidence,
+                }
+                for index in range(connections)
+            ]
+            return record(
+                experimental_protocol_version=protocol,
+                parallel_streams=streams,
+                parallel_connections=connections,
+                payload_key_count=1,
+                kem_sessions=1,
+                path_start="direct",
+                path_end="direct",
+                path_evidence=path_evidence,
+                connection_evidence=per_connection,
+            )
+
         rows = [
             record(),
-            record(experimental_protocol_version="shared-key-parallel/1", parallel_streams=1, payload_key_count=1, kem_sessions=1),
-            record(experimental_protocol_version="shared-key-parallel/1", parallel_streams=4, payload_key_count=1, kem_sessions=1),
+            experiment(1, 1),
+            experiment(4, 1),
+            experiment(4, 4),
+            experiment(4, 1, "shared-key-parallel/1"),
         ]
         summary = summarize.summarize_records(rows)
-        self.assertEqual(len(summary["groups"]), 3)
+        self.assertEqual(len(summary["groups"]), 5)
         self.assertEqual(
             {group["parallel_streams"] for group in summary["groups"]},
             {"unknown", 1, 4},
         )
+        self.assertEqual(
+            {group["parallel_connections"] for group in summary["groups"]},
+            {"unknown", 1, 4},
+        )
+
+    def test_v2_summarizer_rejects_corrupt_secondary_connection_evidence(self):
+        evidence = {
+            "classification": "direct", "verified": True, "lagged": False,
+            "missing_path_stats": False, "relay_selected": False,
+            "relay_stream_tx": 0, "relay_stream_rx": 0,
+            "direct_stream_tx": 1, "direct_stream_rx": 1,
+        }
+        connections = [
+            {
+                "connection_index": index,
+                "stable_id": 100 + index,
+                "local_endpoint_id": "sender",
+                "remote_endpoint_id": "receiver",
+                "path": "direct",
+                "path_start": "direct",
+                "path_end": "direct",
+                "path_evidence": evidence,
+            }
+            for index in range(4)
+        ]
+        valid = record(
+            experimental_protocol_version="shared-key-parallel/2",
+            parallel_streams=4,
+            parallel_connections=4,
+            payload_key_count=1,
+            kem_sessions=1,
+            path_start="direct",
+            path_end="direct",
+            path_evidence=evidence,
+            connection_evidence=connections,
+        )
+        self.assertEqual(summarize.rejection_reason(valid), None)
+        relay = {**valid, "connection_evidence": [dict(item) for item in connections]}
+        relay["connection_evidence"][2]["path"] = "relay"
+        self.assertIn("connection did not remain direct", summarize.rejection_reason(relay))
+        missing = {**valid, "connection_evidence": connections[:3]}
+        self.assertIn("missing or incomplete", summarize.rejection_reason(missing))
+        duplicate = {**valid, "connection_evidence": [dict(item) for item in connections]}
+        duplicate["connection_evidence"][3]["stable_id"] = 101
+        self.assertIn("duplicated", summarize.rejection_reason(duplicate))
 
     def test_groups_keep_build_direction_pairing_host_and_storage_separate(self):
         rows = [

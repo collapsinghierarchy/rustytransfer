@@ -51,6 +51,34 @@
     },
     "experimental_protocol_version": { "type": "string", "minLength": 1 },
     "parallel_streams": { "type": "integer", "enum": [1, 4] },
+    "parallel_connections": { "type": "integer", "enum": [1, 4] },
+    "connection_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "connection_index",
+          "stable_id",
+          "local_endpoint_id",
+          "remote_endpoint_id",
+          "path",
+          "path_start",
+          "path_end",
+          "path_evidence"
+        ],
+        "properties": {
+          "connection_index": { "type": "integer", "minimum": 0, "maximum": 3 },
+          "stable_id": { "type": "integer", "minimum": 0 },
+          "local_endpoint_id": { "type": "string", "minLength": 1 },
+          "remote_endpoint_id": { "type": "string", "minLength": 1 },
+          "path": { "enum": ["direct", "relay", "mixed", "unknown"] },
+          "path_start": { "enum": ["direct", "relay", "unknown"] },
+          "path_end": { "enum": ["direct", "relay", "unknown"] },
+          "path_evidence": { "type": ["object", "null"] }
+        },
+        "additionalProperties": true
+      }
+    },
     "payload_key_count": { "type": "integer", "const": 1 },
     "kem_sessions": { "type": "integer", "const": 1 },
     "source_staging": { "enum": ["per-trial", "pre-staged"] },

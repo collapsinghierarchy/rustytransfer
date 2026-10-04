@@ -103,6 +103,7 @@ GROUP_FIELDS = (
     "stream_window_bytes",
     "experimental_protocol_version",
     "parallel_streams",
+    "parallel_connections",
     "payload_key_count",
     "kem_sessions",
     "source_staging",
@@ -252,6 +253,9 @@ def load_records(input_paths):
 def rejection_reason(record):
     if record.get("success") is not True:
         return "transfer failed"
+    experiment_error = experimental_connection_rejection_reason(record)
+    if experiment_error is not None:
+        return experiment_error
     profile_mode = record.get("profile_mode", "standard")
     if profile_mode not in (None, "standard", "payload-profile"):
         return "profile mode is invalid"
@@ -314,6 +318,78 @@ def rejection_reason(record):
             return "sender binary SHA-256 is invalid"
         if not isinstance(receiver_binary_hash, str) or not SHA256.fullmatch(receiver_binary_hash):
             return "receiver binary SHA-256 is invalid"
+    return None
+
+
+def experimental_connection_rejection_reason(record):
+    if record.get("experimental_protocol_version") != "shared-key-parallel/2":
+        return None
+    streams = record.get("parallel_streams")
+    connections_count = record.get("parallel_connections")
+    if (connections_count, streams) not in ((1, 1), (1, 4), (4, 4)):
+        return "shared-key connection/stream geometry is invalid"
+    if record.get("payload_key_count") != 1 or record.get("kem_sessions") != 1:
+        return "shared-key crypto session count is invalid"
+    connections = record.get("connection_evidence")
+    if not isinstance(connections, list) or len(connections) != connections_count:
+        return "per-connection route evidence is missing or incomplete"
+    indices = []
+    stable_ids = []
+    ordered_items = []
+    first_local = None
+    first_remote = None
+    for item in connections:
+        if not isinstance(item, dict):
+            return "per-connection route evidence is malformed"
+        index = item.get("connection_index")
+        stable_id = item.get("stable_id")
+        indices.append(index)
+        stable_ids.append(stable_id)
+        ordered_items.append(item)
+        if (
+            not isinstance(index, int)
+            or isinstance(index, bool)
+            or not isinstance(stable_id, int)
+            or isinstance(stable_id, bool)
+            or stable_id < 0
+        ):
+            return "connection index or stable ID is invalid"
+        local_id = item.get("local_endpoint_id")
+        remote_id = item.get("remote_endpoint_id")
+        if not isinstance(local_id, str) or not local_id or not isinstance(remote_id, str) or not remote_id:
+            return "connection endpoint IDs are missing"
+        if first_local is None:
+            first_local, first_remote = local_id, remote_id
+        elif local_id != first_local or remote_id != first_remote:
+            return "connection endpoint IDs are inconsistent"
+        if local_id == remote_id:
+            return "local and remote endpoint IDs are identical"
+        if item.get("path") != "direct" or item.get("path_start") != "direct" or item.get("path_end") != "direct":
+            return "a data connection did not remain direct"
+        evidence = item.get("path_evidence")
+        if not (
+            isinstance(evidence, dict)
+            and evidence.get("classification") == "direct"
+            and evidence.get("verified") is True
+            and evidence.get("lagged") is False
+            and evidence.get("missing_path_stats") is False
+            and evidence.get("relay_selected") is False
+            and evidence.get("relay_stream_tx") == 0
+            and evidence.get("relay_stream_rx") == 0
+            and (evidence.get("direct_stream_tx", 0) + evidence.get("direct_stream_rx", 0)) > 0
+        ):
+            return "strict direct STREAM evidence is missing for a data connection"
+    if sorted(indices) != list(range(connections_count)):
+        return "connection lane indices are missing or duplicated"
+    if len(set(stable_ids)) != connections_count:
+        return "stable connection IDs are duplicated"
+    primary = sorted(ordered_items, key=lambda item: item["connection_index"])[0]
+    if record.get("path_evidence") != primary.get("path_evidence"):
+        return "primary connection evidence does not match endpoint path evidence"
+    if record.get("path_start") != primary.get("path_start") or record.get("path_end") != primary.get("path_end"):
+        return "primary connection path boundaries do not match endpoint path boundaries"
+    if record.get("path") != "direct":
+        return "aggregate experimental connection route is not direct"
     return None
 
 

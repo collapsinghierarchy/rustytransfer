@@ -62,6 +62,8 @@ METRIC_FIELDS = (
     "stream_window_bytes",
     "experimental_protocol_version",
     "parallel_streams",
+    "parallel_connections",
+    "connection_evidence",
     "payload_key_count",
     "kem_sessions",
     "direct_route_verified_both",
@@ -451,6 +453,8 @@ def rusty_sender_argv(args, executable, source_path):
         command.extend(["--chunk-size", str(args.chunk_size)])
     if getattr(args, "experimental_streams", None) is not None:
         command.extend(["--streams", str(args.experimental_streams)])
+    if getattr(args, "experimental_connections", None) is not None:
+        command.extend(["--connections", str(args.experimental_connections)])
     command.extend(["--file", source_path])
     if args.rusty_auth == "pake":
         command.extend(["--password", "ABCDE"])
@@ -517,6 +521,75 @@ def verified_direct_evidence(metric):
     )
 
 
+def verified_direct_connections(metric, expected_count):
+    connections = metric.get("connection_evidence")
+    if not isinstance(connections, list) or len(connections) != expected_count:
+        return False
+    indices = []
+    stable_ids = []
+    for connection in connections:
+        if not isinstance(connection, dict):
+            return False
+        indices.append(connection.get("connection_index"))
+        stable_ids.append(connection.get("stable_id"))
+        if connection.get("path") != "direct" or not verified_direct_evidence(
+            {"path_evidence": connection.get("path_evidence")}
+        ):
+            return False
+        if not all(
+            isinstance(connection.get(field), str) and connection[field]
+            for field in ("local_endpoint_id", "remote_endpoint_id")
+        ):
+            return False
+        if connection.get("path_start") != "direct" or connection.get("path_end") != "direct":
+            return False
+    if not all(
+        isinstance(value, int) and not isinstance(value, bool) and value >= 0
+        for value in (*stable_ids, *indices)
+    ):
+        return False
+    if sorted(indices) != list(range(expected_count)) or len(set(stable_ids)) != expected_count:
+        return False
+    ordered = sorted(connections, key=lambda item: item["connection_index"])
+    primary = ordered[0]
+    if metric.get("path_evidence") != primary.get("path_evidence"):
+        return False
+    if metric.get("path_start") != primary.get("path_start") or metric.get("path_end") != primary.get("path_end"):
+        return False
+    local_id = primary["local_endpoint_id"]
+    remote_id = primary["remote_endpoint_id"]
+    return local_id != remote_id and all(
+        item["local_endpoint_id"] == local_id and item["remote_endpoint_id"] == remote_id
+        for item in ordered
+    )
+
+
+def validate_experimental_connection_pair(sender, receiver, expected_count):
+    if not verified_direct_connections(sender, expected_count) or not verified_direct_connections(
+        receiver, expected_count
+    ):
+        return False
+    sender_connections = sorted(sender["connection_evidence"], key=lambda item: item["connection_index"])
+    receiver_connections = sorted(receiver["connection_evidence"], key=lambda item: item["connection_index"])
+    sender_local = sender_connections[0]["local_endpoint_id"]
+    sender_remote = sender_connections[0]["remote_endpoint_id"]
+    receiver_local = receiver_connections[0]["local_endpoint_id"]
+    receiver_remote = receiver_connections[0]["remote_endpoint_id"]
+    for sent, received in zip(sender_connections, receiver_connections, strict=True):
+        if (
+            sent["local_endpoint_id"] != received["remote_endpoint_id"]
+            or sent["remote_endpoint_id"] != received["local_endpoint_id"]
+            or sent["local_endpoint_id"] != sender_local
+            or sent["remote_endpoint_id"] != sender_remote
+            or received["local_endpoint_id"] != receiver_local
+            or received["remote_endpoint_id"] != receiver_remote
+        ):
+            return False
+    if sender.get("path") != "direct" or receiver.get("path") != "direct":
+        return False
+    return True
+
+
 def ensure_direct_route_evidence(rows, requested_path):
     if requested_path == "direct" and any(
         row.get("direct_route_verified_both") is not True for row in rows
@@ -564,6 +637,7 @@ def rust_rows(
     warmup,
     provenance,
     experimental_streams=None,
+    experimental_connections=None,
 ):
     endpoint_metrics = (("sender", sender_metrics), ("receiver", receiver_metrics))
     for role, metric in endpoint_metrics:
@@ -581,9 +655,11 @@ def rust_rows(
             )
         requested_streams = experimental_streams
         if requested_streams is not None:
+            requested_connections = experimental_connections or 1
             expected_experimental = {
-                "experimental_protocol_version": "shared-key-parallel/1",
+                "experimental_protocol_version": "shared-key-parallel/2",
                 "parallel_streams": requested_streams,
+                "parallel_connections": requested_connections,
                 "payload_key_count": 1,
                 "kem_sessions": 1,
             }
@@ -593,6 +669,13 @@ def rust_rows(
                         f"Rustytransfer {role} reported {field}={metric.get(field)!r}; "
                         f"expected {expected!r} for the requested shared-key experiment"
                     )
+    experimental_evidence_matches = (
+        validate_experimental_connection_pair(
+            sender_metrics, receiver_metrics, experimental_connections or 1
+        )
+        if experimental_streams is not None
+        else True
+    )
     sender_chunk_size = sender_metrics.get("chunk_size")
     receiver_chunk_size = receiver_metrics.get("chunk_size")
     if (
@@ -610,7 +693,13 @@ def rust_rows(
 
     resources = resource_values(sender_time, receiver_time)
     effective_mib_per_second = (sender_metrics["size_bytes"] / (1024 * 1024)) / wall
-    direct_route_verified_both = verified_direct_evidence(sender_metrics) and verified_direct_evidence(receiver_metrics)
+    direct_route_verified_both = (
+        verified_direct_connections(sender_metrics, experimental_connections or 1)
+        and verified_direct_connections(receiver_metrics, experimental_connections or 1)
+        and experimental_evidence_matches
+        if experimental_streams is not None
+        else verified_direct_evidence(sender_metrics) and verified_direct_evidence(receiver_metrics)
+    )
     rows = []
     for role, metric in (("sender", sender_metrics), ("receiver", receiver_metrics)):
         row = {key: metric[key] for key in METRIC_FIELDS if key in metric}
@@ -754,13 +843,16 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
     received_hash = verify_remote_file(args, output_path, expected_size, source_hash)
     sender_metric = json.loads(sender_metrics_path.read_text(encoding="utf-8").splitlines()[0])
     receiver_metric = read_remote_json(args, remote_metrics_path)
-    if sender_metric["path"] != receiver_metric["path"]:
+    if (
+        sender_metric["path"] != receiver_metric["path"]
+        and getattr(args, "experimental_streams", None) is None
+    ):
         raise RuntimeError(
             f"sender/receiver selected different paths: "
             f"{sender_metric['path']} / {receiver_metric['path']}"
         )
     path = sender_metric["path"]
-    if path not in ("direct", "relay"):
+    if path not in ("direct", "relay") and getattr(args, "experimental_streams", None) is None:
         raise RuntimeError(f"Rustytransfer selected an unusable comparison path: {path}")
     rows = rust_rows(
         sender_metric,
@@ -775,6 +867,7 @@ def run_rusty(args, source, size_mib, expected_size, source_hash, log_root, run_
         warmup,
         {**rust_provenance(args, size_mib), "pairing_mode": args.rusty_auth},
         getattr(args, "experimental_streams", None),
+        getattr(args, "experimental_connections", None),
     )
     cleanup_remote(
         args,
@@ -908,13 +1001,16 @@ def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_ro
     )
     sender_metric = read_remote_json(args, remote_metrics_path)
     receiver_metric = json.loads(receiver_metrics_path.read_text(encoding="utf-8").splitlines()[0])
-    if sender_metric["path"] != receiver_metric["path"]:
+    if (
+        sender_metric["path"] != receiver_metric["path"]
+        and getattr(args, "experimental_streams", None) is None
+    ):
         raise RuntimeError(
             f"sender/receiver selected different paths: "
             f"{sender_metric['path']} / {receiver_metric['path']}"
         )
     path = sender_metric["path"]
-    if path not in ("direct", "relay"):
+    if path not in ("direct", "relay") and getattr(args, "experimental_streams", None) is None:
         raise RuntimeError(f"Rustytransfer selected an unusable comparison path: {path}")
     rows = rust_rows(
         sender_metric,
@@ -929,6 +1025,7 @@ def run_rusty_reverse(args, source, size_mib, expected_size, source_hash, log_ro
         warmup,
         {**rust_provenance(args, size_mib), "pairing_mode": args.rusty_auth},
         getattr(args, "experimental_streams", None),
+        getattr(args, "experimental_connections", None),
     )
     cleanup_remote(
         args,
@@ -1652,6 +1749,12 @@ def build_parser():
         help="run the test-only shared-key parallel-stream example with 1 or 4 streams",
     )
     parser.add_argument(
+        "--experimental-connections",
+        type=int,
+        choices=(1, 4),
+        help="run the test-only shared-key benchmark example with 1 or 4 independent QUIC connections",
+    )
+    parser.add_argument(
         "--rusty-only",
         action="store_true",
         help="measure Rustytransfer alone; use this when Croc cannot select the same path",
@@ -1678,6 +1781,17 @@ def validate_local_args(parser, args):
         parser.error("--experimental-streams requires an explicit --chunk-size")
     if experimental_streams is not None and payload_profile_enabled(args):
         parser.error("--payload-profile is not supported by the shared-key benchmark example")
+    experimental_connections = getattr(args, "experimental_connections", None)
+    if experimental_connections not in (None, 1, 4):
+        parser.error("--experimental-connections must be 1 or 4")
+    if experimental_connections is not None and experimental_streams is None:
+        parser.error("--experimental-connections requires an explicit --experimental-streams")
+    if experimental_connections is not None and (
+        not args.rusty_only or args.rusty_auth != "invite"
+    ):
+        parser.error("--experimental-connections requires --rusty-only --rusty-auth invite and the shared-key benchmark example binary")
+    if experimental_connections == 4 and experimental_streams != 4:
+        parser.error("four experimental connections require --experimental-streams 4")
     if not args.build_id.strip():
         parser.error("--build-id cannot be empty")
     if not args.storage_class.strip():

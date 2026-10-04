@@ -84,32 +84,45 @@ production defaults. The optional `stream_window_bytes` provenance field keeps
 these cohorts separate in summaries. This control is for measurement and does
 not select a new production default.
 
-The test-only `examples/shared_key_parallel.rs` binary can compare one versus
-four payload streams on a single Iroh connection. Build it with
+The test-only `examples/shared_key_parallel.rs` binary compares three layouts:
+one connection/one stream, one connection/four streams, and four independent
+connections/four streams. Build it with
 `cargo build --release --example shared_key_parallel` and point the Oracle
 runner's local and remote Rustytransfer executable paths at that example binary.
 Use `--rusty-only --rusty-auth invite --chunk-size BYTES
 --experimental-streams 1` or `--experimental-streams 4`; the runner sends
-`--streams` only to the sender, and the receiver negotiates the count.
+`--streams` only to the sender, and the receiver negotiates the count. Add
+`--experimental-connections 1` or `--experimental-connections 4` to select the
+connection count; four connections require four streams. The control connection
+also carries lane zero, so the experiment uses exactly the requested number of
+connections.
 
-This experiment uses a separate versioned ALPN and framing protocol. One
-authenticated ML-KEM session supplies one AES-256-GCM payload key shared by
-every stream. Authenticated, contiguous chunk ranges use disjoint global chunk
-indices for nonces, and chunk AAD binds the protocol version, session, stream,
-range, offset, and plaintext length. All streams share one connection and its
-congestion budget. The harness writes chunks to disjoint offsets in a bounded,
-file-backed partial output and promotes it only after authenticated completion.
-Both endpoints require a direct path to remain selected for 500 ms before
-READY, within the startup timer;
-payload path evidence ends after the data streams complete and before FIN/ACK
-shutdown. Control and stream I/O have 30-second idle limits, and SIGINT/SIGTERM
-abort and join active streams before owned partial output cleanup. SIGKILL cannot
-run cleanup and may leave a partial file; this experiment has no resume support.
-It is fresh-transfer only and makes no resume claim. The harness uses separate
-per-chunk encryption/decryption buffers, so its CPU and allocation profile is
-not identical to the production single-stream path. This isolated benchmark
-does not change the production protocol, production defaults, or production
-resume behavior.
+This `/2` experiment uses a separate versioned ALPN and framing protocol. One
+authenticated ML-KEM session supplies exactly one AES-256-GCM payload key shared
+by every stream and connection. The authenticated manifest binds the requested
+connection count and a separate lane-binding nonce prefix. Each extra
+connection proves its lane with a fresh AEAD challenge/response bound to the
+session, manifest digest, lane, and chunk range; repeated lane IDs are rejected.
+Payload chunks use disjoint global indices for nonces, and chunk AAD binds the
+version, session, manifest, stream, range, offset, and plaintext length. The
+one-connection layouts share a congestion budget; the four-connection layout
+has independent QUIC congestion control per connection. The harness writes
+chunks to disjoint offsets in a bounded, file-backed partial output and promotes
+it only after authenticated completion.
+
+Both endpoints require every connection's direct path to remain selected for
+500 ms before the observer-start barrier, within the shared startup deadline.
+All connections begin payload observation before the sender is allowed to open
+data streams; the measured evidence spans data stream headers through sender
+finish and receiver EOF, then stops before FIN/ACK. Runner acceptance requires
+strict direct STREAM evidence on every connection at both endpoints and
+cross-checks endpoint IDs and connection counts. Control and stream I/O have
+30-second idle limits, and SIGINT/SIGTERM abort and join active tasks before
+owned partial output cleanup. SIGKILL cannot run cleanup and may leave a
+partial file; this fresh-transfer-only experiment has no resume support. The
+harness uses separate per-chunk encryption/decryption buffers, so its CPU and
+allocation profile is not identical to the production path. It does not change
+the production protocol, defaults, or resume behavior.
 
 With both `RUSTYTRANSFER_BENCH_PAYLOAD_PROFILE=1` and
 `RUSTYTRANSFER_BENCH_PATH_EVIDENCE=1`, Iroh records connection diagnostics in

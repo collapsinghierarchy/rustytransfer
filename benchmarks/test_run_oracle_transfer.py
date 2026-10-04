@@ -263,7 +263,7 @@ class OracleRunnerArgumentTests(unittest.TestCase):
                 runner.append_and_validate_rust_rows(output, rows, "relay", "relay")
             self.assertEqual(len(output.read_text(encoding="utf-8").splitlines()), 2)
 
-    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake", profile=False, remote_inputs=None, with_croc=False, croc_version="11.5.3", chunk_size=None, stream_window_bytes=None, experimental_streams=None):
+    def parse(self, temp_dir, rusty_only, direction="wsl-to-oracle", auth="pake", profile=False, remote_inputs=None, with_croc=False, croc_version="11.5.3", chunk_size=None, stream_window_bytes=None, experimental_streams=None, experimental_connections=None):
         root = Path(temp_dir)
         paths = [root / name for name in ("key", "rusty", "64.bin", "512.bin", "croc")]
         for path in paths:
@@ -297,6 +297,8 @@ class OracleRunnerArgumentTests(unittest.TestCase):
             argv.extend(["--stream-window-bytes", str(stream_window_bytes)])
         if experimental_streams is not None:
             argv.extend(["--experimental-streams", str(experimental_streams)])
+        if experimental_connections is not None:
+            argv.extend(["--experimental-connections", str(experimental_connections)])
         if remote_inputs is not None:
             argv.extend(["--remote-input-64", remote_inputs[0], "--remote-input-512", remote_inputs[1]])
         parser = runner.build_parser()
@@ -766,30 +768,104 @@ class OracleRunnerArgumentTests(unittest.TestCase):
                 with self.assertRaises(SystemExit):
                     self.parse(temp_dir, rusty_only=True, auth="invite", chunk_size=4096, experimental_streams=invalid)
 
+    def test_experimental_connections_requires_explicit_supported_stream_geometry(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            parser, args = self.parse(
+                temp_dir, rusty_only=True, auth="invite", chunk_size=4096,
+                experimental_streams=4, experimental_connections=4,
+            )
+            runner.validate_local_args(parser, args)
+            self.assertEqual(
+                runner.rusty_sender_argv(args, "bench-example", "source.bin"),
+                ["bench-example", "--transport", "iroh", "send", "--direct", "--chunk-size", "4096", "--streams", "4", "--connections", "4", "--file", "source.bin"],
+            )
+        for stream_count, connection_count in ((None, 4), (1, 4)):
+            with tempfile.TemporaryDirectory() as temp_dir:
+                parser, args = self.parse(
+                    temp_dir, rusty_only=True, auth="invite", chunk_size=4096,
+                    experimental_streams=stream_count, experimental_connections=connection_count,
+                )
+                with self.assertRaises(SystemExit):
+                    runner.validate_local_args(parser, args)
+
     def test_experimental_endpoint_metrics_must_match_requested_crypto_mode(self):
+        path_evidence = {
+            "classification": "direct", "verified": True, "lagged": False,
+            "missing_path_stats": False, "relay_selected": False,
+            "relay_stream_tx": 0, "relay_stream_rx": 0,
+            "direct_stream_tx": 1, "direct_stream_rx": 1,
+        }
+        sender_connection = {
+            "connection_index": 0, "stable_id": 1,
+            "local_endpoint_id": "sender", "remote_endpoint_id": "receiver",
+            "path": "direct", "path_start": "direct", "path_end": "direct",
+            "path_evidence": path_evidence,
+        }
+        receiver_connection = {
+            **sender_connection, "stable_id": 2,
+            "local_endpoint_id": "receiver", "remote_endpoint_id": "sender",
+        }
         base = {
             "success": True,
             "size_bytes": 100,
             "chunk_size": 10,
             "bytes_transferred": 100,
-            "experimental_protocol_version": "shared-key-parallel/1",
+            "experimental_protocol_version": "shared-key-parallel/2",
             "parallel_streams": 4,
+            "parallel_connections": 1,
             "payload_key_count": 1,
             "kem_sessions": 1,
+            "path": "direct",
+            "path_start": "direct",
+            "path_end": "direct",
+            "path_evidence": path_evidence,
+            "connection_evidence": [sender_connection],
         }
         with tempfile.TemporaryDirectory() as temp_dir:
             parser, args = self.parse(temp_dir, rusty_only=True, auth="invite", chunk_size=10, experimental_streams=4)
             time_value = {"user_cpu_seconds": 0.1, "system_cpu_seconds": 0.0, "max_rss_kib": 1}
-            rows = runner.rust_rows(base, base, "a" * 64, "a" * 64, 100, 1.0, time_value, time_value, 1, False, {"direction": "wsl-to-oracle"}, 4)
+            receiver_base = dict(base, connection_evidence=[receiver_connection])
+            rows = runner.rust_rows(base, receiver_base, "a" * 64, "a" * 64, 100, 1.0, time_value, time_value, 1, False, {"direction": "wsl-to-oracle"}, 4)
             self.assertEqual(rows[0]["parallel_streams"], 4)
             for field, value in (("payload_key_count", 4), ("kem_sessions", 4), ("parallel_streams", 1), ("experimental_protocol_version", "other")):
                 invalid = dict(base, **{field: value})
                 with self.assertRaisesRegex(RuntimeError, field):
-                    runner.rust_rows(invalid, base, "a" * 64, "a" * 64, 100, 1.0, time_value, time_value, 1, False, {"direction": "wsl-to-oracle"}, 4)
+                    runner.rust_rows(invalid, receiver_base, "a" * 64, "a" * 64, 100, 1.0, time_value, time_value, 1, False, {"direction": "wsl-to-oracle"}, 4)
             invalid = dict(base)
             del invalid["kem_sessions"]
             with self.assertRaisesRegex(RuntimeError, "kem_sessions"):
-                runner.rust_rows(invalid, base, "a" * 64, "a" * 64, 100, 1.0, time_value, time_value, 1, False, {"direction": "wsl-to-oracle"}, 4)
+                runner.rust_rows(invalid, receiver_base, "a" * 64, "a" * 64, 100, 1.0, time_value, time_value, 1, False, {"direction": "wsl-to-oracle"}, 4)
+
+    def test_experimental_secondary_connection_failures_remain_diagnostic_rows(self):
+        direct = {"classification": "direct", "verified": True, "lagged": False, "missing_path_stats": False, "relay_selected": False, "relay_stream_tx": 0, "relay_stream_rx": 0, "direct_stream_tx": 1, "direct_stream_rx": 1}
+        def lane(index, stable_id, local, remote, path="direct", evidence=direct):
+            return {"connection_index": index, "stable_id": stable_id, "local_endpoint_id": local, "remote_endpoint_id": remote, "path": path, "path_start": path, "path_end": path, "path_evidence": evidence}
+        sender_connections = [lane(0, 1, "sender", "receiver"), lane(1, 2, "sender", "receiver"), lane(2, 3, "sender", "receiver"), lane(3, 4, "sender", "receiver")]
+        receiver_connections = [lane(0, 11, "receiver", "sender"), lane(1, 12, "receiver", "sender"), lane(2, 13, "receiver", "sender"), lane(3, 14, "receiver", "sender")]
+        sender = {"success": True, "size_bytes": 100, "bytes_transferred": 100, "chunk_size": 10, "experimental_protocol_version": "shared-key-parallel/2", "parallel_streams": 4, "parallel_connections": 4, "payload_key_count": 1, "kem_sessions": 1, "path": "direct", "path_start": "direct", "path_end": "direct", "path_evidence": direct, "connection_evidence": sender_connections}
+        receiver = {**sender, "path_evidence": direct, "connection_evidence": receiver_connections}
+        time_value = {"user_cpu_seconds": 0.1, "system_cpu_seconds": 0.0, "max_rss_kib": 1}
+        for mutation in (
+            lambda rows: rows[1].update(path="relay", path_evidence={**direct, "classification": "relay", "relay_stream_rx": 1}),
+            lambda rows: rows.pop(),
+            lambda rows: rows[1].update(stable_id=rows[0]["stable_id"]),
+        ):
+            invalid_sender = {**sender, "connection_evidence": [dict(item) for item in sender["connection_evidence"]]}
+            mutation(invalid_sender["connection_evidence"])
+            rows = runner.rust_rows(invalid_sender, receiver, "a" * 64, "a" * 64, 100, 1.0, time_value, time_value, 1, False, {"direction": "wsl-to-oracle"}, 4, 4)
+            self.assertFalse(rows[0]["direct_route_verified_both"])
+            with tempfile.TemporaryDirectory() as temp_dir:
+                output = Path(temp_dir) / "raw.jsonl"
+                with self.assertRaisesRegex(RuntimeError, "diagnostic rows were retained"):
+                    runner.append_and_validate_rust_rows(output, rows, "direct", "mixed")
+                self.assertEqual(len(output.read_text(encoding="utf-8").splitlines()), 2)
+        mismatched_receiver = {
+            **receiver,
+            "connection_evidence": [dict(item) for item in receiver["connection_evidence"]],
+        }
+        mismatched_receiver["connection_evidence"][2]["remote_endpoint_id"] = "other-peer"
+        rows = runner.rust_rows(sender, mismatched_receiver, "a" * 64, "a" * 64, 100, 1.0, time_value, time_value, 1, False, {"direction": "wsl-to-oracle"}, 4, 4)
+        self.assertFalse(rows[0]["direct_route_verified_both"])
 
     def test_remote_sender_command_uses_invite_mode_and_scoped_session(self):
         with tempfile.TemporaryDirectory() as temp_dir:

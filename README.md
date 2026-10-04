@@ -253,14 +253,6 @@ from byte zero. Authentication, protocol, and file errors do not trigger retries
 
 ---
 
-## Use of AI
-
-- Early throw-away unit and integration tests.
-- CLI wiring (bin crate) is almost 90% chatgpt 5.2.
-- The cli_ui crate is also 80-90% chatgpt 5.2.
-- The transport crate may contain up to 50% chatgpt 5.2 generated code.
-- Install scripts are 100% chatgpt 5.2 generated.
-
 ## Acknowledgements
 
 - WebRTC transport via Rust crates in the ecosystem

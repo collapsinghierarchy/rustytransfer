@@ -1,0 +1,14 @@
+{
+  "baseline_ref": null,
+  "baseline_status": "Set explicitly after the compatible harness commit; never auto-advance",
+  "harness_version": 1,
+  "rust_toolchain": "1.97.0",
+  "sizes_mib": [64, 512],
+  "warmups": 1,
+  "measured_pairs": 5,
+  "regression_threshold": 0.10,
+  "maximum_relative_spread": 0.20,
+  "gating": "report-only",
+  "trial_timeout_seconds": 960,
+  "build_timeout_seconds": 3600
+}

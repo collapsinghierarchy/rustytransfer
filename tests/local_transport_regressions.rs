@@ -421,6 +421,9 @@ fn prepare_local_benchmark_files(
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "manual local full-file performance baseline"]
 async fn local_full_file_performance_baseline() -> Result<()> {
+    if std::env::var_os("RUSTYTRANSFER_PERFORMANCE_TRIAL_DIR").is_some() {
+        return controlled_iroh_performance_trial().await;
+    }
     let transports = local_baseline_transports_from(
         std::env::var("RUSTYTRANSFER_LOCAL_BENCH_TRANSPORT")
             .ok()
@@ -541,6 +544,67 @@ async fn local_full_file_performance_baseline() -> Result<()> {
     }
     fs::remove_file(&received_path).context("failed to remove local baseline output")?;
     fs::remove_dir(&temp_dir).context("failed to remove local baseline temp directory")?;
+    Ok(())
+}
+
+// performance harness v1: identical committed harness required on both builds.
+async fn controlled_iroh_performance_trial() -> Result<()> {
+    let trial_dir = PathBuf::from(
+        std::env::var_os("RUSTYTRANSFER_PERFORMANCE_TRIAL_DIR")
+            .context("missing trial directory")?,
+    );
+    ensure!(
+        trial_dir.is_dir(),
+        "runner must create a fresh trial directory"
+    );
+    let source = PathBuf::from(
+        std::env::var_os("RUSTYTRANSFER_BENCH_SOURCE").context("missing prestaged source")?,
+    );
+    let size = fs::metadata(&source)?.len();
+    ensure!(
+        size == 64 * 1024 * 1024 || size == 512 * 1024 * 1024,
+        "controlled trials require 64 or 512 MiB"
+    );
+    let received = trial_dir.join("received.bin");
+    let rows = trial_dir.join("endpoints.jsonl");
+    ensure!(
+        !received.exists() && !rows.exists(),
+        "trial outputs must be fresh"
+    );
+    let source_hash = sha256_file(&source)?;
+    // Full external hashing and JSON emission are outside this single pair timer.
+    let started = Instant::now();
+    let (sender, receiver) =
+        run_local_full_transfer("iroh", &source, &received, size, IROH_BASELINE_CHUNK_SIZE).await?;
+    let elapsed = started.elapsed().as_secs_f64();
+    let received_hash = sha256_file(&received)?;
+    for timing in [&sender, &receiver] {
+        append_local_metric(
+            &rows,
+            timing,
+            "iroh",
+            size,
+            1,
+            false,
+            &source_hash,
+            &received_hash,
+        )?;
+    }
+    let pair = serde_json::json!({"harness_version": 1, "elapsed_seconds": elapsed,
+        "received_size_bytes": fs::metadata(&received)?.len(),
+        "source_sha256": source_hash, "received_sha256": received_hash});
+    fs::write(
+        trial_dir.join("pair.json"),
+        serde_json::to_vec_pretty(&pair)?,
+    )?;
+    ensure!(
+        received_hash == source_hash && fs::metadata(&received)?.len() == size,
+        "received file verification failed"
+    );
+    ensure!(
+        sender.direct_route_verified_both && receiver.direct_route_verified_both,
+        "direct STREAM evidence must be verified at both endpoints"
+    );
     Ok(())
 }
 
@@ -886,6 +950,12 @@ async fn send_local_file(
     path_start: PathObservation,
     setup_seconds: f64,
 ) -> Result<EndpointTimings> {
+    // Synthetic calibration only; the runner clears this for ordinary trials.
+    let calibration_delay = std::env::var("RUSTYTRANSFER_PERFORMANCE_DELAY_MS")
+        .ok()
+        .map(|value| value.parse::<u64>())
+        .transpose()?
+        .unwrap_or(0);
     let source = tokio::fs::File::open(&source_path)
         .await
         .context("failed to open local baseline source")?;
@@ -897,7 +967,11 @@ async fn send_local_file(
         TransferConfig {
             chunk_size: usize::try_from(chunk_size).context("chunk size exceeds usize")?,
         },
-        |_, _| {},
+        |_, _| {
+            if calibration_delay > 0 {
+                std::thread::sleep(Duration::from_millis(calibration_delay));
+            }
+        },
     )
     .await?;
     let path_end = metrics

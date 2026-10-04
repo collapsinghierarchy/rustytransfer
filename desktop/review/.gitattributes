@@ -1,0 +1,3 @@
+# Preserve the exact recorded evidence bytes on Windows and Linux.
+*.json -text
+*.png -text

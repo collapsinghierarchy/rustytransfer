@@ -1,0 +1,42 @@
+name: Native desktop MVP
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['desktop/**', '.github/workflows/desktop.yml']
+  pull_request:
+    paths: ['desktop/**', '.github/workflows/desktop.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.97.0
+          components: rustfmt, clippy
+      - name: Formatting
+        run: cargo fmt --manifest-path desktop/Cargo.toml -- --check
+      - name: Model, geometry, and shader tests
+        run: cargo test --manifest-path desktop/Cargo.toml --locked
+      - name: Desktop Clippy
+        run: cargo clippy --manifest-path desktop/Cargo.toml --all-targets --locked -- -D warnings
+      - name: Native release build
+        run: cargo build --manifest-path desktop/Cargo.toml --release --locked
+      - name: Retain Windows preview
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rustytransfer-native-mvp-windows
+          path: desktop/target/release/rustytransfer-desktop.exe
+          if-no-files-found: error
+          retention-days: 7

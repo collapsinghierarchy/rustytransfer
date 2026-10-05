@@ -1,6 +1,0 @@
-{
-  "signal": "SIGTERM",
-  "phase": "initial listener accept",
-  "exit_status": 1,
-  "exited_within_seconds": 10
-}

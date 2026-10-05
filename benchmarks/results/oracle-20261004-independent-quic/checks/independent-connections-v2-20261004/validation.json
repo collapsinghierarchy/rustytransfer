@@ -1,7 +1,0 @@
-{
-  "required_commands_passed": 9,
-  "sarif_identity_gate_passed": true,
-  "existing_workspace_clippy_findings": 3,
-  "example_test_passed": true,
-  "new_example_clippy_findings": 0
-}

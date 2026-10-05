@@ -1,0 +1,26 @@
+[package]
+name = "rustytransfer-desktop"
+version = "0.1.0"
+edition = "2024"
+license = "AGPL-3.0-only"
+publish = false
+
+# Keep the experimental desktop independent of the transfer/security CI workspace.
+[workspace]
+resolver = "3"
+
+[dependencies]
+iced = { version = "=0.14.0", default-features = false, features = ["wgpu", "canvas", "tokio", "x11", "wayland"] }
+bytemuck = { version = "1.24", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+png = "0.18"
+
+[dev-dependencies]
+naga = { version = "27", features = ["wgsl-in"] }
+
+[profile.release]
+lto = "thin"
+
+[lints.clippy]
+all = "warn"

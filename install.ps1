@@ -21,7 +21,7 @@ cargo build -p rustytransfer --release
 $BinSrc = Join-Path (Get-Location) ("target\release\{0}.exe" -f $BinName)
 if (-not (Test-Path $BinSrc)) {
   Write-Host "ERROR: expected binary at $BinSrc"
-  Write-Host "If your binary name differs: .\install-local.ps1 -BinName <name>"
+  Write-Host "If your binary name differs: .\install.ps1 -BinName <name>"
   exit 1
 }
 

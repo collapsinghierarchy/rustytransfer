@@ -1,0 +1,11 @@
+{"type":"snapshot","source":{"id":"source","label":"MacBook Pro","kind":"local_source","reachability":"reachable","transport":"Iroh / QUIC"},"peers":[],"infrastructure":[],"routes":[],"transfers":[]}
+{"type":"peer_upsert","peer":{"id":"phone","label":"iPhone 15","kind":"peer","reachability":"nearby","transport":"WebRTC / ICE"}}
+{"type":"infrastructure_upsert","node":{"id":"signal","label":"Signaling backend","kind":"signaling","reachability":"reachable","transport":"HTTPS / WSS"}}
+{"type":"transfer_created","transfer":{"id":"t1","source_id":"source","target_id":"phone","file_name":"ProjectArchive.zip","bytes_total":4200000000,"bytes_sent":0,"state":"connecting","error":null}}
+{"type":"route_upsert","route":{"id":"signal-t1","transfer_id":"t1","kind":"signaling","topology":"indirect","from":"source","via":["signal"],"to":"phone","state":"connected","transport":"WebRTC signaling"}}
+{"type":"route_upsert","route":{"id":"payload-t1","transfer_id":"t1","kind":"payload","topology":"direct","from":"source","via":[],"to":"phone","state":"connected","transport":"WebRTC / DTLS"}}
+{"type":"transfer_progress","transfer":{"id":"t1","source_id":"source","target_id":"phone","file_name":"ProjectArchive.zip","bytes_total":4200000000,"bytes_sent":1764000000,"state":"transferring","error":null}}
+{"type":"transfer_state","transfer":{"id":"t1","source_id":"source","target_id":"phone","file_name":"ProjectArchive.zip","bytes_total":4200000000,"bytes_sent":2856000000,"state":"failed","error":"direct path lost"}}
+{"type":"infrastructure_upsert","node":{"id":"relay","label":"EU Relay","kind":"relay","reachability":"reachable","transport":"Iroh / QUIC"}}
+{"type":"route_upsert","route":{"id":"payload-t1","transfer_id":"t1","kind":"payload","topology":"relay","from":"source","via":["relay"],"to":"phone","state":"connected","transport":"Iroh / relay"}}
+{"type":"transfer_state","transfer":{"id":"t1","source_id":"source","target_id":"phone","file_name":"ProjectArchive.zip","bytes_total":4200000000,"bytes_sent":2856000000,"state":"transferring","error":null}}

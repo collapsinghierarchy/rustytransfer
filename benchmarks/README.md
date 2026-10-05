@@ -81,8 +81,8 @@ A/A, synthetic slowdown and fixed-baseline candidate cohorts: 72 verified
 transfers, including all warmups and valid slow samples. Hosted-runner calibration
 remains required before enabling performance gating.
 Historical reports and reproduction instructions are indexed in
-[`archives/README.md`](archives/README.md); the old guide and runners are frozen
-there. Historical Croc measurements remain evidence only. See the
+[`archives/README.md`](archives/README.md); the old guide, runners and completed
+cleanup plan are frozen there. The [evidence index](results/README.md) identifies
+retained result cohorts. Historical Croc measurements remain evidence only. See the
 [final no-debug report](results/oracle-20261004-no-debug/README.md),
-[efficiency report](../docs/direct-transfer-efficiency-report.md), and
-[approved cleanup plan](CLEANUP_PLAN.md).
+[efficiency report](../docs/direct-transfer-efficiency-report.md).

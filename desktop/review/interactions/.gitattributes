@@ -1,0 +1,2 @@
+# Preserve the replay's recorded hash across Windows/Linux checkout.
+local-demo.ndjson -text

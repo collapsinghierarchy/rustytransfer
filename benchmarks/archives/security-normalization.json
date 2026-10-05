@@ -1271,5 +1271,19 @@
     "frozen_dependencies_unchanged": true,
     "desktop_draft_unchanged": true,
     "unrelated_source_and_assets_unchanged": true
+  },
+  "validation": {
+    "history_source_changes_only": true,
+    "baseline_production_and_harness_unchanged": true,
+    "normalized_provenance_files_restored_byte_exactly": 27,
+    "patch_applies_to_exact_frozen_source": true,
+    "patched_source_matches_all_four_final_hashes": true,
+    "updated_inventory_entries_verified": 29,
+    "archives_verified_per_branch": 7,
+    "extracted_members_verified_per_branch": 294,
+    "push_guard_tests_passed": 23,
+    "performance_runner_tests_passed": 13,
+    "default_guard_passed_main_and_native": true,
+    "scanner_exceptions": 0
   }
 }

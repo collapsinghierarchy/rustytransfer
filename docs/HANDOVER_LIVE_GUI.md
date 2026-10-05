@@ -14,14 +14,17 @@ mechanische Teilaufgaben. Assets und bestehende native Darstellung wiederverwend
 
 ## Git- und Prüfstand am 2026-10-05
 
-- Aktueller Branch: `chore/repository-cleanup`.
+- Aktueller Branch: `main`.
 - Cleanup-Commits: `19f62a0` (Archive/Retirement), `33cf68a` (Dokumentation),
-  `18c86fa` (inventarisierte Einmal-Helfer). Das Handover folgt als eigener Commit.
-- Diese drei Commits sind bisher nicht gemerged oder gepusht. Ein vollständiger
-  Merge enthält auch das bislang lokale GUI-MVP. Der Nutzer wurde dazu gefragt;
-  eine spätere ausdrückliche Antwort hat Vorrang vor diesem Snapshot.
-- Lokaler GUI-Branch `feature/native-desktop-mvp`: `a67b23b`.
-- Veröffentlichter `main`: `5762d37` mit dem Security-Fix und striktem Push-Guard.
+  `18c86fa` (inventarisierte Einmal-Helfer), `d955039` (Handover).
+- Der Nutzer hat ausdrücklich „Cleanup und GUI nach main“ bestätigt. Beide sind
+  mit Merge-Commit `878af5b663b25dd744ada784290199e6248fd390` zusammengeführt.
+  Das Merge-Ergebnis entspricht vollständig dem geprüften Cleanup-Branch.
+- Enthaltener GUI-MVP: `a67b23b` (`feature/native-desktop-mvp`).
+- Vorheriger veröffentlichter `main`: `5762d37` mit Security-Fix und Push-Guard.
+  Die Veröffentlichung des Merge-/Handover-Stands wird nach erneut bestandenem
+  Guard in der abschließenden Chatantwort bestätigt. Vor dem Weiterarbeiten
+  `git status`, `git log -3 --oneline` und `origin/main` prüfen.
 - Draft-Worktree: `C:\Users\wasil\Documents\GitHub\rustytransfer-desktop-draft`,
   Branch `feature/desktop-draft`, Commit `d654b0b`. Nicht anfassen.
 - Vier Windows/WSL-Statuszeilen betreffen `crates/firefox-host/src/main.rs`,
@@ -29,7 +32,8 @@ mechanische Teilaufgaben. Assets und bestehende native Darstellung wiederverwend
   `crates/transfer/src/error.rs`. Tatsächliche Diffs waren leer. Nicht resetten
   oder fremde Dateien zur Normalisierung anfassen; erneut echte Diffs prüfen.
 
-Cleanup: versionierter Dateibestand 21,3 auf 13,0 MB reduziert, 1192 auf 940 Dateien.
+Cleanup vor dem Handover: versionierter Dateibestand 21,3 auf 13,0 MB reduziert,
+1192 auf 940 Dateien. Dieses zusätzliche Handover ergibt 941 Dateien.
 254 Diagnose-/Inventardateien und drei überholte Pläne/Experimentdateien sind
 bytegenau archiviert. Alle scored/raw Messreihen und langsamen Samples bleiben
 erhalten. Neun Archive/551 Mitglieder verifiziert; 27 Provenienzdateien lassen
@@ -43,9 +47,9 @@ die vollständige Cleanup-Historie ohne Findings, Warnungen oder Fehler.
 Temporäre Security-Prüfworktrees und zehn Einmal-Helfer sind entfernt; ihre
 finalen Commits und redigierten Berichte liegen weiterhin im Hauptrepository.
 
-Für die Live-GUI von diesem bereinigten Stand aus weiterarbeiten, etwa auf einem
-neuen `feature/native-desktop-live`-Branch. Nicht von `main` beginnen und dadurch
-den GUI-/Cleanup-Stand verlieren. Den tatsächlich aktuellen Merge-Stand prüfen.
+Für die Live-GUI vom aktuellen bereinigten `main` aus weiterarbeiten, etwa auf
+einem neuen `feature/native-desktop-live`-Branch. Die GUI und der Cleanup sind
+jetzt Bestandteil dieses gemeinsamen Ausgangsstands.
 
 ## Was bereits funktioniert und erhalten bleiben muss
 

@@ -1,20 +1,95 @@
-﻿[
-    {
-        "path":  "tmp/archive_cleanup.py",
-        "bytes":  3906,
-        "sha256":  "6eb2f4e97b9dbf7254ad49c505e6c228fb6753b5dfc9e43c69bb88859b220774",
-        "replacement":  "Verified archive indexes, inventory audit, removal manifest and local performance evidence"
-    },
-    {
-        "path":  "tmp/index_archives.py",
-        "bytes":  2034,
-        "sha256":  "4a221be209914d1a1001061303d1d0ef4ac25660c583f187be876eee4f2cf56e",
-        "replacement":  "Verified archive indexes, inventory audit, removal manifest and local performance evidence"
-    },
-    {
-        "path":  "tmp/retain_performance_evidence.py",
-        "bytes":  5220,
-        "sha256":  "72ec838c87959ee95ed9e9aee4a464be5bc4f4b9c1d25e7fca91ec0b8b7e7b78",
-        "replacement":  "Verified archive indexes, inventory audit, removal manifest and local performance evidence"
-    }
+[
+  {
+    "value": [
+      {
+        "path": "tmp/archive_cleanup.py",
+        "bytes": 3906,
+        "sha256": "6eb2f4e97b9dbf7254ad49c505e6c228fb6753b5dfc9e43c69bb88859b220774",
+        "replacement": "Verified archive indexes, inventory audit, removal manifest and local performance evidence"
+      },
+      {
+        "path": "tmp/index_archives.py",
+        "bytes": 2034,
+        "sha256": "4a221be209914d1a1001061303d1d0ef4ac25660c583f187be876eee4f2cf56e",
+        "replacement": "Verified archive indexes, inventory audit, removal manifest and local performance evidence"
+      },
+      {
+        "path": "tmp/retain_performance_evidence.py",
+        "bytes": 5220,
+        "sha256": "72ec838c87959ee95ed9e9aee4a464be5bc4f4b9c1d25e7fca91ec0b8b7e7b78",
+        "replacement": "Verified archive indexes, inventory audit, removal manifest and local performance evidence"
+      }
+    ],
+    "Count": 3
+  },
+  {
+    "path": "target/security-review/apply_source_cleanup.ps1",
+    "bytes": 2232,
+    "sha256": "1368ce21e4c2191a5315f58b5c1afa8bf5e10511e97ced8a4b8669289202f758",
+    "replacement": "Maintained archive verifier, provenance recovery, security-normalization record and guard tests",
+    "date": "2026-10-05"
+  },
+  {
+    "path": "target/security-review/finalize_source_cleanup.py",
+    "bytes": 7425,
+    "sha256": "65cb36350a172e49b07130fca8e065d1a3b321fb6be26537bc65d5c4ffce1de3",
+    "replacement": "Maintained archive verifier, provenance recovery, security-normalization record and guard tests",
+    "date": "2026-10-05"
+  },
+  {
+    "path": "target/security-review/fix_warning_sources.py",
+    "bytes": 10631,
+    "sha256": "0840ec8f3701546a67e81766a830990a60f220b9765c243c26d8a7dec2f961fd",
+    "replacement": "Maintained archive verifier, provenance recovery, security-normalization record and guard tests",
+    "date": "2026-10-05"
+  },
+  {
+    "path": "target/security-review/prepare_cleanup.py",
+    "bytes": 7328,
+    "sha256": "1cc205cbd8f5404d9fee6cc678ec92497ce9b5d742b71a09f2abc5e4e60ad524",
+    "replacement": "Maintained archive verifier, provenance recovery, security-normalization record and guard tests",
+    "date": "2026-10-05"
+  },
+  {
+    "path": "target/security-review/prepare_history_preview.py",
+    "bytes": 6492,
+    "sha256": "8f6b60887d67f42d5f3b8b6d580e1944f586751e6ac720581f5b1a94aeccd4fe",
+    "replacement": "Maintained archive verifier, provenance recovery, security-normalization record and guard tests",
+    "date": "2026-10-05"
+  },
+  {
+    "path": "target/security-review/restore_provenance.py",
+    "bytes": 7507,
+    "sha256": "73568016687c747c13103563334fb5486d5e064be4f0c528d47a279490728e66",
+    "replacement": "Maintained archive verifier, provenance recovery, security-normalization record and guard tests",
+    "date": "2026-10-05"
+  },
+  {
+    "path": "target/security-review/validate_history_preview.py",
+    "bytes": 4697,
+    "sha256": "83607185db7e52187e960d2083195afce718bf48da2fdad08cfcd119f79e7aa5",
+    "replacement": "Maintained archive verifier, provenance recovery, security-normalization record and guard tests",
+    "date": "2026-10-05"
+  },
+  {
+    "path": "target/security-review/validate_source_cleanup.py",
+    "bytes": 4652,
+    "sha256": "19bc343d467611a076c1c2d12271413265ef92feb3be4eba0a467501d1171d48",
+    "replacement": "Maintained archive verifier, provenance recovery, security-normalization record and guard tests",
+    "date": "2026-10-05"
+  },
+  {
+    "path": "target/repository-cleanup/archive_redundant_evidence.py",
+    "bytes": 6597,
+    "sha256": "fc9ece8047ecf2d386b3aab05ad89440fe079937b527f16274d0bc34937082b7",
+    "replacement": "Maintained archive verifier, provenance recovery, security-normalization record and guard tests",
+    "date": "2026-10-05"
+  },
+  {
+    "path": "target/repository-cleanup/update_archive_links.py",
+    "bytes": 1924,
+    "sha256": "6b003f211eb7fa29abd89962235a980f5a1261f5c945e5dfb1536b7b2bb44709",
+    "replacement": "Maintained archive verifier, provenance recovery, security-normalization record and guard tests",
+    "date": "2026-10-05"
+  }
 ]

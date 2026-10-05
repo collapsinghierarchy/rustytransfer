@@ -1,15 +1,12 @@
 # Historical benchmark archives
 
-These are frozen evidence, not maintained performance commands. Croc and Oracle
-collectors, their tests and dependencies retain their original bytes and paths.
-Readable reports, scored raw rows, summaries, patches and core provenance remain
-under `benchmarks/results/`. The old benchmark guide is in `retired-active-tools`.
+These are frozen evidence, not maintained performance commands. Historical Croc
+measurements, scored raw samples, readable reports and frozen dependencies remain
+available under `benchmarks/results/` and in these archives.
 
-[`index.json`](index.json) maps every archived original repository path to a
-bundle, byte count and SHA-256. It also records each bundle's hash and successful
-extraction verification. [`removal-manifest.json`](removal-manifest.json) lists
-only the exact helper paths removed after verification. All 120 inventoried
-local agent helpers are preserved, including unique preparation/recovery code.
+[`index.json`](index.json) maps original paths to each archive, byte count and
+SHA-256. [`removal-manifest.json`](removal-manifest.json) inventories the helpers
+removed only after verification. All 120 local helpers are recoverable.
 
 Verify every bundle and extracted member with Python 3.12 or later:
 
@@ -26,13 +23,54 @@ tar -xzf benchmarks/archives/retired-active-tools.tar.gz -C /tmp/rustytransfer-h
 tar -xzf benchmarks/archives/local-agent-helpers.tar.gz -C /tmp/rustytransfer-history
 ```
 
-Repeat for any campaign needed. For a full historical reconstruction, check out
-`372956e` in a separate checkout and extract the bundles there. Frozen scripts
-may depend on the old filesystem layout, binaries, tools or hosts; archiving
-does not claim they can run against current production. Frozen source patches,
-tool manifests and checksums remain readable at their existing result paths.
+Repeat for any campaign needed. Frozen scripts may depend on old filesystem
+layouts, binaries, tools or hosts. Archiving does not claim they run against
+current production. Artifact-index files beside each campaign locate archived
+helpers. Original campaign inventories inside the archives remain collection-time
+snapshots; live inventory records retain original hashes alongside updated hashes
+for the normalized provenance described below.
 
-Original campaign `artifact-inventory.json` files remain historical inventories
-and are also inside their bundles unchanged. New adjacent `artifact-index.json`
-files explain archived storage. Use this archive index to locate helper bytes;
-do not interpret an archived helper's absence from the live tree as lost evidence.
+## Approved warning-source cleanup, 2026-10-05
+
+The retired helper `local-agent-helpers.tar.gz!target/croc_measure.py` used a fixed
+self-hosted relay password. It now generates a fresh random password on every
+reproduction run. The literal was removed from the affected branch histories.
+The other 119 members of that archive retain their exact bytes. All seven
+archives and 294 extracted members verify. No frozen dependencies were changed.
+
+Historical `source_files_sha256` provenance now uses records with separate `path`
+and `sha256` fields rather than filenames as assignment keys beside digests. Every
+original source digest is retained. Two Rust patch hunks have unrelated boundary
+context trimmed; every added and removed source line is retained, and the patch
+hash and live inventory hashes were updated. Production code, measured samples
+and transfer behavior are unchanged.
+
+[`security-normalization.json`](security-normalization.json) records original and
+normalized evidence hashes and the rewritten commit mapping.
+[`security-review.json`](security-review.json) records the original redacted finding
+review and its resolution. There are no scanner exceptions, disabled rules or
+ignore files. The maintained publication guard uses the unchanged default detector.
+
+Some frozen historical readers expect the old provenance mapping. Restore its
+exact original JSON bytes into a new directory before using those readers:
+
+```sh
+python3 benchmarks/archives/restore_provenance.py \
+  --source . --destination /tmp/rustytransfer-original-provenance \
+  --index benchmarks/archives/security-normalization.json
+```
+
+Overlay those recovered JSON files into a separate historical reconstruction
+containing the result artifacts and extracted helpers. The restoration command
+checks original byte counts and hashes and never overwrites the maintained tree.
+Historical reports retain the original commit IDs at measurement time; the
+rewrite mapping explains their replacement IDs.
+
+The fixed performance baseline's new object ID is recorded in `../baseline.json`.
+Its production source and harness are identical to the original reviewed baseline;
+only evidence formatting and ancestry changed. The runner still refuses to advance
+the baseline automatically. CI remains report-only for performance.
+
+Rewriting branch histories does not erase other clones, backups, reflogs, or hosted
+cached/PR references. Any relay still using the old password must also be rotated.
+No complete physical erasure or external revocation is claimed.

@@ -4,6 +4,10 @@ These are frozen evidence, not maintained performance commands. Historical Croc
 measurements, scored raw samples, readable reports and frozen dependencies remain
 available under `benchmarks/results/` and in these archives.
 
+The maintained tree keeps reports, scored rows, summaries and source provenance.
+Build/check output and superseded implementation material are archived below.
+The current index covers nine bundles and 551 verified members.
+
 [`index.json`](index.json) maps original paths to each archive, byte count and
 SHA-256. [`removal-manifest.json`](removal-manifest.json) inventories the helpers
 removed only after verification. All 120 local helpers are recoverable.
@@ -30,13 +34,38 @@ helpers. Original campaign inventories inside the archives remain collection-tim
 snapshots; live inventory records retain original hashes alongside updated hashes
 for the normalized provenance described below.
 
+## Archived diagnostics and retired experiments
+
+`diagnostics-20261005.tar.gz` contains 254 build/check logs, unscored diagnostic
+artifacts and maintained inventory snapshots at their original repository paths.
+It preserves 9.00 MB of original bytes in a 0.75 MB bundle. Reports, all scored
+rows, summaries, source archives and the normalized source manifests stay live.
+Campaign `artifact-index.json` files refer to the single member/hash index rather
+than duplicating large inventory lists. When the same inventory path occurs in
+two bundles, the campaign bundle holds the collection-time original and the
+diagnostic bundle holds the later maintained snapshot.
+
+`retired-experiments-20261005.tar.gz` preserves the parallel-transfer example,
+the completed benchmark cleanup plan and the superseded desktop implementation
+plan. These are historical material; the maintained runner and current desktop
+roadmap replace them. The production transfer engine never used that example.
+
+To recover a linked diagnostic artifact, find its original path in `index.json`
+and extract the indicated bundle into a separate directory:
+
+```sh
+tar -xzf benchmarks/archives/diagnostics-20261005.tar.gz -C /tmp/rustytransfer-history
+tar -xzf benchmarks/archives/retired-experiments-20261005.tar.gz -C /tmp/rustytransfer-history
+```
+
 ## Approved warning-source cleanup, 2026-10-05
 
 The retired helper `local-agent-helpers.tar.gz!target/croc_measure.py` used a fixed
 self-hosted relay password. It now generates a fresh random password on every
 reproduction run. The literal was removed from the affected branch histories.
-The other 119 members of that archive retain their exact bytes. All seven
-archives and 294 extracted members verify. No frozen dependencies were changed.
+The other 119 members of that archive retain their exact bytes. The seven
+original archives and 294 members verified at that milestone. No frozen
+dependencies were changed by either cleanup.
 
 Historical `source_files_sha256` provenance now uses records with separate `path`
 and `sha256` fields rather than filenames as assignment keys beside digests. Every

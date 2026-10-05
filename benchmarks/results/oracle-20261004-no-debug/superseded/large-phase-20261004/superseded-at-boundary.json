@@ -1,8 +1,0 @@
-{
-  "parent_pid": 1550,
-  "parent_stopped": true,
-  "recorded_transfers": 26,
-  "reason": "User superseded remaining debug samples with final no-debug comparison.",
-  "last_croc_lease_restored_exactly": true,
-  "note": "Parent stopped at a completed-transfer boundary; root verifies no endpoints before terminating the superseded launcher."
-}

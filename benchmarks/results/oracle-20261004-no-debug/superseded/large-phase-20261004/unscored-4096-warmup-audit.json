@@ -1,9 +1,0 @@
-{
-  "accepted_scored_transfers": 0,
-  "unscored_warmups": 2,
-  "full_hashes_and_routes_verified": true,
-  "canonical_endpoint_rows": 4,
-  "reason": "User superseded remaining debug runs with no-debug final comparison.",
-  "overall_retained_transfers": 26,
-  "complete_phase_cohort_transfers": 24
-}

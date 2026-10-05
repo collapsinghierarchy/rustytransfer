@@ -31,7 +31,9 @@ was corrected to inspect content while tolerating Windows/WSL CRLF differences.
 An isolated Git test also verifies that actual source edits still fail the check.
 
 Each cohort retains `report.json`, scored/raw trial envelopes including warmups,
-`summary.md`, both compiler logs, and a SHA-256-verified `runner.py.frozen` snapshot.
+`summary.md`, and a SHA-256-verified `runner.py.frozen` snapshot. Both compiler
+logs are preserved in the [diagnostic archive](../../archives/README.md), with
+their original paths and hashes in the [artifact index](artifact-index.json).
 Original report fields are preserved, including the pre-configuration A/A run's
 null configured baseline and its explicit baseline/candidate arguments. Runner
 provenance additions after that run do not rewrite its measurements. Received

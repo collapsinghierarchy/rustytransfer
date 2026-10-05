@@ -115,7 +115,7 @@ the peer/port/size criteria, including packets potentially queued before its
 kernel filter was attached. Original helpers, failed logs and corrected
 observer provenance are retained. Application binaries were unchanged.
 
-[Superseded phase audit](superseded/large-phase-20261004/audit-report.json)
+[Superseded phase audit](../../archives/README.md "Archive member: benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/audit-report.json")
 retains the diagnostic mean sender payload rates of 30.624 MiB/s at 1 GiB
 and 30.137 MiB/s at 2 GiB, individually against their contemporaneous Croc
 full-transfer means of 27.905 and 27.506 MiB/s. Those phase windows come from

@@ -11,9 +11,11 @@ The ARM efficiency milestone is complete. A small Cargo configuration enables th
 pinned AES/POLYVAL crates' runtime ARM acceleration on Linux/macOS AArch64, with
 software fallback. Encryption, nonce rules, payload framing, and chunk sizes are
 unchanged. Release CI now includes Cargo configuration changes in its path filter.
-Desktop and device work is stopped; unvalidated drafts remain in the separate
-`feature/desktop-draft` worktree. The submitted Firefox extension and pending
-0.1.0 artifacts were not replaced.
+The separate `feature/desktop-draft` worktree remains preserved. A later
+[native desktop MVP](../desktop/README.md) implements fixture replay and field
+interaction only; live transfer/device integration is still future work in the
+[desktop roadmap](desktop-roadmap.md). The submitted Firefox extension and
+0.1.0 artifacts were not replaced by these experiments.
 
 The [matched ARM experiment](../benchmarks/results/oracle-20261003-arm-crypto/README.md)
 contains 80 measured direct transfers across two reversed-order series, both

@@ -1,3 +1,0 @@
-   Compiling rustytransfer v0.1.0 (/mnt/c/Users/wasil/Documents/GitHub/rustytransfer)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.93s
-     Running unittests examples/shared_key_parallel.rs (/home/wasilij/rustytransfer-bench/target/debug/examples/shared_key_parallel-b026cce65375aaa9)

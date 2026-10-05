@@ -1,6 +1,0 @@
-   Compiling rustytransfer-crypto v0.1.0 (/home/wasilij/rustytransfer-bench/build-completion-v1-20261004/source/crates/crypto)
-   Compiling rustytransfer-protocol v0.1.0 (/home/wasilij/rustytransfer-bench/build-completion-v1-20261004/source/crates/protocol)
-   Compiling rustytransfer-transfer v0.1.0 (/home/wasilij/rustytransfer-bench/build-completion-v1-20261004/source/crates/transfer)
-   Compiling rustytransfer-native v0.1.0 (/home/wasilij/rustytransfer-bench/build-completion-v1-20261004/source/crates/native)
-   Compiling rustytransfer v0.1.0 (/home/wasilij/rustytransfer-bench/build-completion-v1-20261004/source)
-    Finished `release` profile [optimized] target(s) in 19.88s

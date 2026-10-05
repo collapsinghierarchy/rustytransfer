@@ -1,8 +1,0 @@
-{
-  "signal": "SIGTERM",
-  "phase": "payload receiver",
-  "sender_status": 1,
-  "receiver_status": 1,
-  "part_removed": true,
-  "output_absent": true
-}

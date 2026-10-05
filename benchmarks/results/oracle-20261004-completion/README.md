@@ -159,7 +159,7 @@ Clippy run hitting existing crypto warnings are recorded in the developer note.
 
 The first Croc comparison lost its runner session before the final trial.
 Its **23 recorded successful transfers / 46 rows remain unscored**, with a
-[partial audit](interrupted/completion-croc-20261004/partial-audit.json), redacted
+[partial audit](../../archives/README.md "Archive member: benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/partial-audit.json"), redacted
 logs and interruption reason. The bounded lease expired and restored INPUT;
 the remaining Oracle Croc waiter was terminated through validated process-group
 cleanup. The initial partial collector assumed a Croc endpoint byte-count field,

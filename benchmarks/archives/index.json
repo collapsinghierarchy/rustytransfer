@@ -1531,6 +1531,1309 @@
           "sha256": "5dfcd3de5cfc687dc5cd9fec7be5e5ab71dfac74071da2e721f7ab7473ff4d9b"
         }
       ]
+    },
+    {
+      "file": "diagnostics-20261005.tar.gz",
+      "sha256": "86cd0cf40094f56cbba923ae27a2212b83e4887aa36b3afdb47cba15cd055427",
+      "purpose": "Historical check/build output and maintained inventory snapshots; original bytes retained",
+      "snapshot_date": "2026-10-05",
+      "extraction_verified": true,
+      "members": [
+        {
+          "path": "benchmarks/results/local-20261004-performance/aa/build-baseline.log",
+          "bytes": 475193,
+          "sha256": "0186e8da53c2a3d766c4da2b09cb8f82ed45e19eae23e436b0656c6181678c2e"
+        },
+        {
+          "path": "benchmarks/results/local-20261004-performance/aa/build-candidate.log",
+          "bytes": 476187,
+          "sha256": "01eff49e2c7ccb7927a46fb55f22c5d53b1a278443dc93262b22dcfc531d98c1"
+        },
+        {
+          "path": "benchmarks/results/local-20261004-performance/artifact-inventory.json",
+          "bytes": 2899,
+          "sha256": "5a9324dffd98b2b765ed710a3fc3d54f88e0079487d2b26515e69bb6ac605e90"
+        },
+        {
+          "path": "benchmarks/results/local-20261004-performance/candidate/build-baseline.log",
+          "bytes": 482151,
+          "sha256": "553040c211c46a57acb8d5eb2547e3c5984c081c9a7486b733982a575d0cee65"
+        },
+        {
+          "path": "benchmarks/results/local-20261004-performance/candidate/build-candidate.log",
+          "bytes": 483145,
+          "sha256": "346f3d36a00f8a4852d63b377ef2704fea8d12f3a444bbc779d668bf6b0f05c5"
+        },
+        {
+          "path": "benchmarks/results/local-20261004-performance/slow/build-baseline.log",
+          "bytes": 477181,
+          "sha256": "1d46696ed33286b2fb120220ff4eb624f199747a11e4618535644e0b4a2c0c1c"
+        },
+        {
+          "path": "benchmarks/results/local-20261004-performance/slow/build-candidate.log",
+          "bytes": 478175,
+          "sha256": "9c17b916994231f4fc47680d6796e19fb8276633a6d191135853357672f9ccc3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/artifact-inventory.json",
+          "bytes": 383835,
+          "sha256": "b3c43d975e10eac97f6096390632222c71b283a71a7d8ff21fa0cbcedbb966f8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/diagnostics-20261003/arm-build.log",
+          "bytes": 58,
+          "sha256": "c92d514b9904d20d5e778b3d2ca2ff19e78b0e01a5579df0c2ff1fa557871a95"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/diagnostics-20261003/x86-build.log",
+          "bytes": 62,
+          "sha256": "fd1b92161a096f36553c7e7b2e9669f195902d69b7c9a4c79a7b8a7771cf12ad"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/diagnostics-v2-20261003/arm-build.log",
+          "bytes": 682,
+          "sha256": "f0000c67d4da66f75ae9b6933c1a9d34c8ea02d50c69481c2f329a772c542176"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/diagnostics-v2-20261003/x86-build.log",
+          "bytes": 690,
+          "sha256": "5814959ae19ff6c307c6952406457e617d0860186b81a08e799f833101132f06"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/diagnostics-v3-20261003/arm-build.log",
+          "bytes": 682,
+          "sha256": "fe34a8f47bc0d1d986674ba646cba185ee8b3ddcc4af5a18fe3695e459770b65"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/diagnostics-v3-20261003/x86-build.log",
+          "bytes": 742,
+          "sha256": "88363d73a35056270efcff954bb9d773b6cb7b94f2c571abc5c95077952d0dff"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/owned-chunk-20261003/arm-build.log",
+          "bytes": 667,
+          "sha256": "29e5c6c0228eb5924e9712e4c98d084a60c194a9d41a2d90171944a6518e1120"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/owned-chunk-20261003/x86-build.log",
+          "bytes": 675,
+          "sha256": "b8be661dd9aad6335fb7a0690c46a992a3b1f4a5f14a0bf68fadf893ec945a65"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/receive-window-20261003/arm-build.log",
+          "bytes": 682,
+          "sha256": "a3bfca167b6506ea84d1d559470f120bf058279beff28b638ecc21f2140a668c"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/receive-window-20261003/x86-build.log",
+          "bytes": 690,
+          "sha256": "ebeafb85aa6710c5a5fb28e4c30aeb4444a630618598470c88efc6f5df20bfda"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/shared-key-streams-20261003/arm-build.log",
+          "bytes": 4083,
+          "sha256": "3a3b7308650e374f59654f7ef910b44615a402789a41e8e62e3ab5773c26b1d2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/shared-key-streams-20261003/x86-build.log",
+          "bytes": 710,
+          "sha256": "40b5aec0a21b0a991cee65a834a641fa3134085507d18f4f0b0157988f21b465"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/00.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/00.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/01.log",
+          "bytes": 6132,
+          "sha256": "1293977dc5e24362668a6f25a7f7e2fb0a5a87e63f2dcbe06432486a4fc353ad"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/01.stderr.log",
+          "bytes": 2276,
+          "sha256": "d14807368ed41dc6fae875b3392f450d02a97fe680167b63410b0c2c9c08655c"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/02.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/02.stderr.log",
+          "bytes": 72,
+          "sha256": "cbad3e526dd89d5bff8a3fc4552fe58586db996b923a31cb8e637eef6e98bd9a"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/03.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/03.stderr.log",
+          "bytes": 8115,
+          "sha256": "01120a4403573a8840e2b5edc479555450a974c67f9326dac66346096f837dea"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/04.log",
+          "bytes": 2483,
+          "sha256": "c4a2778afc6437f8083115ab47128a48ce4fb837c1e7c5cd4f0e568ec5d3727f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/04.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/05.log",
+          "bytes": 1237,
+          "sha256": "3da3ff685b45d2558bc401b2337921b3283ec0511c07c7d579d0273b18e34c74"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/05.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/06.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/06.stderr.log",
+          "bytes": 112,
+          "sha256": "922974cc867ba75df57c889f7eb08ad011e54e4e68ecf21883eb2fb938a9629f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/07.stderr.log",
+          "bytes": 495,
+          "sha256": "8f3d16f4be6b42ad56b32cf13cac66c9133f9d3e9b441232fa0d15d76f6a82ee"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/08.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/08.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/clippy.json",
+          "bytes": 382977,
+          "sha256": "32d01995fa72c9aceb18c7b7afcbb1289e14926e60dc0f3a589299953ab23d49"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-20261003/results.json",
+          "bytes": 2616,
+          "sha256": "021f60fe0fa635840f27b17b93b4b543bf4abb4053f9e63c4ac190bd9ac42fb3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/00.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/00.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/01.log",
+          "bytes": 6132,
+          "sha256": "960a718c80720f86f98aded5ede5aa656302eac43e0a9e0d70875c8572607fdd"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/01.stderr.log",
+          "bytes": 2165,
+          "sha256": "2f3fd4dde188b0a4fabd14b2d042299115b81457d28d13949bd5ef5ad8870fd0"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/02.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/02.stderr.log",
+          "bytes": 124,
+          "sha256": "404e435c5a20069b12ad8c2a4631213787de23a5db87a405fb3da96a901069b7"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/03.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/03.stderr.log",
+          "bytes": 8115,
+          "sha256": "b1aa8f9c0f4ef90d315d89b3095eeb996ba21d06f3f09aa4eb20426e9cfee140"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/04.log",
+          "bytes": 2483,
+          "sha256": "c4a2778afc6437f8083115ab47128a48ce4fb837c1e7c5cd4f0e568ec5d3727f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/04.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/05.log",
+          "bytes": 1237,
+          "sha256": "3da3ff685b45d2558bc401b2337921b3283ec0511c07c7d579d0273b18e34c74"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/05.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/06.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/06.stderr.log",
+          "bytes": 112,
+          "sha256": "922974cc867ba75df57c889f7eb08ad011e54e4e68ecf21883eb2fb938a9629f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/07.stderr.log",
+          "bytes": 72,
+          "sha256": "b72370be6a423448fe4693e88696de86a459b0aa13f82e81efea0a37f3eebc6f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/08.log",
+          "bytes": 48,
+          "sha256": "f1a0fca39d4280363937aabd77783990ea6480bd9ca257816de3b68fc8efa845"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/08.stderr.log",
+          "bytes": 321124,
+          "sha256": "9775791392922f26ad65fcc6d21810e670b6145c6a65e3537231b87c0af67c49"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/clippy.json",
+          "bytes": 378367,
+          "sha256": "6baee08fc1b11159b2ddd392afc2b6ad9207053dfe76b6e9cfb814d357b1325c"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/clippy.sarif",
+          "bytes": 3869,
+          "sha256": "a144afbbfc9f931ca52edb2eb438c7ee70be53c69cf27c393bebee05e69ca06e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/diagnostics-v3-20261003/results.json",
+          "bytes": 3089,
+          "sha256": "fb61c0fec4a1457c28a52bb2e854decf127e160b7e6df442dca33baa418fe55d"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/failure-truncated-source-v3/smoke.json",
+          "bytes": 205,
+          "sha256": "a94a00dab72fe004b687e4f2400751b785862c2fa3f1fe9fb622ec2e941d9654"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-example-clippy-default.log",
+          "bytes": 12390,
+          "sha256": "597768b506f1bb64aec40e9f664f0421eb473a32a0231e69edc11358e1ed3a66"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-example-clippy.log",
+          "bytes": 1228,
+          "sha256": "44db40ae79c3a5ed81c099b51fd6077553454fb7797469059d33ab4ed059c39b"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v1/cancel-initial-accept/smoke.json",
+          "bytes": 115,
+          "sha256": "379f249ce4ca808c205738ff4faa59da61776e97ca38eb67d9a32ca7ad901ff8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v1/failure-truncated-source/smoke.json",
+          "bytes": 205,
+          "sha256": "a94a00dab72fe004b687e4f2400751b785862c2fa3f1fe9fb622ec2e941d9654"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v1/success-1/smoke.json",
+          "bytes": 855,
+          "sha256": "407bcddc2c6eb406efbbcf0713a73281c04658fa5d58757b9e41df102fb64d32"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v1/success-4/smoke.json",
+          "bytes": 855,
+          "sha256": "19ee71b11d402cf341a8bf224bdc6283e47e4e16c2d48132051724a266a90059"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v2/cancel-initial-accept/smoke.json",
+          "bytes": 115,
+          "sha256": "379f249ce4ca808c205738ff4faa59da61776e97ca38eb67d9a32ca7ad901ff8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v2/cancel-receiver-payload/smoke.json",
+          "bytes": 152,
+          "sha256": "78d0e18b78a7e3515c0f1ad1b3c864116210709ef6324b7bfdc137ca4e8ce271"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v2/cancel-sender-payload/smoke.json",
+          "bytes": 150,
+          "sha256": "b5d3680482c34c6893f8216a78206fc4b90baf3fdc6ce410374561462f2601fd"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v2/failure-truncated-source/smoke.json",
+          "bytes": 205,
+          "sha256": "a94a00dab72fe004b687e4f2400751b785862c2fa3f1fe9fb622ec2e941d9654"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v2/source-sha256.txt",
+          "bytes": 82,
+          "sha256": "a1630dc732c3e2220174b0403fa486aaf6b81b5c626d4fd295110e2036eca810"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v2/success-1/smoke.json",
+          "bytes": 855,
+          "sha256": "fb1a76244b8038608964c417f689f737364db752dd330fc221e8b48a64393359"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v2/success-4/smoke.json",
+          "bytes": 855,
+          "sha256": "c0b2632d6655e38652c4f8532a55028dae61182415a27c6e36020d5d8a98dc7d"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v3/cancel-initial-accept/smoke.json",
+          "bytes": 115,
+          "sha256": "379f249ce4ca808c205738ff4faa59da61776e97ca38eb67d9a32ca7ad901ff8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v3/cancel-receiver-payload/smoke.json",
+          "bytes": 152,
+          "sha256": "78d0e18b78a7e3515c0f1ad1b3c864116210709ef6324b7bfdc137ca4e8ce271"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v3/cancel-sender-payload/smoke.json",
+          "bytes": 150,
+          "sha256": "b5d3680482c34c6893f8216a78206fc4b90baf3fdc6ce410374561462f2601fd"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v3/failure-truncated-source/smoke.json",
+          "bytes": 205,
+          "sha256": "a94a00dab72fe004b687e4f2400751b785862c2fa3f1fe9fb622ec2e941d9654"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v3/source-sha256.txt",
+          "bytes": 82,
+          "sha256": "d1c549dcaa51ed84d5fbc9656073f6e458a35332bced53035d7265c8ac059ba8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v3/success-1/smoke.json",
+          "bytes": 855,
+          "sha256": "144698d0765acb4bea879ba056c0c299bcb25c9516a486fd62fc6ba9b3625e99"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-readiness-v3/success-4/smoke.json",
+          "bytes": 855,
+          "sha256": "eac197f0882c7ffd47b12d8d124d05d2d699cad73bcbf5a8819e0ab69857bdab"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-release-build.log",
+          "bytes": 148,
+          "sha256": "acd2a3bef94bc3b25d42531f011bd13d4d63aaa33856c30d4690386290f274e6"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-rust-example-test.log",
+          "bytes": 1240,
+          "sha256": "94d5820e856ab52f447b8020b98d6d8cd2c9f25b7a13f5c3260b1c5e570afad6"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-v2-example-clippy.log",
+          "bytes": 2307,
+          "sha256": "46826db79bc3245bc78451f9e7a4904c630107d1e2ae835a23f44ab23a7c9022"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-v2-release-build.log",
+          "bytes": 148,
+          "sha256": "be0aecaddba958fc3334a3726bd414e30768b882172fa16a52c57f84e303abe6"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-v2-rust-example-test.log",
+          "bytes": 1240,
+          "sha256": "a7f3051f10efa573a397cf54f0114bd6458adcb617d157d88b4e530bf4314c64"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-v3-example-clippy.log",
+          "bytes": 1720,
+          "sha256": "9743415327c4874ad10676f14e5980aa394e2f786448b6e279d369aba4e67904"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-v3-release-build.log",
+          "bytes": 148,
+          "sha256": "b931d6fa426db4844ebd5f3f472cb7ff54731f19587cf0ef6c14b1dcd6b2a947"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/final-v3-rust-example-test.log",
+          "bytes": 1239,
+          "sha256": "e8be925e43c71b52f7411ad4161a30fc898dce99fcaf3d7d851b8e117cef2b0c"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/python-tests.log",
+          "bytes": 25952,
+          "sha256": "a4d19142a44fe3d06fa9ac28039255c038ec7a319b0f0056bc764f3a3649e354"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/release-build.log",
+          "bytes": 367,
+          "sha256": "a91e40e78b25ae36f424c869da53b0143de680c1cf9ba520e9d748f70c58e38f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/rust-example-test.log",
+          "bytes": 1458,
+          "sha256": "17beac1c1887620a8b65e4764fe1eb5e4a86c40600e36c1c0c25ef3e845bc82f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/source-sha256.txt",
+          "bytes": 82,
+          "sha256": "d3f8cb5129eaaef80fbbf63b51b5ef3ef5b10848000db47497bed34439a1b230"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/success-1-v2/smoke.json",
+          "bytes": 855,
+          "sha256": "f8b262eea5ae729c506ce25d5922667a544bf4eee5ad78f85210d22b785eae22"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/success-1-v3/smoke.json",
+          "bytes": 855,
+          "sha256": "48c09d8d6b715bca450e701a52c373bb2e61e8ac70eeb29442962320ab87a2ed"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/success-4-v2/smoke.json",
+          "bytes": 855,
+          "sha256": "cf7ba4426623923c185b1f068a018d01a12ccef7ba1f70cce92b080b6a8dcb3e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-example-20261003/success-4-v3/smoke.json",
+          "bytes": 855,
+          "sha256": "e444f4f4a140a883371b03ceb95b8965a1c43569847fefaa1327514df174e8fd"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/00.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/00.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/01.log",
+          "bytes": 6389,
+          "sha256": "759f46bc37bea651dd22aa811f7f6f1c77d4f9820513a91b29f4b438989848f3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/01.stderr.log",
+          "bytes": 1939,
+          "sha256": "55dce0069f0b2d63d5d07a4bf1405745fc44362c21f027e7a9a3bf327cc3ae30"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/02.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/02.stderr.log",
+          "bytes": 72,
+          "sha256": "ec3275bd7cdb61fe7edc4fadcb9a7a8d1c03aef38d75c8a6d05652c57a1d448e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/03.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/03.stderr.log",
+          "bytes": 16701,
+          "sha256": "7c1cf7833630838e1c608f133423e259882d8b44b77c8b51b9a5c584e18c10a6"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/04.log",
+          "bytes": 2483,
+          "sha256": "c4a2778afc6437f8083115ab47128a48ce4fb837c1e7c5cd4f0e568ec5d3727f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/04.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/05.log",
+          "bytes": 1237,
+          "sha256": "3da3ff685b45d2558bc401b2337921b3283ec0511c07c7d579d0273b18e34c74"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/05.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/06.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/06.stderr.log",
+          "bytes": 112,
+          "sha256": "98987b683c13a6013ac4aa816a1a43d5dd6e7b6da6fd0ee2a067edf409af7d57"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/07.stderr.log",
+          "bytes": 816,
+          "sha256": "1fadfef07fc1fee8d477be6a8926acd6d6583aed545ce682654374507fd71a96"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/08.log",
+          "bytes": 48,
+          "sha256": "f1a0fca39d4280363937aabd77783990ea6480bd9ca257816de3b68fc8efa845"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/08.stderr.log",
+          "bytes": 321909,
+          "sha256": "8d913efa6a882e572788975fd93cdc4c1536b7d805508cc0b70963d91e3d5db1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/clippy.json",
+          "bytes": 378766,
+          "sha256": "a2e69889ce1ff94d4c59c19cff5a3b8a891d7f631750bd23d0d2a009a980d6d4"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/clippy.sarif",
+          "bytes": 3869,
+          "sha256": "a144afbbfc9f931ca52edb2eb438c7ee70be53c69cf27c393bebee05e69ca06e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/shared-key-final-20261003/results.json",
+          "bytes": 3125,
+          "sha256": "cb84067e43651e347e40eeb5787a7bd4a76a4ab7abf6308d66bdaea71081664d"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-20261003/00.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-20261003/00.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-20261003/01.log",
+          "bytes": 6389,
+          "sha256": "599a6a65d2ea6a6201679c07774f51a5fc4181372f12bda970683fce08216821"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-20261003/01.stderr.log",
+          "bytes": 2276,
+          "sha256": "44363b03635a698041578b1a4a25bbd53d4c6bfd5899bc9b6a5bf2d7790f3da9"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-20261003/02.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-20261003/02.stderr.log",
+          "bytes": 72,
+          "sha256": "50030225e5ae0694fd524bd6ffaf6739a71feab2d9e42ecddfc4945633e875e4"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-20261003/03.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-20261003/03.stderr.log",
+          "bytes": 11927,
+          "sha256": "87a54b937c6608716f1b24fce63877c2fadda1c684b11575ef0f797f38be38c0"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-20261003/results.json",
+          "bytes": 1293,
+          "sha256": "1ff59ca4a08aaa384dc025d77e0dd46412d2c47ee28a530ba8b5cf1203eb0a97"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/03.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/03.stderr.log",
+          "bytes": 11034,
+          "sha256": "685c62d11b8215b29fbdb441b5eb501395e8bd9d916cafa4e46dca083753ab7e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/04.log",
+          "bytes": 2483,
+          "sha256": "c4a2778afc6437f8083115ab47128a48ce4fb837c1e7c5cd4f0e568ec5d3727f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/04.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/05.log",
+          "bytes": 1237,
+          "sha256": "3da3ff685b45d2558bc401b2337921b3283ec0511c07c7d579d0273b18e34c74"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/05.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/06.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/06.stderr.log",
+          "bytes": 112,
+          "sha256": "40a53a9a3bf6f3bed61356852fd6a328dd2af55f20f6ec295b1206c8c5148348"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/07.stderr.log",
+          "bytes": 495,
+          "sha256": "5bc0db337c07d3242a322bd1c6aa072690bdedeacd938f7e8af56dcc82501a7e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/08.log",
+          "bytes": 48,
+          "sha256": "f1a0fca39d4280363937aabd77783990ea6480bd9ca257816de3b68fc8efa845"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/08.stderr.log",
+          "bytes": 321124,
+          "sha256": "9775791392922f26ad65fcc6d21810e670b6145c6a65e3537231b87c0af67c49"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/clippy.json",
+          "bytes": 378763,
+          "sha256": "5b8c92c9518ee598754964c1ac5b59bb187ea9566d84b09ed7c0c5da05160c20"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/clippy.sarif",
+          "bytes": 3869,
+          "sha256": "a144afbbfc9f931ca52edb2eb438c7ee70be53c69cf27c393bebee05e69ca06e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261003-direct-tuning/checks/window-v2-20261003/results.json",
+          "bytes": 2040,
+          "sha256": "239044822caeff2dc773f8c6a113953e9bb4eee1aa60902ff17f78f546b7a3e8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/artifact-inventory.json",
+          "bytes": 90578,
+          "sha256": "11a3e3d3c5e945ebc6a68f2940662c7762c9c758fd81d5bbe1381bd11bfaebdd"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/builds/completion-v1-20261004/arm-build.log",
+          "bytes": 677,
+          "sha256": "80191dc0c723452bec07875d24d9686235294dcb995ea5c93841751dd46dcf98"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/builds/completion-v1-20261004/x86-build.log",
+          "bytes": 685,
+          "sha256": "f65d491f9d37a0a85a326afefb08884f7af86a34de30fc597b526e2f2d79dcc6"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/00.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/00.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/01.log",
+          "bytes": 6478,
+          "sha256": "ebba68debe583669f05cd692a43e762bffbe760d41043e4d6cd893f44c666164"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/01.stderr.log",
+          "bytes": 2276,
+          "sha256": "f09c70308a1e78102bf0112e82255391215d8bbb3a641824a317bc9a6735b50c"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/02.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/02.stderr.log",
+          "bytes": 72,
+          "sha256": "93a9750a90ebd973ec3f714d39e412b44eb5ed423aade70d185ebcb11081f183"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/03.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/03.stderr.log",
+          "bytes": 22240,
+          "sha256": "099f906be5f822497bbd545de755b5fab74cb7672854a0cd8a175fa31733dc43"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/04.log",
+          "bytes": 2483,
+          "sha256": "c4a2778afc6437f8083115ab47128a48ce4fb837c1e7c5cd4f0e568ec5d3727f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/04.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/05.log",
+          "bytes": 1237,
+          "sha256": "3da3ff685b45d2558bc401b2337921b3283ec0511c07c7d579d0273b18e34c74"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/05.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/06.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/06.stderr.log",
+          "bytes": 112,
+          "sha256": "23ee495bbf64fe3031ca4c869ba0e2088b74099964594418e93bf76d66f7d129"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/07.stderr.log",
+          "bytes": 495,
+          "sha256": "2e5d7f99197b4ff24be6dc4ac21080d8d391065e7f38c1908b4c52e1cac0c594"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/08.log",
+          "bytes": 48,
+          "sha256": "f1a0fca39d4280363937aabd77783990ea6480bd9ca257816de3b68fc8efa845"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/08.stderr.log",
+          "bytes": 321909,
+          "sha256": "8d913efa6a882e572788975fd93cdc4c1536b7d805508cc0b70963d91e3d5db1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/clippy.json",
+          "bytes": 386130,
+          "sha256": "08c4213cb5f8b6cbe51cb561e70b3ed6425ea811a08b9b4b8f97d00cd892a3e6"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/clippy.sarif",
+          "bytes": 8416,
+          "sha256": "20af3c3b2917bc53b9a58504422bf04791eb1878c1fca2c125a68f6767260ef7"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-20261004/results.json",
+          "bytes": 3017,
+          "sha256": "fef5dc7cd0bf507bf6f987693fdb4700a7c2e9f230909086d58c94b65f642ee8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/00.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/00.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/01.log",
+          "bytes": 6478,
+          "sha256": "809a289d0162a5ab6c2b842513ab25553a26290ddc315236b67adc805e088157"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/01.stderr.log",
+          "bytes": 2276,
+          "sha256": "a0fa4fb82cee7c56f092491a29cdeb23d93e707611d8240fa154863a652e2ea8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/02.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/02.stderr.log",
+          "bytes": 72,
+          "sha256": "beed191cf5cd39a57477a6d66e9acb53f3b4efe7566a30e0ada805357a0fe6ff"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/03.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/03.stderr.log",
+          "bytes": 22240,
+          "sha256": "062d3d53ab072fccc3faf51924b61a9221d080a92e9d9265df4804898d2f4db3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/04.log",
+          "bytes": 2483,
+          "sha256": "c4a2778afc6437f8083115ab47128a48ce4fb837c1e7c5cd4f0e568ec5d3727f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/04.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/05.log",
+          "bytes": 1237,
+          "sha256": "3da3ff685b45d2558bc401b2337921b3283ec0511c07c7d579d0273b18e34c74"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/05.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/06.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/06.stderr.log",
+          "bytes": 112,
+          "sha256": "058dd285833bd2f391c021d8fb66cc66dcbeb7b7ef121d1744c92f764a81411b"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/07.stderr.log",
+          "bytes": 816,
+          "sha256": "5ae51a4a3a10afc0452294a6a1572c522c34cc85101db440671f16b1c81de310"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/08.log",
+          "bytes": 48,
+          "sha256": "f1a0fca39d4280363937aabd77783990ea6480bd9ca257816de3b68fc8efa845"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/08.stderr.log",
+          "bytes": 321909,
+          "sha256": "8d913efa6a882e572788975fd93cdc4c1536b7d805508cc0b70963d91e3d5db1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/clippy.json",
+          "bytes": 378766,
+          "sha256": "3e745ab9b8603f164ab8be28b5b88df6113ff9d6eba40e9dd3e05144d8883d33"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/clippy.sarif",
+          "bytes": 3869,
+          "sha256": "a144afbbfc9f931ca52edb2eb438c7ee70be53c69cf27c393bebee05e69ca06e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/completion-final-20261004/results.json",
+          "bytes": 3125,
+          "sha256": "8acbe869176462d10c3fbd3a6a09766c645d27a8959bd4adf659c13f9e4a9ca1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/checks/developer-check-note.json",
+          "bytes": 776,
+          "sha256": "88ab5c73eb82f5eca16c6d068fae05e91817efcee6ee3dc985388ce3ed706b1a"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/comparison-manifest.json",
+          "bytes": 1007,
+          "sha256": "8f2a4210efb6c7a49f68ec2342299306dcbcb12421cb3d11277cd27c8153e32a"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/firewall-lease-audit.json",
+          "bytes": 440,
+          "sha256": "a994a639363ff03bba1aa0f3eafffddaa0f4ff0c8d64eb0eaf8177176551e1d3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/interruption.json",
+          "bytes": 673,
+          "sha256": "c371fc1d3f1a7ec3a64df07eeeba0d23181d464826d6fd204c212de5ba10f799"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/partial-audit.json",
+          "bytes": 763,
+          "sha256": "62ecc28b994922c1dfed8caec01dff3e191c66d1717e6387468b974dfcecec1f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-20261004/run-order.json",
+          "bytes": 2786,
+          "sha256": "c0cd04269a90a3aa72cda4a0a98dd118044b8f563e8c4195709ef44424e767f2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-retry-20261004.launcher.json",
+          "bytes": 1171,
+          "sha256": "b46964727516f8ab762450a6d99212bf672b2f41618035dda652e6a1e81bdf06"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-croc-retry-20261004.launcher.log",
+          "bytes": 3875,
+          "sha256": "1ab863e46551283d073d7fb31bc0488f973d1b09af896347d47529c519e68934"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/interrupted/completion-interrupted-cleanup-20261004.json",
+          "bytes": 665,
+          "sha256": "0bec712ce9ecad971b018858fe794555b5fa561ac3b2da6ffc2826f2eb475c9b"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/preflight/metric-provenance-cost.json",
+          "bytes": 3056,
+          "sha256": "c4bfbb11908436650c4c34fbc3fe39b5395ec7bcf78669291d4b2cd197643930"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-completion/preflight/pre-run-audit.json",
+          "bytes": 665,
+          "sha256": "0bec712ce9ecad971b018858fe794555b5fa561ac3b2da6ffc2826f2eb475c9b"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/artifact-inventory.json",
+          "bytes": 42239,
+          "sha256": "6f040c1cdd7e07391a466967f7e3ddd440f0482b968dcbc87bb7c76dc512a7b9"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/builds/independent-connections-v2-20261004/arm-build.log",
+          "bytes": 742,
+          "sha256": "af6a642926ed67940a465c0a80564c654b3c069ac2ebff38e73ac51d1b078222"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/builds/independent-connections-v2-20261004/x86-build.log",
+          "bytes": 750,
+          "sha256": "d221a694693db9685e1f69867bfd8acf9c3dc33e994490effcf549199f6aaff1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-local-v1-20261004/results.json",
+          "bytes": 3350,
+          "sha256": "99dce28dc7e0961a70414e798006161e793e621643fa4cc6cb9ab59c32e66014"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/00.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/00.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/01.log",
+          "bytes": 6389,
+          "sha256": "e964f5bb8c53737c9cc50a5fc9f4047deb85ba87803c8e195fb32840c531b12a"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/01.stderr.log",
+          "bytes": 1939,
+          "sha256": "2d8a8a65e165e6eff4c3a10ec4939963b7d205a1d203c85b61c1ddfcab9a7bf8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/02.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/02.stderr.log",
+          "bytes": 72,
+          "sha256": "45f75b19e5718ce74d75d27dc949e2b0cc21908a1e53dca4d31c24e03ebe8e09"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/03.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/03.stderr.log",
+          "bytes": 20177,
+          "sha256": "2e5914d6a36136b5ba4f7e125fb04bd9ca5839d4b09ebc85c69329aa783716d2"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/04.log",
+          "bytes": 2483,
+          "sha256": "c4a2778afc6437f8083115ab47128a48ce4fb837c1e7c5cd4f0e568ec5d3727f"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/04.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/05.log",
+          "bytes": 1237,
+          "sha256": "3da3ff685b45d2558bc401b2337921b3283ec0511c07c7d579d0273b18e34c74"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/05.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/06.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/06.stderr.log",
+          "bytes": 112,
+          "sha256": "e73ebbcc4a6e98c15c487aaf249d47d57a99a123243bb226551c0ce7def7f2f5"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/07.stderr.log",
+          "bytes": 72,
+          "sha256": "fc5b16bc4342f093a52115087c240e1f6fe65f972486e7cac73e26a2ac51b1c9"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/08.log",
+          "bytes": 48,
+          "sha256": "f1a0fca39d4280363937aabd77783990ea6480bd9ca257816de3b68fc8efa845"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/08.stderr.log",
+          "bytes": 321909,
+          "sha256": "68c2414588b20e34b60370198c22ab482cc97c8b66e4ec86ff62a3050ac07a27"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/clippy.json",
+          "bytes": 378757,
+          "sha256": "5e96527e4cbc83d5e8313c08f9caaa8a3aac6abdf1b1c9e3db00f7ce907ae0d9"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/clippy.sarif",
+          "bytes": 3869,
+          "sha256": "a144afbbfc9f931ca52edb2eb438c7ee70be53c69cf27c393bebee05e69ca06e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/example-clippy.json",
+          "bytes": 418166,
+          "sha256": "55aeac0fdd78a6c59a8ce01c6571dc4652226eb585f28409c8a20e3596f5f272"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/example-clippy.json.stderr.log",
+          "bytes": 158,
+          "sha256": "13cf938244a13982c88f6a358feb7924baa0c1fd2af4f43ffdf6a6a9d2d56045"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/example-test.log",
+          "bytes": 1164,
+          "sha256": "d1fd43992d35aa6cda7a622945f7fa4ced5dadf4e8ce4dd0d94ded3e98ee15a3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/example-test.log.stderr.log",
+          "bytes": 309,
+          "sha256": "8bc6c8fff20d1fc37e412ad11a9c1b8ef7ed491dca7809deb5c4436e8cf6ffda"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/gate-output.log",
+          "bytes": 2292,
+          "sha256": "cf05c17cf68fe241d097c2460c2db52615eb21e310c1066058b44770945affd9"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/results.json",
+          "bytes": 3305,
+          "sha256": "83083c8a9d7adf028df04d331dc8b4e60bbc84e15c3f1bb308a24527d46c30c0"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/independent-connections-v2-20261004/validation.json",
+          "bytes": 184,
+          "sha256": "483424cb095791c5ff6780c1bd5188bfb51c92f2ad6e3cc0486afe951c66ccf8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/shared-key-connections-20261004/release-build-final.log",
+          "bytes": 149,
+          "sha256": "b50adb9ae04b417ac6c64c3e7a9b3f9f56a0cad7f78736d4f7879b921870150e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/shared-key-connections-20261004/release-build-native.log",
+          "bytes": 149,
+          "sha256": "2fc8599ee21b3d71fc0f7f2064db86a07198a5222480b565dc5751555a3dce79"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/shared-key-connections-20261004/release-build.log",
+          "bytes": 2049,
+          "sha256": "f4c2899486c3c58c477830fde6c20911247242f81275af7cd854aa0ab3f13a41"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-independent-quic/checks/shared-key-connections-20261004/rust-example-tests.log",
+          "bytes": 1440,
+          "sha256": "765f6c855ea5d93e0dc88f0c865263b84255043a2ddaaa371a212b6929b64590"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/artifact-inventory.json",
+          "bytes": 140635,
+          "sha256": "4440d3fdbe613f3bc4efe814e659b0466ac7c8bec8ee97935db792454d93dc28"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/audit-report.json",
+          "bytes": 19826,
+          "sha256": "0ab7ca7bfb92cfc4867a363a876d96af0a335bd59e1c9ee2c5e4cac018e61428"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/comparison-manifest.json",
+          "bytes": 1043,
+          "sha256": "313ba74362c5e8fbfc92713714c2a7954321a71b90360b729079f27f4cd8fbc0"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/croc-manifest.json",
+          "bytes": 1162,
+          "sha256": "0204e0efbf5e81f9598beddacbd3f5ba2dbb9d0d353f402ace2590683d035b78"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/croc-route-evidence.json",
+          "bytes": 40623,
+          "sha256": "dca670affe0624ae810beb2926e1fc1af64c8c2687611218943ef48bb0d80962"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/croc-stock-startup.json",
+          "bytes": 17078,
+          "sha256": "e51219d8eee5617b97e3c5d554b330a49b9c0dffde3cc34d5f41507ea6c5f783"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/fixture-manifest.json",
+          "bytes": 1056,
+          "sha256": "4aac198f34470d44bfbacb56184be385e3350e3b90104f36b3e5c65a24ed96ec"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/intermediate-croc-startup-inspection.json",
+          "bytes": 2237,
+          "sha256": "085ad39858c45715f470546ca5a042393b3fc1aa27145be94b8e2b63deaeceba"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/launcher-termination.json",
+          "bytes": 276,
+          "sha256": "330ddf9f61e9e18f3bf9e37364d5077f1c4121338cb6b40e4858f4858950953b"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-1024-0.json",
+          "bytes": 440,
+          "sha256": "f7a3d152a700a2768ec68b31d4b55ac5f95eb7820e1953a4c7e8c08de7ddf3d4"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-1024-1.json",
+          "bytes": 440,
+          "sha256": "c88d846a722c2828c5d57f9994cb2510367f8e70801ee5fe72d8ef3216c05fe3"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-1024-2.json",
+          "bytes": 440,
+          "sha256": "c567df5636d4c3b7c72ceaec00e58fc5213b1455e2608509df1ba1e2c854cfbf"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-1024-3.json",
+          "bytes": 440,
+          "sha256": "a8cf915212647283e0b0629504388a6a193b6dec199fa4f1e371bef1d18945d8"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-1024-4.json",
+          "bytes": 440,
+          "sha256": "999b47848180bd2d3a34c4a5d9cb686e9df92b7ab7df8b57200a3004054cb56e"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-1024-5.json",
+          "bytes": 440,
+          "sha256": "e382603d34aa8f24f15e3e70a0e033ea816892f945fbd6ba3d0e633a9ac67543"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-2048-0.json",
+          "bytes": 440,
+          "sha256": "105dc846e75097e807ee7967dc0f0b2f7b0f452cd681747bdf16cda100110804"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-2048-1.json",
+          "bytes": 440,
+          "sha256": "6c21a6571362dedec3eb64a5e3de485eef50e91d45c118d9794b0d5bd082198c"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-2048-2.json",
+          "bytes": 440,
+          "sha256": "60176f25afb9c20532655c4a95ca4f3199a46c35bc5e5a4a79ad00b715703136"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-2048-3.json",
+          "bytes": 440,
+          "sha256": "005d82f167e77218b7ebe941cc8f1844b8753149df708345f832ff315126331c"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-2048-4.json",
+          "bytes": 440,
+          "sha256": "87448a1e0edc2515402b7f47f51b03e1bcd1f912ee6f71d3caa02c6c37480983"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-2048-5.json",
+          "bytes": 440,
+          "sha256": "d1ff6fa9e412a696846b8c320bbadd6f0ff31bdef157bcef7f2c3a55e09d5aa1"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/leases/oracle-4096-0.json",
+          "bytes": 440,
+          "sha256": "6dcb9e54ac9cab715673ad280b12897cc64f7e2c218e6c5cd5e5c6c56ba0ac52"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/requested-overall-snapshot.json",
+          "bytes": 1497,
+          "sha256": "0575131f81b5a50ace294c08469df7dca8b5b4800fb6ea1052bbc151445502ea"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/run-order.json",
+          "bytes": 5457,
+          "sha256": "7100054bfa0170b305b358e7bff299b1e51699cba61d104c222ff635e5ac39a7"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/status.json",
+          "bytes": 81,
+          "sha256": "6e12b50b48a40e68109afc84068cbd0842877afcb9b056a7d26bb7231aa7c05c"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/superseded-at-boundary.json",
+          "bytes": 343,
+          "sha256": "7de77543f632a59a18764c78c721e7065a7a28b251085b23947c32d8dabb50cc"
+        },
+        {
+          "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/unscored-4096-warmup-audit.json",
+          "bytes": 298,
+          "sha256": "dbea965a1a8e030981e7897307159779c5b53ba50fb0320bbf462b17a1e0a337"
+        }
+      ]
+    },
+    {
+      "file": "retired-experiments-20261005.tar.gz",
+      "sha256": "a2f1c09dc0ca5738c98252de643fde6f18189c902a924a4acbc899e262338a60",
+      "purpose": "Retired parallel-transfer experiment and superseded implementation plans",
+      "snapshot_date": "2026-10-05",
+      "extraction_verified": true,
+      "members": [
+        {
+          "path": "benchmarks/CLEANUP_PLAN.md",
+          "bytes": 10648,
+          "sha256": "a23ac50bd45f8e54dbc4d41a0d254032c9378f4cec339d72db81a85ea1575436"
+        },
+        {
+          "path": "docs/direct-transfer-desktop-plan.md",
+          "bytes": 41083,
+          "sha256": "601cff7c256c4215eecf64c60f2b9b5c9e14fe282e0bd8fdae598c4133970c49"
+        },
+        {
+          "path": "examples/shared_key_parallel.rs",
+          "bytes": 70475,
+          "sha256": "a4dc73c1ed8bd83ffea8d824796bf0a9da356daf1b7ea7d209e094089b304d2e"
+        }
+      ]
     }
   ],
   "note": "Original artifact inventories are historical, unchanged hash claims. Use this extraction map for archived members."

@@ -6,4 +6,4 @@ independently checks that example and `iroh_probe` name as well. Both endpoints
 are clear, no Croc listeners or leases remain, and the original Oracle INPUT
 hash still matches exactly. No firewall mutation was needed for this evaluation.
 The original records remain unchanged; the exact expanded checker is retained
-as [audit-independent-cleanup.py](../reproduction/audit-independent-cleanup.py).
+as [audit-independent-cleanup.py](../../../archives/README.md "Archive member: benchmarks/results/oracle-20261004-independent-quic/reproduction/audit-independent-cleanup.py").

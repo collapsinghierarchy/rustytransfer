@@ -100,7 +100,7 @@ drain are also covered by focused tests. Partial bootstrap closure is a source
 audit; the physical interruption checks cover initial accept and active payload.
 
 The initial Windows-mounted-target release build failed with a temporary archive
-permission error. Its [failed log](checks/shared-key-connections-20261004/release-build.log)
+permission error. Its [failed log](../../archives/README.md "Archive member: benchmarks/results/oracle-20261004-independent-quic/checks/shared-key-connections-20261004/release-build.log")
 is retained; the native Linux build and final required checks passed. It is not
 a failed scored transfer. All local correctness checks passed on their first
 attempt. Per-run endpoint logs remain local under ignored `logs/` directories;

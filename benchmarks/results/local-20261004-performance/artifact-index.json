@@ -1,0 +1,12 @@
+{
+  "schema_version": 2,
+  "extraction_map": "../../archives/index.json",
+  "original_path_prefix": "benchmarks/results/local-20261004-performance/",
+  "archives": [
+    {
+      "archive": "../../archives/diagnostics-20261005.tar.gz",
+      "content": "Historical diagnostics and maintained inventory snapshot"
+    }
+  ],
+  "retained_live": "Readable reports, scored rows, summaries and source provenance"
+}

@@ -62,13 +62,13 @@ These scripts build whatever is currently checked out and install it.
 #### Linux/macOS
 
 ```bash
-./install-local.sh
+./install.sh
 ```
 
 #### Windows (PowerShell)
 
 ```powershell
-.\install-local.ps1
+.\install.ps1
 ```
 
 By default, the scripts install to:
@@ -88,6 +88,9 @@ encryption), `rustytransfer-protocol` (wire messages and state machines),
 `rustytransfer-wasm` contains the JavaScript PAKE adapter and builds as a
 `cdylib` for WebAssembly. `rustytransfer-firefox-host` is the separate desktop
 native messaging process used by the Firefox extension.
+
+The [native desktop preview](desktop/README.md) is a standalone Iced event-replay
+MVP; it does not perform live file transfers.
 
 ### Firefox desktop extension (direct Iroh preview)
 
@@ -155,21 +158,13 @@ Omit `--relay-only` to allow direct IP paths. Keep the key file private.
 
 ### Send
 
-### TUI File Picker
 ```bash
-rustytransfer send 
-```
-After the file is selected
-- Prints a share code like: `1234-ABCDE`
-- The receiver uses that code to connect
-### CLI
-
-```bash
+rustytransfer send
 rustytransfer send --file /path/to/file
 ```
-
-- Prints a share code like: `1234-ABCDE`
-- The receiver uses that code to connect
+With no file argument, `send` opens the terminal file picker. With `--file`, it
+uses the specified path. For a PAKE transfer it prints a share code for the
+receiver.
 
 Optional flags:
 

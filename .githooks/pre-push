@@ -1,0 +1,19 @@
+#!/bin/sh
+# Git supplies the actual updates on stdin, including non-HEAD branches and tags.
+set -eu
+guard_dir=$(CDPATH= cd -- "$(dirname -- "$0")/../scripts" && pwd)
+while read -r local_ref local_sha remote_ref remote_sha extra; do
+    if [ -z "$local_ref" ] || [ -z "$local_sha" ] || [ -z "$remote_ref" ] || [ -z "$remote_sha" ] || [ -n "${extra:-}" ]; then
+        echo 'Push blocked: invalid pre-push update record.' >&2
+        exit 1
+    fi
+    # A deletion sends no new objects.
+    case "$local_sha" in
+        0000000000000000000000000000000000000000|0000000000000000000000000000000000000000000000000000000000000000) continue ;;
+    esac
+    echo "Checking Betterleaks before pushing $local_ref to $remote_ref..." >&2
+    sh "$guard_dir/check-betterleaks.sh" "$local_sha" </dev/null || {
+        echo 'Push blocked by Betterleaks. Resolve the findings or scan errors before retrying.' >&2
+        exit 1
+    }
+done

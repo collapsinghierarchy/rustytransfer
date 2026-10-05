@@ -3,12 +3,17 @@
   "baseline_status": "Initial compatible harness revision; production matches approved 372956e; fixed pending explicit review updates",
   "harness_version": 1,
   "rust_toolchain": "1.97.0",
-  "sizes_mib": [64, 512],
+  "sizes_mib": [
+    64,
+    512
+  ],
   "warmups": 1,
   "measured_pairs": 5,
-  "regression_threshold": 0.10,
-  "maximum_relative_spread": 0.20,
+  "regression_threshold": 0.1,
+  "maximum_relative_spread": 0.2,
   "gating": "report-only",
   "trial_timeout_seconds": 960,
-  "build_timeout_seconds": 3600
+  "build_timeout_seconds": 3600,
+  "original_baseline_ref": "1311b81694f9f15c002ab952bebfa7158b10ecc2",
+  "history_cleanup": "Reviewed source-warning cleanup; production and harness unchanged; see archives/security-normalization.json."
 }

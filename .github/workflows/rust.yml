@@ -364,20 +364,20 @@ jobs:
     - name: Install Betterleaks
       shell: bash
       run: |
-        go install "github.com/betterleaks/betterleaks@${BETTERLEAKS_VERSION}"
+        go install -ldflags="-X github.com/betterleaks/betterleaks/version.Version=${BETTERLEAKS_VERSION#v}" \
+          "github.com/betterleaks/betterleaks@${BETTERLEAKS_VERSION}"
         echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
         betterleaks --version
+    - name: Test Betterleaks push guard
+      shell: bash
+      run: |
+        PUSH_GUARD_REAL_SCANNER="$(command -v betterleaks)" \
+          python3 -m unittest discover -s scripts/tests -p 'test_push_guard*.py' -v
     - name: Scan repository with Betterleaks
       shell: bash
       run: |
         mkdir -p target
-        betterleaks git . \
-          --report-path target/betterleaks.sarif \
-          --report-format sarif \
-          --redact \
-          --no-color \
-          --no-banner \
-          --timeout 300
+        sh scripts/check-betterleaks.sh "$(git rev-parse HEAD)" target/betterleaks.sarif
     - name: Upload Betterleaks SARIF report
       if: always() && hashFiles('target/betterleaks.sarif') != ''
       uses: github/codeql-action/upload-sarif@v3

@@ -1,0 +1,11 @@
+#!/bin/sh
+# rustytransfer-betterleaks-dispatch-v1
+# Installed in the common Git hooks directory, shared by linked worktrees.
+set -eu
+common_dir=$(git rev-parse --path-format=absolute --git-common-dir)
+primary_root=$(dirname -- "$common_dir")
+if [ ! -f "$primary_root/.githooks/pre-push" ]; then
+    echo 'Push blocked: the maintained Betterleaks hook is missing from the primary checkout.' >&2
+    exit 1
+fi
+exec sh "$primary_root/.githooks/pre-push" "$@"

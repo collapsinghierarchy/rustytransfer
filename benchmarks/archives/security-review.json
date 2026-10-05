@@ -1,0 +1,781 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-05",
+  "reviewed_revision": "a4200e03ee5d2180368b29436a8ac4221e70e0c5",
+  "summary": {
+    "source_file_checksums": 73,
+    "rust_parameter_types": 2,
+    "retired_relay_passwords": 1
+  },
+  "policy_exceptions_enabled": false,
+  "history_rewritten": true,
+  "archive_cleanup": {
+    "archive": "local-agent-helpers.tar.gz",
+    "member": "target/croc_measure.py",
+    "before_archive_sha256": "4baf7cd2e7b01d6ea48ef7093859836c0d0547b2fa6bcf69e5d02b710741e363",
+    "after_archive_sha256": "0f44d39d84ea74152ffe34b74f97110c805f06430aed321022162192782cdbf2",
+    "before_member_sha256": "9989c7b581c7d2089bdc1afd9b75c420dfb85320ce585760553001931e244a7d",
+    "after_member_sha256": "0a8faed6062fb0386e6f01aa2674e78339a7e9013b8d3298f8949cf1494c6a2b",
+    "unchanged_members": 119,
+    "extraction_verified": true
+  },
+  "findings": [
+    {
+      "rule": "generic-password",
+      "path": "benchmarks/archives/local-agent-helpers.tar.gz!target/croc_measure.py",
+      "commit": "8b0d58051d090f69c45091d81c98b9677667ea9f",
+      "line": 22,
+      "classification": "retired-benchmark-relay-password",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-no-debug/provenance/rustytransfer-release-manifest.json",
+      "commit": "69fc4cce9a5d7ab8e160f6723ce792d2e35fabcf",
+      "line": 51,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-no-debug/provenance/rustytransfer-release-manifest.json",
+      "commit": "69fc4cce9a5d7ab8e160f6723ce792d2e35fabcf",
+      "line": 54,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/rusty-manifest.json",
+      "commit": "69fc4cce9a5d7ab8e160f6723ce792d2e35fabcf",
+      "line": 51,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-no-debug/superseded/large-phase-20261004/rusty-manifest.json",
+      "commit": "69fc4cce9a5d7ab8e160f6723ce792d2e35fabcf",
+      "line": 54,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/builds/completion-v1-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 51,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/builds/completion-v1-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 54,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 137,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 140,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 213,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 216,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 289,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 292,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/config.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 54,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/config.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 57,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/config.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 130,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/config.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 133,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/config.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 206,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-diagnostics-20261004/config.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 209,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/config.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 54,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/config.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 57,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/config.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 130,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/config.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 133,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 209,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 212,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 285,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-completion/cohorts/completion-screen-20261004/manifest.json",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 288,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-password",
+      "path": "benchmarks/results/oracle-20261004-completion/provenance/post-measurement-lint-cleanup.patch",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 108,
+      "classification": "rust-parameter-type-not-a-password",
+      "evidence": "Rust byte-slice parameter declaration; contains no assigned value",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-password",
+      "path": "benchmarks/results/oracle-20261004-completion/provenance/post-measurement-lint-cleanup.patch",
+      "commit": "1d5757bf731bde209a06877e958de0ed45aa26d4",
+      "line": 177,
+      "classification": "rust-parameter-type-not-a-password",
+      "evidence": "Rust byte-slice parameter declaration; contains no assigned value",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/builds/independent-connections-v2-20261004/manifest.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 51,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/builds/independent-connections-v2-20261004/manifest.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 54,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/config.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 54,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/config.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 57,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/config.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 130,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/config.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 133,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/config.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 206,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/config.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 209,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/manifest.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 281,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/manifest.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 284,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/manifest.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 357,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/manifest.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 360,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/manifest.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 433,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261004-independent-quic/cohorts/independent-connections-screen-20261004/manifest.json",
+      "commit": "889ef41232399aa5151f8c14bae98f475df55600",
+      "line": 436,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/diagnostics-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 50,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/diagnostics-v2-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 50,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/diagnostics-v3-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 50,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/owned-chunk-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 50,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/receive-window-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 50,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/shared-key-streams-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 51,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/builds/shared-key-streams-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 54,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-copy-screen-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 53,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-copy-screen-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 123,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-copy-screen-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 352,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-copy-screen-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 422,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-diagnostics-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 53,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-diagnostics-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 112,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-profile-overhead-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 53,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-profile-overhead-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 124,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-profile-overhead-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 352,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-profile-overhead-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 423,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-shared-key-streams-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 54,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-shared-key-streams-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 57,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-shared-key-streams-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 128,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-shared-key-streams-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 131,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-shared-key-streams-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 209,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-shared-key-streams-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 212,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-shared-key-streams-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 283,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-shared-key-streams-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 286,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-window-screen-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 53,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-window-screen-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 124,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-window-screen-20261003/config.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 195,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-window-screen-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 280,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-window-screen-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 351,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/cohorts/next-window-screen-20261003/manifest.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 422,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/provenance/final-source-hash-audit.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 48,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "crates/transfer/src/transport_api.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    },
+    {
+      "rule": "generic-api-key",
+      "path": "benchmarks/results/oracle-20261003-direct-tuning/provenance/final-source-hash-audit.json",
+      "commit": "477b7f9688d37dad34a34c5afcc83988f50bc08a",
+      "line": 51,
+      "classification": "source-file-sha256-not-a-credential",
+      "source_file": "examples/shared_key_parallel.rs",
+      "evidence": "64 hexadecimal characters in source_files_sha256 metadata",
+      "action": "source corrected in replacement history; detector unchanged"
+    }
+  ],
+  "warning_resolution": "sources normalized in approved replacement history; no scanner exceptions"
+}

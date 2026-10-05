@@ -1,7 +1,8 @@
 # Historical benchmark archives
 
 These are frozen evidence, not maintained performance commands. Croc and Oracle
-collectors, their tests and dependencies retain their original bytes and paths.
+collectors, their tests and dependencies retain their paths and original bytes,
+except for the documented credential sanitization below.
 Readable reports, scored raw rows, summaries, patches and core provenance remain
 under `benchmarks/results/`. The old benchmark guide is in `retired-active-tools`.
 
@@ -36,3 +37,26 @@ Original campaign `artifact-inventory.json` files remain historical inventories
 and are also inside their bundles unchanged. New adjacent `artifact-index.json`
 files explain archived storage. Use this archive index to locate helper bytes;
 do not interpret an archived helper's absence from the live tree as lost evidence.
+
+## Credential sanitization, 2026-10-05
+
+`local-agent-helpers.tar.gz!target/croc_measure.py` contained a fixed password
+used by its retired, self-hosted benchmark relay. It now generates a fresh
+random password for each reproduction run. The old literal is unnecessary for
+the maintained Rustytransfer-only benchmark or for recovering measurements.
+The other 119 members of this bundle retain their exact bytes. Scored data,
+source-file checksums, Rust patches, frozen dependencies, and all other bundles
+are unchanged.
+
+[`security-review.json`](security-review.json) records the original and sanitized
+archive/member hashes and the reviewed findings, without credential values.
+`index.json` records this explicit sanitization rather than claiming that the
+modified member still has its original hash. All seven archives and 294
+extracted members passed verification afterward.
+
+A new commit does **not** remove the old password from Git history. The review
+record leaves that historical finding blocked. History cleanup and any exact
+false-positive exceptions need separate approval; neither has been enabled by
+this archive change. The 75 other findings are source-file SHA-256 provenance
+values and Rust `password: &[u8]` parameter declarations, which contain no
+credential and have been retained.

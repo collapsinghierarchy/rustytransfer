@@ -2,7 +2,7 @@
 
 Peer-to-peer file transfer over WebRTC or Iroh with short-code PAKE or direct Iroh invites and end-to-end encryption (ML-KEM+AES-GCM). Similar to [croc](https://github.com/schollz/croc) and [wormhole](https://github.com/magic-wormhole/magic-wormhole), but with quantum-safe features and in rust (and less features).
 
-> Status: **alpha**. The protocol and implementation are under active development and have not been security-audited, but reviewed by a cryptographer (whatever that means to you). Also everything may change without notice and yada yada.
+> Status: Now that the hybrid TLS is an available standard this tool may be obsolete. https://www.rfc-editor.org/info/rfc9954/
 
 ---
 
